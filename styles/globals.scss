@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-image {
+    background-image: url("../assets/images/login_background.png");
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh; /* Ensure the background covers the entire viewport */
+  }
+  

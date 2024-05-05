@@ -10,10 +10,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <MenuContextProvider>
-          <MainLayout>{children}</MainLayout>
-        </MenuContextProvider>
+        <MenuContextProvider>{children}</MenuContextProvider>
       </body>
     </html>
   );
+}
+{
+  /* <MainLayout>{children}</MainLayout> */
 }
