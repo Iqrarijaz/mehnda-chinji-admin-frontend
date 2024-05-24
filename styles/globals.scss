@@ -9,3 +9,20 @@
     min-height: 100vh; /* Ensure the background covers the entire viewport */
   }
   
+  /* styles.css */
+.custom-label {
+  font-family: 'Sans-serif'; /* equivalent to font-sans */
+  font-size: 1.125rem; /* equivalent to text-lg */
+  font-weight: 600; /* equivalent to font-semibold */
+}
+
+
+
+
+
+  // Media Queries
+  @media (max-width: 768px) {
+    .bg-image {
+      background-image: white;
+    }
+  }

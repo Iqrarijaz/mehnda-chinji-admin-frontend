@@ -1,9 +1,8 @@
 import React from "react";
-import TopAnimation from "./topAnimation";
 
 function LoginCard({ children }) {
   return (
-      <div className="bg-gray-100 h-auto rounded-xl min-w-[500px] p-10 ">
+      <div className="bg-gray-100 h-auto rounded-xl w-[500px] p-10 ">
         <div className="text-center mb-10">
           <h1 className="text-xl font-sans text-black font-bold mb-2">
             Welcome to

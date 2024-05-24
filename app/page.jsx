@@ -1,33 +1,39 @@
 "use client";
 import LoginCard from "@/components/login/card";
-import TopAnimation from "@/components/login/topAnimation";
 import { Formik } from "formik";
 import React from "react";
+import * as Yup from "yup";
+
+const initialValues = {
+  email: "",
+  password: "",
+};
+
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .required("Password is required"),
+});
 
 function Page() {
+  function handleLoginSubmit(values, { setSubmitting }) {
+    console.log("login", values);
+    localStorage.setItem("login", "true");
+    setSubmitting(false); // Set submitting to false after login process
+    window.location.href = "/admin/dashboard/home";
+  }
+
   return (
     <div className="bg-image" style={{ height: "100vh" }}>
-      <div className="flex items-center justify-center h-full m-4">
+      <div className="flex items-center justify-center h-full p-6">
         <LoginCard>
           <Formik
-            initialValues={{ email: "", password: "" }}
-            validate={(values) => {
-              const errors = {};
-              if (!values.email) {
-                errors.email = "Required";
-              } else if (
-                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-              ) {
-                errors.email = "Invalid email address";
-              }
-              return errors;
-            }}
-            onSubmit={(values, { setSubmitting }) => {
-              setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                setSubmitting(false);
-              }, 400);
-            }}
+            validationSchema={validationSchema}
+            initialValues={initialValues}
+            onSubmit={handleLoginSubmit}
           >
             {({
               values,
@@ -37,13 +43,9 @@ function Page() {
               handleBlur,
               handleSubmit,
               isSubmitting,
-              /* and other goodies */
             }) => (
               <form onSubmit={handleSubmit} className="flex flex-col">
-                <label
-                  htmlFor="email"
-                  className="mb-2 font-sans text-lg font-semibold"
-                >
+                <label htmlFor="email" className="mb-2 custom-label">
                   Email
                 </label>
                 <input
@@ -55,13 +57,9 @@ function Page() {
                   className="min-h-8 p-2 rounded-lg border-none"
                 />
                 <p className="!text-red-500">
-                  {" "}
                   {errors.email && touched.email && errors.email}
                 </p>
-                <label
-                  htmlFor="password"
-                  className="mt-4 mb-2 font-sans text-lg font-semibold"
-                >
+                <label htmlFor="password" className="mt-4 mb-2 custom-label">
                   Password
                 </label>
                 <input
@@ -70,9 +68,11 @@ function Page() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.password}
-                  className="mb-4 min-h-8 p-2 rounded-lg border-none"
+                  className="mb-1 min-h-8 p-2 rounded-lg border-none"
                 />
-                {errors.password && touched.password && errors.password}
+                <p className="!text-red-500">
+                  {errors.password && touched.password && errors.password}
+                </p>
                 <button
                   type="submit"
                   disabled={isSubmitting}
