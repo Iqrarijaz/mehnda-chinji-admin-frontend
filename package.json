@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
     "@tanstack/react-query": "^5.37.1",
+    "antd": "^5.17.3",
+    "axios": "^1.7.2",
     "formik": "^2.4.6",
     "next": "14.2.3",
     "nookies": "^2.5.2",
