@@ -52,9 +52,9 @@ function Page() {
         message.success("Login successfully");
       },
       onError: (error) => {
-        console.error("Login failed", error); // Handle error
+        console.error("Invalid email or password", error); // Handle error
         setSubmitting(false);
-        message.error("Login failed");
+        message.error("Invalid email or password");
       },
     });
   }

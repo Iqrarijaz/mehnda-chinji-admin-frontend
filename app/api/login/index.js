@@ -5,7 +5,7 @@ export async function LOGIN(data) {
     const response = await axios.post(`${baseUrl}/auth/admin/login`, data);
     return response.data;
   } catch (error) {
-    console.error("Error posting data:", error);
+    console.error("Invalid email or password", error);
     throw error;
   }
 }
