@@ -1,8 +1,8 @@
 " use client";
-import UseMount from "@/hooks/useMount";
 import { Select, Table } from "antd";
 import React from "react";
 import { FaEllipsisVertical } from "react-icons/fa6";
+import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 function UserTable() {
   const dataSource = [
@@ -104,24 +104,33 @@ function UserTable() {
       key: "action",
       render: () => (
         <>
-          <div className="d-flex align-items-end">
-            <FaEllipsisVertical
-              size={20}
+          <div className="d-flex relative justify-center items-center bg-red-600 w-[100px]">
+            <div
               style={{
-                cursor: "pointer",
-                padding: "0 5px",
+                position: "absolute",
+                zIndex: 1,
+                display: "flex",
+                justifyContent: "center",
+                width: "100%",
               }}
             >
-              <Select
-                defaultValue={""}
-                style={{ width: 120, opacity: 0 }}
-                value={""}
-                onChange={(value) => {}}
-              >
-                <Option value="View">View</Option>
-                <Option value="Delete">Delete</Option>
-              </Select>
-            </FaEllipsisVertical>
+              <HiOutlineDotsHorizontal
+                size={20}
+                style={{
+                  cursor: "pointer",
+                }}
+              />
+            </div>
+            <Select
+              defaultValue={""}
+              className="w-full cursor-pointer"
+              style={{ opacity: 1 }}
+              value={""}
+              onChange={(value) => {}}
+            >
+              <Select.Option value="View">View</Select.Option>
+              <Select.Option value="Delete">Delete</Select.Option>
+            </Select>
           </div>
         </>
       ),

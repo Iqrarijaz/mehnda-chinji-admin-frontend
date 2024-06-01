@@ -12,13 +12,13 @@ function Users() {
         <h1 className="text-xl text-gray-500 font-sans font-bold ">Users</h1>
         <div>
           <input
-            class="px-3 py-2 border border-gray-400 rounded-2xl focus:border-gray-500"
+            className="px-3 py-2 border border-gray-400 rounded-2xl focus:border-gray-500"
             type="text"
             placeholder="Search"
           />
         </div>
       </div>
-      <div className="relative min-h-[400px] bg-gray-200 rounded-3xl p-3">
+      <div className="relative">
         {!isMounted ? <Loading /> : <UserTable />}
       </div>{" "}
     </div>
