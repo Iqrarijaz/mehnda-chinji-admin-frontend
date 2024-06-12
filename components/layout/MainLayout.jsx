@@ -63,7 +63,7 @@ function MainLayout({ children }) {
     <div className="w-screen min-h-screen">
       <div className="flex align-start justify-start min-h-screen">
         <aside
-          className={`bg-gray-200 text-primary overflow-hidden transition-all duration-200 ${
+          className={`bg-red-200 text-primary overflow-hidden transition-all duration-100 ${
             open ? "w-60 p-4" : "w-0"
           } lg:w-60 lg:p-4`}
         >

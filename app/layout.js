@@ -21,7 +21,7 @@ const queryClient = new QueryClient({
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body suppressHydrationWarning={true}>
         <ConfigProvider
           theme={{
             token: {

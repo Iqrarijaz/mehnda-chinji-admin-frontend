@@ -1,8 +1,10 @@
-" use client";
+"use client";
 import { Select, Table } from "antd";
 import React from "react";
-import { FaEllipsisVertical } from "react-icons/fa6";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import { FaEdit } from "react-icons/fa";
+import { CustomPopover } from "../popHover";
+import { popoverContent } from "../popHover/popHoverContent";
 
 function UserTable() {
   const dataSource = [
@@ -11,8 +13,6 @@ function UserTable() {
       name: "Mike",
       age: 32,
       address: "10 Downing Street",
-      address: "10 Downing Street",
-
       field1: "Value1",
       field2: "Value2",
       field3: "Value3",
@@ -23,9 +23,6 @@ function UserTable() {
       name: "John",
       age: 42,
       address: "10 Downing Street",
-
-      address: "10 Downing Street",
-
       field1: "Value5",
       field2: "Value6",
       field3: "Value7",
@@ -36,8 +33,6 @@ function UserTable() {
       name: "John",
       age: 42,
       address: "10 Downing Street",
-      address: "10 Downing Street",
-
       field1: "Value5",
       field2: "Value6",
       field3: "Value7",
@@ -48,12 +43,28 @@ function UserTable() {
       name: "John",
       age: 42,
       address: "10 Downing Street",
-      address: "10 Downing Street",
-
       field1: "Value5",
       field2: "Value6",
       field3: "Value7",
       field4: "Value8",
+    },
+  ];
+
+  const actionMenu = [
+    {
+      heading: "View",
+      icon: <HiOutlineDotsHorizontal size={20} />,
+      handleFunction: () => console.log("View"),
+    },
+    {
+      heading: "Edit",
+      icon: <FaEdit size={20} />,
+      handleFunction: () => console.log("Edit"),
+    },
+    {
+      heading: "Delete",
+      icon: <FaEdit size={20} />,
+      handleFunction: () => console.log("Delete"),
     },
   ];
 
@@ -67,11 +78,6 @@ function UserTable() {
       title: "Age",
       dataIndex: "age",
       key: "age",
-    },
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
     },
     {
       title: "Address",
@@ -99,61 +105,31 @@ function UserTable() {
       key: "field4",
     },
     {
-      title: "Action",
-      dataIndex: "action",
-      key: "action",
+      title: "Actions",
+      key: "actions",
       render: () => (
-        <>
-          <div className="d-flex relative justify-center items-center bg-red-600 w-[100px]">
-            <div
-              style={{
-                position: "absolute",
-                zIndex: 1,
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-              }}
-            >
-              <HiOutlineDotsHorizontal
-                size={20}
-                style={{
-                  cursor: "pointer",
-                }}
-              />
-            </div>
-            <Select
-              defaultValue={""}
-              className="w-full cursor-pointer"
-              style={{ opacity: 1 }}
-              value={""}
-              onChange={(value) => {}}
-            >
-              <Select.Option value="View">View</Select.Option>
-              <Select.Option value="Delete">Delete</Select.Option>
-            </Select>
-          </div>
-        </>
+        <div className="flex justify-center items-center w-[40px]">
+          <CustomPopover
+            triggerContent={<HiOutlineDotsHorizontal size={20} />}
+            popoverContent={popoverContent(actionMenu)}
+          />
+        </div>
       ),
     },
   ];
 
   return (
-    <>
-      {
-        <div className="overflow-x-auto" style={{ overflowX: "auto" }}>
-          <Table
-            className="bg-gray-200"
-            rowClassName={(record, index) =>
-              index % 2 === 0 ? "table-row-light" : "table-row-dark"
-            }
-            pagination={{}}
-            onChange={(e) => {}}
-            columns={columns}
-            dataSource={dataSource}
-          />
-        </div>
-      }
-    </>
+    <div className="overflow-x-auto">
+      <Table
+        className="bg-gray-200"
+        rowClassName={(record, index) =>
+          index % 2 === 0 ? "table-row-light" : "table-row-dark"
+        }
+        pagination={{}}
+        columns={columns}
+        dataSource={dataSource}
+      />
+    </div>
   );
 }
 
