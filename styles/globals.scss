@@ -104,8 +104,8 @@ table {
   border: none !important;
 }
 .scroll-bar-style {
-  --sb-track-color: #788388;
-  --sb-thumb-color: #2628dd;
+  --sb-track-color: #d2d6d8;
+  --sb-thumb-color: #000000;
   --sb-size: 8px;
 }
 
@@ -120,7 +120,7 @@ table {
 
 .scroll-bar-style::-webkit-scrollbar-thumb {
   background: var(--sb-thumb-color);
-  border-radius: 5px;
+  border-radius: 0px;
 }
 
 .inner-pages {
@@ -150,33 +150,39 @@ table {
 
 // side bar menu style
 .sidebar {
-  background-color: #edecec;
+  background-color: #333333 !important;
 }
 
 // ===========selected menu class side bar
 .side_menu_item {
-  color: black;
+  margin-bottom: 8px !important;
+  display: flex !important;
+  justify-items: center !important;
+  align-items: center !important;
+  padding: 10px 20px !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 0px !important;
 }
 
 .side_menu_item:hover,
 .selected-menu-item {
-  background-color: #2628dd;
-  border-radius: 10px;
-  color: white;
+  background-color: white !important;
+  border-radius: 0px;
+  color: black !important;
   position: relative;
-  padding-left: 10px; /* Adjust padding if needed to avoid overlap */
 }
 
 .side_menu_item_close:hover,
 .selected-menu-item-close {
-  background-color: #2628dd;
-  color: white;
+  background-color: white;
+  color: black !important;
   border: none !important;
 }
 
 .side_menu_item:hover svg,
 .side_menu_item:hover span {
-  color: white;
+  color: black;
 }
 
 .menu-width-open {
@@ -483,9 +489,8 @@ table {
   gap: 4px !important;
 }
 
-
-.antd-select{
-  padding:0px !important;
+.antd-select {
+  padding: 0px !important;
 }
 // Media Queries
 @media (max-width: 768px) {

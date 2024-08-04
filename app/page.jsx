@@ -98,7 +98,7 @@ function Page() {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.email}
-                      className="min-h-8 p-2 rounded-lg border-none"
+                      className="min-h-8 p-2 border-none"
                     />
                     <p className="!text-red-500">
                       {errors.email && touched.email && errors.email}
@@ -115,7 +115,7 @@ function Page() {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.password}
-                      className="mb-1 min-h-8 p-2 rounded-lg border-none"
+                      className="mb-1 min-h-8 p-2 border-none"
                     />
                     <p className="!text-red-500">
                       {errors.password && touched.password && errors.password}
@@ -123,7 +123,7 @@ function Page() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="mt-4 p-2 rounded-lg bg-secondary text-white font-sans font-semibold border-2 hover:bg-transparent hover:!text-secondary hover:!border-2 hover:!border-secondary"
+                      className="mt-4 p-2 bg-secondary text-white font-sans font-semibold border-2 hover:bg-transparent hover:!text-secondary hover:!border-2 hover:!border-secondary"
                     >
                       Login
                     </button>

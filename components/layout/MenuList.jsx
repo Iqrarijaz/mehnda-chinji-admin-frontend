@@ -49,25 +49,9 @@ const MenuList = [
     name: "Users",
     link: "/admin/users",
     icon: <FaUser size={20} />,
-    sub: [
-      {
-        name: "Clients",
-        icon: <FaUser size={16} />,
-        link: "/admin/users/clients",
-      },
-      {
-        name: "Tenants",
-        icon: <FaUserCircle size={16} />,
-        link: "/admin/users/tenants",
-      },
-    ],
+    link: "/admin/users",
   },
-  {
-    name: "Claims",
-    icon: <LuBaggageClaim size={20} />,
-    link: "/admin/claims",
-    sub: [],
-  },
+
 
   {
     name: "CMS",
@@ -161,7 +145,6 @@ const MenuList = [
   },
 ];
 
-
 export const CloseMenuList = [
   {
     name: "Dashboard",
@@ -172,13 +155,11 @@ export const CloseMenuList = [
     name: "Insurance",
     icon: <FaProductHunt size={20} />,
     link: "/admin/insurance-product",
-
   },
   {
     name: "Add-Ons",
     icon: <BiSolidAddToQueue size={20} />,
     link: "/admin/add-ons",
-
   },
   {
     name: "Buildings",
@@ -235,7 +216,7 @@ export const CloseMenuList = [
     icon: <GrSystem size={16} />,
     link: "/admin/developer/system-logs",
   },
-  
+
   {
     name: "Policy",
     icon: <MdPolicy size={20} />,
