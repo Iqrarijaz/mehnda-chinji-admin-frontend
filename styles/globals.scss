@@ -1,0 +1,521 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"');
+body {
+  font-family: "Poppins", sans-serif !important;
+  font-weight: 400;
+  font-style: normal;
+  overflow: hidden;
+  color: #788388 !important;
+}
+
+// Main app header
+
+.main-app-header {
+  height: 80px !important;
+  background-color: white !important;
+  box-shadow: 0 0 24px 0 #0000001a;
+}
+// Menu icons
+
+.close-menu-width {
+  width: 100px !important;
+}
+.menu-icon {
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 2px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+}
+.menu-icon:hover {
+  color: #7cb9e8 !important;
+  border-color: #7cb9e8 !important;
+  background-color: white !important;
+  box-shadow: rgba(2, 22, 107, 0.1) 0px 4px 12px;
+}
+
+//  Antd table header style
+.ant-table-thead .ant-table-cell {
+  background-color: #e0dede96 !important;
+  color: #000000 !important;
+  padding: 16px 10px !important;
+  font-size: 16px !important;
+  white-space: nowrap !important;
+}
+
+// Antd table row style
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ant-table-row {
+  padding: 0px !important;
+}
+
+.table-row-light {
+  background-color: #ffffff;
+}
+.table-row-dark {
+  background-color: #e0dede38;
+}
+
+.ant-select-selector {
+  border-radius: 20px !important;
+}
+
+// antd table style
+
+.ant-table-container {
+  border: 0px !important;
+}
+
+.ant-table-cell {
+  border: 0px !important;
+}
+.ant-table-row {
+  border-bottom: 1px solid #7cb9e8;
+  padding-left: 10px !important;
+}
+
+.antd-table-custom table thead th {
+  @apply bg-white;
+}
+.antd-table-custom {
+  padding: 0;
+  border: 3px solid #e0dede96 !important;
+  overflow: hidden;
+}
+
+// antd selector border
+
+.ant-select-selector {
+  border: none !important;
+}
+.scroll-bar-style {
+  --sb-track-color: #788388;
+  --sb-thumb-color: #2628dd;
+  --sb-size: 8px;
+}
+
+.scroll-bar-style::-webkit-scrollbar {
+  width: var(--sb-size);
+}
+
+.scroll-bar-style::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 0px;
+}
+
+.scroll-bar-style::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 5px;
+}
+
+.inner-pages {
+  height: 100%;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+@supports not selector(::-webkit-scrollbar) {
+  .scroll-bar-style {
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
+}
+
+.bg-image {
+  background-image: url("../assets/images/login_background.png");
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh; /* Ensure the background covers the entire viewport */
+}
+
+/* styles.css */
+.custom-label {
+  font-family: "Sans-serif"; /* equivalent to font-sans */
+  font-size: 1.125rem; /* equivalent to text-lg */
+  font-weight: 600; /* equivalent to font-semibold */
+}
+
+// side bar menu style
+.sidebar {
+  background-color: #edecec;
+}
+
+// ===========selected menu class side bar
+.side_menu_item {
+  color: black;
+}
+
+.side_menu_item:hover,
+.selected-menu-item {
+  background-color: #2628dd;
+  border-radius: 10px;
+  color: white;
+  position: relative;
+  padding-left: 10px; /* Adjust padding if needed to avoid overlap */
+}
+
+.side_menu_item_close:hover,
+.selected-menu-item-close {
+  background-color: #2628dd;
+  color: white;
+  border: none !important;
+}
+
+.side_menu_item:hover svg,
+.side_menu_item:hover span {
+  color: white;
+}
+
+.menu-width-open {
+  width: 19rem;
+}
+
+.sidebar-scroll {
+  overflow: hidden auto;
+  max-height: 100vh;
+}
+
+// Inner pages css
+
+.inner-page-title {
+  font-family: "Poppins", sans-serif !important;
+}
+
+.add-button {
+  color: white !important;
+  background-color: #7cb9e8 !important;
+  border: 2px solid #7cb9e8 !important;
+  border-radius: 10px !important;
+  margin-left: 6px !important;
+  padding: 12px !important;
+  height: 45px !important;
+  font-size: 16px !important;
+}
+
+.add-button:hover {
+  color: black !important;
+  background-color: white !important;
+  border: 2px solid black !important;
+}
+
+.filter-button {
+  color: white !important;
+  background-color: #7cb9e8 !important;
+  border: 2px solid #7cb9e8 !important;
+  border-radius: 10px !important;
+  height: 45px !important;
+  font-size: 16px !important;
+  padding: 0px 20px !important;
+}
+
+.filter-button:hover {
+  color: black !important;
+  background-color: white !important;
+  border: 2px solid black !important;
+}
+
+.apply-button {
+  color: white !important;
+  background-color: #7cb9e8 !important;
+  border: 2px solid #7cb9e8 !important;
+  border-radius: 10px !important;
+  margin-left: 6px !important;
+  padding: 4px 10px !important;
+  height: 34px !important;
+  width: 100px !important;
+  font-size: 16px !important;
+}
+.apply-button:hover {
+  color: green !important;
+  background-color: white !important;
+  border: 2px solid green !important;
+}
+
+.cancel-button {
+  color: black !important;
+  background-color: white !important;
+  border: 2px solid black !important;
+  border-radius: 10px !important;
+  margin-left: 6px !important;
+  padding: 4px 10px !important;
+  height: 34px !important;
+  width: 100px !important;
+  font-size: 16px !important;
+}
+
+.cancel-button:hover {
+  color: red !important;
+  background-color: white !important;
+  border: 2px solid red !important;
+}
+
+// ================antd css ==============//
+
+.ant-select {
+  border: 2px solid #7cb9e8 !important;
+  padding: 4px !important;
+  height: 40px !important;
+  border-radius: 10px !important;
+}
+.ant-input {
+  padding: 6px !important;
+  border-radius: 10px !important;
+}
+.ant-modal-content {
+  border-radius: 20px !important;
+  padding: 24px !important;
+}
+
+.formit-input {
+  color: rgba(0, 0, 0, 0.603) !important;
+  width: 100% !important;
+  padding: 6px !important;
+  border-radius: 10px !important;
+  border: 2px solid #e0dede8c !important;
+}
+.formit-input:focus {
+  border: 2px solid #7cb9e8 !important;
+}
+
+.place-holder-table {
+  border-radius: 10px !important;
+  background-color: white !important;
+}
+
+.error {
+  color: red !important;
+}
+.select-field {
+  width: 100% !important;
+  border-radius: 10px !important;
+  background-color: white !important;
+}
+.select-field:focus {
+  border: 2px solid #7cb9e8 !important;
+}
+.form-class {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+}
+.reset-button {
+  background-color: #f3f4f6 !important;
+  border: 2px solid #f3f4f6 !important;
+  border-radius: 10px !important;
+  padding: 6px 10px !important;
+  font-size: 16px !important;
+}
+
+.reset-button:hover {
+  color: #000000 !important;
+  border: 2px solid #7cb9e8 !important;
+  box-shadow: rgba(8, 28, 99, 0.1) 0px 4px 12px;
+}
+
+// ============ profile image design =================//
+.profile-image-antd .ant-upload {
+  background-color: #f3f4f6 !important;
+  height: 170px !important;
+  width: 170px !important;
+  border-radius: 50% !important;
+  border: none !important;
+}
+.profile-image-antd .ant-upload:hover {
+  box-shadow: rgba(2, 22, 107, 0.1) 0px 4px 12px !important;
+}
+.upload-image-div {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0px !important;
+}
+
+// ==============upload client background image ================
+
+.upload-background-image-antd .ant-upload {
+  background-color: white !important;
+  height: 190px !important;
+  border-radius: 10px !important;
+  border: none !important;
+  margin: 0px !important;
+  margin-top: 3px !important;
+  border: 2px solid #f3f4f6 !important;
+  width: 100% !important; /* Add this line */
+}
+
+.upload-background-image-antd .ant-upload:hover {
+  box-shadow: rgba(2, 22, 107, 0.1) 0px 4px 12px !important;
+}
+
+.upload-background-image-div {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0px !important;
+  // border:2px solid #7cb9e8 !important;
+}
+
+// ============== delete button ==================
+.modal-delete-button {
+  color: white !important;
+  background-color: #ff0000 !important;
+  border: 2px solid #ff0000 !important;
+  border-radius: 10px !important;
+  margin-left: 6px !important;
+  padding: 4px 10px !important;
+  height: 34px !important;
+  width: 100px !important;
+  font-size: 16px !important;
+}
+.delete-button:hover {
+  box-shadow: rgba(250, 0, 0, 0.753) 0px 4px 12px;
+}
+.building-banner {
+  object-fit: cover;
+}
+.building_detail {
+  display: grid;
+  grid-template-columns: 500px auto;
+  gap: 60px;
+  padding: 40px;
+  background-color: white;
+  box-shadow: 0 0 28px 0 rgb(0 0 0 / 10%);
+  border-radius: 22px;
+}
+.overlay {
+  position: absolute;
+  bottom: 0;
+  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, 0.5); /* Black see-through */
+  color: #f1f1f1;
+  // width: 100%;
+  transition: 0.5s ease;
+  opacity: 0;
+  color: white;
+  font-size: 20px;
+  padding: 8px 30px 8px 130px;
+  text-align: start;
+  border-top-right-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
+}
+.building_logo_img {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+}
+.building_logo_img img {
+  box-shadow: 0 0 28px 0 rgb(0 0 0 / 10%);
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+.building_label {
+  font-size: 36px;
+  color: black;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+.banner_img {
+  border-radius: 40% 90% 200% 50% / 40% 100% 200% 50%;
+  width: 100%;
+  height: 430px;
+  overflow: hidden;
+}
+.status_btn {
+  top: 20px;
+  right: 20px;
+}
+.status_btn span {
+  padding: 6px 14px;
+  box-shadow: 0 0 20px 0 #00000036;
+}
+
+// -===================antd tag =====================
+
+.ant-tag {
+  user-select: none;
+  border: 2px solid #e0dede8c;
+  border-radius: 10px !important;
+  background-color: white !important;
+  padding: 6px 6px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center !important;
+  height: 37px !important;
+  box-shadow: rgba(2, 22, 107, 0.1) 0px 4px 12px;
+}
+
+.custom-tag-input {
+  user-select: none;
+  color: rgba(0, 0, 0, 0.603) !important;
+  border: 2px solid #e0dede8c;
+  border-radius: 10px !important;
+  background-color: white !important;
+  padding: 6px 6px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center !important;
+  height: 37px !important;
+  box-shadow: rgba(2, 22, 107, 0.1) 0px 4px 12px;
+}
+
+.ant-tag .ant-input {
+  /* Apply the custom styles to .ant-input inside .ant-tag */
+  /* You can either add new properties or override existing ones */
+  /* Example: */
+  width: 100%; /* Adjust width as needed */
+  margin-top: 8px; /* Example additional property */
+}
+.ant-flex {
+  gap: 4px !important;
+}
+
+
+.antd-select{
+  padding:0px !important;
+}
+// Media Queries
+@media (max-width: 768px) {
+  .bg-image {
+    background-image: white;
+  }
+}
+
+@media (min-width: 1250px) {
+  .building-detail-cover {
+    flex: 1 !important;
+  }
+}
+@media screen and (min-width: 1270px) and (max-width: 1399px) {
+  .building_detail {
+    grid-template-columns: 380px auto;
+    gap: 30px;
+  }
+  .building_logo_img {
+    display: none !important;
+  }
+}
+@media screen and (min-width: 200px) and (max-width: 1270px) {
+  .building_detail {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+}
+.ant-popover-open {
+  background-color: #2628dd;
+  color: white;
+}
