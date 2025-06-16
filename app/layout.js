@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
         <ConfigProvider
           theme={{
             token: {
-              colorPrimary: "#7CB9E8",
+              colorPrimary: "#008080",
               borderRadius: 5,
               colorBgContainer: "#ffffff", //a6b5ad
               fontFamily: "Poppins, sans-serif",

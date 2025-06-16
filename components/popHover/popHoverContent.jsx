@@ -1,19 +1,23 @@
-// popHoverContent.js
-import React from "react";
+// popHoverContent.jsx
 
-export function popoverContent(actionMenu, record) {
-  return (
-    <div className="flex flex-col bg-white border-[#e0dede96] border-2 rounded min-w-[140px]">
-      {actionMenu.map((item, index) => (
-        <div
-          key={index}
-          className="text-black p-1 flex justify-between gap-10 items-center hover:text-white hover:bg-lightBlue cursor-pointer px-2 py-1"
-          onClick={() => item.handleFunction(record)}
-        >
-          <p>{item.heading}</p>
+export const popoverContent = (menu, record) => (
+  <div className="flex flex-col min-w-[120px] text-black bg-[#EDECEC]">
+    {menu.map((item, index) => (
+      <div
+        key={index}
+        onClick={() => item.handleFunction(record)}
+        className={`px-3 py-2 cursor-pointer transition-colors duration-200 hover:text-white ${
+          item.heading === "Delete"
+            ? "hover:bg-red-600"
+            : "hover:bg-primary"
+        }`}
+      >
+        <div className="flex items-center gap-2">
           {item.icon}
+          <span>{item.heading}</span>
         </div>
-      ))}
-    </div>
-  );
-}
+      </div>
+    ))}
+  </div>
+);
+

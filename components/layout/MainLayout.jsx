@@ -1,221 +1,102 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useContext, useEffect, useState } from "react";
-import MainHeader from "./MainHeader";
-import { FaAngleDown, FaAngleRight, FaHome, FaUser } from "react-icons/fa";
+import React, { useContext } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { RiLogoutCircleFill } from "react-icons/ri";
-
-import logo from "../../assets/images/logo.png";
-import { RiLogoutBoxFill } from "react-icons/ri";
+import MenuList from "./MenuList";
+import MainHeader from "./MainHeader";
 import { MenuContext } from "@/context/MenuContext";
-import { useMediaQuery } from "@chakra-ui/react";
-import MenuList, { CloseMenuList } from "./MenuList";
-import { Popover } from "antd";
 
 function MainLayout({ children }) {
-  const {
-    open,
-    activeSubMenu,
-    toggleSubMenu,
-    selectedMenu,
-    setSelectedMenu,
-    toggleMenu,
-  } = useContext(MenuContext);
-  const [isLargerThan650] = useMediaQuery("(min-width: 650px)");
-
+  const { open, toggleMenu } = useContext(MenuContext);
   const pathname = usePathname();
   const router = useRouter();
-  const [selectMenu, setSelectedMenuState] = useState(pathname);
 
-  useEffect(() => {
-    // if (isLargerThan650) {
-    //   toggleMenu(true);
-    // }
-    setSelectedMenuState(pathname);
-    if (activeSubMenu === null) {
-      setSelectedMenu(pathname);
-    }
-  }, [pathname, activeSubMenu]);
-
-  function handleLogout() {
-    console.log("Logout");
+  const handleLogout = () => {
     localStorage.clear();
     router.push("/");
-  }
-
-  // render menu without sub menu
-  function renderItemMenu(item) {
-    return (
-      <li
-        key={item.name}
-        className={`side_menu_item ${
-          selectMenu === item.link || selectedMenu === item.link
-            ? "selected-menu-item"
-            : ""
-        }`}
-      >
-        <Link href={item.link} className="flex items-center w-full">
-          <div
-            className={`mr-4 ${
-              selectMenu === item.link || selectedMenu === item.link
-                ? "selected-menu-item"
-                : ""
-            }`}
-          >
-            {item.icon}
-          </div>
-
-          <div
-            className={`${
-              selectMenu === item.link || selectedMenu === item.link
-                ? "selected-menu-item"
-                : ""
-            }`}
-          >
-            {item.name}
-          </div>
-        </Link>
-      </li>
-    );
-  }
-
-  // render menu with sub menu
-  function renderItemWithSubMenu(subItemArray, name) {
-    return (
-      <ul className="pl-0">
-        {subItemArray.map((subItem) => (
-          <Link href={subItem.link} className="font-sans" key={subItem.name}>
-            <li
-              key={subItem.name}
-              className={`flex items-center justify-start mb-1 pl-6 side_menu_item cursor-pointer ${
-                selectMenu === subItem.link ? "selected-menu-item" : ""
-              }`}
-            >
-              <div className="flex items-center w-full justify-start p-2">
-                <div
-                  className={`mr-4 ${
-                    selectMenu === subItem.link ? "text-black" : ""
-                  }`}
-                >
-                  {subItem.icon}
-                </div>
-                <span
-                  className={`${
-                    selectMenu === subItem.link ? "text-white" : ""
-                  }`}
-                >
-                  {subItem.name}
-                </span>
-              </div>
-            </li>
-          </Link>
-        ))}
-      </ul>
-    );
-  }
-
-  // render open sidebar and close sidebar
-  const renderOpenSideBar = () => {
-    return (
-      <>
-        <div className="flex items-center justify-center mb-4 h-[150px]">
-          logo here
-        </div>
-        {MenuList.length > 0 &&
-          MenuList.map((item) =>
-            item.sub?.length === 0 ? (
-              <ul key={item.name} className="space-y-2">
-                {renderItemMenu(item)}
-              </ul>
-            ) : (
-              <ul key={item.name}>
-                <li
-                  className={`flex items-center mb-2 justify-start p-2 cursor-pointer side_menu_item ${
-                    selectedMenu === item.link ? "selected-menu-item" : ""
-                  }`}
-                  onClick={() => toggleSubMenu(item.name)}
-                >
-                  <div className="flex justify-between w-full items-center">
-                    <div className="flex">
-                      {item.icon}
-                      <div className="ml-4">{item.name}</div>
-                    </div>
-                    {activeSubMenu === item.name ? (
-                      <FaAngleDown />
-                    ) : (
-                      <FaAngleRight />
-                    )}
-                  </div>
-                </li>
-                {activeSubMenu === item.name &&
-                  renderItemWithSubMenu(item.sub, item.name)}
-              </ul>
-            )
-          )}
-        <li
-          className="flex items-center mb-1 justify-start p-2 cursor-pointer side_menu_item"
-          onClick={handleLogout}
-        >
-          <RiLogoutBoxFill className="mr-4" size={20} />
-          <div>Logout</div>
-        </li>{" "}
-      </>
-    );
   };
 
-  // render close sidebar for desktop view
-  const renderCloseMenu = () => {
-    return (
-      <>
-        <div className="flex items-center justify-center mb-4 bg-slate-100 h-12">
-          <img src={logo} alt="Logo" className="h-8 w-auto" />
-        </div>
-        <ul>
-          {CloseMenuList.map((item) => (
-            <li
-              className={`flex items-center justify-center p-3 relative
-            `}
-              key={item.name}
-            >
-              <Link
-                href={item.link}
-                className={`flex items-center justify-center w-10 h-10 bg-white side_menu_item_close !border-none shadow-transparent focus:outline-none
-                    ${
-                      selectMenu === item.link || selectedMenu === item.link
-                        ? "selected-menu-item-close"
-                        : ""
-                    }
-                        `}
-              >
-                {React.cloneElement(item.icon, { size: 26 })}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </>
-    );
-  };
+  const isActive = (link) => pathname === link;
 
   return (
-    <div className="flex align-start justify-start min-h-screen">
+    <div className="flex min-h-screen">
+      {/* Desktop Sidebar */}
       <aside
-        className={`sidebar flex-shrink-0 sidebar-scroll scroll-bar-style transition-all duration-100 ${
-          open
-            ? "menu-width-open"
-            : isLargerThan650
-            ? "close-menu-width"
-            : "w-0 p-0"
-        }`}
+        className={`
+          transition-all duration-300 z-50
+          ${open ? "w-64" : "w-20"}
+          bg-gray-100 h-screen sticky top-0 hidden md:flex flex-col
+        `}
       >
-        {open ? renderOpenSideBar() : renderCloseMenu()}
-      </aside>
-      <main className="flex-1 w-[calc(100vw-19rem)]">
-        <div className="sticky top-0">
-          <MainHeader />
+        <div className="p-4 h-full flex flex-col">
+          {/* Logo */}
+          <div className="flex items-center justify-center pt-4">
+            <img
+              src="/logo.png"
+              alt="Logo"
+              className={`object-contain rounded-xl transition-all duration-200 ${open ? "h-40 w-auto" : "h-10 w-10"}`}
+            />
+          </div>
+
+          {/* Menu */}
+          <nav className="flex-1 mt-6 overflow-y-auto">
+            <ul className="space-y-3">
+              {MenuList.map((item) => (
+                <li key={item.name}>
+                  <Link
+                    href={item.link}
+                    className={`flex items-center p-2 rounded-lg transition-colors ${isActive(item.link)
+                      ? "bg-primary text-white"
+                      : "hover:bg-primary hover:text-white"
+                      }`}
+                  >
+                    <span className="text-lg">{item.icon}</span>
+                    {open && <span className="ml-3">{item.name}</span>}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
-        <div className="p-6 bg-white inner-pages">{children}</div>
+      </aside>
+
+      {/* Mobile Sidebar */}
+      {open && (
+        <aside className="fixed top-0 left-0 w-64 h-screen z-50 bg-gray-100 flex flex-col md:hidden transition-all duration-300">
+          <div className="p-4 flex justify-between items-center border-b">
+            <img src="/logo.png" alt="Logo" className="h-10 w-auto rounded-xl" />
+            <button onClick={() => toggleMenu(false)} className="text-lg font-bold">
+              ✕
+            </button>
+          </div>
+
+          <nav className="flex-1 overflow-y-auto p-4">
+            <ul className="space-y-3">
+              {MenuList.map((item) => (
+                <li key={item.name}>
+                  <Link
+                    href={item.link}
+                    className={`flex items-center p-2 rounded-lg transition-colors ${isActive(item.link)
+                      ? "bg-primary text-white"
+                      : "hover:bg-primary hover:text-white"
+                      }`}
+                    onClick={() => toggleMenu(false)}                  >
+                    <span className="text-lg">{item.icon}</span>
+                    <span className="ml-3">{item.name}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+      )}
+
+      {/* Main Content */}
+      <main className="flex-1 bg-white flex flex-col max-h-screen w-full">
+        <MainHeader toggleSidebar={toggleMenu} sidebarOpen={open} />
+        <div className="flex-1 overflow-y-auto overflow-x-auto p-6 bg-white">
+          {children}
+        </div>
       </main>
     </div>
   );

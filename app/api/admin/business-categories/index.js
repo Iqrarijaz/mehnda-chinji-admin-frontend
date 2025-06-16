@@ -1,30 +1,22 @@
 import { Axios } from "@/interceptors";
 
-export async function LIST_BUILDINGS(data) {
+export async function LIST_BUSINESS_CATEGORIES(data) {
   try {
-    const response = await Axios.post("/api/admin/buildings/list", data);
+    console.log("===========data", data);
+    const response = await Axios.get("/api/admin/business-category/list", {
+      params: data,
+    });
     return response.data;
   } catch (error) {
-    console.error("Error posting data:", error);
-    throw error;
-  }
-}
-export async function LIST_CLIENTS_FOR_ADDING_BUILDING(data) {
-  try {
-    const response = await Axios.post(
-      "/api/admin/buildings/list_clients_for_adding_building",
-      data
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error posting data:", error);
+    console.error("Error fetching data:", error);
     throw error;
   }
 }
 
-export async function CREATE_BUILDING(data) {
+
+export async function CREATE_BUSINESS_CATEGORY(data) {
   try {
-    const response = await Axios.post("/api/admin/buildings/create", data);
+    const response = await Axios.post("/api/admin/business-category/create", data);
     return response.data;
   } catch (error) {
     console.error("Error posting data:", error);
@@ -34,7 +26,7 @@ export async function CREATE_BUILDING(data) {
 
 export async function GET_BUILDING(data) {
   try {
-    const response = await Axios.post("/api/admin/buildings/get", {
+    const response = await Axios.get("/api/admin/buildings/get", {
       _id: data,
     });
     return response.data;
@@ -69,9 +61,9 @@ export async function GET_BUILDING_DETAILS(data) {
   }
 }
 
-export async function UPDATE_BUILDING(data) {
+export async function UPDATE_BUSINESS_CATEGORY(data) {
   try {
-    const response = await Axios.post("/api/admin/buildings/update", data);
+    const response = await Axios.post("/api/admin/business-category/update", data);
     return response.data;
   } catch (error) {
     console.error("Error posting data:", error);
@@ -79,9 +71,19 @@ export async function UPDATE_BUILDING(data) {
   }
 }
 
-export async function DELETE_BUILDING(data) {
+export async function UPDATE_BUSINESS_CATEGORY_STATUS(data) {
   try {
-    const response = await Axios.post("/api/admin/buildings/delete", data);
+    const response = await Axios.post("/api/admin/business-category/update-status", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error posting data:", error);
+    throw error;
+  }
+}
+
+export async function DELETE_BUSINESS_CATEGORY(data) {
+  try {
+    const response = await Axios.post("/api/admin/business-category/delete", data);
     return response.data;
   } catch (error) {
     console.error("Error posting data:", error);

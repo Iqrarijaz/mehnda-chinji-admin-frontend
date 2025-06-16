@@ -12,23 +12,22 @@ function SearchInput({ setFilters }) {
         }));
       }}
       placeholder="Search..."
-      className="border-2 border-lightBlue focus:outline-none rounded-xl"
-      prefix={<IoSearchCircle size={30} color="#7CB9E8" className="me-2" />}
+      className="custom-search-input border-2 border-lightBlue rounded-xl"
+      prefix={<IoSearchCircle size={30} color="#008080" className="me-2" />}
       onChange={(event) => {
         const value = event?.target?.value;
-        // if values has - then remove it from value (For Number search)
         if (value.includes("-")) {
           const newValue = value.replace(/-/g, "");
           setFilters((oldValues) => ({
             ...oldValues,
-            keyWord: newValue.trim(),
+            search: newValue.trim(),
             onChangeSearch: true,
           }));
           return;
         }
         setFilters((oldValues) => ({
           ...oldValues,
-          keyWord: value.trim(),
+          search: value.trim(),
           onChangeSearch: true,
         }));
       }}

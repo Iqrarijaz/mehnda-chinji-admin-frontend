@@ -1,20 +1,20 @@
 "use client";
 
-import { LIST_BUILDINGS } from "@/app/api/admin/buildings";
+import { LIST_BUSINESS_CATEGORIES } from "@/app/api/admin/business-categories";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 
 const { createContext, useState, useContext } = require("react");
 
-export const buildingContext = createContext();
-export const useBuildingContext = () => useContext(buildingContext);
+export const businessCategoriesContext = createContext();
+export const useBusinessCategoriesContext = () => useContext(businessCategoriesContext);
 
-function BuildingContextProvider({ children }) {
+function BusinessCategoriesContextProvider({ children }) {
   const [filters, setFilters] = useState({
-    itemsPerPage: 10,
+    itemsPerPage: 20,
     currentPage: 1,
-    keyWord: null,
+    search: null,
     sortOrder: -1,
     sortingKey: "_id",
     onChangeSearch: false,
@@ -22,10 +22,10 @@ function BuildingContextProvider({ children }) {
   });
 
   const debFilter = useDebounce(filters, filters?.onChangeSearch ? 1000 : 0);
-  const buildingsList = useQuery({
-    queryKey: ["buildingsList", JSON.stringify(debFilter)],
+  const businessCategoriesList = useQuery({
+    queryKey: ["businessCategoriesList", JSON.stringify(debFilter)],
     queryFn: async () => {
-      return await LIST_BUILDINGS(debFilter);
+      return await LIST_BUSINESS_CATEGORIES(debFilter);
     },
     enabled: true,
     onError: (error) => {
@@ -39,12 +39,12 @@ function BuildingContextProvider({ children }) {
   }
 
   return (
-    <buildingContext.Provider
-      value={{ filters, buildingsList, setFilters, onChange }}
+    <businessCategoriesContext.Provider
+      value={{ filters, businessCategoriesList, setFilters, onChange }}
     >
       {children}
-    </buildingContext.Provider>
+    </businessCategoriesContext.Provider>
   );
 }
 
-export default BuildingContextProvider;
+export default BusinessCategoriesContextProvider;

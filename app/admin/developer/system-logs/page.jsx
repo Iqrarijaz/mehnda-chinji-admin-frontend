@@ -32,7 +32,7 @@ function SystemLogs() {
             defaultValue={"Admin"}
             style={{
               width: "100%",
-              height: "45px !important",
+              height: "40px !important",
             }}
             onChange={(value) => {
               if (value === null) {

@@ -20,12 +20,16 @@ export function CustomPopover({
         <Button
           color={color}
           variant={buttonVariant}
-          className={`${buttonClass} focus:outline-none `}
+          className={`${buttonClass} focus:outline-none`}
         >
           {triggerContent}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="!p-0">{popoverContent}</PopoverContent>
+      <PopoverContent className="!p-0 rounded-[5px] bg-zinc-900">
+        {popoverContent}
+      </PopoverContent>
     </Popover>
   );
 }
+
+
