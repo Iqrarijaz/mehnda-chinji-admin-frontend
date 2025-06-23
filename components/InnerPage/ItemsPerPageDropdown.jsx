@@ -1,11 +1,9 @@
 "use client";
-import { useBusinessCategoriesContext } from "@/context/admin/business-categories/BusinessCategoriesContext";
 import { Select } from "antd";
 
-const itemsPerPageOptions = [10, 20, 30, 40, 50];
+const itemsPerPageOptions = [10, 20, 30, 40, 50,100];
 
-function ItemsPerPageDropdown() {
-  const { onChange } = useBusinessCategoriesContext();
+function ItemsPerPageDropdown({onChange}) {
 
   return (
     <div className="flex justify-end items-center gap-2">

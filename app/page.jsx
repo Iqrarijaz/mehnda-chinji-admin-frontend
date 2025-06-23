@@ -32,7 +32,7 @@ function Page() {
   useEffect(() => {
     const isLogged = localStorage.getItem("userData");
     if (isLogged) {
-      router.push("/admin/dashboard/home");
+      router.push("/admin/dashboard");
     } else {
       setLoading(false);
     }

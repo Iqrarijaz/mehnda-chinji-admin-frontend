@@ -25,6 +25,11 @@ const MenuList = [
     icon: <FaProductHunt size={20} />,
     link: "/admin/business-categories",
   },
+   {
+    name: "Locations",
+    icon: <FaProductHunt size={20} />,
+    link: "/admin/locations",
+  },
   {
     name: "Add-Ons",
     icon: <BiSolidAddToQueue size={20} />,
