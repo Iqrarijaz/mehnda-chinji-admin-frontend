@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"');
+
 body {
   font-family: "Poppins", sans-serif !important;
   font-weight: 400;
@@ -13,89 +14,124 @@ body {
 // Main app header
 
 .main-app-header {
-  height: 80px !important;
-  background-color: white !important;
-  box-shadow: 0 0 24px 0 #0000001a;
+  height: 70px !important;
+  background-color: #0f172a !important; // Match sidebar
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease-in-out;
 }
+
 // Menu icons
 
 .close-menu-width {
   width: 100px !important;
 }
+
 .menu-icon {
   cursor: pointer;
-  border-radius: 10px;
-  padding: 2px !important;
+  border-radius: 8px;
+  padding: 8px !important;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 40px;
   height: 40px;
+  transition: all 0.2s ease-in-out;
+  color: #9ca3af; // Lighter for dark bg
 }
+
 .menu-icon:hover {
-  color: #008080 !important;
-  border-color: #008080 !important;
-  background-color: white !important;
-  box-shadow: rgba(2, 22, 107, 0.1) 0px 4px 12px;
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  transform: scale(1.05);
 }
 
 //  Antd table header style
 .ant-table-thead .ant-table-cell {
-  background-color: #e0dede96 !important;
-  color: #000000 !important;
-  padding: 16px 10px !important;
-  font-size: 16px !important;
-  white-space: nowrap !important;
+  background-color: #0F172A !important;
+  color: #ffffff !important;
+  padding: 14px 16px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  border-bottom: 2px solid #1e293b !important;
 }
 
-// Antd table row style
-
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
+.ant-table-tbody .ant-table-cell {
+  padding: 16px 16px !important;
+  font-size: 14px !important;
+  color: #475569 !important;
+  transition: all 0.2s;
+  border-bottom: 1px solid #f1f5f9 !important;
 }
 
-.ant-table-row {
-  padding: 0px !important;
+.ant-table-row:hover .ant-table-cell {
+  background-color: #f8fafc !important;
 }
 
-.table-row-light {
-  background-color: #ffffff;
-}
-.table-row-dark {
-  background-color: #e0dede38;
-}
-
-.ant-select-selector {
-  border-radius: 20px !important;
-}
-
-// antd table style
-
-.ant-table-container {
-  border: 0px !important;
-}
-
-.ant-table-cell {
-  border: 0px !important;
-}
-.ant-table-row {
-  border-bottom: 1px solid #008080;
-  padding-left: 10px !important;
-}
-
-.antd-table-custom table thead th {
-  @apply bg-white;
-}
 .antd-table-custom {
-  padding: 0;
-  border: 3px solid #e0dede96 !important;
+  background: white;
+  border-radius: 12px !important;
+  border: 1px solid #e2e8f0 !important;
   overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.ant-table {
+  background: transparent !important;
+}
+
+// Table Pagination Premium Styling
+.ant-pagination {
+  margin: 16px 0 !important;
+}
+
+.ant-pagination-item-active {
+  border-color: #0F172A !important;
+  background-color: #0F172A !important;
+
+  a {
+    color: white !important;
+  }
+}
+
+.ant-pagination-item:hover {
+  border-color: #090e1a !important;
+
+  a {
+    color: #090e1a !important;
+  }
+}
+
+// Table Action Buttons
+.table-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+
+    &:hover {
+      background: #f1f5f9;
+      color: #090e1a;
+      border-color: #090e1a;
+    }
+
+    &.delete:hover {
+      background: #fef2f2;
+      color: #ef4444;
+      border-color: #fecaca;
+    }
+  }
 }
 
 // antd selector border
@@ -114,19 +150,25 @@ table {
   background-image: url("../assets/images/login_background.png");
   background-size: cover;
   background-position: center;
-  min-height: 100vh; /* Ensure the background covers the entire viewport */
+  min-height: 100vh;
+  /* Ensure the background covers the entire viewport */
 }
 
 /* styles.css */
 .custom-label {
-  font-family: "Sans-serif"; /* equivalent to font-sans */
-  font-size: 1.125rem; /* equivalent to text-lg */
-  font-weight: 600; /* equivalent to font-semibold */
+  font-family: "Sans-serif";
+  /* equivalent to font-sans */
+  font-size: 1.125rem;
+  /* equivalent to text-lg */
+  font-weight: 600;
+  /* equivalent to font-semibold */
 }
 
 // side bar menu style
 .sidebar {
-  background-color: #333333 !important;
+  background: #0f172a !important; // Deep Slate Dark
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.4);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 // ===========selected menu class side bar
@@ -135,30 +177,69 @@ table {
   display: flex !important;
   justify-items: center !important;
   align-items: center !important;
-  padding: 10px 20px !important;
-  color: white !important;
+  padding: 12px 16px !important;
+  color: #9ca3af !important; // Gray-400 for dark bg
   border: none !important;
-  border-radius: 0px !important;
-}
-
-.side_menu_item:hover,
-.selected-menu-item {
-  background-color: white !important;
-  border-radius: 0px;
-  color: black !important;
+  border-radius: 10px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-weight: 500;
   position: relative;
+  overflow: hidden;
+  background: transparent;
+  border-left: 3px solid transparent !important;
 }
 
+// Hover state - subtle white gradient highlight
+.side_menu_item:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+  color: #ffffff !important;
+  border-left: 3px solid #090e1a !important;
+  transform: translateX(4px);
+}
+
+// Selected/Active state - premium gradient with gloss
+.selected-menu-item {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, #0F172A 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-left: 3px solid #ffffff !important;
+  font-weight: 600;
+}
+
+// Active state glow effect
+.selected-menu-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%); // More pronounced gloss
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+// Collapsed sidebar states
 .side_menu_item_close:hover,
 .selected-menu-item-close {
-  background-color: white;
-  color: black !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, #0F172A 100%) !important;
+  color: white !important;
   border: none !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+// Icon and text color transitions
 .side_menu_item:hover svg,
 .side_menu_item:hover span {
-  color: black;
+  color: #ffffff;
+  filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.2));
+}
+
+.selected-menu-item svg,
+.selected-menu-item span {
+  color: white;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
 
 .menu-width-open {
@@ -168,6 +249,24 @@ table {
 .sidebar-scroll {
   overflow: hidden auto;
   max-height: 100vh;
+
+  // Dark scrollbar for dark sidebar
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
 }
 
 // Inner pages css
@@ -178,33 +277,49 @@ table {
 
 .add-button {
   color: white !important;
-  background-color: #008080 !important;
-  border: 2px solid #008080 !important;
-  border-radius: 10px !important;
+  background-color: #0f172a !important; // Match sidebar
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
   margin-left: 6px !important;
-  padding: 12px !important;
+  padding: 12px 20px !important;
   height: 40px !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease-in-out !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .add-button:hover {
-  color: black !important;
-  background-color: white !important;
-  border: 2px solid black !important;
+  background-color: #090e1a !important;
+  border-color: #090e1a !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .filter-button {
   color: white !important;
-  background-color: #008080 !important;
-  border: 2px solid #008080 !important;
-  border-radius: 10px !important;
+  background-color: #0f172a !important; // Match sidebar
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
   height: 40px !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
   padding: 0px 20px !important;
+  transition: all 0.2s ease-in-out !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
-.search-input{
+
+.filter-button:hover {
+  background-color: #090e1a !important;
+  border-color: #090e1a !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.search-input {
   height: 40px !important;
 }
+
 .custom-search-input {
   height: 40px !important;
 }
@@ -214,6 +329,7 @@ table {
   box-shadow: none !important;
   outline: none !important;
 }
+
 .custom-search-input {
   height: 40px !important;
 }
@@ -226,7 +342,8 @@ table {
 
 .custom-search-input.ant-input-affix-wrapper-focused {
   box-shadow: none !important;
-  border-color: #008080 !important; /* Optional: keeps your lightBlue border on focus */
+  border-color: #0F172A !important;
+  /* Optional: keeps your lightBlue border on focus */
 }
 
 .custom-search-input:hover .ant-input {
@@ -235,12 +352,14 @@ table {
 
 .custom-search-input.ant-input-affix-wrapper-focused {
   box-shadow: none !important;
-  border-color: #008080 !important; /* Optional: keeps your lightBlue border on focus */
+  border-color: #0F172A !important;
+  /* Optional: keeps your lightBlue border on focus */
 }
 
 .custom-search-input:hover .ant-input {
   border: none !important;
 }
+
 .custom-select-no-focus .ant-select-selector {
   border: none !important;
   box-shadow: none !important;
@@ -263,38 +382,47 @@ table {
 
 .apply-button {
   color: white !important;
-  background-color: #008080 !important;
-  border: 2px solid #008080 !important;
-  border-radius: 10px !important;
+  background-color: #0F172A !important;
+  border: 2px solid #0F172A !important;
+  border-radius: 8px !important;
   margin-left: 6px !important;
   padding: 4px 10px !important;
   height: 34px !important;
   width: 100px !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease-in-out !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
+
 .apply-button:hover {
-  color: green !important;
-  background-color: white !important;
-  border: 2px solid green !important;
+  background-color: #090e1a !important;
+  border-color: #090e1a !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .cancel-button {
-  color: black !important;
+  color: #374151 !important;
   background-color: white !important;
-  border: 2px solid black !important;
-  border-radius: 10px !important;
+  border: 2px solid #d1d5db !important;
+  border-radius: 8px !important;
   margin-left: 6px !important;
   padding: 4px 10px !important;
   height: 34px !important;
   width: 100px !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease-in-out !important;
 }
 
 .cancel-button:hover {
-  color: red !important;
-  background-color: white !important;
-  border: 2px solid red !important;
+  background-color: #fee2e2 !important;
+  border-color: #ef4444 !important;
+  color: #dc2626 !important;
+  transform: translateY(-1px);
 }
+
 /* modalButtons.css */
 
 .modal-cancel-button {
@@ -311,25 +439,29 @@ table {
 }
 
 .modal-add-button:hover {
-  @apply border-2 border-primary;
+  background-color: #090e1a !important;
+  border-color: #090e1a !important;
 }
 
 
 // ================antd css ==============//
 
 .ant-select {
-  border: 2px solid #008080 !important;
+  border: 2px solid #0F172A !important;
   padding: 4px !important;
   height: 40px !important;
   border-radius: 10px !important;
 }
+
 .ant-input {
   padding: 6px !important;
   border-radius: 10px !important;
 }
+
 .ant-modal-content {
-  border-radius: 20px !important;
+  border-radius: 16px !important;
   padding: 24px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .formit-input {
@@ -339,8 +471,9 @@ table {
   border-radius: 10px !important;
   border: 2px solid #e0dede8c !important;
 }
+
 .formit-input:focus {
-  border: 2px solid #008080 !important;
+  border: 2px solid #0F172A !important;
 }
 
 .place-holder-table {
@@ -351,30 +484,39 @@ table {
 .error {
   color: red !important;
 }
+
 .select-field {
   width: 100% !important;
   border-radius: 10px !important;
   background-color: white !important;
 }
+
 .select-field:focus {
-  border: 2px solid #008080 !important;
+  border: 2px solid #0F172A !important;
 }
+
 .form-class {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
 }
+
 .reset-button {
   background-color: #f3f4f6 !important;
-  border: 2px solid #f3f4f6 !important;
-  border-radius: 10px !important;
-  padding: 6px 10px !important;
-  font-size: 16px !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 6px 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #374151 !important;
+  transition: all 0.2s ease-in-out !important;
 }
 
 .reset-button:hover {
-  color: #000000 !important;
-  border: 2px solid #008080 !important;
-  box-shadow: rgba(8, 28, 99, 0.1) 0px 4px 12px;
+  background-color: #e5e7eb !important;
+  border-color: #0F172A !important;
+  color: #0F172A !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
 }
 
 // ============ profile image design =================//
@@ -385,9 +527,11 @@ table {
   border-radius: 50% !important;
   border: none !important;
 }
+
 .profile-image-antd .ant-upload:hover {
   box-shadow: rgba(2, 22, 107, 0.1) 0px 4px 12px !important;
 }
+
 .upload-image-div {
   display: flex !important;
   justify-content: center !important;
@@ -405,7 +549,8 @@ table {
   margin: 0px !important;
   margin-top: 3px !important;
   border: 2px solid #f3f4f6 !important;
-  width: 100% !important; /* Add this line */
+  width: 100% !important;
+  /* Add this line */
 }
 
 .upload-background-image-antd .ant-upload:hover {
@@ -423,21 +568,30 @@ table {
 // ============== delete button ==================
 .modal-delete-button {
   color: white !important;
-  background-color: #ff0000 !important;
-  border: 2px solid #ff0000 !important;
-  border-radius: 10px !important;
+  background-color: #ef4444 !important;
+  border: 2px solid #ef4444 !important;
+  border-radius: 8px !important;
   margin-left: 6px !important;
   padding: 4px 10px !important;
   height: 34px !important;
   width: 100px !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease-in-out !important;
 }
+
+.modal-delete-button:hover,
 .delete-button:hover {
-  box-shadow: rgba(250, 0, 0, 0.753) 0px 4px 12px;
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3), 0 2px 4px -1px rgba(239, 68, 68, 0.2);
 }
+
 .building-banner {
   object-fit: cover;
 }
+
 .building_detail {
   display: grid;
   grid-template-columns: 500px auto;
@@ -447,11 +601,13 @@ table {
   box-shadow: 0 0 28px 0 rgb(0 0 0 / 10%);
   border-radius: 22px;
 }
+
 .overlay {
   position: absolute;
   bottom: 0;
   background: rgb(0, 0, 0);
-  background: rgba(0, 0, 0, 0.5); /* Black see-through */
+  background: rgba(0, 0, 0, 0.5);
+  /* Black see-through */
   color: #f1f1f1;
   // width: 100%;
   transition: 0.5s ease;
@@ -463,34 +619,40 @@ table {
   border-top-right-radius: 10px !important;
   border-bottom-right-radius: 10px !important;
 }
+
 .building_logo_img {
   display: flex;
   align-items: center;
   gap: 20px;
   position: relative;
 }
+
 .building_logo_img img {
   box-shadow: 0 0 28px 0 rgb(0 0 0 / 10%);
   width: 90px;
   height: 90px;
   object-fit: contain;
 }
+
 .building_label {
   font-size: 36px;
   color: black;
   font-weight: 500;
   text-transform: capitalize;
 }
+
 .banner_img {
   border-radius: 40% 90% 200% 50% / 40% 100% 200% 50%;
   width: 100%;
   height: 430px;
   overflow: hidden;
 }
+
 .status_btn {
   top: 20px;
   right: 20px;
 }
+
 .status_btn span {
   padding: 6px 14px;
   box-shadow: 0 0 20px 0 #00000036;
@@ -529,9 +691,12 @@ table {
   /* Apply the custom styles to .ant-input inside .ant-tag */
   /* You can either add new properties or override existing ones */
   /* Example: */
-  width: 100%; /* Adjust width as needed */
-  margin-top: 8px; /* Example additional property */
+  width: 100%;
+  /* Adjust width as needed */
+  margin-top: 8px;
+  /* Example additional property */
 }
+
 .ant-flex {
   gap: 4px !important;
 }
@@ -539,6 +704,7 @@ table {
 .antd-select {
   padding: 0px !important;
 }
+
 // Media Queries
 @media (max-width: 768px) {
   .bg-image {
@@ -551,15 +717,18 @@ table {
     flex: 1 !important;
   }
 }
+
 @media screen and (min-width: 1270px) and (max-width: 1399px) {
   .building_detail {
     grid-template-columns: 380px auto;
     gap: 30px;
   }
+
   .building_logo_img {
     display: none !important;
   }
 }
+
 @media screen and (min-width: 200px) and (max-width: 1270px) {
   .building_detail {
     display: flex;
@@ -567,6 +736,7 @@ table {
     flex-wrap: wrap;
   }
 }
+
 .ant-popover-open {
   background-color: #2628dd;
   color: white;
@@ -592,12 +762,11 @@ body::-webkit-scrollbar-track {
 body::-webkit-scrollbar-thumb {
   background: var(--sb-thumb-color);
   border-radius: 1px;
-  
+
 }
 
 @supports not selector(::-webkit-scrollbar) {
   body {
-    scrollbar-color: var(--sb-thumb-color)
-                     var(--sb-track-color);
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
   }
 }

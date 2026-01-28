@@ -1,17 +1,19 @@
 import React from "react";
-import MainHeader from "./MainHeader";
 
 function InnerPageCard({ title, children }) {
   return (
-    <>
-      <MainHeader />
-      <div className="bg-gray-100 min-h-screen p-4 ">
-        <div className="m-4 rounded-2xl ">
-          <h1 className="text-xl mb-4 font-mono">{title}</h1>
-          <div>{children}</div>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {title && (
+          <h1 className="text-2xl font-semibold text-gray-900 mb-6">
+            {title}
+          </h1>
+        )}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          {children}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

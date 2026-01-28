@@ -15,17 +15,13 @@ export function CustomPopover({
   buttonClass = "capitalize",
 }) {
   return (
-    <Popover placement={placement} color={color}>
+    <Popover placement={placement}>
       <PopoverTrigger>
-        <Button
-          color={color}
-          variant={buttonVariant}
-          className={`${buttonClass} focus:outline-none`}
-        >
+        <div className="focus:outline-none">
           {triggerContent}
-        </Button>
+        </div>
       </PopoverTrigger>
-      <PopoverContent className="!p-0 rounded-[5px] bg-zinc-900">
+      <PopoverContent className="!p-0 border border-gray-100 shadow-xl overflow-hidden rounded-xl">
         {popoverContent}
       </PopoverContent>
     </Popover>

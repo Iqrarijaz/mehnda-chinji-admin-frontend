@@ -27,16 +27,16 @@ export default function RootLayout({ children }) {
         <ConfigProvider
           theme={{
             token: {
-              colorPrimary: "#008080",
+              colorPrimary: "#0F172A",
               borderRadius: 5,
               colorBgContainer: "#ffffff", //a6b5ad
               fontFamily: "Poppins, sans-serif",
               fontSize: 16,
-              colorText:"#404040",
+              colorText: "#404040",
             },
           }}
         >
-          <QueryClientProvider  client={queryClient}>
+          <QueryClientProvider client={queryClient}>
             <ReactQueryDevtools initialIsOpen={false} />
             <ToastContainer />
             <MenuContextProvider>{children}</MenuContextProvider>

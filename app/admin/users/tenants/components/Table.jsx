@@ -169,15 +169,19 @@ function TenantTable() {
       fixed: "right",
       width: 100,
       render: (record) => (
-        <CustomPopover
-          triggerContent={
-            <HiOutlineDotsHorizontal
-              size={34}
-              className="hover:text-lightBlue"
-            />
-          }
-          popoverContent={() => popoverContent(actionMenu, record)} // pass record to popoverContent
-        />
+        <div className="flex justify-center">
+          <CustomPopover
+            triggerContent={
+              <div className="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
+                <HiOutlineDotsHorizontal
+                  size={20}
+                  className="text-gray-500 hover:text-teal-600"
+                />
+              </div>
+            }
+            popoverContent={() => popoverContent(actionMenu, record)}
+          />
+        </div>
       ),
     },
   ];
@@ -186,13 +190,9 @@ function TenantTable() {
     <>
       <Table
         responsive
-        rowClassName={(record, index) =>
-          index % 2 === 0 ? "table-row-light" : "table-row-dark"
-        }
-        className="antd-table-custom rounded-xl overflow-xl w-full"
-        size="small"
+        className="antd-table-custom w-full"
+        size="middle"
         tableLayout="fixed"
-        bordered
         loading={{
           spinning:
             tenantList?.status === "loading" ||

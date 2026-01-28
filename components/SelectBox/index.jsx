@@ -7,6 +7,8 @@ function SelectBox({
   defaultValue = "",
   width = "150px",
   height = "35px",
+  className = "",
+  popupClassName = "",
 }) {
   const formattedOptions = options.map((option) => ({
     value: option,
@@ -15,7 +17,8 @@ function SelectBox({
 
   return (
     <Select
-      className="w-full font-xl"
+      className={`w-full font-xl ${className}`}
+      popupClassName={popupClassName}
       defaultValue={defaultValue}
       style={{
         width,

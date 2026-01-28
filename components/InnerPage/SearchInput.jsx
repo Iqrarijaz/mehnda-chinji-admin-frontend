@@ -13,7 +13,7 @@ function SearchInput({ setFilters }) {
       }}
       placeholder="Search..."
       className="custom-search-input border-2 border-lightBlue rounded-xl"
-      prefix={<IoSearchCircle size={30} color="#008080" className="me-2" />}
+      prefix={<IoSearchCircle size={30} color="#0F172A" className="me-2" />}
       onChange={(event) => {
         const value = event?.target?.value;
         if (value.includes("-")) {

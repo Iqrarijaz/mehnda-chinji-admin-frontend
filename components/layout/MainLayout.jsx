@@ -19,39 +19,39 @@ function MainLayout({ children }) {
   const isActive = (link) => pathname === link;
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-gray-50">
       {/* Desktop Sidebar */}
       <aside
         className={`
+          sidebar
           transition-all duration-300 z-50
-          ${open ? "w-64" : "w-20"}
-          bg-gray-100 h-screen sticky top-0 hidden md:flex flex-col
+          ${open ? "w-64" : "w-0 overflow-hidden"}
+          h-screen sticky top-0 hidden md:flex flex-col
         `}
       >
         <div className="p-4 h-full flex flex-col">
           {/* Logo */}
-          <div className="flex items-center justify-center pt-4">
+          <div className="flex items-center justify-center pt-2 pb-6 border-b border-white/5">
             <img
               src="/logo.png"
               alt="Logo"
-              className={`object-contain rounded-xl transition-all duration-200 ${open ? "h-40 w-auto" : "h-10 w-10"}`}
+              className={`object-contain rounded-xl transition-all duration-300 ${open ? "h-32 w-auto" : "h-12 w-12"
+                }`}
             />
           </div>
 
           {/* Menu */}
-          <nav className="flex-1 mt-6 overflow-y-auto">
-            <ul className="space-y-3">
+          <nav className="flex-1 mt-4 overflow-y-auto">
+            <ul className="space-y-1 px-3">
               {MenuList.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.link}
-                    className={`flex items-center p-2 rounded-lg transition-colors ${isActive(item.link)
-                      ? "bg-primary text-white"
-                      : "hover:bg-primary hover:text-white"
+                    className={`side_menu_item ${isActive(item.link) ? "selected-menu-item" : ""
                       }`}
                   >
-                    <span className="text-lg">{item.icon}</span>
-                    {open && <span className="ml-3">{item.name}</span>}
+                    <span className="text-lg flex-shrink-0">{item.icon}</span>
+                    {open && <span className="ml-3 text-sm">{item.name}</span>}
                   </Link>
                 </li>
               ))}
@@ -62,27 +62,29 @@ function MainLayout({ children }) {
 
       {/* Mobile Sidebar */}
       {open && (
-        <aside className="fixed top-0 left-0 w-64 h-screen z-50 bg-gray-100 flex flex-col md:hidden transition-all duration-300">
-          <div className="p-4 flex justify-between items-center border-b">
+        <aside className="sidebar fixed top-0 left-0 w-64 h-screen z-50 flex flex-col md:hidden transition-all duration-300 shadow-2xl">
+          <div className="p-4 flex justify-between items-center border-b border-white/5">
             <img src="/logo.png" alt="Logo" className="h-10 w-auto rounded-xl" />
-            <button onClick={() => toggleMenu(false)} className="text-lg font-bold">
+            <button
+              onClick={() => toggleMenu(false)}
+              className="text-gray-400 hover:text-white text-2xl font-bold p-2 hover:bg-white/5 rounded-lg transition-colors"
+            >
               ✕
             </button>
           </div>
 
           <nav className="flex-1 overflow-y-auto p-4">
-            <ul className="space-y-3">
+            <ul className="space-y-1">
               {MenuList.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.link}
-                    className={`flex items-center p-2 rounded-lg transition-colors ${isActive(item.link)
-                      ? "bg-primary text-white"
-                      : "hover:bg-primary hover:text-white"
+                    className={`side_menu_item ${isActive(item.link) ? "selected-menu-item" : ""
                       }`}
-                    onClick={() => toggleMenu(false)}                  >
+                    onClick={() => toggleMenu(false)}
+                  >
                     <span className="text-lg">{item.icon}</span>
-                    <span className="ml-3">{item.name}</span>
+                    <span className="ml-3 text-sm">{item.name}</span>
                   </Link>
                 </li>
               ))}
