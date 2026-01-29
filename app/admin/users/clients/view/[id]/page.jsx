@@ -1,5 +1,4 @@
-"use client";
-import { useParams } from "next/navigation";
+import ViewClientClient from "./ViewClientClient";
 
 export function generateStaticParams() {
   return [{ id: "id" }];
@@ -7,25 +6,6 @@ export function generateStaticParams() {
 
 export const dynamicParams = false;
 
-async function ViewClient() {
-  const params = useParams();
-  const { id } = params;
-
-  return (
-    <div >
-      <div className="mb-4 flex justify-between">
-        <h1 className="inner-page-title text-3xl text-black p-0">
-          Client Details
-        </h1>
-      </div>
-    </div>
-  );
+export default function Page() {
+  return <ViewClientClient />;
 }
-
-// export async function page({ params }) {
-//   return {
-//     props: params,
-//   };
-// }
-
-export default ViewClient;
