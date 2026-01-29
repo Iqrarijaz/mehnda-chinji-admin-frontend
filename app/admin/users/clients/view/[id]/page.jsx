@@ -1,11 +1,16 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useLoaderData } from "next/server";
 
- async function ViewClient() {
+export function generateStaticParams() {
+  return [{ id: "id" }];
+}
+
+export const dynamicParams = false;
+
+async function ViewClient() {
   const params = useParams();
   const { id } = params;
-  
+
   return (
     <div >
       <div className="mb-4 flex justify-between">

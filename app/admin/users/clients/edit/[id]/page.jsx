@@ -15,6 +15,12 @@ import UploadImage from "@/components/upload/UploadImage";
 import DescriptionField from "@/components/InnerPage/DescriptionField";
 import { GET_CLIENT, UPDATE_CLIENT } from "@/app/api/admin/clients";
 
+export function generateStaticParams() {
+  return [{ id: "id" }];
+}
+
+export const dynamicParams = false;
+
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("Required"),
   lastName: Yup.string().required("Required"),

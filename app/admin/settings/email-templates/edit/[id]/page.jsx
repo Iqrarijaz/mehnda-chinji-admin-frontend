@@ -12,6 +12,12 @@ import {
   UPDATE_EMAIL_TEMPLATE,
 } from "@/app/api/admin/settings/emailTemplates";
 
+export function generateStaticParams() {
+  return [{ id: "id" }];
+}
+
+export const dynamicParams = false;
+
 function EditEmailTemplate() {
   const router = useRouter();
   const emailEditorRef = useRef(null);
@@ -60,7 +66,7 @@ function EditEmailTemplate() {
       console.log(error);
       toast.error(
         error?.response?.data?.error ??
-          "Something went wrong. Please try again later."
+        "Something went wrong. Please try again later."
       );
     },
   });

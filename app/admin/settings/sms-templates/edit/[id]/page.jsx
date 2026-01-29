@@ -16,6 +16,12 @@ import {
   UPDATE_SMS_TEMPLATE,
 } from "@/app/api/admin/settings/smsTemplates";
 
+export function generateStaticParams() {
+  return [{ id: "id" }];
+}
+
+export const dynamicParams = false;
+
 const validationSchema = Yup.object().shape({
   templateName: Yup.string().required("Required"),
   messageContent: Yup.string().required("Required"),

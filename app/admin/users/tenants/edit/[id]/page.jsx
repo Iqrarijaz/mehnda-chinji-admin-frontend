@@ -13,6 +13,12 @@ import FormField from "@/components/InnerPage/FormField";
 import ProfileImage from "../../components/ProfileImage";
 import { GET_TENANT, UPDATE_TENANT } from "@/app/api/admin/tenants";
 
+export function generateStaticParams() {
+  return [{ id: "id" }];
+}
+
+export const dynamicParams = false;
+
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("Required"),
   lastName: Yup.string().required("Required"),
