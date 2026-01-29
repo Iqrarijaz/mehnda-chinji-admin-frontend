@@ -1,30 +1,13 @@
-import React, { Component } from 'react';
-import Lottie from 'react-lottie';
-import animationData from '../../assets/json/page-not-found.json';
-class NotFoundAnimation extends Component {
-    state = { isClient: false };
+import React from 'react';
 
-    componentDidMount() {
-        this.setState({ isClient: true });
-    }
+const NotFoundContent = () => {
+    return (
+        <div className="text-center">
+            <h1 className="text-9xl font-bold text-gray-200">404</h1>
+            <p className="text-2xl font-medium text-gray-600 mt-4">Page Not Found</p>
+            <p className="text-gray-500 mt-2">The page you are looking for doesn't exist.</p>
+        </div>
+    );
+};
 
-    render() {
-        if (!this.state.isClient) return null;
-        const defaultOptions = {
-            loop: true,
-            autoplay: true,
-            animationData: animationData,
-            renderer: 'svg'
-        }
-        return (
-            <div>
-                <Lottie
-                    options={defaultOptions}
-                    height={500}
-                    width={500}
-                />
-            </div>
-        )
-    };
-}
-export default NotFoundAnimation;
+export default NotFoundContent;

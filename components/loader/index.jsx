@@ -1,26 +1,12 @@
-import React, { Component } from "react";
-import Lottie from "react-lottie";
-import animationData from "../../assets/json/loader.json";
-class NotFoundAnimation extends Component {
-  state = { isClient: false };
+import React from "react";
+import { Spin } from "antd";
 
-  componentDidMount() {
-    this.setState({ isClient: true });
-  }
+const Loader = () => {
+  return (
+    <div className="flex items-center justify-center p-8">
+      <Spin size="large" />
+    </div>
+  );
+};
 
-  render() {
-    if (!this.state.isClient) return null;
-    const defaultOptions = {
-      loop: true,
-      autoplay: true,
-      animationData: animationData,
-      renderer: "svg",
-    };
-    return (
-      <div>
-        <Lottie options={defaultOptions} height={500} width={500} />
-      </div>
-    );
-  }
-}
-export default NotFoundAnimation;
+export default Loader;
