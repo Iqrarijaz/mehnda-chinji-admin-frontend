@@ -8,10 +8,12 @@ export const Axios = axios.create({
 
 Axios.interceptors.request.use(
   function (config) {
-    let local = JSON.parse(localStorage.getItem("userData"))
-    const token = local?.token
-    if (token) {
-      config.headers['Authorization'] = token
+    if (typeof window !== "undefined") {
+      let local = JSON.parse(localStorage.getItem("userData"));
+      const token = local?.token;
+      if (token) {
+        config.headers["Authorization"] = token;
+      }
     }
     return config;
   },

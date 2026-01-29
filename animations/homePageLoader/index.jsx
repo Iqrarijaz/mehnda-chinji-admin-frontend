@@ -3,7 +3,14 @@ import animationData from "../../assets/json/loading.json";
 import Lottie from "react-lottie";
 
 class Loading extends Component {
+  state = { isClient: false };
+
+  componentDidMount() {
+    this.setState({ isClient: true });
+  }
+
   render() {
+    if (!this.state.isClient) return null;
     const defaultOptions = {
       loop: true,
       autoplay: true,

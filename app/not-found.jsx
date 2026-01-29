@@ -2,6 +2,7 @@
 "use client";
 import NotFoundAnimation from "@/components/notFoundPage";
 import React from "react";
+
 function NotFound() {
   return (
     <div className="flex items-center justify-center min-h-screen">

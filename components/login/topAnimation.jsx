@@ -3,7 +3,14 @@ import Lottie from "react-lottie";
 import animationData from "../../assets/json/top.json";
 
 class TopAnimation extends Component {
+  state = { isClient: false };
+
+  componentDidMount() {
+    this.setState({ isClient: true });
+  }
+
   render() {
+    if (!this.state.isClient) return null;
     const defaultOptions = {
       loop: true,
       autoplay: true,
@@ -13,7 +20,7 @@ class TopAnimation extends Component {
 
     return (
       <div style={{ position: "absolute", top: 0, right: 0 }}>
-        <Lottie options={defaultOptions} height={400}  />
+        <Lottie options={defaultOptions} height={400} />
       </div>
     );
   }
