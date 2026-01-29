@@ -1,5 +1,6 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { Modal } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import MenuList from "./MenuList";
@@ -10,6 +11,18 @@ function MainLayout({ children }) {
   const { open, toggleMenu } = useContext(MenuContext);
   const pathname = usePathname();
   const router = useRouter();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -60,38 +73,54 @@ function MainLayout({ children }) {
         </div>
       </aside>
 
-      {/* Mobile Sidebar */}
-      {open && (
-        <aside className="sidebar fixed top-0 left-0 w-64 h-screen z-50 flex flex-col md:hidden transition-all duration-300 shadow-2xl">
-          <div className="p-4 flex justify-between items-center border-b border-white/5">
-            <img src="/logo.png" alt="Logo" className="h-10 w-auto rounded-xl" />
+      {/* Mobile Sidebar Modal Popup */}
+      <Modal
+        open={open && isMobile}
+        onCancel={() => toggleMenu(false)}
+        footer={null}
+        closable={false}
+        centered
+        width={350}
+        styles={{
+          content: { padding: 0, backgroundColor: '#0F172A', overflow: 'hidden', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' },
+          mask: { backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0, 0, 0, 0.6)' }
+        }}
+      >
+        <div className="flex flex-col h-[75vh] max-h-[600px]">
+          <div className="p-6 flex justify-between items-center border-b border-white/10 bg-[#0F172A]">
+            <img src="/logo.png" alt="Logo" className="h-10 w-auto rounded-xl brightness-110" />
             <button
               onClick={() => toggleMenu(false)}
-              className="text-gray-400 hover:text-white text-2xl font-bold p-2 hover:bg-white/5 rounded-lg transition-colors"
+              className="text-gray-400 hover:text-white text-xl font-bold p-2 hover:bg-white/5 rounded-lg transition-colors"
             >
               ✕
             </button>
           </div>
 
-          <nav className="flex-1 overflow-y-auto p-4">
-            <ul className="space-y-1">
+          <nav className="flex-1 overflow-y-auto p-4 bg-[#0F172A] custom-scrollbar">
+            <ul className="space-y-2">
               {MenuList.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.link}
-                    className={`side_menu_item ${isActive(item.link) ? "selected-menu-item" : ""
-                      }`}
+                    className={`side_menu_item !m-0 ${isActive(item.link) ? "selected-menu-item" : ""}`}
                     onClick={() => toggleMenu(false)}
                   >
-                    <span className="text-lg">{item.icon}</span>
-                    <span className="ml-3 text-sm">{item.name}</span>
+                    <span className="text-xl flex-shrink-0">{item.icon}</span>
+                    <span className="ml-4 text-sm font-medium tracking-wide">{item.name}</span>
                   </Link>
                 </li>
               ))}
             </ul>
           </nav>
-        </aside>
-      )}
+
+          <div className="p-4 border-t border-white/5 bg-[#0F172A] text-center">
+            <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">
+              Mehnda Chinji Admin v1.0
+            </p>
+          </div>
+        </div>
+      </Modal>
 
       {/* Main Content */}
       <main className="flex-1 bg-white flex flex-col max-h-screen w-full">
