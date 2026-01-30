@@ -136,7 +136,7 @@ function Page() {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={values.email}
-                        className="h-12 rounded-xl border-gray-200 hover:border-[#0F172A] focus:border-[#0F172A] shadow-sm transition-all"
+                        className="h-12 rounded border-gray-200 hover:border-[#0F172A] focus:border-[#0F172A] shadow-sm transition-all"
                       />
                     </AntForm.Item>
 
@@ -161,7 +161,7 @@ function Page() {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={values.password}
-                        className="h-12 rounded-xl border-gray-200 hover:border-[#0F172A] focus:border-[#0F172A] shadow-sm transition-all"
+                        className="h-12 rounded border-gray-200 hover:border-[#0F172A] focus:border-[#0F172A] shadow-sm transition-all"
                       />
                     </AntForm.Item>
                   </div>
@@ -170,7 +170,7 @@ function Page() {
                     type="primary"
                     htmlType="submit"
                     loading={isSubmitting}
-                    className="w-full h-12 bg-[#0F172A] hover:bg-[#1E293B] border-none text-white font-bold rounded-xl shadow-lg shadow-blue-900/10 transition-all transform active:scale-[0.98] mt-4"
+                    className="w-full h-12 bg-[#0F172A] hover:bg-[#1E293B] border-none text-white font-bold rounded shadow-lg shadow-blue-900/10 transition-all transform active:scale-[0.98] mt-4"
                   >
                     Authenticate
                   </Button>

@@ -137,7 +137,7 @@ function UpdateModal({ modal, setModal }) {
 
           return (
             <Form>
-              <div className="form-class bg-gray-100 p-6 rounded-xl">
+              <div className="form-class bg-gray-100 p-6 rounded">
                 {updateLocation.isLoading && <Loading />}
 
                 <SelectField

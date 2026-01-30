@@ -87,7 +87,7 @@ function EditEmailTemplateClient() {
             </div>
             {getEmailTemplate.isLoading && <Loading />}{" "}
             {updateEmailTemplateMutation.isLoading && <Loading />}
-            <div className="bg-gray-100 p-6 rounded-xl w-full overflow-x-auto">
+            <div className="bg-gray-100 p-6 rounded w-full overflow-x-auto">
                 <div className="form-class mx-auto lg:flex lg:gap-6 ">
                     <div className="flex flex-col gap-4 flex-1 lg:w-70">
                         <div className="flex flex-wrap">
@@ -153,14 +153,14 @@ function EditEmailTemplateClient() {
             <div className="flex justify-end mt-8 gap-6">
                 <Link
                     href="/admin/settings/email-templates"
-                    className="bg-lightBlue h-9 flex items-center  hover:bg-white border-lightBlue hover:text-red-500 hover:border-red-500 text-white font-bold py-2 px-10 rounded-xl"
+                    className="bg-lightBlue h-9 flex items-center  hover:bg-white border-lightBlue hover:text-red-500 hover:border-red-500 text-white font-bold py-2 px-10 rounded"
                 >
                     Cancel
                 </Link>
                 <Button
                     type="primary"
                     onClick={handleOnUpdate}
-                    className="bg-lightBlue hover:bg-white border-lightBlue hover:text-black !hover:border-black text-white font-bold py-4 px-10 rounded-xl"
+                    className="bg-lightBlue hover:bg-white border-lightBlue hover:text-black !hover:border-black text-white font-bold py-4 px-10 rounded"
                 >
                     Update
                 </Button>

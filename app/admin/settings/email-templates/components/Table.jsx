@@ -56,7 +56,7 @@ function EmailTemplatesTable() {
   }
   // action menu
   const actionMenu = [
-    
+
     {
       heading: "Edit",
       icon: <FaEdit size={16} />,
@@ -64,7 +64,7 @@ function EmailTemplatesTable() {
         router.push(`${PATH_ROUTER?.EDIT_EMAIL_TEMPLATE}/${record._id}`);
       },
     },
-  
+
   ];
 
   //  columns
@@ -92,17 +92,17 @@ function EmailTemplatesTable() {
       ),
     },
     {
-        title: "Description",
-        dataIndex: "description",
-        key: "description",
-        width: 200,
-        render: (record) => (
-          <div className=" overflow-hidden flex-wrap">
-            {record}
-          </div>
-        ),
-      },
-    
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      width: 200,
+      render: (record) => (
+        <div className=" overflow-hidden flex-wrap">
+          {record}
+        </div>
+      ),
+    },
+
     {
       title: "Created At",
       dataIndex: "createdAt",
@@ -141,7 +141,7 @@ function EmailTemplatesTable() {
         rowClassName={(record, index) =>
           index % 2 === 0 ? "table-row-light" : "table-row-dark"
         }
-        className="antd-table-custom rounded-xl"
+        className="antd-table-custom rounded"
         size="small"
         tableLayout="fixed"
         bordered

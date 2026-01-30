@@ -48,7 +48,7 @@ function MainLayout({ children }) {
             <img
               src="/logo.png"
               alt="Logo"
-              className={`object-contain rounded-xl transition-all duration-300 ${open ? "h-32 w-auto" : "h-12 w-12"
+              className={`object-contain rounded transition-all duration-300 ${open ? "h-32 w-auto" : "h-12 w-12"
                 }`}
             />
           </div>
@@ -88,10 +88,10 @@ function MainLayout({ children }) {
       >
         <div className="flex flex-col h-[75vh] max-h-[600px]">
           <div className="p-6 flex justify-between items-center border-b border-white/10 bg-[#0F172A]">
-            <img src="/logo.png" alt="Logo" className="h-10 w-auto rounded-xl brightness-110" />
+            <img src="/logo.png" alt="Logo" className="h-10 w-auto rounded brightness-110" />
             <button
               onClick={() => toggleMenu(false)}
-              className="text-gray-400 hover:text-white text-xl font-bold p-2 hover:bg-white/5 rounded-lg transition-colors"
+              className="text-gray-400 hover:text-white text-xl font-bold p-2 hover:bg-white/5 rounded transition-colors"
             >
               ✕
             </button>

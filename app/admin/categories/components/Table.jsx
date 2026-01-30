@@ -8,21 +8,21 @@ import { Switch } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { CustomPopover } from "@/components/popHover";
-import { useBusinessCategoriesContext } from "@/context/admin/business-categories/BusinessCategoriesContext";
+import { usecategoriesContext } from "@/context/admin/categories/CategoriesContext";
 import { timestampToDate } from "@/utils/date";
-import { DELETE_BUSINESS_CATEGORY, UPDATE_BUSINESS_CATEGORY_STATUS } from "@/app/api/admin/business-categories";
+import { DELETE_BUSINESS_CATEGORY, UPDATE_BUSINESS_CATEGORY_STATUS } from "@/app/api/admin/categories";
 import { popoverContent } from "@/components/popHover/popHoverContent";
 
 function BusinessCategoryTable({ modal, setModal }) {
   const queryClient = useQueryClient();
-  const { businessCategoriesList, onChange, setFilters } = useBusinessCategoriesContext();
+  const { categoriesList, onChange, setFilters } = usecategoriesContext();
   const [deleteModalData, setDeleteModalData] = useState(null);
 
   // Status mutation
   const manageStatusMutation = useMutation({
     mutationFn: UPDATE_BUSINESS_CATEGORY_STATUS,
     onSuccess: (data) => {
-      queryClient.invalidateQueries("businessCategoriesList");
+      queryClient.invalidateQueries("categoriesList");
       toast.success(data?.message);
     },
     onError: (error) => {
@@ -34,7 +34,7 @@ function BusinessCategoryTable({ modal, setModal }) {
   const deleteMutation = useMutation({
     mutationFn: DELETE_BUSINESS_CATEGORY,
     onSuccess: (data) => {
-      queryClient.invalidateQueries("businessCategoriesList");
+      queryClient.invalidateQueries("categoriesList");
       toast.success(data?.message);
       setDeleteModalData(null);
     },
@@ -166,26 +166,26 @@ function BusinessCategoryTable({ modal, setModal }) {
     <>
       <Table
         rowKey="_id"
-        className="antd-table-custom rounded-xl"
+        className="antd-table-custom rounded"
         size="small"
         tableLayout="fixed"
         bordered
         scroll={{ x: 1200 }}
         loading={{
-          spinning: businessCategoriesList?.status === "loading",
+          spinning: categoriesList?.status === "loading",
           indicator: <Loading />,
         }}
         columns={columns}
-        dataSource={businessCategoriesList?.data?.data}
+        dataSource={categoriesList?.data?.data}
         pagination={false}
         onChange={handleSorting}
       />
 
       <Pagination
         className="flex justify-end mt-4"
-        pageSize={businessCategoriesList?.data?.pagination?.itemsPerPage}
-        total={businessCategoriesList?.data?.pagination?.totalItems}
-        current={businessCategoriesList?.data?.pagination?.currentPage}
+        pageSize={categoriesList?.data?.pagination?.itemsPerPage}
+        total={categoriesList?.data?.pagination?.totalItems}
+        current={categoriesList?.data?.pagination?.currentPage}
         onChange={(page) => onChange({ currentPage: Number(page) })}
       />
 

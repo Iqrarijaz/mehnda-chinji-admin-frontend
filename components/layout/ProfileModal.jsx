@@ -72,7 +72,7 @@ const ProfileModal = ({ open, onCancel }) => {
             onCancel={onCancel}
             footer={null}
             centered
-            width={420}
+            width={350}
             className="profile-modal-custom"
         >
             <div className="flex flex-col items-center py-4">
@@ -106,7 +106,7 @@ const ProfileModal = ({ open, onCancel }) => {
                             value={editForm.name}
                             onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                             placeholder="Full Name"
-                            className="text-center font-semibold text-base rounded-xl h-11 border-blue-100 hover:border-[#0F172A] focus:border-[#0F172A]"
+                            className="text-center font-semibold text-base rounded h-11 border-blue-100 hover:border-[#0F172A] focus:border-[#0F172A]"
                         />
                     </div>
                 ) : (

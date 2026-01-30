@@ -21,7 +21,7 @@ export function CustomPopover({
           {triggerContent}
         </div>
       </PopoverTrigger>
-      <PopoverContent className="!p-0 border border-gray-100 shadow-xl overflow-hidden rounded-xl">
+      <PopoverContent className="!p-0 border border-gray-100 shadow-xl overflow-hidden rounded">
         {popoverContent}
       </PopoverContent>
     </Popover>

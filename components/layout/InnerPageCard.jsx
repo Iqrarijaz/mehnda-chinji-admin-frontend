@@ -9,7 +9,7 @@ function InnerPageCard({ title, children }) {
             {title}
           </h1>
         )}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
           {children}
         </div>
       </div>

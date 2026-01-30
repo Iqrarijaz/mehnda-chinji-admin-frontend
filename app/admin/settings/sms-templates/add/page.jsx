@@ -34,7 +34,7 @@ function AddSMSTemplate() {
   const createSMSTemplate = useMutation({
     mutationKey: ["createSMSTemplate"],
     mutationFn: async (values) => {
-        return await CREATE_SMS_TEMPLATE(values);
+      return await CREATE_SMS_TEMPLATE(values);
     },
     onSuccess: (data) => {
       router.push("/admin/settings/sms-templates");
@@ -80,8 +80,8 @@ function AddSMSTemplate() {
         {({ errors, values, touched, setFieldValue }) => (
           <div className=" ">
             <Form>
-              {console.log({values})}
-              <div className="form-class mx-auto lg:gap-6 md:gap-3 relative  bg-gray-100 p-6 rounded-xl">
+              {console.log({ values })}
+              <div className="form-class mx-auto lg:gap-6 md:gap-3 relative  bg-gray-100 p-6 rounded">
                 {/* {JSON.stringify({
                   errors,
                 })} */}
@@ -89,7 +89,7 @@ function AddSMSTemplate() {
                 <div className="">
                   <FormField label="Template Name" name="templateName" />
                   <DescriptionField label="Message Content" name="messageContent" />
-                  <TagsFields label="Add Placeholder" name="fields"/>
+                  <TagsFields label="Add Placeholder" name="fields" />
                 </div>
                 <div className="">
                   <DescriptionField
@@ -102,14 +102,14 @@ function AddSMSTemplate() {
               <div className="flex justify-end mt-8 gap-6">
                 <Link
                   href="/admin/settings/sms-templates"
-                  className="bg-lightBlue h-9 flex items-center  hover:bg-white border-lightBlue hover:text-red-500 hover:border-red-500 text-white font-bold py-2 px-10 rounded-xl"
+                  className="bg-lightBlue h-9 flex items-center  hover:bg-white border-lightBlue hover:text-red-500 hover:border-red-500 text-white font-bold py-2 px-10 rounded"
                 >
                   Cancel
                 </Link>
                 <Button
                   type="primary"
                   htmlType="submit"
-                  className="bg-lightBlue hover:bg-white border-lightBlue hover:text-black !hover:border-black text-white font-bold py-4 px-10 rounded-xl"
+                  className="bg-lightBlue hover:bg-white border-lightBlue hover:text-black !hover:border-black text-white font-bold py-4 px-10 rounded"
                 >
                   Add
                 </Button>

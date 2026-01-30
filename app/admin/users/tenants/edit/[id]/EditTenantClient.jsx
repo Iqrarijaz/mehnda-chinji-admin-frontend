@@ -132,10 +132,10 @@ function EditTenantClient() {
                 {({ errors, touched, values, setFieldValue }) => (
                     <div className=" ">
                         <Form>
-                            <div className="form-class mx-auto gap-6 relative  bg-gray-100 p-6 rounded-xl">
+                            <div className="form-class mx-auto gap-6 relative  bg-gray-100 p-6 rounded">
                                 {getTenant?.status === "loading" && <Loading />}
                                 {updateTenant?.status === "loading" && <Loading />}
-                                <div className=" bg-white w-full p-6 rounded-xl">
+                                <div className=" bg-white w-full p-6 rounded">
                                     <div className="upload-image-div">
                                         <ProfileImage />
                                     </div>
@@ -157,14 +157,14 @@ function EditTenantClient() {
                             <div className="flex justify-end mt-8 gap-6">
                                 <Link
                                     href="/admin/users/tenants"
-                                    className="bg-lightBlue h-9 flex items-center  hover:bg-white border-lightBlue hover:text-red-500 hover:border-red-500 text-white font-bold py-2 px-10 rounded-xl"
+                                    className="bg-lightBlue h-9 flex items-center  hover:bg-white border-lightBlue hover:text-red-500 hover:border-red-500 text-white font-bold py-2 px-10 rounded"
                                 >
                                     Cancel
                                 </Link>
                                 <Button
                                     type="primary"
                                     htmlType="submit"
-                                    className="bg-lightBlue hover:bg-white border-lightBlue hover:text-black !hover:border-black text-white font-bold py-4 px-10 rounded-xl"
+                                    className="bg-lightBlue hover:bg-white border-lightBlue hover:text-black !hover:border-black text-white font-bold py-4 px-10 rounded"
                                 >
                                     Update
                                 </Button>

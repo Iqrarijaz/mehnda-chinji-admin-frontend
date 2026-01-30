@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import BusinessCategoryTable from "./components/Table";
-import BusinessCategoriesContextProvider, { useBusinessCategoriesContext } from "@/context/admin/business-categories/BusinessCategoriesContext";
+import CategoriesContextProvider, { usecategoriesContext } from "@/context/admin/categories/CategoriesContext";
 import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import AddBusinessCategoryModal from "./components/AddModal";
 import UpdateBusinessCategoryModal from "./components/UpdateModal";
@@ -14,13 +14,13 @@ function Building() {
     data: null,
     state: false,
   });
-  const { filters, setFilters , onChange } = useBusinessCategoriesContext();
+  const { filters, setFilters, onChange } = usecategoriesContext();
 
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between mb-4">
         <h1 className="inner-page-title text-2xl md:text-3xl text-black p-0 mb-4 md:mb-0 font-semibold">
-          Business Categories
+          Categories
         </h1>
         <div className="flex flex-col md:flex-row gap-4">
           <SearchInput setFilters={setFilters} />
@@ -47,8 +47,8 @@ function Building() {
 
 export default function ParentWrapper() {
   return (
-    <BusinessCategoriesContextProvider>
+    <CategoriesContextProvider>
       <Building />
-    </BusinessCategoriesContextProvider>
+    </CategoriesContextProvider>
   );
 }

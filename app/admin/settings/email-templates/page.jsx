@@ -7,7 +7,7 @@ import { PATH_ROUTER } from "@/routes";
 import EmailTemplateContextProvider, {
   useEmailTemplateContext,
 } from "@/context/admin/settings/EmailTemplateContext";
-import BuildingTable from "../../business-categories/components/Table";
+import BuildingTable from "../../categories/components/Table";
 import EmailTemplatesTable from "./components/Table";
 function EmailTemplate() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,7 +23,7 @@ function EmailTemplate() {
           <SearchInput setFilters={setFilters} />
         </div>
       </div>
-     
+
       <EmailTemplatesTable />
     </>
   );

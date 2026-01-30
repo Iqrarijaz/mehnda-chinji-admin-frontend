@@ -21,11 +21,11 @@ const MenuList = [
     link: "/admin/dashboard",
   },
   {
-    name: "Business Categories",
+    name: "Categories",
     icon: <FaProductHunt size={20} />,
-    link: "/admin/business-categories",
+    link: "/admin/categories",
   },
-   {
+  {
     name: "Locations",
     icon: <FaProductHunt size={20} />,
     link: "/admin/locations",
@@ -44,6 +44,11 @@ const MenuList = [
     name: "Users",
     link: "/admin/users",
     icon: <FaUser size={20} />,
+  },
+  {
+    name: "Roles",
+    link: "/admin/roles",
+    icon: <RiAdminFill size={20} />,
   },
 
 

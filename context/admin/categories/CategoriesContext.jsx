@@ -1,16 +1,16 @@
 "use client";
 
-import { LIST_BUSINESS_CATEGORIES } from "@/app/api/admin/business-categories";
+import { CATEGORIES } from "@/app/api/admin/categories";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 
 const { createContext, useState, useContext } = require("react");
 
-export const businessCategoriesContext = createContext();
-export const useBusinessCategoriesContext = () => useContext(businessCategoriesContext);
+export const categoriesContext = createContext();
+export const usecategoriesContext = () => useContext(categoriesContext);
 
-function BusinessCategoriesContextProvider({ children }) {
+function CategoriesContextProvider({ children }) {
   const [filters, setFilters] = useState({
     itemsPerPage: 20,
     currentPage: 1,
@@ -22,10 +22,10 @@ function BusinessCategoriesContextProvider({ children }) {
   });
 
   const debFilter = useDebounce(filters, filters?.onChangeSearch ? 1000 : 0);
-  const businessCategoriesList = useQuery({
-    queryKey: ["businessCategoriesList", JSON.stringify(debFilter)],
+  const categoriesList = useQuery({
+    queryKey: ["categoriesList", JSON.stringify(debFilter)],
     queryFn: async () => {
-      return await LIST_BUSINESS_CATEGORIES(debFilter);
+      return await CATEGORIES(debFilter);
     },
     enabled: true,
     onError: (error) => {
@@ -39,12 +39,12 @@ function BusinessCategoriesContextProvider({ children }) {
   }
 
   return (
-    <businessCategoriesContext.Provider
-      value={{ filters, businessCategoriesList, setFilters, onChange }}
+    <categoriesContext.Provider
+      value={{ filters, categoriesList, setFilters, onChange }}
     >
       {children}
-    </businessCategoriesContext.Provider>
+    </categoriesContext.Provider>
   );
 }
 
-export default BusinessCategoriesContextProvider;
+export default CategoriesContextProvider;

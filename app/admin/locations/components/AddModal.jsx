@@ -25,7 +25,7 @@ const validationSchema = Yup.object().shape({
   tehsil: Yup.string().test(
     'tehsil-required',
     'Tehsil is required for villages',
-    function(value) {
+    function (value) {
       return this.parent.type !== 'VILLAGE' || (this.parent.type === 'VILLAGE' && !!value);
     }
   ),
@@ -51,8 +51,8 @@ function AddModal({ modal, setModal }) {
     mutationFn: CREATE_LOCATION,
     onSuccess: (data) => {
       toast.success(data?.message || "Location added successfully");
-      queryClient.invalidateQueries({ 
-        predicate: (query) => query.queryKey[0] === "locationsList" 
+      queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === "locationsList"
       });
       handleCloseModal();
     },
@@ -89,7 +89,7 @@ function AddModal({ modal, setModal }) {
     }
   }, [isModalOpen, fetchTehsils]);
 
-  const tehsilOptions = useMemo(() => 
+  const tehsilOptions = useMemo(() =>
     tehsils.map((t) => ({
       label: t.name?.en || t.name_en, // Updated to match your API response structure
       value: t._id,
@@ -112,7 +112,7 @@ function AddModal({ modal, setModal }) {
   return (
     <Modal
       title="Add Location"
-      className="!rounded-xl"
+      className="!rounded"
       centered
       width={600}
       open={isModalOpen}
@@ -135,13 +135,13 @@ function AddModal({ modal, setModal }) {
       >
         {({ values, isSubmitting }) => (
           <Form>
-            <div className="form-class bg-gray-100 p-6 rounded-xl">
+            <div className="form-class bg-gray-100 p-6 rounded">
               {createLocation.isLoading && <Loading />}
 
-              <SelectField 
-                label="Location Type" 
-                name="type" 
-                options={TYPES} 
+              <SelectField
+                label="Location Type"
+                name="type"
+                options={TYPES}
               />
 
               {values.type === "VILLAGE" && (

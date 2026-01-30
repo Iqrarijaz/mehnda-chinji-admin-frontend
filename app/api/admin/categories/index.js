@@ -1,6 +1,6 @@
 import { Axios } from "@/interceptors";
 
-export async function LIST_BUSINESS_CATEGORIES(data) {
+export async function CATEGORIES(data) {
   try {
     console.log("===========data", data);
     const response = await Axios.get("/api/admin/business-category/list", {

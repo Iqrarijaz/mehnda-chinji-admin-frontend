@@ -27,7 +27,7 @@ const ColorPickerFormField = ({
           value={colorModal?.colorCode}
         />
         <Button
-          className={`absolute top-0 bottom-0 border-2 border-lightBlue right-1 !m-auto rounded-lg focus:outline-none border-none item-center`}
+          className={`absolute top-0 bottom-0 border-2 border-lightBlue right-1 !m-auto rounded focus:outline-none border-none item-center`}
           onClick={onClick}
           style={{
             backgroundColor: colorModal?.colorCode ?? "#5790d4",

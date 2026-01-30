@@ -190,7 +190,7 @@ function PageTable({ modal, setModal }) {
     <>
       <Table
         rowKey="_id"
-        className="antd-table-custom rounded-xl"
+        className="antd-table-custom rounded"
         size="small"
         tableLayout="fixed"
         bordered

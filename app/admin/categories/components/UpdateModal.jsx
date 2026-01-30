@@ -10,7 +10,7 @@ import Loading from "@/animations/homePageLoader";
 import FormField from "@/components/InnerPage/FormField";
 import {
   UPDATE_BUSINESS_CATEGORY,
-} from "@/app/api/admin/business-categories";
+} from "@/app/api/admin/categories";
 
 // Validation schema
 const validationSchema = Yup.object().shape({
@@ -30,7 +30,7 @@ function UpdateBusinessCategoryModal({ modal, setModal }) {
 
       // Refetch updated list
       queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey[0] === "businessCategoriesList",
+        predicate: (query) => query.queryKey[0] === "categoriesList",
       });
 
       setModal({ name: null, state: false, data: null });
@@ -81,7 +81,7 @@ function UpdateBusinessCategoryModal({ modal, setModal }) {
       >
         {({ isSubmitting }) => (
           <Form>
-            <div className="form-class bg-gray-100 p-6 rounded-xl">
+            <div className="form-class bg-gray-100 p-6 rounded">
               {updateBusinessCategory.status === "loading" && <Loading />}
               <FormField label="Name English" name="name_en" />
               <FormField label="Name Urdu" name="name_ur" />

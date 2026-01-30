@@ -121,16 +121,16 @@ function ClientTable() {
         <div className="overflow-hidden whitespace-nowrap flex flex-col">
           {record?.length > 0
             ? record.map((item) => (
-                <div
-                  key={item?._id}
-                  className="capitalize p-1 cursor-pointer text-lightBlue underline"
-                  onClick={() => {
-                    router.push(`${PATH_ROUTER.VIEW_BUILDING}/${item?._id}`);
-                  }}
-                >
-                  {item?.name}
-                </div>
-              ))
+              <div
+                key={item?._id}
+                className="capitalize p-1 cursor-pointer text-lightBlue underline"
+                onClick={() => {
+                  router.push(`${PATH_ROUTER.VIEW_BUILDING}/${item?._id}`);
+                }}
+              >
+                {item?.name}
+              </div>
+            ))
             : " ---- "}
         </div>
       ),
@@ -238,7 +238,7 @@ function ClientTable() {
         rowClassName={(record, index) =>
           index % 2 === 0 ? "table-row-light" : "table-row-dark"
         }
-        className="antd-table-custom rounded-xl"
+        className="antd-table-custom rounded"
         size="small"
         tableLayout="fixed"
         bordered

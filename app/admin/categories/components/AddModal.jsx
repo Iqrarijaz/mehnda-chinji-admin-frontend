@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 import Loading from "@/animations/homePageLoader";
 import FormField from "@/components/InnerPage/FormField";
-import { CREATE_BUSINESS_CATEGORY } from "@/app/api/admin/business-categories";
+import { CREATE_BUSINESS_CATEGORY } from "@/app/api/admin/categories";
 import { useQueryClient } from "react-query";
 
 // Validation schema
@@ -32,10 +32,10 @@ function AddBusinessCategoryModal({ modal, setModal }) {
         mutationFn: CREATE_BUSINESS_CATEGORY,
         onSuccess: (data) => {
             toast.success(data?.message || "Category added successfully");
-            
-            // Invalidate all queries that start with "businessCategoriesList"
+
+            // Invalidate all queries that start with "categoriesList"
             queryClient.invalidateQueries({
-                predicate: (query) => query.queryKey[0] === "businessCategoriesList",
+                predicate: (query) => query.queryKey[0] === "categoriesList",
             });
             handleCloseModal();
         },
@@ -64,7 +64,7 @@ function AddBusinessCategoryModal({ modal, setModal }) {
     return (
         <Modal
             title="Add Business Category"
-            className="!rounded-xl"
+            className="!rounded"
             centered
             width={600}
             open={modal?.name === "Add" && modal?.state}
@@ -89,7 +89,7 @@ function AddBusinessCategoryModal({ modal, setModal }) {
             >
                 {({ isSubmitting }) => (
                     <Form>
-                        <div className="form-class bg-gray-100 p-6 rounded-xl">
+                        <div className="form-class bg-gray-100 p-6 rounded">
                             {createBusinessCategory.status === "loading" && <Loading />}
                             <FormField label="Name English" name="name_en" />
                             <FormField label="Name Urdu" name="name_ur" />
