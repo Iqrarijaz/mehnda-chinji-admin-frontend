@@ -102,7 +102,7 @@ function BusinessCategoryTable({ modal, setModal }) {
       dataIndex: "name",
       key: "name_en",
       sorter: (a, b) => a.name.en.localeCompare(b.name.en),
-      width: 200,
+      width: 100,
       render: (name) => (
         <div className="capitalize overflow-hidden whitespace-nowrap">
           {name?.en}
@@ -113,11 +113,11 @@ function BusinessCategoryTable({ modal, setModal }) {
       title: "Name (Urdu)",
       dataIndex: "name",
       key: "name_ur",
-      width: 200,
+      width: 100,
       align: "left",
       sorter: (a, b) => a.name.ur.localeCompare(b.name.ur),
       render: (name) => (
-        <div className="overflow-hidden whitespace-nowrap text-right font-notoUrdu">
+        <div className="overflow-hidden whitespace-nowrap text-right font-notoUrdu p-2">
           {name?.ur}
         </div>
       ),
@@ -127,7 +127,7 @@ function BusinessCategoryTable({ modal, setModal }) {
       dataIndex: "status",
       key: "status",
       align: "center",
-      width: 120,
+      width: 100,
       render: (status, record) => (
         <Switch
           checked={status}
@@ -140,24 +140,26 @@ function BusinessCategoryTable({ modal, setModal }) {
       title: "Created At",
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 180,
+      width: 100,
       render: (text) => <div className="whitespace-nowrap">{timestampToDate(text)}</div>,
     },
     {
       title: "Actions",
       key: "actions",
-      width: 100,
+      width: 70,
       align: "center",
       render: (record) => (
-        <CustomPopover
-          triggerContent={
-            <HiOutlineDotsHorizontal
-              size={28}
-              className="hover:text-secondary cursor-pointer"
-            />
-          }
-          popoverContent={() => popoverContent(actionMenu, record)}
-        />
+        <div className="flex items-center justify-center">
+          <CustomPopover
+            triggerContent={
+              <HiOutlineDotsHorizontal
+                size={28}
+                className="hover:text-secondary cursor-pointer"
+              />
+            }
+            popoverContent={() => popoverContent(actionMenu, record)}
+          />
+        </div>
       ),
     }
   ];

@@ -24,11 +24,6 @@ function MainLayout({ children }) {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    router.push("/");
-  };
-
   const isActive = (link) => pathname === link;
 
   return (
