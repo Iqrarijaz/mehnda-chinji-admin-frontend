@@ -56,7 +56,17 @@ function MainLayout({ children }) {
           {/* Menu */}
           <nav className="flex-1 mt-4 overflow-y-auto">
             <ul className="space-y-1 px-3">
-              {MenuList.map((item) => (
+              {MenuList.filter(item => {
+                try {
+                  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+                  const user = userData?.adminData || userData;
+                  if (!item.permission) return true; // No permission required
+                  if (user?.role === "SUPER_ADMIN") return true; // Super Admin sees everything
+                  return user?.permissions?.includes(item.permission);
+                } catch (e) {
+                  return false;
+                }
+              }).map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.link}
@@ -99,7 +109,17 @@ function MainLayout({ children }) {
 
           <nav className="flex-1 overflow-y-auto p-4 bg-[#0F172A] custom-scrollbar">
             <ul className="space-y-2">
-              {MenuList.map((item) => (
+              {MenuList.filter(item => {
+                try {
+                  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+                  const user = userData?.adminData || userData;
+                  if (!item.permission) return true;
+                  if (user?.role === "SUPER_ADMIN") return true; // Super Admin sees everything
+                  return user?.permissions?.includes(item.permission);
+                } catch (e) {
+                  return false;
+                }
+              }).map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.link}

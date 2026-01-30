@@ -3,12 +3,13 @@ import React, { useEffect, useState } from "react";
 import { Modal, Button, Avatar, Divider, Tag, Input, message, Tooltip } from "antd";
 import { UserOutlined, LogoutOutlined, MailOutlined, PhoneOutlined, SafetyCertificateOutlined, CheckOutlined, CloseOutlined, CameraOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-
+import { LOGOUT } from "@/app/api/login";
 const ProfileModal = ({ open, onCancel }) => {
     const router = useRouter();
     const [user, setUser] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editForm, setEditForm] = useState({ name: "", phone: "" });
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     useEffect(() => {
         if (open) {
@@ -28,10 +29,20 @@ const ProfileModal = ({ open, onCancel }) => {
         }
     }, [open]);
 
-    const handleLogout = () => {
-        localStorage.clear();
-        router.push("/");
-        onCancel();
+    const handleLogout = async () => {
+        setIsLoggingOut(true);
+        try {
+            await LOGOUT();
+            message.success("Logged out successfully");
+        } catch (error) {
+            // Even if server logout fails, still clear local storage
+            console.error("Server logout failed:", error);
+        } finally {
+            localStorage.clear();
+            router.push("/");
+            onCancel();
+            setIsLoggingOut(false);
+        }
     };
 
     const handleSave = () => {
@@ -186,6 +197,7 @@ const ProfileModal = ({ open, onCancel }) => {
                             danger
                             icon={<LogoutOutlined />}
                             onClick={handleLogout}
+                            loading={isLoggingOut}
                             className="w-full h-12 rounded-2xl font-bold flex items-center justify-center hover:scale-[1.01] transition-all shadow-lg shadow-red-900/10 border-none bg-gradient-to-r from-red-600 to-red-500"
                         >
                             Sign Out

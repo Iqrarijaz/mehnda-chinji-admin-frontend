@@ -1,5 +1,5 @@
 import React from "react";
-import { FaProductHunt, FaUser } from "react-icons/fa";
+import { FaProductHunt, FaUser, FaUserShield } from "react-icons/fa";
 import { BiSolidAddToQueue } from "react-icons/bi";
 import { RiAdminFill } from "react-icons/ri";
 import { LuBaggageClaim } from "react-icons/lu";
@@ -19,55 +19,67 @@ const MenuList = [
     name: "Dashboard",
     icon: <MdDashboardCustomize size={20} />,
     link: "/admin/dashboard",
+    permission: "dashboard.read"
   },
   {
     name: "Categories",
     icon: <FaProductHunt size={20} />,
     link: "/admin/categories",
+    permission: "categories.read"
   },
   {
     name: "Locations",
     icon: <FaProductHunt size={20} />,
     link: "/admin/locations",
+    permission: "locations.read"
   },
   {
     name: "Add-Ons",
     icon: <BiSolidAddToQueue size={20} />,
     link: "/admin/add-ons",
+    permission: "add_ons.read"
   },
   {
     name: "Buildings",
     icon: <FaBuildingColumns size={20} />,
     link: "/admin/buildings",
+    permission: "buildings.read"
   },
   {
     name: "Users",
     link: "/admin/users",
     icon: <FaUser size={20} />,
+    permission: "users.read"
   },
   {
     name: "Roles",
     link: "/admin/roles",
     icon: <RiAdminFill size={20} />,
+    permission: "roles.read"
   },
-
-
+  {
+    name: "Admin Users",
+    link: "/admin/admin-users",
+    icon: <FaUserShield size={20} />,
+    permission: "admin_users.read"
+  },
   {
     name: "CMS",
     icon: <RiListSettingsFill size={20} />,
     link: "/admin/cms",
+    permission: "cms.read"
   },
-
   {
     name: "Developer",
     link: "/admin/developer",
     icon: <MdOutlineDeveloperMode size={20} />,
-
+    permission: "developer.read"
   },
   {
     name: "Policy",
     icon: <MdPolicy size={20} />,
     link: "/admin/policy",
+    permission: "policy.read"
   },
 
 ]

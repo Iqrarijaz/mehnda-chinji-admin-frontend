@@ -7,6 +7,8 @@ import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { CREATE_ROLE, UPDATE_ROLE } from "@/app/api/admin/roles";
 
+import PermissionsSelector from "./PermissionsSelector";
+
 const validationSchema = Yup.object().shape({
     name: Yup.string().required("Role name is required"),
     description: Yup.string().required("Description is required"),
@@ -22,8 +24,8 @@ const AddEditRoleModal = ({ modal, setModal }) => {
             toast.success(`Role ${isEdit ? "updated" : "created"} successfully`);
             handleCancel();
         },
-        onError: () => {
-            toast.error(`Failed to ${isEdit ? "update" : "create"} role`);
+        onError: (err) => {
+            toast.error(err.response?.data?.message || `Failed to ${isEdit ? "update" : "create"} role`);
         },
     });
 
@@ -43,11 +45,13 @@ const AddEditRoleModal = ({ modal, setModal }) => {
             onCancel={handleCancel}
             footer={null}
             destroyOnClose
+            width={800}
         >
             <Formik
                 initialValues={{
                     name: modal.data?.name || "",
                     description: modal.data?.description || "",
+                    permissions: modal.data?.permissions || [],
                 }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
@@ -61,6 +65,7 @@ const AddEditRoleModal = ({ modal, setModal }) => {
                     handleBlur,
                     handleSubmit,
                     isSubmitting,
+                    setFieldValue,
                 }) => (
                     <Form layout="vertical" onFinish={handleSubmit}>
                         <Form.Item
@@ -88,7 +93,14 @@ const AddEditRoleModal = ({ modal, setModal }) => {
                                 value={values.description}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                rows={4}
+                                rows={2}
+                            />
+                        </Form.Item>
+
+                        <Form.Item label="Permissions">
+                            <PermissionsSelector
+                                selectedPermissions={values.permissions}
+                                onChange={(newPermissions) => setFieldValue("permissions", newPermissions)}
                             />
                         </Form.Item>
 
