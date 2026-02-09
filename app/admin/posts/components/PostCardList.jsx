@@ -11,7 +11,7 @@ import Loading from "@/animations/homePageLoader";
 function PostCardList({ modal, setModal }) {
     const queryClient = useQueryClient();
     const { postsList, loadMore, hasMore, setFilters } = usePostsContext();
-    const [expandedCards, setExpandedCards] = useState(new Set());
+    const [expandedPostIds, setExpandedPostIds] = useState(new Set());
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false,
         title: "",
@@ -21,6 +21,18 @@ function PostCardList({ modal, setModal }) {
         confirmText: "Confirm",
         cancelText: "Cancel"
     });
+
+    const toggleExpand = (postId) => {
+        setExpandedPostIds(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(postId)) {
+                newSet.delete(postId);
+            } else {
+                newSet.add(postId);
+            }
+            return newSet;
+        });
+    };
 
     const observerRef = useRef(null);
     const loadMoreRef = useRef(null);
@@ -72,18 +84,6 @@ function PostCardList({ modal, setModal }) {
             closeConfirmModal();
         },
     });
-
-    const handleToggleExpand = (postId) => {
-        setExpandedCards(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(postId)) {
-                newSet.delete(postId);
-            } else {
-                newSet.add(postId);
-            }
-            return newSet;
-        });
-    };
 
     const handleEdit = (post) => {
         setModal({
@@ -140,45 +140,24 @@ function PostCardList({ modal, setModal }) {
         );
     }
 
-    const [featuredPost, ...otherPosts] = posts;
-
     return (
         <>
-            {/* Featured Card - Latest Post */}
-            {featuredPost && (
-                <PostCard
-                    post={featuredPost}
-                    isFeatured={true}
-                    isExpanded={expandedCards.has(featuredPost._id)}
-                    onToggleExpand={handleToggleExpand}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                    onStatusChange={handleStatusChange}
-                />
-            )}
-
-            {/* Section Title */}
-            {otherPosts.length > 0 && (
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">More Posts</h3>
-            )}
-
-            {/* Other Posts Grid */}
-            <div className="grid grid-cols-1 gap-4">
-                {otherPosts.map((post, index) => {
-                    const isLastPost = index === otherPosts.length - 1;
+            <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6">
+                {posts.map((post, index) => {
+                    const isLastPost = index === posts.length - 1;
                     return (
                         <div
                             key={post._id}
                             ref={isLastPost ? lastPostRef : null}
+                            className="break-inside-avoid"
                         >
                             <PostCard
                                 post={post}
-                                isFeatured={false}
-                                isExpanded={expandedCards.has(post._id)}
-                                onToggleExpand={handleToggleExpand}
                                 onEdit={handleEdit}
                                 onDelete={handleDelete}
                                 onStatusChange={handleStatusChange}
+                                isExpanded={expandedPostIds.has(post._id)}
+                                onToggleExpand={() => toggleExpand(post._id)}
                             />
                         </div>
                     );
