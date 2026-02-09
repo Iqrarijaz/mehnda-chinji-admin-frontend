@@ -1,5 +1,5 @@
 "use client";
-import { Modal, Pagination, Table, Tag } from "antd";
+import { Modal, Pagination, Table, Tag, Tooltip } from "antd";
 import React, { useState } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
@@ -129,9 +129,15 @@ function PlacesTable({ modal, setModal }) {
             sorter: (a, b) => a.name?.en?.localeCompare(b.name?.en),
             width: 150,
             render: (name) => (
-                <div className="capitalize overflow-hidden whitespace-nowrap">
-                    {name?.en}
-                </div>
+                <Tooltip
+                    title={name?.en}
+                    placement="topLeft"
+                    overlayStyle={{ maxWidth: 300 }}
+                >
+                    <div className="capitalize overflow-hidden whitespace-nowrap text-ellipsis cursor-pointer">
+                        {name?.en}
+                    </div>
+                </Tooltip>
             ),
         },
         {
@@ -142,9 +148,15 @@ function PlacesTable({ modal, setModal }) {
             align: "left",
             sorter: (a, b) => a.name?.ur?.localeCompare(b.name?.ur),
             render: (name) => (
-                <div className="overflow-hidden whitespace-nowrap text-right font-notoUrdu p-2">
-                    {name?.ur}
-                </div>
+                <Tooltip
+                    title={<span className="font-notoUrdu">{name?.ur}</span>}
+                    placement="topLeft"
+                    overlayStyle={{ maxWidth: 300 }}
+                >
+                    <div className="overflow-hidden whitespace-nowrap text-ellipsis text-right font-notoUrdu p-2 cursor-pointer">
+                        {name?.ur}
+                    </div>
+                </Tooltip>
             ),
         },
         {
@@ -168,9 +180,20 @@ function PlacesTable({ modal, setModal }) {
             key: "address_en",
             width: 200,
             render: (address) => (
-                <div className="overflow-hidden whitespace-nowrap text-ellipsis" title={address?.en}>
-                    {address?.en}
-                </div>
+                <Tooltip
+                    title={
+                        <div>
+                            <div className="mb-1"><strong>English:</strong> {address?.en || "-"}</div>
+                            <div className="font-notoUrdu text-right"><strong>Urdu:</strong> {address?.ur || "-"}</div>
+                        </div>
+                    }
+                    placement="topLeft"
+                    overlayStyle={{ maxWidth: 350 }}
+                >
+                    <div className="overflow-hidden whitespace-nowrap text-ellipsis cursor-pointer">
+                        {address?.en || "-"}
+                    </div>
+                </Tooltip>
             ),
         },
         {

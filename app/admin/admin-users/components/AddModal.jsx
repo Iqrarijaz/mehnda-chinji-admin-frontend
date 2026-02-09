@@ -10,7 +10,7 @@ import md5 from "md5";
 import Loading from "@/animations/homePageLoader";
 import FormField from "@/components/InnerPage/FormField";
 import { CREATE_ADMIN_USER } from "@/app/api/admin/admin-users";
-import { GET_ROLES } from "@/app/api/admin/roles";
+import { GET_ACTIVE_ROLES } from "@/app/api/admin/roles";
 
 const { Option } = Select;
 
@@ -19,7 +19,7 @@ const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     phone: Yup.string(),
-    role: Yup.string().required("Role type is required"),
+    accessRoleId: Yup.string().required("Role is required"),
     password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
 });
 
@@ -28,7 +28,8 @@ const initialValues = {
     name: "",
     email: "",
     phone: "",
-    role: "ADMIN",
+    role: "",
+    accessRoleId: "",
     password: "",
     status: "ACTIVE",
 };
@@ -37,11 +38,15 @@ function AddAdminUserModal({ modal, setModal }) {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
 
-    // Fetch roles for dropdown
-    const { data: rolesData } = useQuery("allRolesList", () => GET_ROLES({ limit: 100 }), {
-        staleTime: 30000,
-        enabled: modal?.name === "Add" && modal?.state,
-    });
+    // Fetch active roles for dropdown
+    const { data: rolesData, isLoading: rolesLoading } = useQuery(
+        "activeRolesList",
+        GET_ACTIVE_ROLES,
+        {
+            staleTime: 30000,
+            enabled: modal?.name === "Add" && modal?.state,
+        }
+    );
 
     const createAdminUser = useMutation({
         mutationKey: ["createAdminUser"],
@@ -151,22 +156,30 @@ function AddAdminUserModal({ modal, setModal }) {
                                 )}
                             </div>
 
-                            {/* Role Type */}
+                            {/* Role */}
                             <div className="mb-3">
                                 <label className="text-black font-[500] mb-1 block">
-                                    Role Type <span className="text-red-500">*</span>
+                                    Role <span className="text-red-500">*</span>
                                 </label>
                                 <Select
-                                    value={values.role}
-                                    onChange={(value) => setFieldValue("role", value)}
-                                    placeholder="Select role type"
+                                    value={values.accessRoleId}
+                                    onChange={(value) => {
+                                        const selectedRole = rolesData?.data?.find(r => r._id === value);
+                                        setFieldValue("accessRoleId", value);
+                                        setFieldValue("role", selectedRole?.name || "");
+                                    }}
+                                    placeholder="Select role"
                                     className="w-full"
+                                    loading={rolesLoading}
                                 >
-                                    <Option value="ADMIN">Admin</Option>
-                                    <Option value="USER">User</Option>
+                                    {rolesData?.data?.map((role) => (
+                                        <Option key={role._id} value={role._id}>
+                                            {role.name}
+                                        </Option>
+                                    ))}
                                 </Select>
-                                {touched.role && errors.role && (
-                                    <div className="text-red-500 text-sm mt-1">{errors.role}</div>
+                                {touched.accessRoleId && errors.accessRoleId && (
+                                    <div className="text-red-500 text-sm mt-1">{errors.accessRoleId}</div>
                                 )}
                             </div>
 

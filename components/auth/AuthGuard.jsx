@@ -1,32 +1,27 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Modal } from "antd";
 import Loading from "@/animations/homePageLoader";
+import { useSession } from "@/context/SessionContext";
 
 const AuthGuard = ({ children }) => {
     const router = useRouter();
     const [authorized, setAuthorized] = useState(false);
+    const { handleSessionExpired } = useSession();
 
     useEffect(() => {
         const checkAuth = () => {
             const userData = localStorage.getItem("userData");
             if (!userData) {
-                Modal.warning({
-                    title: "Session Expired",
-                    content: "Your session has expired. Please log in again.",
-                    centered: true,
-                    onOk() {
-                        router.push("/");
-                    },
-                });
+                // Use the custom session expired modal
+                handleSessionExpired();
             } else {
                 setAuthorized(true);
             }
         };
 
         checkAuth();
-    }, [router]);
+    }, [router, handleSessionExpired]);
 
     if (!authorized) {
         return (

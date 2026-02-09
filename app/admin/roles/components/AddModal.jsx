@@ -42,7 +42,10 @@ function AddRoleModal({ modal, setModal }) {
     });
 
     const handleSubmit = (values) => {
-        createRole.mutate(values);
+        createRole.mutate({
+            ...values,
+            name: values.name.toUpperCase()
+        });
     };
 
     const handleCloseModal = () => {

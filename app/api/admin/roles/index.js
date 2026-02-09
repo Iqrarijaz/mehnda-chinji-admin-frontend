@@ -51,3 +51,12 @@ export async function GET_PERMISSIONS() {
         throw error;
     }
 }
+
+export async function GET_ACTIVE_ROLES() {
+    try {
+        const response = await Axios.get("/api/admin/roles/active");
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
