@@ -97,7 +97,7 @@ function Page() {
           <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="text-center lg:text-left mb-10">
               <h2 className="text-3xl font-bold text-[#0F172A] tracking-tight mb-2">
-                Authentication
+                Admin Login
               </h2>
               <p className="text-gray-500">
                 Please enter your credentials to access your account.
@@ -145,14 +145,14 @@ function Page() {
                       help={errors.password && touched.password ? errors.password : ""}
                       className="mb-0"
                     >
-                      <div className="flex justify-between items-center mb-2 ml-1">
+                      {/* <div className="flex justify-between items-center mb-2 ml-1">
                         <label className="text-sm font-semibold text-gray-700">
                           Account Password
                         </label>
                         <a href="#" className="text-xs font-semibold text-[#0F172A] hover:underline decoration-2 underline-offset-4">
                           Lost password?
                         </a>
-                      </div>
+                      </div> */}
                       <Input.Password
                         size="large"
                         prefix={<LockOutlined className="text-gray-400 mr-2" />}
@@ -172,7 +172,7 @@ function Page() {
                     loading={isSubmitting}
                     className="w-full h-12 bg-[#0F172A] hover:bg-[#1E293B] border-none text-white font-bold rounded shadow-lg shadow-blue-900/10 transition-all transform active:scale-[0.98] mt-4"
                   >
-                    Authenticate
+                    Login
                   </Button>
 
                   <div className="relative py-4">

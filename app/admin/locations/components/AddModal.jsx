@@ -123,7 +123,7 @@ function AddModal({ modal, setModal }) {
     >
       <div className="mb-4 flex justify-end">
         <Button className="reset-button" onClick={handleResetForm}>
-          Reset Form
+          Reset
         </Button>
       </div>
 

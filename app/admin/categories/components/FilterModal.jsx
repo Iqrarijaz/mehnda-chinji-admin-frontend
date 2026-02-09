@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Input, Modal } from "antd";
 import { Select } from "antd";
 
-function BuildingFilterModal({ isModalOpen, setIsModalOpen, setFilters }) {
+function FilterModal({ isModalOpen, setIsModalOpen, setFilters }) {
   // Initialize the advanceFilter state with null values
   const [advanceFilter, setAdvanceFilter] = useState({
     name: null,
@@ -64,7 +64,7 @@ function BuildingFilterModal({ isModalOpen, setIsModalOpen, setFilters }) {
       <div className="grid grid-cols-2 gap-6 mb-6 mt-4">
         <div>
           <Input
-            placeholder="Building Name..."
+            placeholder="Category Name..."
             onChange={(event) => {
               const value = event.target.value;
               // Update the advanceFilter state with the new company name
@@ -78,7 +78,7 @@ function BuildingFilterModal({ isModalOpen, setIsModalOpen, setFilters }) {
         </div>
         <div>
           <Input
-            placeholder="Building Contact..."
+            placeholder="Category Contact..."
             onChange={(event) => {
               const value = event.target.value;
               // Update the advanceFilter state with the new contact name
@@ -142,4 +142,4 @@ function BuildingFilterModal({ isModalOpen, setIsModalOpen, setFilters }) {
   );
 }
 
-export default BuildingFilterModal;
+export default FilterModal;

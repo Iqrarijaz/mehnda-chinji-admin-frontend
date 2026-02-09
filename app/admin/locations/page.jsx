@@ -6,7 +6,7 @@ import SearchInput from "@/components/InnerPage/SearchInput";
 import PageTable from "./components/Table";
 import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import AddBusinessCategoryModal from "./components/AddModal";
-import UpdateBusinessCategoryModal from "./components/UpdateModal";
+import updateCategoryModal from "./components/UpdateModal";
 import LocationsContextProvider, { useLocationsContext } from "@/context/admin/locations/LocationsContext";
 function Page() {
   const [modal, setModal] = useState({
@@ -39,7 +39,7 @@ function Page() {
       </div>
 
       <AddBusinessCategoryModal modal={modal} setModal={setModal} />
-      <UpdateBusinessCategoryModal modal={modal} setModal={setModal} />
+      <updateCategoryModal modal={modal} setModal={setModal} />
 
     </>
   );

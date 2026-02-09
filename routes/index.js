@@ -11,11 +11,7 @@ export const PATH_ROUTER = {
   EDIT_TENANT: "/admin/users/tenants/edit-tenant",
   VIEW_TENANT: "/admin/users/tenants/view",
 
-  // ============ Building =================
-  ADD_BUILDING: "/admin/buildings/add",
-  BUILDINGS: "/admin/buildings",
-  EDIT_BUILDING: "/admin/buildings/edit",
-  VIEW_BUILDING: "/admin/buildings/view",
+
 
 
   // ============= Email Templates Settings =================

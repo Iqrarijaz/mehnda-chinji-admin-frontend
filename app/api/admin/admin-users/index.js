@@ -35,6 +35,18 @@ export async function UPDATE_ADMIN_USER(data) {
     }
 }
 
+export async function UPDATE_ADMIN_USER_STATUS(data) {
+    try {
+        const response = await Axios.post("/api/admin/moderators/update", {
+            _id: data._id,
+            status: data.status
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export async function DELETE_ADMIN_USER(data) {
     try {
         const response = await Axios.post("/api/admin/moderators/remove", data);

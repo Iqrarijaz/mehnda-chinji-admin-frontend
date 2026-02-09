@@ -1,6 +1,6 @@
 "use client";
 
-import { LIST_EMAIL_TEMPLATES } from "@/app/api/admin/settings/emailTemplates";
+import { GET_EMAIL_TEMPLATES } from "@/app/api/admin/settings/emailTemplates";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
@@ -12,20 +12,18 @@ export const useEmailTemplateContext = () => useContext(emailTemplateContext);
 
 function EmailTemplateContextProvider({ children }) {
   const [filters, setFilters] = useState({
-    itemsPerPage: 10,
-    currentPage: 1,
-    keyWord: null,
-    sortOrder: -1,
-    sortingKey: "_id",
+    limit: 10,
+    page: 1,
+    search: "",
     onChangeSearch: false,
-    advance: null,
   });
 
-  const debFilter = useDebounce(filters, filters?.onChangeSearch ? 1000 : 0);
-  const emailTemplateListList = useQuery({
-    queryKey: ["emailTemplateListList", JSON.stringify(debFilter)],
+  const debFilter = useDebounce(filters, filters?.onChangeSearch ? 500 : 0);
+
+  const emailTemplatesList = useQuery({
+    queryKey: ["emailTemplatesList", JSON.stringify(debFilter)],
     queryFn: async () => {
-      return await LIST_EMAIL_TEMPLATES(debFilter);
+      return await GET_EMAIL_TEMPLATES(debFilter);
     },
     enabled: true,
     onError: (error) => {
@@ -40,7 +38,7 @@ function EmailTemplateContextProvider({ children }) {
 
   return (
     <emailTemplateContext.Provider
-      value={{ filters, emailTemplateListList, setFilters, onChange }}
+      value={{ filters, emailTemplatesList, setFilters, onChange }}
     >
       {children}
     </emailTemplateContext.Provider>

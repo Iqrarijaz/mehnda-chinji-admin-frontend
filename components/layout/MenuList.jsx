@@ -1,5 +1,5 @@
 import React from "react";
-import { FaProductHunt, FaUser, FaUserShield } from "react-icons/fa";
+import { FaProductHunt, FaUser, FaUserShield, FaMapMarkerAlt } from "react-icons/fa";
 import { BiSolidAddToQueue } from "react-icons/bi";
 import { RiAdminFill } from "react-icons/ri";
 import { LuBaggageClaim } from "react-icons/lu";
@@ -14,6 +14,8 @@ import { GrSystem } from "react-icons/gr";
 import { MdPolicy } from "react-icons/md";
 import { RiListSettingsFill } from "react-icons/ri";
 import { IoSettings } from "react-icons/io5";
+import { MdEmail } from "react-icons/md";
+
 const MenuList = [
   {
     name: "Dashboard",
@@ -28,28 +30,16 @@ const MenuList = [
     permission: "categories.read"
   },
   {
-    name: "Locations",
-    icon: <FaProductHunt size={20} />,
-    link: "/admin/locations",
-    permission: "locations.read"
+    name: "Places",
+    icon: <FaMapMarkerAlt size={20} />,
+    link: "/admin/places",
+    permission: "places.read"
   },
   {
-    name: "Add-Ons",
-    icon: <BiSolidAddToQueue size={20} />,
-    link: "/admin/add-ons",
-    permission: "add_ons.read"
-  },
-  {
-    name: "Buildings",
-    icon: <FaBuildingColumns size={20} />,
-    link: "/admin/buildings",
-    permission: "buildings.read"
-  },
-  {
-    name: "Users",
-    link: "/admin/users",
-    icon: <FaUser size={20} />,
-    permission: "users.read"
+    name: "Posts",
+    icon: <FaBloggerB size={20} />,
+    link: "/admin/posts",
+    permission: "posts.read"
   },
   {
     name: "Roles",
@@ -63,24 +53,31 @@ const MenuList = [
     icon: <FaUserShield size={20} />,
     permission: "admin_users.read"
   },
-  {
-    name: "CMS",
-    icon: <RiListSettingsFill size={20} />,
-    link: "/admin/cms",
-    permission: "cms.read"
-  },
-  {
-    name: "Developer",
-    link: "/admin/developer",
-    icon: <MdOutlineDeveloperMode size={20} />,
-    permission: "developer.read"
-  },
-  {
-    name: "Policy",
-    icon: <MdPolicy size={20} />,
-    link: "/admin/policy",
-    permission: "policy.read"
-  },
+  // {
+  //   name: "CMS",
+  //   icon: <RiListSettingsFill size={20} />,
+  //   link: "/admin/cms",
+  //   permission: "cms.read"
+  // },
+  // {
+  //   name: "Developer",
+  //   link: "/admin/developer",
+  //   icon: <MdOutlineDeveloperMode size={20} />,
+  //   permission: "developer.read"
+  // },
+  // {
+  //   name: "Settings",
+  //   icon: <IoSettings size={20} />,
+  //   permission: "settings.read",
+  //   subItems: [
+  //     {
+  //       name: "Email Template",
+  //       link: "/admin/settings/email-templates",
+  //       icon: <MdEmail size={18} />,
+  //       permission: "settings.email_templates.read"
+  //     }
+  //   ]
+  // },
 
 ]
 

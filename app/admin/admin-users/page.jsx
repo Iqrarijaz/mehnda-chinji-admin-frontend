@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import AdminUsersContextProvider, { useAdminUsersContext } from "@/context/admin/admin-users/AdminUsersContext";
 import AdminUsersTable from "./components/Table";
-import AddEditAdminUserModal from "./components/AddEditAdminUserModal";
+import AddAdminUserModal from "./components/AddModal";
+import UpdateAdminUserModal from "./components/UpdateModal";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import AddButton from "@/components/InnerPage/AddButton";
 import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
@@ -20,7 +21,7 @@ function AdminUsersPageContent() {
         <>
             <div className="flex flex-col md:flex-row justify-between mb-4">
                 <h1 className="inner-page-title text-2xl md:text-3xl text-black p-0 mb-4 md:mb-0 font-semibold">
-                    Admin Users Management
+                    Admin Users
                 </h1>
                 <div className="flex flex-col md:flex-row gap-4">
                     <SearchInput setFilters={setFilters} />
@@ -39,7 +40,11 @@ function AdminUsersPageContent() {
                 <AdminUsersTable setModal={setModal} />
             </div>
 
-            <AddEditAdminUserModal modal={modal} setModal={setModal} />
+            {/* Add Modal */}
+            <AddAdminUserModal modal={modal} setModal={setModal} />
+
+            {/* Update Modal */}
+            <UpdateAdminUserModal modal={modal} setModal={setModal} />
         </>
     );
 }

@@ -449,8 +449,8 @@ body {
 
 .ant-select {
   border: 2px solid #0F172A !important;
-  padding: 4px !important;
   height: 40px !important;
+  background-color: #ffffff !important;
   border-radius: 6px !important;
 }
 
@@ -505,8 +505,8 @@ body {
   background-color: #f3f4f6 !important;
   border: 2px solid #e5e7eb !important;
   border-radius: 6px !important;
-  padding: 6px 16px !important;
-  font-size: 14px !important;
+  padding: 6px !important;
+  font-size: 12px !important;
   font-weight: 500 !important;
   color: #374151 !important;
   transition: all 0.2s ease-in-out !important;
@@ -745,9 +745,10 @@ body {
 
 
 
+
 body {
-  --sb-track-color: #232E33;
-  --sb-thumb-color: #6BAF8D;
+  --sb-track-color: #ffffff;
+  --sb-thumb-color: #0f172a;
   --sb-size: 6px;
 }
 
@@ -769,5 +770,35 @@ body::-webkit-scrollbar-thumb {
 @supports not selector(::-webkit-scrollbar) {
   body {
     scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
+}
+
+::-webkit-scrollbar {
+  width: var(--sb-size)
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 1px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 1px;
+}
+
+.custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: var(--sb-size)
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 1px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 1px;
   }
 }

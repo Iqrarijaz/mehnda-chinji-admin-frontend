@@ -1,26 +1,31 @@
 "use client";
 import React, { useRef, useEffect } from "react";
-import { Formik, Form } from "formik";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Button, Modal } from "antd";
+import { Button, Modal, Select } from "antd";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 
 import Loading from "@/animations/homePageLoader";
 import FormField from "@/components/InnerPage/FormField";
-import { CREATE_BUSINESS_CATEGORY } from "@/app/api/admin/categories";
+import { CREATE_CATEGORY } from "@/app/api/admin/categories";
 import { useQueryClient } from "react-query";
+import SelectBox from "@/components/SelectBox";
+
+const { Option } = Select;
 
 // Validation schema
 const validationSchema = Yup.object().shape({
     name_en: Yup.string().required("Required"),
     name_ur: Yup.string().required("Required"),
+    type: Yup.string().oneOf(["PLACES", "SERVICES"]).required("Required"),
 });
 
 // Initial values
 const initialValues = {
     name_en: "",
     name_ur: "",
+    type: "PLACES",
 };
 
 function AddBusinessCategoryModal({ modal, setModal }) {
@@ -29,7 +34,7 @@ function AddBusinessCategoryModal({ modal, setModal }) {
 
     const createBusinessCategory = useMutation({
         mutationKey: ["createBusinessCategory"],
-        mutationFn: CREATE_BUSINESS_CATEGORY,
+        mutationFn: CREATE_CATEGORY,
         onSuccess: (data) => {
             toast.success(data?.message || "Category added successfully");
 
@@ -41,7 +46,7 @@ function AddBusinessCategoryModal({ modal, setModal }) {
         },
 
         onError: (error) => {
-            toast.error(error?.response?.data?.error || "Something went wrong");
+            toast.error(error?.response?.data?.message || "Something went wrong");
         },
     });
 
@@ -63,7 +68,7 @@ function AddBusinessCategoryModal({ modal, setModal }) {
 
     return (
         <Modal
-            title="Add Business Category"
+            title="Add Category"
             className="!rounded"
             centered
             width={600}
@@ -77,7 +82,7 @@ function AddBusinessCategoryModal({ modal, setModal }) {
                     className="reset-button"
                     onClick={() => formikRef.current?.resetForm()}
                 >
-                    Reset Form
+                    Reset
                 </Button>
             </div>
 
@@ -87,12 +92,22 @@ function AddBusinessCategoryModal({ modal, setModal }) {
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
-                {({ isSubmitting }) => (
+                {({ isSubmitting, values, setFieldValue, errors, touched }) => (
                     <Form>
                         <div className="form-class bg-gray-100 p-6 rounded">
                             {createBusinessCategory.status === "loading" && <Loading />}
                             <FormField label="Name English" name="name_en" />
                             <FormField label="Name Urdu" name="name_ur" />
+
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Type
+                                </label>
+                                <SelectBox options={["PLACES", "SERVICES"]} handleChange={(value) => setFieldValue("type", value)} defaultValue={values.type} className="custom-select-no-focus" />
+                                {errors.type && touched.type && (
+                                    <div className="text-red-500 text-sm mt-1">{errors.type}</div>
+                                )}
+                            </div>
                         </div>
 
                         <div className="flex justify-end mt-4 gap-6">

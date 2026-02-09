@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import RolesContextProvider, { useRolesContext } from "@/context/admin/roles/RolesContext";
 import RolesTable from "./components/Table";
-import AddEditRoleModal from "./components/AddEditRoleModal";
+import AddRoleModal from "./components/AddModal";
+import UpdateRoleModal from "./components/UpdateModal";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import AddButton from "@/components/InnerPage/AddButton";
 import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
@@ -39,7 +40,11 @@ function RolesPageContent() {
                 <RolesTable setModal={setModal} />
             </div>
 
-            <AddEditRoleModal modal={modal} setModal={setModal} />
+            {/* Add Modal */}
+            <AddRoleModal modal={modal} setModal={setModal} />
+
+            {/* Update Modal */}
+            <UpdateRoleModal modal={modal} setModal={setModal} />
         </>
     );
 }

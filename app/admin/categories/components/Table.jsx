@@ -10,47 +10,65 @@ import { toast } from "react-toastify";
 import { CustomPopover } from "@/components/popHover";
 import { usecategoriesContext } from "@/context/admin/categories/CategoriesContext";
 import { timestampToDate } from "@/utils/date";
-import { DELETE_BUSINESS_CATEGORY, UPDATE_BUSINESS_CATEGORY_STATUS } from "@/app/api/admin/categories";
+import { DELETE_CATEGORY, UPDATE_CATEGORY_STATUS } from "@/app/api/admin/categories";
 import { popoverContent } from "@/components/popHover/popHoverContent";
+import ConfirmModal from "@/components/shared/ConfirmModal";
+import { getTagColor } from "@/utils/tagColor";
 
-function BusinessCategoryTable({ modal, setModal }) {
+function CategoryTable({ modal, setModal }) {
   const queryClient = useQueryClient();
   const { categoriesList, onChange, setFilters } = usecategoriesContext();
-  const [deleteModalData, setDeleteModalData] = useState(null);
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: "",
+    description: "",
+    onConfirm: null,
+    variant: "primary",
+    confirmText: "Confirm",
+    cancelText: "Cancel"
+  });
+
+  const closeConfirmModal = () => {
+    setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+  };
 
   // Status mutation
   const manageStatusMutation = useMutation({
-    mutationFn: UPDATE_BUSINESS_CATEGORY_STATUS,
+    mutationFn: UPDATE_CATEGORY_STATUS,
     onSuccess: (data) => {
       queryClient.invalidateQueries("categoriesList");
       toast.success(data?.message);
+      closeConfirmModal();
     },
     onError: (error) => {
       toast.error(error?.response?.data?.error || "Failed to update status");
+      closeConfirmModal();
     },
   });
 
   // Delete mutation
   const deleteMutation = useMutation({
-    mutationFn: DELETE_BUSINESS_CATEGORY,
+    mutationFn: DELETE_CATEGORY,
     onSuccess: (data) => {
       queryClient.invalidateQueries("categoriesList");
       toast.success(data?.message);
-      setDeleteModalData(null);
+      closeConfirmModal();
     },
     onError: (error) => {
       toast.error(error?.response?.data?.error || "Failed to delete category");
+      closeConfirmModal();
     },
   });
 
   const handleStatus = (data) => {
-    Modal.confirm({
+    setConfirmModal({
+      isOpen: true,
       title: 'Confirm Status Change',
-      content: `Are you sure you want to ${data?.status ? 'deactivate' : 'activate'} this category?`,
-      okText: 'Yes',
-      cancelText: 'No',
-      centered: true,
-      onOk: () => manageStatusMutation.mutate({
+      description: `Are you sure you want to ${data?.status ? 'deactivate' : 'activate'} this category?`,
+      confirmText: 'Yes, Change',
+      cancelText: 'No, Keep',
+      variant: 'primary',
+      onConfirm: () => manageStatusMutation.mutate({
         _id: data._id,
         status: !data.status
       })
@@ -58,18 +76,18 @@ function BusinessCategoryTable({ modal, setModal }) {
   };
 
   const handleDelete = (data) => {
-    Modal.confirm({
+    setConfirmModal({
+      isOpen: true,
       title: 'Confirm Deletion',
-      content: 'Are you sure you want to delete this category?',
-      okText: 'Yes',
-      cancelText: 'No',
-      centered: true,
-      onOk: () => deleteMutation.mutate({
+      description: 'Are you sure you want to delete this category? This action cannot be undone.',
+      confirmText: 'Yes, Delete',
+      cancelText: 'Cancel',
+      variant: 'danger',
+      onConfirm: () => deleteMutation.mutate({
         _id: data._id,
       })
-    })
+    });
   };
-
 
   const handleSorting = (pagination, filters, sorter) => {
     setFilters(prev => ({
@@ -120,6 +138,21 @@ function BusinessCategoryTable({ modal, setModal }) {
         <div className="overflow-hidden whitespace-nowrap text-right font-notoUrdu p-2">
           {name?.ur}
         </div>
+      ),
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+      width: 80,
+      align: "center",
+      render: (type) => (
+        <span
+          className="mr-0 text-[10px] px-2 py-1 rounded capitalize font-semibold text-white"
+          style={{ backgroundColor: getTagColor(type) }}
+        >
+          {type}
+        </span>
       ),
     },
     {
@@ -191,8 +224,19 @@ function BusinessCategoryTable({ modal, setModal }) {
         onChange={(page) => onChange({ currentPage: Number(page) })}
       />
 
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={closeConfirmModal}
+        onConfirm={confirmModal.onConfirm}
+        title={confirmModal.title}
+        description={confirmModal.description}
+        confirmText={confirmModal.confirmText}
+        cancelText={confirmModal.cancelText}
+        variant={confirmModal.variant}
+        loading={manageStatusMutation.isLoading || deleteMutation.isLoading}
+      />
     </>
   );
 }
 
-export default BusinessCategoryTable;
+export default CategoryTable;

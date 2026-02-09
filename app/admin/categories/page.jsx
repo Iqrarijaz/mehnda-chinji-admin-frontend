@@ -3,12 +3,12 @@ import Link from "next/link";
 import React, { useState } from "react";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
-import BusinessCategoryTable from "./components/Table";
+import CategoryTable from "./components/Table";
 import CategoriesContextProvider, { usecategoriesContext } from "@/context/admin/categories/CategoriesContext";
 import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import AddBusinessCategoryModal from "./components/AddModal";
-import UpdateBusinessCategoryModal from "./components/UpdateModal";
-function Building() {
+import UpdateCategoryModal from "./components/UpdateModal";
+function Categories() {
   const [modal, setModal] = useState({
     name: null,
     data: null,
@@ -35,11 +35,11 @@ function Building() {
         />
       </div>
       <div className="flex flex-col mb-4 ">
-        <BusinessCategoryTable modal={modal} setModal={setModal} />
+        <CategoryTable modal={modal} setModal={setModal} />
       </div>
 
       <AddBusinessCategoryModal modal={modal} setModal={setModal} />
-      <UpdateBusinessCategoryModal modal={modal} setModal={setModal} />
+      <UpdateCategoryModal modal={modal} setModal={setModal} />
 
     </>
   );
@@ -48,7 +48,7 @@ function Building() {
 export default function ParentWrapper() {
   return (
     <CategoriesContextProvider>
-      <Building />
+      <Categories />
     </CategoriesContextProvider>
   );
 }

@@ -3,6 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { Modal } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import MenuList from "./MenuList";
 import MainHeader from "./MainHeader";
 import { MenuContext } from "@/context/MenuContext";
@@ -12,6 +13,7 @@ function MainLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
+  const [expandedMenus, setExpandedMenus] = useState({});
 
   useEffect(() => {
     const checkMobile = () => {
@@ -24,14 +26,103 @@ function MainLayout({ children }) {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Auto-expand menu if current path matches a submenu item
+  useEffect(() => {
+    MenuList.forEach((item) => {
+      if (item.subItems) {
+        const hasActiveSubItem = item.subItems.some(sub => pathname.startsWith(sub.link));
+        if (hasActiveSubItem) {
+          setExpandedMenus(prev => ({ ...prev, [item.name]: true }));
+        }
+      }
+    });
+  }, [pathname]);
+
   const isActive = (link) => pathname === link;
+  const isSubMenuActive = (subItems) => subItems?.some(sub => pathname.startsWith(sub.link));
+
+  const toggleSubmenu = (menuName) => {
+    setExpandedMenus(prev => ({ ...prev, [menuName]: !prev[menuName] }));
+  };
+
+  const hasPermission = (item) => {
+    try {
+      const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+      const user = userData?.adminData || userData;
+      if (!item.permission) return true;
+      if (user?.role === "SUPER_ADMIN") return true;
+      return user?.permissions?.includes(item.permission);
+    } catch (e) {
+      return false;
+    }
+  };
+
+  const renderMenuItem = (item, isMobileView = false) => {
+    const hasSubItems = item.subItems && item.subItems.length > 0;
+    const isExpanded = expandedMenus[item.name];
+    const isActiveParent = hasSubItems && isSubMenuActive(item.subItems);
+
+    if (hasSubItems) {
+      return (
+        <li key={item.name}>
+          <button
+            onClick={() => toggleSubmenu(item.name)}
+            className={`side_menu_item w-full justify-between ${isActiveParent ? "selected-menu-item" : ""}`}
+          >
+            <div className="flex items-center">
+              <span className="text-lg flex-shrink-0">{item.icon}</span>
+              {(open || isMobileView) && <span className={`${isMobileView ? 'ml-4' : 'ml-3'} text-sm`}>{item.name}</span>}
+            </div>
+            {(open || isMobileView) && (
+              <span className="text-sm">
+                {isExpanded ? <IoChevronUp size={16} /> : <IoChevronDown size={16} />}
+              </span>
+            )}
+          </button>
+
+          {/* Submenu */}
+          {isExpanded && (open || isMobileView) && (
+            <ul className="mt-1 ml-6 space-y-1">
+              {item.subItems.filter(hasPermission).map((subItem) => (
+                <li key={subItem.name}>
+                  <Link
+                    href={subItem.link}
+                    className={`side_menu_item !py-2 ${isActive(subItem.link) ? "selected-menu-item" : ""}`}
+                    onClick={isMobileView ? () => toggleMenu(false) : undefined}
+                  >
+                    <span className="text-md flex-shrink-0">{subItem.icon}</span>
+                    <span className={`${isMobileView ? 'ml-4' : 'ml-3'} text-xs`}>{subItem.name}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+      );
+    }
+
+    return (
+      <li key={item.name}>
+        <Link
+          href={item.link}
+          className={`side_menu_item ${isMobileView ? '!m-0' : ''} ${isActive(item.link) ? "selected-menu-item" : ""}`}
+          onClick={isMobileView ? () => toggleMenu(false) : undefined}
+        >
+          <span className={`${isMobileView ? 'text-xl' : 'text-lg'} flex-shrink-0`}>{item.icon}</span>
+          {(open || isMobileView) && (
+            <span className={`${isMobileView ? 'ml-4 font-medium tracking-wide' : 'ml-3'} text-sm`}>{item.name}</span>
+          )}
+        </Link>
+      </li>
+    );
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Desktop Sidebar */}
       <aside
         className={`
-          sidebar
+          sidebar overflow-y-auto custom-scrollbar
           transition-all duration-300 z-50
           ${open ? "w-64" : "w-0 overflow-hidden"}
           h-screen sticky top-0 hidden md:flex flex-col
@@ -49,30 +140,9 @@ function MainLayout({ children }) {
           </div>
 
           {/* Menu */}
-          <nav className="flex-1 mt-4 overflow-y-auto">
+          <nav className="flex-1 mt-4 ">
             <ul className="space-y-1 px-3">
-              {MenuList.filter(item => {
-                try {
-                  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
-                  const user = userData?.adminData || userData;
-                  if (!item.permission) return true; // No permission required
-                  if (user?.role === "SUPER_ADMIN") return true; // Super Admin sees everything
-                  return user?.permissions?.includes(item.permission);
-                } catch (e) {
-                  return false;
-                }
-              }).map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.link}
-                    className={`side_menu_item ${isActive(item.link) ? "selected-menu-item" : ""
-                      }`}
-                  >
-                    <span className="text-lg flex-shrink-0">{item.icon}</span>
-                    {open && <span className="ml-3 text-sm">{item.name}</span>}
-                  </Link>
-                </li>
-              ))}
+              {MenuList.filter(hasPermission).map((item) => renderMenuItem(item, false))}
             </ul>
           </nav>
         </div>
@@ -104,28 +174,7 @@ function MainLayout({ children }) {
 
           <nav className="flex-1 overflow-y-auto p-4 bg-[#0F172A] custom-scrollbar">
             <ul className="space-y-2">
-              {MenuList.filter(item => {
-                try {
-                  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
-                  const user = userData?.adminData || userData;
-                  if (!item.permission) return true;
-                  if (user?.role === "SUPER_ADMIN") return true; // Super Admin sees everything
-                  return user?.permissions?.includes(item.permission);
-                } catch (e) {
-                  return false;
-                }
-              }).map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.link}
-                    className={`side_menu_item !m-0 ${isActive(item.link) ? "selected-menu-item" : ""}`}
-                    onClick={() => toggleMenu(false)}
-                  >
-                    <span className="text-xl flex-shrink-0">{item.icon}</span>
-                    <span className="ml-4 text-sm font-medium tracking-wide">{item.name}</span>
-                  </Link>
-                </li>
-              ))}
+              {MenuList.filter(hasPermission).map((item) => renderMenuItem(item, true))}
             </ul>
           </nav>
 

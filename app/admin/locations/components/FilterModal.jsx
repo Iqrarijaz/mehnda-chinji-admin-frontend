@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Input, Modal } from "antd";
 import { Select } from "antd";
 
-function BuildingFilterModal({ isModalOpen, setIsModalOpen, setFilters }) {
+function FilterModal({ isModalOpen, setIsModalOpen, setFilters }) {
   // Initialize the advanceFilter state with null values
   const [advanceFilter, setAdvanceFilter] = useState({
     name: null,
@@ -142,4 +142,4 @@ function BuildingFilterModal({ isModalOpen, setIsModalOpen, setFilters }) {
   );
 }
 
-export default BuildingFilterModal;
+export default FilterModal;

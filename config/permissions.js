@@ -14,18 +14,7 @@ export const PERMISSIONS = {
         UPDATE: "locations.update",
         DELETE: "locations.delete",
     },
-    ADD_ONS: {
-        CREATE: "add_ons.create",
-        READ: "add_ons.read",
-        UPDATE: "add_ons.update",
-        DELETE: "add_ons.delete",
-    },
-    BUILDINGS: {
-        CREATE: "buildings.create",
-        READ: "buildings.read",
-        UPDATE: "buildings.update",
-        DELETE: "buildings.delete",
-    },
+
     USERS: {
         CREATE: "users.create",
         READ: "users.read",
