@@ -120,10 +120,10 @@ function PostCard({
 
     const renderContent = () => {
         const isLongContent = post?.content?.length > 50;
-        if (!isLongContent) return <p className="text-gray-700 text-sm mb-4 whitespace-pre-wrap">{post?.content}</p>;
+        if (!isLongContent) return <p className="text-gray-700 text-sm py-2 whitespace-pre-wrap">{post?.content}</p>;
 
         return (
-            <div className="mb-4">
+            <div className="py-2">
                 <p className="text-gray-700 text-sm whitespace-pre-wrap">
                     {isExpanded ? post?.content : `${post?.content?.substring(0, 50)}...`}
                 </p>
@@ -162,7 +162,7 @@ function PostCard({
                 </div>
 
                 <div className="flex flex-col p-4">
-                    <h3 className="text-sm font-bold text-gray-900 mb-2 line-clamp-2">
+                    <h3 className="text-sm font-bold text-gray-900 line-clamp-2">
                         {post?.title}
                     </h3>
 
