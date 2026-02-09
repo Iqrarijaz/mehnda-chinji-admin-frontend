@@ -162,7 +162,7 @@ function PostCard({
                 </div>
 
                 <div className="flex flex-col p-4">
-                    <h3 className="text-sm font-bold text-gray-900 line-clamp-2">
+                    <h3 className="text-sm font-bold py-2 text-gray-900 line-clamp-2">
                         {post?.title}
                     </h3>
 
