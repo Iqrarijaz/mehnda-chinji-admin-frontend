@@ -97,10 +97,13 @@ function BloodDonorsTable({ modal, setModal }) {
             key: "bloodGroup",
             width: 80,
             align: "center",
-            render: (bloodGroup) => (
-                <Tag color="red" className="font-bold border-none px-3 py-1 bg-red-50 text-red-600 rounded-full">
-                    {bloodGroup}
-                </Tag>
+            render: (type) => (
+                <span
+                    className="mr-0 text-[10px] px-2 py-1 rounded capitalize font-semibold text-white"
+                    style={{ backgroundColor: getTagColor(type) }}
+                >
+                    {type}
+                </span>
             ),
         },
         {
