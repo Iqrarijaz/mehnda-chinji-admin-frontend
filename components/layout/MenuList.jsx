@@ -15,6 +15,7 @@ import { MdPolicy } from "react-icons/md";
 import { RiListSettingsFill } from "react-icons/ri";
 import { IoSettings } from "react-icons/io5";
 import { MdEmail } from "react-icons/md";
+import { FaDroplet } from "react-icons/fa6";
 
 const MenuList = [
   {
@@ -22,6 +23,12 @@ const MenuList = [
     icon: <MdDashboardCustomize size={20} />,
     link: "/admin/dashboard",
     permission: "dashboard.read"
+  },
+  {
+    name: "Posts",
+    icon: <FaBloggerB size={20} />,
+    link: "/admin/posts",
+    permission: "posts.read"
   },
   {
     name: "Categories",
@@ -35,11 +42,18 @@ const MenuList = [
     link: "/admin/places",
     permission: "places.read"
   },
+
   {
-    name: "Posts",
-    icon: <FaBloggerB size={20} />,
-    link: "/admin/posts",
-    permission: "posts.read"
+    name: "Users",
+    icon: <FaUser size={20} />,
+    link: "/admin/users",
+    permission: "users.read"
+  },
+  {
+    name: "Blood Donors",
+    icon: <FaDroplet size={20} className="text-red-600" />,
+    link: "/admin/blood-donors",
+    permission: "blood_donors.read"
   },
   {
     name: "Roles",

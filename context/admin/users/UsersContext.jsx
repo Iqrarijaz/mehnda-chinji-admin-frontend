@@ -1,15 +1,15 @@
 "use client";
 
-import { GET_ADMIN_USERS } from "@/app/api/admin/admin-users";
+import { GET_USERS } from "@/app/api/admin/users";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 const { createContext, useState, useContext } = require("react");
 
-export const AdminUsersContext = createContext();
-export const useAdminUsersContext = () => useContext(AdminUsersContext);
+export const UsersContext = createContext();
+export const useUsersContext = () => useContext(UsersContext);
 
-function AdminUsersContextProvider({ children }) {
+function UsersContextProvider({ children }) {
     const [filters, setFilters] = useState({
         limit: 20,
         page: 1,
@@ -21,15 +21,15 @@ function AdminUsersContextProvider({ children }) {
 
     const debFilter = useDebounce(filters, filters?.onChangeSearch ? 500 : 0);
 
-    const adminUsersList = useQuery({
-        queryKey: ["adminUsersList", JSON.stringify(debFilter)],
+    const usersList = useQuery({
+        queryKey: ["usersList", JSON.stringify(debFilter)],
         queryFn: async () => {
-            return await GET_ADMIN_USERS(debFilter);
+            return await GET_USERS(debFilter);
         },
         keepPreviousData: true,
         onError: (error) => {
             console.error("Error fetching data:", error);
-            toast.error("Failed to fetch admin users.");
+            toast.error("Failed to fetch users.");
         },
     });
 
@@ -38,12 +38,12 @@ function AdminUsersContextProvider({ children }) {
     }
 
     return (
-        <AdminUsersContext.Provider
-            value={{ filters, adminUsersList, setFilters, onChange }}
+        <UsersContext.Provider
+            value={{ filters, usersList, setFilters, onChange }}
         >
             {children}
-        </AdminUsersContext.Provider>
+        </UsersContext.Provider>
     );
 }
 
-export default AdminUsersContextProvider;
+export default UsersContextProvider;

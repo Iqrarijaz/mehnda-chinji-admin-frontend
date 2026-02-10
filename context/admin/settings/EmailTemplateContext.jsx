@@ -12,7 +12,7 @@ export const useEmailTemplateContext = () => useContext(emailTemplateContext);
 
 function EmailTemplateContextProvider({ children }) {
   const [filters, setFilters] = useState({
-    limit: 10,
+    limit: 20,
     page: 1,
     search: "",
     onChangeSearch: false,

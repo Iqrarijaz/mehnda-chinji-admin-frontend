@@ -14,6 +14,18 @@ export const PERMISSIONS = {
         UPDATE: "places.update",
         DELETE: "places.delete",
     },
+    BUSINESSES: {
+        CREATE: "businesses.create",
+        READ: "businesses.read",
+        UPDATE: "businesses.update",
+        DELETE: "businesses.delete",
+    },
+    LOCATIONS: {
+        CREATE: "locations.create",
+        READ: "locations.read",
+        UPDATE: "locations.update",
+        DELETE: "locations.delete",
+    },
     POSTS: {
         CREATE: "posts.create",
         READ: "posts.read",
@@ -48,5 +60,11 @@ export const PERMISSIONS = {
         READ: "admin_users.read",
         UPDATE: "admin_users.update",
         DELETE: "admin_users.delete",
+    },
+    BLOOD_DONORS: {
+        CREATE: "blood_donors.create",
+        READ: "blood_donors.read",
+        UPDATE: "blood_donors.update",
+        DELETE: "blood_donors.delete",
     }
 };
