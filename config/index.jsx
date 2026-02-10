@@ -1,6 +1,6 @@
 // env file config 
 // base urls 
-export const baseUrl = "http://localhost:5000";
+// export const baseUrl = "http://localhost:5000";
 
 
-// export const baseUrl = "https://api.mehndachinji.com"
+export const baseUrl = "https://api.mehndachinji.com"
