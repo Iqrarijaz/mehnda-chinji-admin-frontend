@@ -67,6 +67,18 @@ const MenuList = [
     icon: <FaUserShield size={20} />,
     permission: "admin_users.read"
   },
+  {
+    name: "Configurations",
+    link: "/admin/configurations",
+    icon: <IoSettings size={20} />,
+    permission: "configurations.read"
+  },
+  {
+    name: "Support",
+    link: "/admin/support",
+    icon: <FaQuestionCircle size={20} />,
+    permission: "support.read"
+  },
   // {
   //   name: "CMS",
   //   icon: <RiListSettingsFill size={20} />,

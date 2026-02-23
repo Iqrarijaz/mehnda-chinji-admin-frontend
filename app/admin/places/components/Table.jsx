@@ -123,88 +123,64 @@ function PlacesTable({ modal, setModal }) {
 
     const columns = [
         {
-            title: "Name (English)",
+            title: "Name",
             dataIndex: "name",
-            key: "name_en",
-            sorter: (a, b) => a.name?.en?.localeCompare(b.name?.en),
-            width: 150,
+            key: "name",
+            sorter: (a, b) => a.name?.localeCompare(b.name),
+            width: 250,
             render: (name) => (
                 <Tooltip
-                    title={name?.en}
+                    title={name}
                     placement="topLeft"
                     overlayStyle={{ maxWidth: 300 }}
                 >
                     <div className="capitalize overflow-hidden whitespace-nowrap text-ellipsis cursor-pointer">
-                        {name?.en}
-                    </div>
-                </Tooltip>
-            ),
-        },
-        {
-            title: "Name (Urdu)",
-            dataIndex: "name",
-            key: "name_ur",
-            width: 150,
-            align: "left",
-            sorter: (a, b) => a.name?.ur?.localeCompare(b.name?.ur),
-            render: (name) => (
-                <Tooltip
-                    title={<span className="font-notoUrdu">{name?.ur}</span>}
-                    placement="topLeft"
-                    overlayStyle={{ maxWidth: 300 }}
-                >
-                    <div className="overflow-hidden whitespace-nowrap text-ellipsis text-right font-notoUrdu p-2 cursor-pointer">
-                        {name?.ur}
+                        {name}
                     </div>
                 </Tooltip>
             ),
         },
         {
             title: "Category",
-            dataIndex: "categoryName",
+            dataIndex: "category",
             key: "category",
             width: 120,
             align: "center",
-            render: (categoryName) => (
+            render: (category) => (
                 <span
                     className="mr-0 text-[10px] px-2 py-1 rounded capitalize font-semibold text-white"
-                    style={{ backgroundColor: getTagColor(categoryName?.en) }}
+                    style={{ backgroundColor: getTagColor(category) }}
                 >
-                    {categoryName?.en || "N/A"}
+                    {category || "N/A"}
                 </span>
             ),
         },
         {
             title: "Address",
             dataIndex: "address",
-            key: "address_en",
-            width: 200,
+            key: "address",
+            width: 250,
             render: (address) => (
                 <Tooltip
-                    title={
-                        <div>
-                            <div className="mb-1"><strong>English:</strong> {address?.en || "-"}</div>
-                            <div className="font-notoUrdu text-right"><strong>Urdu:</strong> {address?.ur || "-"}</div>
-                        </div>
-                    }
+                    title={address}
                     placement="topLeft"
                     overlayStyle={{ maxWidth: 350 }}
                 >
                     <div className="overflow-hidden whitespace-nowrap text-ellipsis cursor-pointer">
-                        {address?.en || "-"}
+                        {address || "-"}
                     </div>
                 </Tooltip>
             ),
         },
         {
-            title: "Phone",
-            dataIndex: "phone",
-            key: "phone",
-            width: 120,
-            render: (phone) => (
+            title: "Contact",
+            dataIndex: "contact",
+            key: "contact",
+            width: 150,
+            render: (contact) => (
                 <div className="overflow-hidden whitespace-nowrap">
-                    {phone?.length > 0 ? phone[0] : "-"}
-                    {phone?.length > 1 && <span className="text-gray-500 ml-1">(+{phone.length - 1})</span>}
+                    {contact?.length > 0 ? `${contact[0].name}: ${contact[0].number}` : "-"}
+                    {contact?.length > 1 && <span className="text-gray-500 ml-1">(+{contact.length - 1})</span>}
                 </div>
             ),
         },

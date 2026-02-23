@@ -8,7 +8,7 @@ import PlacesContextProvider, { usePlacesContext } from "@/context/admin/places/
 import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import AddPlaceModal from "./components/AddModal";
 import UpdatePlaceModal from "./components/UpdateModal";
-import { CATEGORIES } from "@/app/api/admin/categories";
+import { PLACE_CATEGORIES } from "@/config/config";
 import SelectBox from "@/components/SelectBox";
 
 
@@ -21,13 +21,9 @@ function Places() {
     });
     const { filters, setFilters, onChange } = usePlacesContext();
 
-    // Fetch categories for filter dropdown
-    const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
-        queryKey: ["categoriesListForFilter", { type: "PLACES", itemsPerPage: 100 }],
-        queryFn: () => CATEGORIES({ type: "PLACES", itemsPerPage: 100 }),
-    });
-
-    const categories = categoriesData?.data || [];
+    // Categories are now constants
+    const categoriesLoading = false;
+    const categories = PLACE_CATEGORIES;
 
     const handleCategoryFilter = (value) => {
         setFilters(prev => ({
@@ -52,8 +48,8 @@ function Places() {
                         width={null}
                         loading={categoriesLoading}
                         options={categories.map(cat => ({
-                            value: cat._id,
-                            label: cat.name?.en
+                            value: cat.value,
+                            label: cat.label
                         }))}
                     />
                     <SearchInput setFilters={setFilters} />

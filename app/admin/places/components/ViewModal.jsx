@@ -16,74 +16,38 @@ function ViewModal({ viewModal, setViewModal }) {
                 <div className="bg-gray-100 p-2 rounded max-h-[60vh] overflow-y-auto">
                     <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
                         <div>
-                            <h4 className="font-bold text-gray-700">Name (English)</h4>
-                            <p className="text-gray-600">{viewModal.data.name?.en}</p>
+                            <h4 className="font-bold text-gray-700">Name</h4>
+                            <p className="text-gray-600">{viewModal.data.name}</p>
                         </div>
-                        <div>
-                            <h4 className="font-bold text-gray-700">Name (Urdu)</h4>
-                            <p className="font-notoUrdu text-right text-gray-600">{viewModal.data.name?.ur}</p>
-                        </div>
-                    </div>
-
-                    <div className="grid gap-4 mt-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
                         <div>
                             <h4 className="font-bold text-gray-700 mb-1">Category</h4>
                             <span
                                 className="mr-0 text-[10px] px-2 py-1 rounded capitalize font-semibold text-white inline-block"
-                                style={{ backgroundColor: getTagColor(viewModal.data.categoryName?.en) }}
+                                style={{ backgroundColor: getTagColor(viewModal.data.category) }}
                             >
-                                {viewModal.data.categoryName?.en || "N/A"}
+                                {viewModal.data.category || "N/A"}
                             </span>
                         </div>
                     </div>
 
-                    {(viewModal.data.description?.en || viewModal.data.description?.ur) && (
-                        <div className="grid gap-4 mt-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                            {viewModal.data.description?.en && (
-                                <div>
-                                    <h4 className="font-bold text-gray-700">Description (English)</h4>
-                                    <p className="text-gray-600 whitespace-pre-wrap">{viewModal.data.description?.en}</p>
-                                </div>
-                            )}
-                            {viewModal.data.description?.ur && (
-                                <div>
-                                    <h4 className="font-bold text-gray-700">Description (Urdu)</h4>
-                                    <p className="font-notoUrdu text-right text-gray-600 whitespace-pre-wrap">{viewModal.data.description?.ur}</p>
-                                </div>
-                            )}
+                    {viewModal.data.description && (
+                        <div className="grid gap-4 mt-4 grid-cols-1">
+                            <div>
+                                <h4 className="font-bold text-gray-700">Description</h4>
+                                <p className="text-gray-600 whitespace-pre-wrap">{viewModal.data.description}</p>
+                            </div>
                         </div>
                     )}
 
-                    <div className="grid gap-4 mt-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+                    <div className="grid gap-4 mt-4 grid-cols-1">
                         <div>
-                            <h4 className="font-bold text-gray-700">Address (English)</h4>
-                            <p className="text-gray-600">{viewModal.data.address?.en}</p>
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-gray-700">Address (Urdu)</h4>
-                            <p className="font-notoUrdu text-right text-gray-600">{viewModal.data.address?.ur}</p>
+                            <h4 className="font-bold text-gray-700">Address</h4>
+                            <p className="text-gray-600">{viewModal.data.address}</p>
                         </div>
                     </div>
 
-                    {(viewModal.data.mohala?.en || viewModal.data.mohala?.ur) && (
-                        <div className="grid gap-4 mt-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                            {viewModal.data.mohala?.en && (
-                                <div>
-                                    <h4 className="font-bold text-gray-700">Mohala (English)</h4>
-                                    <p className="text-gray-600">{viewModal.data.mohala?.en}</p>
-                                </div>
-                            )}
-                            {viewModal.data.mohala?.ur && (
-                                <div>
-                                    <h4 className="font-bold text-gray-700">Mohala (Urdu)</h4>
-                                    <p className="font-notoUrdu text-right text-gray-600">{viewModal.data.mohala?.ur}</p>
-                                </div>
-                            )}
-                        </div>
-                    )}
-
                     {viewModal.data.googleAddress && (
-                        <div className="grid gap-4 mt-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+                        <div className="grid gap-4 mt-4 grid-cols-1">
                             <div>
                                 <h4 className="font-bold text-gray-700">Google Address</h4>
                                 <p className="text-gray-600">{viewModal.data.googleAddress}</p>
@@ -94,63 +58,52 @@ function ViewModal({ viewModal, setViewModal }) {
                     <div className="grid gap-4 mt-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
                         <div>
                             <h4 className="font-bold text-gray-700">Latitude</h4>
-                            <p className="text-gray-600">{viewModal.data.location?.lat}</p>
+                            <p className="text-gray-600">{viewModal.data.location?.lat || viewModal.data.location?.coordinates?.[1]}</p>
                         </div>
                         <div>
                             <h4 className="font-bold text-gray-700">Longitude</h4>
-                            <p className="text-gray-600">{viewModal.data.location?.lng}</p>
+                            <p className="text-gray-600">{viewModal.data.location?.lng || viewModal.data.location?.coordinates?.[0]}</p>
                         </div>
                     </div>
 
-                    {viewModal.data.phone?.length > 0 && (
+                    {viewModal.data.contact?.length > 0 && (
                         <div className="mt-4">
-                            <h4 className="font-bold text-gray-700 mb-2">Phone Numbers</h4>
-                            <div className="flex flex-wrap gap-2">
-                                {viewModal.data.phone.map((p, i) => (
-                                    <span key={i} className="text-[12px] px-2 py-1 rounded bg-gray-200 text-gray-700 font-medium">
-                                        {p}
-                                    </span>
+                            <h4 className="font-bold text-gray-700 mb-2">Contacts</h4>
+                            <div className="grid gap-2">
+                                {viewModal.data.contact.map((c, i) => (
+                                    <div key={i} className="flex justify-between items-center bg-white p-2 rounded shadow-sm">
+                                        <span className="font-medium text-gray-800">{c.name}:</span>
+                                        <span className="text-gray-600 font-mono">{c.number}</span>
+                                    </div>
                                 ))}
                             </div>
                         </div>
                     )}
 
-                    {(viewModal.data.timing?.en || viewModal.data.timing?.ur || viewModal.data.services?.en || viewModal.data.services?.ur) && (
+                    {(viewModal.data.timing || viewModal.data.services) && (
                         <>
                             <h3 className="font-bold text-gray-800 mt-6 mb-2 text-lg">Additional Info</h3>
                             <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                                {viewModal.data.timing?.en && (
+                                {viewModal.data.timing && (
                                     <div>
-                                        <h4 className="font-bold text-gray-700">Timing (English)</h4>
-                                        <p className="text-gray-600">{viewModal.data.timing?.en}</p>
+                                        <h4 className="font-bold text-gray-700">Timing</h4>
+                                        <p className="text-gray-600">{viewModal.data.timing}</p>
                                     </div>
                                 )}
-                                {viewModal.data.timing?.ur && (
+                                {viewModal.data.services && (
                                     <div>
-                                        <h4 className="font-bold text-gray-700">Timing (Urdu)</h4>
-                                        <p className="font-notoUrdu text-right text-gray-600">{viewModal.data.timing?.ur}</p>
-                                    </div>
-                                )}
-                                {viewModal.data.services?.en && (
-                                    <div>
-                                        <h4 className="font-bold text-gray-700">Services (English)</h4>
-                                        <p className="text-gray-600">{viewModal.data.services?.en}</p>
-                                    </div>
-                                )}
-                                {viewModal.data.services?.ur && (
-                                    <div>
-                                        <h4 className="font-bold text-gray-700">Services (Urdu)</h4>
-                                        <p className="font-notoUrdu text-right text-gray-600">{viewModal.data.services?.ur}</p>
+                                        <h4 className="font-bold text-gray-700">Services</h4>
+                                        <p className="text-gray-600">{viewModal.data.services}</p>
                                     </div>
                                 )}
                             </div>
                         </>
                     )}
 
-                    <div className="mt-6">
-                        <h4 className="font-bold text-gray-700 mb-1">Status</h4>
+                    <div className="mt-6 flex items-center justify-between bg-white p-3 rounded shadow-sm">
+                        <h4 className="font-bold text-gray-700 mb-0">Status</h4>
                         <span
-                            className={`mr-0 text-[10px] px-2 py-1 rounded capitalize font-semibold text-white inline-block ${viewModal.data.isActive ? "bg-green-500" : "bg-red-500"}`}
+                            className={`mr-0 text-[10px] px-3 py-1 rounded capitalize font-semibold text-white inline-block ${viewModal.data.isActive ? "bg-green-500" : "bg-red-500"}`}
                         >
                             {viewModal.data.isActive ? "Active" : "Inactive"}
                         </span>

@@ -10,32 +10,32 @@ import { FaPlus, FaTrash } from "react-icons/fa";
 import Loading from "@/animations/homePageLoader";
 import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_PLACE } from "@/app/api/admin/places";
-import { CATEGORIES } from "@/app/api/admin/categories";
+import { PLACE_CATEGORIES } from "@/config/config";
 import SelectBox from "@/components/SelectBox";
 
 const { Option } = Select;
 
 // Validation schema
 const validationSchema = Yup.object().shape({
-    name_en: Yup.string().required("Name (English) is required"),
-    name_ur: Yup.string().required("Name (Urdu) is required"),
-    address_en: Yup.string().required("Address (English) is required"),
-    address_ur: Yup.string().required("Address (Urdu) is required"),
+    name: Yup.string().required("Name is required"),
+    address: Yup.string().required("Address is required"),
     lat: Yup.number().required("Latitude is required").typeError("Must be a number"),
     lng: Yup.number().required("Longitude is required").typeError("Must be a number"),
     categoryId: Yup.string().required("Category is required"),
+    contact: Yup.array().of(
+        Yup.object().shape({
+            name: Yup.string().required("Contact name is required"),
+            number: Yup.string().required("Contact number is required"),
+        })
+    )
 });
 
 function UpdatePlaceModal({ modal, setModal }) {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
 
-    // Fetch categories for dropdown
-    const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
-        queryKey: ["categoriesList", { type: "PLACES", itemsPerPage: 100 }],
-        queryFn: () => CATEGORIES({ type: "PLACES", itemsPerPage: 100 }),
-        enabled: modal?.name === "Update" && modal?.state,
-    });
+    // Categories are now constants
+    const categoriesLoading = false;
 
     const updatePlace = useMutation({
         mutationKey: ["updatePlace"],
@@ -53,32 +53,25 @@ function UpdatePlaceModal({ modal, setModal }) {
     });
 
     const initialValues = {
-        name_en: modal?.data?.name?.en || "",
-        name_ur: modal?.data?.name?.ur || "",
-        description_en: modal?.data?.description?.en || "",
-        description_ur: modal?.data?.description?.ur || "",
-        address_en: modal?.data?.address?.en || "",
-        address_ur: modal?.data?.address?.ur || "",
-        mohala_en: modal?.data?.mohala?.en || "",
-        mohala_ur: modal?.data?.mohala?.ur || "",
-        timing_en: modal?.data?.timing?.en || "",
-        timing_ur: modal?.data?.timing?.ur || "",
-        services_en: modal?.data?.services?.en || "",
-        services_ur: modal?.data?.services?.ur || "",
+        name: modal?.data?.name || "",
+        description: modal?.data?.description || "",
+        address: modal?.data?.address || "",
+        timing: modal?.data?.timing || "",
+        services: modal?.data?.services || "",
         googleAddress: modal?.data?.googleAddress || "",
-        lat: modal?.data?.location?.lat || "",
-        lng: modal?.data?.location?.lng || "",
+        lat: modal?.data?.location?.lat || modal?.data?.location?.coordinates?.[1] || "",
+        lng: modal?.data?.location?.lng || modal?.data?.location?.coordinates?.[0] || "",
         categoryId: modal?.data?.categoryId || "",
-        phone: modal?.data?.phone?.length > 0 ? modal?.data?.phone : [""],
+        contact: modal?.data?.contact?.length > 0 ? modal?.data?.contact : [{ name: "", number: "" }],
     };
 
     const handleSubmit = (values) => {
-        // Filter out empty phone numbers
-        const filteredPhone = values.phone.filter(p => p && p.trim() !== "");
-        updatePlace.mutate({ _id: modal?.data?._id, ...values, phone: filteredPhone });
+        // Filter out empty contacts
+        const filteredContact = values.contact.filter(c => c.name.trim() !== "" && c.number.trim() !== "");
+        updatePlace.mutate({ _id: modal?.data?._id, ...values, contact: filteredContact });
     };
 
-    const categories = categoriesData?.data || [];
+    const categories = PLACE_CATEGORIES;
 
     return (
         <Modal
@@ -115,22 +108,21 @@ function UpdatePlaceModal({ modal, setModal }) {
                         <div className="bg-gray-100 p-2 rounded max-h-[60vh] overflow-y-auto">
                             {(updatePlace.status === "loading" || categoriesLoading) && <Loading />}
 
-                            {/* Names */}
+                            {/* Name */}
                             <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                                <FormField label="Name (English)" name="name_en" required />
-                                <FormField label="Name (Urdu)" name="name_ur" required />
+                                <FormField label="Name" name="name" required />
                             </div>
 
                             {/* Category */}
-                            <div className="grid gap-4 mb-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+                            <div className="grid gap-4 mb-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))] mt-2">
                                 <div>
                                     <label className="block text-lg text-black mb-1">
                                         Category <span className="text-red-500">*</span>
                                     </label>
                                     <SelectBox
                                         options={categories.map((cat) => ({
-                                            value: cat._id,
-                                            label: `${cat.name?.en} - ${cat.name?.ur}`
+                                            value: cat.value,
+                                            label: cat.label
                                         }))}
                                         handleChange={(value) => setFieldValue("categoryId", value)}
                                         value={values.categoryId}
@@ -144,22 +136,14 @@ function UpdatePlaceModal({ modal, setModal }) {
                                 </div>
                             </div>
 
-                            {/* Descriptions */}
+                            {/* Description */}
                             <div className="grid gap-4 mt-2 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                                <FormField label="Description (English)" name="description_en" as="textarea" />
-                                <FormField label="Description (Urdu)" name="description_ur" as="textarea" />
+                                <FormField label="Description" name="description" as="textarea" />
                             </div>
 
                             {/* Address */}
                             <div className="grid gap-4 mt-2 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                                <FormField label="Address (English)" name="address_en" required />
-                                <FormField label="Address (Urdu)" name="address_ur" required />
-                            </div>
-
-                            {/* Mohala */}
-                            <div className="grid gap-4 mt-2 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                                <FormField label="Mohala (English)" name="mohala_en" />
-                                <FormField label="Mohala (Urdu)" name="mohala_ur" />
+                                <FormField label="Address" name="address" required />
                             </div>
 
                             {/* Google Address */}
@@ -174,52 +158,69 @@ function UpdatePlaceModal({ modal, setModal }) {
                             </div>
 
                             {/* Contact */}
-                            <h3 className="font-semibold mt-2 mb-2">Contact</h3>
-                            <FieldArray name="phone">
+                            <h3 className="font-semibold mt-4 mb-2 text-lg">Contact <span className="text-red-500">*</span></h3>
+                            <FieldArray name="contact">
                                 {({ push, remove }) => (
-                                    <div className="space-y-1">
-                                        {values.phone.map((phone, index) => (
+                                    <div className="space-y-2">
+                                        {values.contact.map((_, index) => (
                                             <div
                                                 key={index}
-                                                className="flex flex-wrap gap-1 items-center"
+                                                className="flex flex-wrap gap-2 items-start"
                                             >
-                                                <Input
-                                                    value={phone}
-                                                    onChange={(e) =>
-                                                        setFieldValue(`phone.${index}`, e.target.value)
-                                                    }
-                                                    placeholder="Phone number"
-                                                    size="large"
-                                                    className="min-w-[300px] flex-1"
-                                                />
-                                                {values.phone.length > 1 && (
+                                                <div className="flex-1 min-w-[200px]">
+                                                    <Input
+                                                        value={values.contact[index].name}
+                                                        onChange={(e) =>
+                                                            setFieldValue(`contact.${index}.name`, e.target.value)
+                                                        }
+                                                        placeholder="Name (e.g. Office, Mobile)"
+                                                        size="large"
+                                                    />
+                                                    {errors.contact?.[index]?.name && touched.contact?.[index]?.name && (
+                                                        <div className="text-red-500 text-xs mt-1">{errors.contact[index].name}</div>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-[200px]">
+                                                    <Input
+                                                        value={values.contact[index].number}
+                                                        onChange={(e) =>
+                                                            setFieldValue(`contact.${index}.number`, e.target.value)
+                                                        }
+                                                        placeholder="Phone number"
+                                                        size="large"
+                                                    />
+                                                    {errors.contact?.[index]?.number && touched.contact?.[index]?.number && (
+                                                        <div className="text-red-500 text-xs mt-1">{errors.contact[index].number}</div>
+                                                    )}
+                                                </div>
+                                                {values.contact.length > 1 && (
                                                     <Button
                                                         type="text"
                                                         danger
                                                         onClick={() => remove(index)}
                                                         icon={<FaTrash />}
+                                                        className="mt-2"
                                                     />
                                                 )}
                                             </div>
                                         ))}
                                         <Button
                                             type="dashed"
-                                            onClick={() => push("")}
+                                            onClick={() => push({ name: "", number: "" })}
                                             icon={<FaPlus />}
+                                            className="w-full"
                                         >
-                                            Add Phone
+                                            Add Contact
                                         </Button>
                                     </div>
                                 )}
                             </FieldArray>
 
                             {/* Additional Info */}
-                            <h3 className="font-semibold mt-6 mb-2">Additional Info</h3>
+                            <h3 className="font-semibold mt-6 mb-2 text-lg">Additional Info</h3>
                             <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                                <FormField label="Timing (English)" name="timing_en" />
-                                <FormField label="Timing (Urdu)" name="timing_ur" />
-                                <FormField label="Services (English)" name="services_en" />
-                                <FormField label="Services (Urdu)" name="services_ur" />
+                                <FormField label="Timing" name="timing" />
+                                <FormField label="Services" name="services" />
                             </div>
                         </div>
 
