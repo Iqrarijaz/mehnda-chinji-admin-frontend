@@ -43,3 +43,12 @@ export async function DELETE_BLOOD_DONOR(data) {
         throw error;
     }
 }
+
+export async function GET_BLOOD_DONOR_STATUS_COUNTS() {
+    try {
+        const response = await Axios.get("/api/admin/blood-donors/status-counts");
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

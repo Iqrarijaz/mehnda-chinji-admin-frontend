@@ -4,7 +4,6 @@ import React from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { FaEye, FaReply } from "react-icons/fa";
 import Loading from "@/animations/homePageLoader";
-import { useSupportContext } from "@/context/admin/support/SupportContext";
 import { timestampToDate } from "@/utils/date";
 import { CustomPopover } from "@/components/popHover";
 import { popoverContent } from "@/components/popHover/popHoverContent";
@@ -18,8 +17,7 @@ const getTicketStatusColor = (status) => {
     }
 };
 
-function SupportTable({ modal, setModal }) {
-    const { ticketsList, onChange } = useSupportContext();
+function SupportTable({ modal, setModal, ticketsList, onChange }) {
 
     const actionMenu = [
         {

@@ -8,16 +8,14 @@ import { Switch } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { CustomPopover } from "@/components/popHover";
-import { usecategoriesContext } from "@/context/admin/categories/CategoriesContext";
 import { timestampToDate } from "@/utils/date";
 import { DELETE_CATEGORY, UPDATE_CATEGORY_STATUS } from "@/app/api/admin/categories";
 import { popoverContent } from "@/components/popHover/popHoverContent";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { getTagColor } from "@/utils/tagColor";
 
-function CategoryTable({ modal, setModal }) {
+function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }) {
   const queryClient = useQueryClient();
-  const { categoriesList, onChange, setFilters } = usecategoriesContext();
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
     title: "",

@@ -38,7 +38,16 @@ export default function RootLayout({ children }) {
         >
           <QueryClientProvider client={queryClient}>
             <ReactQueryDevtools initialIsOpen={false} />
-            <ToastContainer />
+            <ToastContainer
+              position="top-right"
+              autoClose={3500}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              pauseOnHover
+              draggable={false}
+              theme="light"
+            />
             <MenuContextProvider>{children}</MenuContextProvider>
           </QueryClientProvider>
         </ConfigProvider>

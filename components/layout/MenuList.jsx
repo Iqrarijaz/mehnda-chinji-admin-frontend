@@ -1,5 +1,5 @@
 import React from "react";
-import { FaProductHunt, FaUser, FaUserShield, FaMapMarkerAlt } from "react-icons/fa";
+import { FaProductHunt, FaUser, FaUserShield, FaMapMarkerAlt, FaBuilding } from "react-icons/fa";
 import { BiSolidAddToQueue } from "react-icons/bi";
 import { RiAdminFill } from "react-icons/ri";
 import { LuBaggageClaim } from "react-icons/lu";
@@ -37,6 +37,12 @@ const MenuList = [
     permission: "categories.read"
   },
   {
+    name: "Businesses",
+    icon: <FaBuilding size={20} />,
+    link: "/admin/business",
+    permission: "businesses.read"
+  },
+  {
     name: "Places",
     icon: <FaMapMarkerAlt size={20} />,
     link: "/admin/places",
@@ -51,7 +57,7 @@ const MenuList = [
   },
   {
     name: "Blood Donors",
-    icon: <FaDroplet size={20} className="text-red-600" />,
+    icon: <FaDroplet size={20} className="text-white" />,
     link: "/admin/blood-donors",
     permission: "blood_donors.read"
   },

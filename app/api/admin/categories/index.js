@@ -57,3 +57,12 @@ export async function DELETE_CATEGORY(data) {
     throw error;
   }
 }
+
+export async function GET_CATEGORIES_STATUS_COUNTS() {
+  try {
+    const response = await Axios.get("/api/admin/category/status-counts");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

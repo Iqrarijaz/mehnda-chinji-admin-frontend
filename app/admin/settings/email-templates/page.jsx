@@ -1,17 +1,28 @@
 "use client";
-import Link from "next/link";
 import React, { useState } from "react";
-import AddButton from "@/components/InnerPage/AddButton";
+import { useQuery } from "react-query";
+import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
-import { PATH_ROUTER } from "@/routes";
-import EmailTemplateContextProvider, {
-  useEmailTemplateContext,
-} from "@/context/admin/settings/EmailTemplateContext";
-import BuildingTable from "../../categories/components/Table";
 import EmailTemplatesTable from "./components/Table";
-function EmailTemplate() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { filters, setFilters } = useEmailTemplateContext();
+import { GET_EMAIL_TEMPLATES } from "@/app/api/admin/settings/emailTemplates";
+import { useDebounce } from "@/hooks/useDebounce";
+
+export default function EmailTemplatePage() {
+  const [filters, setFilters] = useState({
+    limit: 20,
+    page: 1,
+    search: "",
+    onChangeSearch: false,
+  });
+
+  const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
+  const emailTemplatesList = useQuery({
+    queryKey: ["emailTemplatesList", JSON.stringify(debFilter)],
+    queryFn: () => GET_EMAIL_TEMPLATES(debFilter),
+    onError: () => toast.error("Something went wrong. Please try again later."),
+  });
+
+  const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
 
   return (
     <>
@@ -24,15 +35,11 @@ function EmailTemplate() {
         </div>
       </div>
 
-      <EmailTemplatesTable />
+      <EmailTemplatesTable
+        emailTemplatesList={emailTemplatesList}
+        filters={filters}
+        onChange={onChange}
+      />
     </>
-  );
-}
-
-export default function ParentWrapper() {
-  return (
-    <EmailTemplateContextProvider>
-      <EmailTemplate />
-    </EmailTemplateContextProvider>
   );
 }

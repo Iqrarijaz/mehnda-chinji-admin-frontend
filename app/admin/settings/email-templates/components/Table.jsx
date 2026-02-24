@@ -11,14 +11,12 @@ import { toast } from "react-toastify";
 import { CustomPopover } from "@/components/popHover";
 import { popoverContent } from "@/components/popHover/popHoverContent";
 import { PATH_ROUTER } from "@/routes";
-import { useEmailTemplateContext } from "@/context/admin/settings/EmailTemplateContext";
 import { UPDATE_EMAIL_TEMPLATE_STATUS, DELETE_EMAIL_TEMPLATE } from "@/app/api/admin/settings/emailTemplates";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 
-function EmailTemplatesTable() {
+function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { emailTemplatesList, onChange, filters } = useEmailTemplateContext();
 
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,

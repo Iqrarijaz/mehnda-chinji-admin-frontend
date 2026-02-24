@@ -1,101 +1,117 @@
 "use client";
 import React, { useState } from "react";
-import AddButton from "@/components/InnerPage/AddButton";
+import { useQuery } from "react-query";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import BloodDonorsTable from "./components/Table";
-import BloodDonorsContextProvider, { useBloodDonorsContext } from "@/context/admin/blood-donors/BloodDonorsContext";
 import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
-import AddDonorModal from "./components/AddModal";
 import UpdateDonorModal from "./components/UpdateModal";
-import { Select } from "antd";
 import SelectBox from "@/components/SelectBox";
 import FilterModal from "./components/FilterModal";
 import { FaFilter } from "react-icons/fa";
+import { GET_BLOOD_DONORS, GET_BLOOD_DONOR_STATUS_COUNTS } from "@/app/api/admin/blood-donors";
+import { useDebounce } from "@/hooks/useDebounce";
+import StatCard from "@/components/shared/StatCard";
+import InnerPageCard from "@/components/layout/InnerPageCard";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
-function BloodDonorsContent() {
-    const { onChange, filters } = useBloodDonorsContext();
-    const [modal, setModal] = useState({
-        name: null,
-        state: false,
-        data: null,
-    });
+export default function BloodDonorsPage() {
+    const [modal, setModal] = useState({ name: null, state: false, data: null });
     const [filterModalOpen, setFilterModalOpen] = useState(false);
+    const [filters, setFilters] = useState({
+        limit: 10,
+        page: 1,
+        search: "",
+        bloodGroup: "",
+        city: "",
+        available: null,
+    });
+
+    const debouncedSearch = useDebounce(filters.search, 500);
+    const bloodDonorsList = useQuery({
+        queryKey: ["bloodDonorsList", { ...filters, search: debouncedSearch }],
+        queryFn: () => GET_BLOOD_DONORS({ ...filters, search: debouncedSearch }),
+        keepPreviousData: true,
+    });
+
+    const { data: countsData } = useQuery({
+        queryKey: ["bloodDonorsStatusCounts"],
+        queryFn: GET_BLOOD_DONOR_STATUS_COUNTS,
+    });
+
+    const counts = countsData?.data || { available: 0, unavailable: 0 };
+
+    const statCards = [
+        { label: "Available", key: "true", count: counts.available, color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
+        { label: "Unavailable", key: "false", count: counts.unavailable, color: "#dc2626", bg: "#fef2f2", border: "#fecaca" },
+    ];
+
+    const onChange = (newFilters) => setFilters((prev) => ({ ...prev, ...newFilters }));
     const hasActiveFilters = filters?.bloodGroup || filters?.available || filters?.search || filters?.city;
 
     return (
-        <div className="p-4 md:p-6 min-h-screen">
-            <div className="flex flex-col md:flex-row justify-between mb-4">
-                <h1 className="inner-page-title text-2xl md:text-3xl text-black p-0 mb-4 md:mb-0 font-semibold">
-                    Blood Donors
-                </h1>
+        <InnerPageCard title="Blood Donors">
 
-                {/* Desktop Filters - Hidden on mobile */}
-                <div className="hidden md:flex flex-row gap-4">
+            {/* Status Count Cards */}
+            <div className="flex gap-3 mb-5" style={{ flexWrap: "wrap" }}>
+                {statCards.map((card) => (
+                    <StatCard
+                        key={card.key}
+                        title={card.label}
+                        count={card.count}
+                        color={card.color}
+                        bg={card.bg}
+                        border={card.border}
+                        active={filters.available === card.key}
+                        onClick={() =>
+                            setFilters((prev) => ({
+                                ...prev,
+                                available: prev.available === card.key ? null : card.key,
+                                page: 1,
+                            }))
+                        }
+                    />
+                ))}
+            </div>
+
+            <div className="flex justify-end mb-4 gap-4 items-center">
+                {/* Desktop: blood group + search inline */}
+                <div className="hidden md:flex gap-4 items-center">
                     <SelectBox
                         placeholder="Filter by Blood Group"
                         allowClear
                         handleChange={(val) => onChange({ bloodGroup: val || "", page: 1 })}
                         value={filters.bloodGroup}
-                        className="w-48"
-                        width={null}
-                        options={bloodGroups.map(bg => ({ value: bg, label: bg }))}
+                        width={180}
+                        options={bloodGroups.map((bg) => ({ value: bg, label: bg }))}
                     />
-
-                    <SelectBox
-                        placeholder="Filter by Availability"
-                        allowClear
-                        handleChange={(val) => onChange({ available: val === undefined ? "" : val, page: 1 })}
-                        value={filters.available}
-                        className="w-48"
-                        width={null}
-                        options={[
-                            { value: "true", label: "Available" },
-                            { value: "false", label: "Busy / Not Available" }
-                        ]}
-                    />
-
                     <SearchInput
                         placeholder="Search donors..."
                         onChange={(e) => onChange({ search: e.target.value, page: 1 })}
                         value={filters.search}
                     />
                 </div>
-            </div>
-
-            <div className="flex justify-between md:justify-end mb-4 gap-2">
-                {/* Mobile Search & Filter Button */}
-                <div className="flex md:hidden gap-2 flex-1">
-                    <div className="flex-1">
-                        <SearchInput
-                            placeholder="Search donors..."
-                            onChange={(e) => onChange({ search: e.target.value, page: 1 })}
-                            value={filters.search}
-                        />
-                    </div>
+                {/* Mobile: search + filter button */}
+                <div className="flex md:hidden gap-4 flex-1 items-center">
+                    <SearchInput
+                        placeholder="Search donors..."
+                        onChange={(e) => onChange({ search: e.target.value, page: 1 })}
+                        value={filters.search}
+                    />
                     <button
                         onClick={() => setFilterModalOpen(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white rounded-lg hover:bg-[#1e293b] transition-colors relative"
+                        className="flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white rounded-lg hover:bg-[#1e293b] transition-colors relative flex-shrink-0"
                     >
                         <FaFilter size={14} />
                         {hasActiveFilters && (
-                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white" />
                         )}
                     </button>
                 </div>
-
-                <div className="flex gap-2">
-                    <ItemsPerPageDropdown onChange={onChange} />
-                    {/* <AddButton
-                        title="Add Donor"
-                        icon={false}
-                        onClick={() => setModal({ name: "Add", state: true, data: null })}
-                    /> */}
-                </div>
+                <ItemsPerPageDropdown onChange={onChange} />
             </div>
 
-            <BloodDonorsTable modal={modal} setModal={setModal} />
+            <BloodDonorsTable modal={modal} setModal={setModal} bloodDonorsList={bloodDonorsList} onChange={onChange} />
 
             <FilterModal
                 isOpen={filterModalOpen}
@@ -105,16 +121,6 @@ function BloodDonorsContent() {
             />
 
             <UpdateDonorModal modal={modal} setModal={setModal} />
-        </div>
+        </InnerPageCard>
     );
 }
-
-function BloodDonorsPage() {
-    return (
-        <BloodDonorsContextProvider>
-            <BloodDonorsContent />
-        </BloodDonorsContextProvider>
-    );
-}
-
-export default BloodDonorsPage;

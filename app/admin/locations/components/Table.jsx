@@ -10,12 +10,10 @@ import { toast } from "react-toastify";
 import { CustomPopover } from "@/components/popHover";
 import { timestampToDate } from "@/utils/date";
 import { popoverContent } from "@/components/popHover/popHoverContent";
-import { useLocationsContext } from "@/context/admin/locations/LocationsContext";
 import { DELETE_LOCATION, UPDATE_LOCATION_STATUS } from "@/app/api/admin/locations";
 
-function PageTable({ modal, setModal }) {
+function PageTable({ modal, setModal, locationsList, onChange, setFilters }) {
   const queryClient = useQueryClient();
-  const { locationsList, onChange, setFilters } = useLocationsContext();
   const [deleteModalData, setDeleteModalData] = useState(null);
 
   // Status mutation

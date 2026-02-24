@@ -39,3 +39,12 @@ export const UPDATE_TICKET_STATUS = async (id, status) => {
         throw error;
     }
 };
+
+export const GET_SUPPORT_STATUS_COUNTS = async () => {
+    try {
+        const response = await Axios.get("/api/admin/support/status-counts");
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};

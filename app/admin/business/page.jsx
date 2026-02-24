@@ -2,53 +2,52 @@
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
-import AdminUsersTable from "./components/Table";
-import AddAdminUserModal from "./components/AddModal";
-import UpdateAdminUserModal from "./components/UpdateModal";
-import SearchInput from "@/components/InnerPage/SearchInput";
 import AddButton from "@/components/InnerPage/AddButton";
+import SearchInput from "@/components/InnerPage/SearchInput";
 import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
-import { GET_ADMIN_USERS, GET_ADMIN_USER_STATUS_COUNTS } from "@/app/api/admin/admin-users";
+import BusinessTable from "./components/Table";
+import AddBusinessModal from "./components/AddModal";
+import UpdateBusinessModal from "./components/UpdateModal";
+import { GET_BUSINESSES, GET_BUSINESS_STATUS_COUNTS } from "@/app/api/admin/business";
 import { useDebounce } from "@/hooks/useDebounce";
 import StatCard from "@/components/shared/StatCard";
 import InnerPageCard from "@/components/layout/InnerPageCard";
 
-export default function AdminUsersPage() {
+export default function BusinessPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
     const [filters, setFilters] = useState({
-        limit: 20,
-        page: 1,
-        search: "",
+        itemsPerPage: 20,
+        currentPage: 1,
+        search: null,
         status: null,
-        sortOrder: -1,
-        sortingKey: "_id",
         onChangeSearch: false,
     });
 
-    const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
-    const adminUsersList = useQuery({
-        queryKey: ["adminUsersList", JSON.stringify(debFilter)],
-        queryFn: () => GET_ADMIN_USERS(debFilter),
-        keepPreviousData: true,
-        onError: () => toast.error("Failed to fetch admin users."),
+    const debFilters = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
+
+    const businessList = useQuery({
+        queryKey: ["businessList", JSON.stringify(debFilters)],
+        queryFn: () => GET_BUSINESSES(debFilters),
+        onError: () => toast.error("Something went wrong. Please try again later."),
     });
 
     const { data: countsData } = useQuery({
-        queryKey: ["adminUsersStatusCounts"],
-        queryFn: GET_ADMIN_USER_STATUS_COUNTS,
+        queryKey: ["businessStatusCounts"],
+        queryFn: GET_BUSINESS_STATUS_COUNTS,
     });
 
-    const counts = countsData?.data || { active: 0, inactive: 0 };
-
-    const statCards = [
-        { label: "Active", key: "ACTIVE", count: counts.active, color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
-        { label: "Inactive", key: "INACTIVE", count: counts.inactive, color: "#dc2626", bg: "#fef2f2", border: "#fecaca" },
-    ];
+    const counts = countsData?.data || { approved: 0, pending: 0, rejected: 0 };
 
     const onChange = (data) => setFilters((prev) => ({ ...prev, ...data }));
 
+    const statCards = [
+        { label: "Approved", key: "APPROVED", count: counts.approved, color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
+        { label: "Pending", key: "PENDING", count: counts.pending, color: "#ea580c", bg: "#fff7ed", border: "#fed7aa" },
+        { label: "Rejected", key: "REJECTED", count: counts.rejected, color: "#dc2626", bg: "#fef2f2", border: "#fecaca" },
+    ];
+
     return (
-        <InnerPageCard title="Admin Users">
+        <InnerPageCard title="Businesses">
 
             {/* Status Count Cards */}
             <div className="flex gap-3 mb-5" style={{ flexWrap: "wrap" }}>
@@ -65,7 +64,7 @@ export default function AdminUsersPage() {
                             setFilters((prev) => ({
                                 ...prev,
                                 status: prev.status === card.key ? null : card.key,
-                                page: 1,
+                                currentPage: 1,
                             }))
                         }
                     />
@@ -77,16 +76,21 @@ export default function AdminUsersPage() {
                     <SearchInput setFilters={setFilters} />
                 </div>
                 <ItemsPerPageDropdown onChange={onChange} />
-                <AddButton title="Add Admin User" onClick={() => setModal({ name: "Add", data: null, state: true })} />
+                <AddButton title="Add" onClick={() => setModal({ name: "Add", data: null, state: true })} />
 
             </div>
 
             <div className="flex flex-col mb-4">
-                <AdminUsersTable setModal={setModal} adminUsersList={adminUsersList} filters={filters} onChange={onChange} />
+                <BusinessTable
+                    modal={modal}
+                    setModal={setModal}
+                    businessList={businessList}
+                    onChange={onChange}
+                />
             </div>
 
-            <AddAdminUserModal modal={modal} setModal={setModal} />
-            <UpdateAdminUserModal modal={modal} setModal={setModal} />
+            <AddBusinessModal modal={modal} setModal={setModal} />
+            <UpdateBusinessModal modal={modal} setModal={setModal} />
         </InnerPageCard>
     );
 }

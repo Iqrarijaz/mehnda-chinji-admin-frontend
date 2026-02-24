@@ -8,17 +8,15 @@ import { Switch } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { CustomPopover } from "@/components/popHover";
-import { usePlacesContext } from "@/context/admin/places/PlacesContext";
 import { timestampToDate } from "@/utils/date";
-import { DELETE_PLACE, UPDATE_PLACE_STATUS } from "@/app/api/admin/places";
+import { DELETE_PLACE, UPDATE_PLACE_STATUS, UPDATE_PLACE_REQUEST_STATUS } from "@/app/api/admin/places";
 import { popoverContent } from "@/components/popHover/popHoverContent";
 import ViewModal from "./ViewModal";
 import { getTagColor } from "@/utils/tagColor";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 
-function PlacesTable({ modal, setModal }) {
+function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
     const queryClient = useQueryClient();
-    const { placesList, onChange, setFilters } = usePlacesContext();
     const [viewModal, setViewModal] = useState({ open: false, data: null });
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false,
@@ -33,6 +31,20 @@ function PlacesTable({ modal, setModal }) {
     const closeConfirmModal = () => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
     };
+
+    // Request status mutation (APPROVED / REJECTED)
+    const requestStatusMutation = useMutation({
+        mutationFn: UPDATE_PLACE_REQUEST_STATUS,
+        onSuccess: (data) => {
+            queryClient.invalidateQueries("placesList");
+            toast.success(data?.message);
+            closeConfirmModal();
+        },
+        onError: (error) => {
+            toast.error(error?.response?.data?.message || "Failed to update request status");
+            closeConfirmModal();
+        },
+    });
 
     // Status mutation
     const manageStatusMutation = useMutation({
@@ -91,6 +103,30 @@ function PlacesTable({ modal, setModal }) {
         });
     };
 
+    const handleApprove = (data) => {
+        setConfirmModal({
+            isOpen: true,
+            title: 'Approve Place',
+            description: `Are you sure you want to approve "${data.name}"?`,
+            confirmText: 'Yes, Approve',
+            cancelText: 'Cancel',
+            variant: 'primary',
+            onConfirm: () => requestStatusMutation.mutate({ _id: data._id, status: 'APPROVED' })
+        });
+    };
+
+    const handleReject = (data) => {
+        setConfirmModal({
+            isOpen: true,
+            title: 'Reject Place',
+            description: `Are you sure you want to reject "${data.name}"?`,
+            confirmText: 'Yes, Reject',
+            cancelText: 'Cancel',
+            variant: 'danger',
+            onConfirm: () => requestStatusMutation.mutate({ _id: data._id, status: 'REJECTED' })
+        });
+    };
+
     const handleSorting = (pagination, filters, sorter) => {
         setFilters(prev => ({
             ...prev,
@@ -113,6 +149,16 @@ function PlacesTable({ modal, setModal }) {
                 data: record,
                 state: true
             }),
+        },
+        {
+            heading: "Approve",
+            icon: <span style={{ color: '#16a34a', fontWeight: 700, fontSize: 13 }}>✓</span>,
+            handleFunction: (record) => handleApprove(record),
+        },
+        {
+            heading: "Reject",
+            icon: <span style={{ color: '#dc2626', fontWeight: 700, fontSize: 13 }}>✕</span>,
+            handleFunction: (record) => handleReject(record),
         },
         {
             heading: "Delete",
@@ -185,11 +231,33 @@ function PlacesTable({ modal, setModal }) {
             ),
         },
         {
-            title: "Status",
+            title: "Request Status",
+            dataIndex: "status",
+            key: "status",
+            align: "center",
+            width: 120,
+            render: (status) => {
+                const colorMap = {
+                    APPROVED: "#16a34a",
+                    REJECTED: "#dc2626",
+                    PENDING: "#ea580c",
+                };
+                return (
+                    <span
+                        className="mr-0 text-[10px] px-2 py-1 rounded capitalize font-semibold text-white"
+                        style={{ backgroundColor: colorMap[status] || "#6b7280" }}
+                    >
+                        {status || "PENDING"}
+                    </span>
+                );
+            },
+        },
+        {
+            title: "Active",
             dataIndex: "isActive",
             key: "isActive",
             align: "center",
-            width: 100,
+            width: 80,
             render: (isActive, record) => (
                 <Switch
                     checked={isActive}
@@ -265,7 +333,7 @@ function PlacesTable({ modal, setModal }) {
                 confirmText={confirmModal.confirmText}
                 cancelText={confirmModal.cancelText}
                 variant={confirmModal.variant}
-                loading={manageStatusMutation.isLoading || deleteMutation.isLoading}
+                loading={manageStatusMutation.isLoading || deleteMutation.isLoading || requestStatusMutation.isLoading}
             />
         </>
     );

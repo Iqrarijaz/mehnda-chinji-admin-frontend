@@ -1,58 +1,56 @@
 "use client";
 import React, { useState } from "react";
-import RolesContextProvider, { useRolesContext } from "@/context/admin/roles/RolesContext";
+import { useQuery } from "react-query";
+import { toast } from "react-toastify";
 import RolesTable from "./components/Table";
 import AddRoleModal from "./components/AddModal";
 import UpdateRoleModal from "./components/UpdateModal";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import AddButton from "@/components/InnerPage/AddButton";
 import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
+import { GET_ROLES } from "@/app/api/admin/roles";
+import { useDebounce } from "@/hooks/useDebounce";
+import InnerPageCard from "@/components/layout/InnerPageCard";
 
-function RolesPageContent() {
-    const [modal, setModal] = useState({
-        name: null,
-        data: null,
-        state: false,
+export default function RolesPage() {
+    const [modal, setModal] = useState({ name: null, data: null, state: false });
+    const [filters, setFilters] = useState({
+        itemsPerPage: 10,
+        currentPage: 1,
+        search: "",
+        sortOrder: -1,
+        sortingKey: "_id",
+        onChangeSearch: false,
     });
 
-    const { setFilters, onChange } = useRolesContext();
+    const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
+    const rolesList = useQuery({
+        queryKey: ["rolesList", JSON.stringify(debFilter)],
+        queryFn: () => GET_ROLES(debFilter),
+        keepPreviousData: true,
+        onError: () => toast.error("Failed to fetch roles."),
+    });
+
+    const onChange = (data) => setFilters((prev) => ({ ...prev, ...data }));
 
     return (
-        <>
-            <div className="flex flex-col md:flex-row justify-between mb-4">
-                <h1 className="inner-page-title text-2xl md:text-3xl text-black p-0 mb-4 md:mb-0 font-semibold">
-                    Roles Management
-                </h1>
+        <InnerPageCard title="Roles Management">
+
+            <div className="flex justify-end mb-4 gap-4 items-center">
                 <div className="flex flex-col md:flex-row gap-4">
                     <SearchInput setFilters={setFilters} />
                 </div>
-            </div>
-
-            <div className="flex justify-end mb-4 gap-4">
                 <ItemsPerPageDropdown onChange={onChange} />
-                <AddButton
-                    title="Add Role"
-                    onClick={() => setModal({ name: "Add", data: null, state: true })}
-                />
+                <AddButton title="Add Role" onClick={() => setModal({ name: "Add", data: null, state: true })} />
+
             </div>
 
             <div className="flex flex-col mb-4">
-                <RolesTable setModal={setModal} />
+                <RolesTable setModal={setModal} rolesList={rolesList} filters={filters} onChange={onChange} />
             </div>
 
-            {/* Add Modal */}
             <AddRoleModal modal={modal} setModal={setModal} />
-
-            {/* Update Modal */}
             <UpdateRoleModal modal={modal} setModal={setModal} />
-        </>
-    );
-}
-
-export default function RolesPage() {
-    return (
-        <RolesContextProvider>
-            <RolesPageContent />
-        </RolesContextProvider>
+        </InnerPageCard>
     );
 }

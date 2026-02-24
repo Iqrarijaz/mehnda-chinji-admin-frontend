@@ -52,3 +52,12 @@ export async function RESET_USER_PASSWORD(data) {
         throw error;
     }
 }
+
+export async function GET_USER_STATUS_COUNTS() {
+    try {
+        const response = await Axios.get("/api/admin/users/status-counts");
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

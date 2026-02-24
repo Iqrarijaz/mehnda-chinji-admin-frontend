@@ -7,20 +7,16 @@ import Loading from "@/animations/homePageLoader";
 import { timestampToDateWithTime } from "@/utils/date";
 import { CustomPopover } from "@/components/popHover";
 import { popoverContent } from "@/components/popHover/popHoverContent";
-import { useSystemLogsContext } from "@/context/admin/developers/SystemLogsContext";
 import JsonViewerModal from "./JsonViewerModal";
 import DeleteSystemLogsModal from "./DeleteModal";
 
-function SystemLogsTable() {
+function SystemLogsTable({ systemLogsList, onChange }) {
   // State to manage modal visibility and data
   const [isModalOpen, setIsModalOpen] = useState({
     name: null,
     state: false,
     record: null,
   });
-
-  // Accessing system logs data and state management functions from context
-  const { systemLogsList, onChange } = useSystemLogsContext();
 
   // Function to handle sorting logic
   function handleSorting(pagination, sorter) {

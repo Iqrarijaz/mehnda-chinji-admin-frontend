@@ -7,15 +7,13 @@ import Loading from "@/animations/homePageLoader";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { CustomPopover } from "@/components/popHover";
-import { useBloodDonorsContext } from "@/context/admin/blood-donors/BloodDonorsContext";
 import { UPDATE_BLOOD_DONOR, DELETE_BLOOD_DONOR } from "@/app/api/admin/blood-donors";
 import { popoverContent } from "@/components/popHover/popHoverContent";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { getTagColor } from "@/utils/tagColor";
 
-function BloodDonorsTable({ modal, setModal }) {
+function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange }) {
     const queryClient = useQueryClient();
-    const { bloodDonorsList, onChange } = useBloodDonorsContext();
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false,
         title: "",

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Table, Pagination } from "antd";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { useRolesContext } from "@/context/admin/roles/RolesContext";
 import { useMutation, useQueryClient } from "react-query";
 import { DELETE_ROLE } from "@/app/api/admin/roles";
 import { toast } from "react-toastify";
@@ -12,8 +11,7 @@ import { popoverContent } from "@/components/popHover/popHoverContent";
 import Loading from "@/animations/homePageLoader";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 
-const RolesTable = ({ setModal }) => {
-    const { rolesList, filters, onChange } = useRolesContext();
+const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
     const queryClient = useQueryClient();
 
     const [confirmModal, setConfirmModal] = useState({

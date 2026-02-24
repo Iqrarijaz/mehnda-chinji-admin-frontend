@@ -7,7 +7,6 @@ import Loading from "@/animations/homePageLoader";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { CustomPopover } from "@/components/popHover";
-import { useUsersContext } from "@/context/admin/users/UsersContext";
 import { timestampToDate } from "@/utils/date";
 import { DELETE_USER, UPDATE_USER } from "@/app/api/admin/users";
 import { popoverContent } from "@/components/popHover/popHoverContent";
@@ -15,9 +14,8 @@ import { getTagColor } from "@/utils/tagColor";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { UPDATE_USER_STATUS } from "@/app/api/admin/admin-users"; // Borrowing from admin-users if applicable or adding to users
 
-function UsersTable({ modal, setModal }) {
+function UsersTable({ modal, setModal, usersList, onChange, setFilters }) {
     const queryClient = useQueryClient();
-    const { usersList, onChange, setFilters } = useUsersContext();
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false,
         title: "",

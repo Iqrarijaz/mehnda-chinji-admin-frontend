@@ -189,7 +189,7 @@ function MainLayout({ children }) {
       {/* Main Content */}
       <main className="flex-1 bg-white flex flex-col max-h-screen w-full">
         <MainHeader toggleSidebar={toggleMenu} sidebarOpen={open} />
-        <div className="flex-1 overflow-y-auto overflow-x-auto p-6 bg-white">
+        <div className="flex-1 overflow-y-auto overflow-x-auto p-4 bg-white">
           {children}
         </div>
       </main>

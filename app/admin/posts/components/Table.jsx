@@ -8,7 +8,6 @@ import { Switch } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { CustomPopover } from "@/components/popHover";
-import { usePostsContext } from "@/context/admin/posts/PostsContext";
 import { timestampToDate, timestampToDateWithTime } from "@/utils/date";
 import { DELETE_POST, UPDATE_POST_STATUS } from "@/app/api/admin/posts";
 import { popoverContent } from "@/components/popHover/popHoverContent";
@@ -16,9 +15,8 @@ import ViewModal from "./ViewModal";
 import { getTagColor } from "@/utils/tagColor";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 
-function PostsTable({ modal, setModal }) {
+function PostsTable({ modal, setModal, postsList, onChange, setFilters }) {
     const queryClient = useQueryClient();
-    const { postsList, onChange, setFilters } = usePostsContext();
     const [viewModal, setViewModal] = useState({ open: false, data: null });
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false,

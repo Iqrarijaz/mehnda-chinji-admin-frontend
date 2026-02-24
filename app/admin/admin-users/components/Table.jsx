@@ -5,7 +5,6 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { useAdminUsersContext } from "@/context/admin/admin-users/AdminUsersContext";
 import { DELETE_ADMIN_USER, UPDATE_ADMIN_USER_STATUS } from "@/app/api/admin/admin-users";
 import { CustomPopover } from "@/components/popHover";
 import { popoverContent } from "@/components/popHover/popHoverContent";
@@ -13,9 +12,8 @@ import Loading from "@/animations/homePageLoader";
 import { getTagColor } from "@/utils/tagColor";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 
-const AdminUsersTable = ({ setModal }) => {
+const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange }) => {
     const queryClient = useQueryClient();
-    const { adminUsersList, filters, onChange } = useAdminUsersContext();
     const { data, isLoading } = adminUsersList;
 
     const [confirmModal, setConfirmModal] = useState({

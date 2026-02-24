@@ -2,15 +2,13 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { usePostsContext } from "@/context/admin/posts/PostsContext";
 import { DELETE_POST, UPDATE_POST_STATUS } from "@/app/api/admin/posts";
 import PostCard from "./PostCard";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import Loading from "@/animations/homePageLoader";
 
-function PostCardList({ modal, setModal }) {
+function PostCardList({ modal, setModal, postsList, loadMore, hasMore, setFilters }) {
     const queryClient = useQueryClient();
-    const { postsList, loadMore, hasMore, setFilters } = usePostsContext();
     const [expandedPostIds, setExpandedPostIds] = useState(new Set());
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false,

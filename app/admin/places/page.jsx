@@ -1,82 +1,106 @@
 "use client";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
+import { toast } from "react-toastify";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import PlacesTable from "./components/Table";
-import PlacesContextProvider, { usePlacesContext } from "@/context/admin/places/PlacesContext";
 import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import AddPlaceModal from "./components/AddModal";
 import UpdatePlaceModal from "./components/UpdateModal";
+import { GET_PLACES, GET_PLACE_STATUS_COUNTS } from "@/app/api/admin/places";
 import { PLACE_CATEGORIES } from "@/config/config";
 import SelectBox from "@/components/SelectBox";
+import { useDebounce } from "@/hooks/useDebounce";
+import StatCard from "@/components/shared/StatCard";
+import InnerPageCard from "@/components/layout/InnerPageCard";
 
-
-
-function Places() {
-    const [modal, setModal] = useState({
-        name: null,
-        data: null,
-        state: false,
+export default function PlacesPage() {
+    const [modal, setModal] = useState({ name: null, data: null, state: false });
+    const [filters, setFilters] = useState({
+        itemsPerPage: 20,
+        currentPage: 1,
+        search: null,
+        categoryId: null,
+        sortOrder: -1,
+        sortingKey: "_id",
+        onChangeSearch: false,
+        advance: null,
+        status: null,
     });
-    const { filters, setFilters, onChange } = usePlacesContext();
 
-    // Categories are now constants
-    const categoriesLoading = false;
-    const categories = PLACE_CATEGORIES;
+    const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
+    const placesList = useQuery({
+        queryKey: ["placesList", JSON.stringify(debFilter)],
+        queryFn: () => GET_PLACES(debFilter),
+        onError: () => toast.error("Something went wrong. Please try again later."),
+    });
+
+    const { data: countsData } = useQuery({
+        queryKey: ["placeStatusCounts"],
+        queryFn: GET_PLACE_STATUS_COUNTS,
+    });
+
+    const counts = countsData?.data || { approved: 0, pending: 0, rejected: 0 };
+
+    const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
 
     const handleCategoryFilter = (value) => {
-        setFilters(prev => ({
-            ...prev,
-            categoryId: value || null,
-            currentPage: 1
-        }));
+        setFilters((prev) => ({ ...prev, categoryId: value || null, currentPage: 1 }));
     };
 
+    const statCards = [
+        { label: "Approved", key: "APPROVED", count: counts.approved, color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
+        { label: "Pending", key: "PENDING", count: counts.pending, color: "#ea580c", bg: "#fff7ed", border: "#fed7aa" },
+        { label: "Rejected", key: "REJECTED", count: counts.rejected, color: "#dc2626", bg: "#fef2f2", border: "#fecaca" },
+    ];
+
     return (
-        <>
-            <div className="flex flex-col md:flex-row justify-between mb-4">
-                <h1 className="inner-page-title text-2xl md:text-3xl text-black p-0 mb-4 md:mb-0 font-semibold">
-                    Places
-                </h1>
-                <div className="flex flex-col md:flex-row gap-4">
-                    <SelectBox
-                        placeholder="Filter by Category"
-                        allowClear
-                        handleChange={handleCategoryFilter}
-                        className="w-full md:w-48"
-                        width={null}
-                        loading={categoriesLoading}
-                        options={categories.map(cat => ({
-                            value: cat.value,
-                            label: cat.label
-                        }))}
+        <InnerPageCard title="Places">
+
+            {/* Status Count Cards */}
+            <div className="flex gap-3 mb-5" style={{ flexWrap: "wrap" }}>
+                {statCards.map((card) => (
+                    <StatCard
+                        key={card.key}
+                        title={card.label}
+                        count={card.count}
+                        color={card.color}
+                        bg={card.bg}
+                        border={card.border}
+                        active={filters.status === card.key}
+                        onClick={() =>
+                            setFilters((prev) => ({
+                                ...prev,
+                                status: prev.status === card.key ? null : card.key,
+                                currentPage: 1,
+                            }))
+                        }
                     />
-                    <SearchInput setFilters={setFilters} />
-                </div>
+                ))}
             </div>
 
-            <div className="flex justify-end mb-4">
-                <ItemsPerPageDropdown onChange={onChange} />
-                <AddButton
-                    title="Add Place"
-                    onClick={() => setModal({ name: "Add", data: null, state: true })}
+            <div className="flex justify-end mb-4 gap-4 items-center">
+                <SelectBox
+                    placeholder="Filter by Category"
+                    allowClear
+                    handleChange={handleCategoryFilter}
+                    width={180}
+                    options={PLACE_CATEGORIES.map((cat) => ({ value: cat.value, label: cat.label }))}
                 />
+                <div className="flex flex-col md:flex-row gap-4">
+                    <SearchInput setFilters={setFilters} />
+                </div>
+                <ItemsPerPageDropdown onChange={onChange} />
+                <AddButton title="Add Place" onClick={() => setModal({ name: "Add", data: null, state: true })} />
             </div>
-            <div className="flex flex-col mb-4 ">
-                <PlacesTable modal={modal} setModal={setModal} />
+
+            <div className="flex flex-col mb-4">
+                <PlacesTable modal={modal} setModal={setModal} placesList={placesList} onChange={onChange} setFilters={setFilters} />
             </div>
 
             <AddPlaceModal modal={modal} setModal={setModal} />
             <UpdatePlaceModal modal={modal} setModal={setModal} />
-        </>
-    );
-}
-
-export default function ParentWrapper() {
-    return (
-        <PlacesContextProvider>
-            <Places />
-        </PlacesContextProvider>
+        </InnerPageCard>
     );
 }

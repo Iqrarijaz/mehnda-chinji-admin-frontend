@@ -11,10 +11,8 @@ import { popoverContent } from "@/components/popHover/popHoverContent";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import Loading from "@/animations/homePageLoader";
 import { DELETE_CONFIGURATION, UPDATE_CONFIGURATION } from "@/app/api/admin/configurations";
-import { useConfigurationsContext } from "@/context/admin/configurations/ConfigurationsContext";
 
-function ConfigurationsTable({ modal, setModal }) {
-    const { configurationsList, filters, onChange } = useConfigurationsContext();
+function ConfigurationsTable({ modal, setModal, configurationsList, filters, onChange }) {
     const queryClient = useQueryClient();
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false,

@@ -802,3 +802,159 @@ body::-webkit-scrollbar-thumb {
     border-radius: 1px;
   }
 }
+
+// ─── Custom Toast Design ────────────────────────────────────────────────────
+
+.Toastify__toast-container {
+  width: 380px !important;
+  padding: 0 !important;
+}
+
+.Toastify__toast {
+  border-radius: 16px !important;
+  padding: 16px 18px 16px 16px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+  position: relative;
+  overflow: hidden;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px;
+  min-height: unset !important;
+  font-family: "Poppins", sans-serif !important;
+}
+
+// Decorative blob (bottom-left)
+.Toastify__toast::before {
+  content: "";
+  position: absolute;
+  bottom: -18px;
+  left: -10px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.Toastify__toast--success {
+  background: #d1fae5 !important;
+  color: #064e3b !important;
+  border: 1px solid #a7f3d0 !important;
+
+  &::before {
+    background: #34d399;
+  }
+}
+
+.Toastify__toast--error {
+  background: #fee2e2 !important;
+  color: #7f1d1d !important;
+  border: 1px solid #fca5a5 !important;
+
+  &::before {
+    background: #f87171;
+  }
+}
+
+.Toastify__toast--warning {
+  background: #fef3c7 !important;
+  color: #78350f !important;
+  border: 1px solid #fde68a !important;
+
+  &::before {
+    background: #fbbf24;
+  }
+}
+
+.Toastify__toast--info {
+  background: #dbeafe !important;
+  color: #1e3a5f !important;
+  border: 1px solid #93c5fd !important;
+
+  &::before {
+    background: #60a5fa;
+  }
+}
+
+// Icon circle
+.Toastify__toast-icon {
+  width: 35px !important;
+  height: 35px !important;
+  flex-shrink: 0 !important;
+  background: #fff;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  margin-right: 0 !important;
+
+  svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
+.Toastify__toast--success .Toastify__toast-icon svg {
+  color: #16a34a;
+}
+
+.Toastify__toast--error .Toastify__toast-icon svg {
+  color: #dc2626;
+}
+
+.Toastify__toast--warning .Toastify__toast-icon svg {
+  color: #d97706;
+}
+
+.Toastify__toast--info .Toastify__toast-icon svg {
+  color: #2563eb;
+}
+
+.Toastify__toast-body {
+  padding: 0 !important;
+  margin: 0 !important;
+  flex: 1;
+  display: flex !important;
+  align-items: center !important;
+}
+
+// Title (first line bold)
+.Toastify__toast-body>div {
+  margin-left: 4px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.4;
+  color: inherit;
+}
+
+.Toastify__progress-bar {
+  height: 3px !important;
+  border-radius: 0 0 16px 16px;
+}
+
+.Toastify__progress-bar--success {
+  background: #16a34a !important;
+}
+
+.Toastify__progress-bar--error {
+  background: #dc2626 !important;
+}
+
+.Toastify__progress-bar--warning {
+  background: #d97706 !important;
+}
+
+.Toastify__progress-bar--info {
+  background: #2563eb !important;
+}
+
+.Toastify__close-button {
+  color: inherit !important;
+  opacity: 0.45 !important;
+  align-self: center !important;
+
+  &:hover {
+    opacity: 0.8 !important;
+  }
+}

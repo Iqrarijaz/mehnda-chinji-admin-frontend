@@ -56,3 +56,25 @@ export async function DELETE_PLACE(data) {
         throw error;
     }
 }
+
+// Update place request status (APPROVED / REJECTED / PENDING)
+export async function UPDATE_PLACE_REQUEST_STATUS(data) {
+    try {
+        const response = await Axios.post("/api/admin/places/update-request-status", data);
+        return response.data;
+    } catch (error) {
+        console.error("Error updating place request status:", error);
+        throw error;
+    }
+}
+
+// Get status counts for places (APPROVED / PENDING / REJECTED)
+export async function GET_PLACE_STATUS_COUNTS() {
+    try {
+        const response = await Axios.get("/api/admin/places/status-counts");
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching place status counts:", error);
+        throw error;
+    }
+}
