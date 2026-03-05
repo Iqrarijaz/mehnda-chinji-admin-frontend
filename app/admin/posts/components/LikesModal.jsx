@@ -2,6 +2,7 @@
 import React from "react";
 import { Modal, Table, Avatar } from "antd";
 import { useQuery } from "react-query";
+import { FaHeart } from "react-icons/fa";
 import Loading from "@/animations/homePageLoader";
 import { GET_POST_LIKES } from "@/app/api/admin/posts";
 import { timestampToDateWithTime } from "@/utils/date";
@@ -21,14 +22,16 @@ function LikesModal({ isOpen, onClose, postId }) {
                 <div className="flex items-center gap-3">
                     <Avatar
                         src={record.user?.profileImage}
-                        size="large"
-                        className="bg-gray-200"
+                        size={40}
+                        className="bg-slate-100 border border-slate-200"
                     >
                         {record.user?.name?.charAt(0)}
                     </Avatar>
                     <div className="flex flex-col">
-                        <span className="font-semibold text-sm capitalize">{record.user?.name || "Unknown User"}</span>
-                        <span className="text-xs text-gray-500">{record.user?.phone}</span>
+                        <span className="font-bold text-[14px] text-slate-800 capitalize leading-tight">
+                            {record.user?.name || "Unknown User"}
+                        </span>
+                        <span className="text-xs text-slate-400 font-medium">{record.user?.phone || "No phone"}</span>
                     </div>
                 </div>
             )
@@ -37,42 +40,58 @@ function LikesModal({ isOpen, onClose, postId }) {
             title: "Liked At",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 200,
+            width: 180,
+            align: 'right',
             render: (date) => (
-                <span className="text-xs text-gray-500">
+                <div className="text-[12px] text-slate-500 font-medium">
                     {timestampToDateWithTime(date)}
-                </span>
+                </div>
             )
         }
     ];
 
     return (
         <Modal
-            title="Post Likes"
+            title={
+                <div className="flex items-center gap-3 px-2 pt-1">
+                    <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-red-500">
+                        <FaHeart size={18} />
+                    </div>
+                    <div>
+                        <span className="text-xl font-bold text-slate-900 block">Post Likes</span>
+                        <span className="text-xs text-slate-500 font-normal">Users who appreciated this content</span>
+                    </div>
+                </div>
+            }
             open={isOpen}
             onCancel={onClose}
             footer={null}
-            width={500}
-            className="!rounded"
+            width={520}
+            className="modern-modal"
             destroyOnClose
         >
-            <div className="mt-4">
+            <div className="p-2">
                 {isLoading ? (
-                    <div className="py-10 flex justify-center">
+                    <div className="py-20 flex justify-center">
                         <Loading />
                     </div>
                 ) : error ? (
-                    <div className="py-10 text-center text-red-500">
-                        Failed to fetch likes
+                    <div className="py-20 text-center flex flex-col items-center gap-2">
+                        <div className="text-red-500 font-bold">Failed to load likes</div>
+                        <p className="text-slate-400 text-sm">Please check your connection and try again.</p>
                     </div>
                 ) : (
                     <Table
                         dataSource={data?.data || []}
                         columns={columns}
                         rowKey="_id"
-                        size="small"
-                        pagination={{ pageSize: 5 }}
-                        className="antd-table-custom"
+                        size="middle"
+                        pagination={{
+                            pageSize: 6,
+                            hideOnSinglePage: true,
+                            className: "!mt-6"
+                        }}
+                        className="antd-table-custom !border-none !shadow-none"
                     />
                 )}
             </div>

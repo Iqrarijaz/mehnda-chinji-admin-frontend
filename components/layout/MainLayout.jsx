@@ -118,7 +118,7 @@ function MainLayout({ children }) {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-[#F8FAFC]">
       {/* Desktop Sidebar */}
       <aside
         className={`
@@ -157,12 +157,12 @@ function MainLayout({ children }) {
         centered
         width={350}
         styles={{
-          content: { padding: 0, backgroundColor: '#0F172A', overflow: 'hidden', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' },
+          content: { padding: 0, backgroundColor: '#006666', overflow: 'hidden', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' },
           mask: { backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0, 0, 0, 0.6)' }
         }}
       >
         <div className="flex flex-col h-[75vh] max-h-[600px]">
-          <div className="p-6 flex justify-between items-center border-b border-white/10 bg-[#0F172A]">
+          <div className="p-6 flex justify-between items-center border-b border-white/10 bg-[#006666]">
             <img src="/logo.png" alt="Logo" className="h-10 w-auto rounded brightness-110" />
             <button
               onClick={() => toggleMenu(false)}
@@ -172,13 +172,13 @@ function MainLayout({ children }) {
             </button>
           </div>
 
-          <nav className="flex-1 overflow-y-auto p-4 bg-[#0F172A] custom-scrollbar">
+          <nav className="flex-1 overflow-y-auto p-4 bg-[#006666] custom-scrollbar">
             <ul className="space-y-2">
               {MenuList.filter(hasPermission).map((item) => renderMenuItem(item, true))}
             </ul>
           </nav>
 
-          <div className="p-4 border-t border-white/5 bg-[#0F172A] text-center">
+          <div className="p-4 border-t border-white/5 bg-[#006666] text-center">
             <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">
               Rehbar Admin v1.0
             </p>

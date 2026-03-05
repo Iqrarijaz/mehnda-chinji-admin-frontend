@@ -1,20 +1,17 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { Formik, Form, FieldArray } from "formik";
 import * as Yup from "yup";
-import { Button, Modal, Select, Input } from "antd";
-import { useMutation, useQuery } from "react-query";
+import { Button, Modal, Input } from "antd";
+import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { FaPlus, FaTrash } from "react-icons/fa";
+import { FaPlus, FaTrash, FaMapMarkerAlt, FaAddressCard, FaPhoneAlt, FaClock, FaTools, FaChevronRight } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
 import FormField from "@/components/InnerPage/FormField";
 import { CREATE_PLACE } from "@/app/api/admin/places";
-import { useQueryClient } from "react-query";
 import { PLACE_CATEGORIES } from "@/config/config";
 import SelectBox from "@/components/SelectBox";
-
-const { Option } = Select;
 
 // Validation schema
 const validationSchema = Yup.object().shape({
@@ -50,9 +47,6 @@ function AddPlaceModal({ modal, setModal }) {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
 
-    // Categories are now constants
-    const categoriesLoading = false;
-
     const createPlace = useMutation({
         mutationKey: ["createPlace"],
         mutationFn: CREATE_PLACE,
@@ -70,7 +64,6 @@ function AddPlaceModal({ modal, setModal }) {
     });
 
     const handleSubmit = (values) => {
-        // Filter out empty contacts
         const filteredContact = values.contact.filter(c => c.name.trim() !== "" && c.number.trim() !== "");
         createPlace.mutate({ ...values, contact: filteredContact });
     };
@@ -86,181 +79,171 @@ function AddPlaceModal({ modal, setModal }) {
         }
     }, [modal.state]);
 
-    const categories = PLACE_CATEGORIES;
-
     return (
         <Modal
-            title="Add Place"
-            className="!rounded"
+            title={
+                <div className="flex items-center gap-3 px-2 pt-1">
+                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
+                        <FaMapMarkerAlt size={18} />
+                    </div>
+                    <div>
+                        <span className="text-xl font-bold text-slate-900 block">Add New Place</span>
+                        <span className="text-xs text-slate-500 font-normal">Create a new location or point of interest</span>
+                    </div>
+                </div>
+            }
             centered
-            width={800}
+            width={780}
             open={modal?.name === "Add" && modal?.state}
             onCancel={handleCloseModal}
             footer={null}
-            afterClose={() => formikRef.current?.resetForm()}
+            className="modern-modal"
         >
-            <div className="mb-4 flex justify-end">
-                <Button
-                    className="reset-button"
-                    onClick={() => formikRef.current?.resetForm()}
+            <div className="p-2 pt-4">
+                <Formik
+                    innerRef={formikRef}
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={handleSubmit}
                 >
-                    Reset
-                </Button>
-            </div>
+                    {({ isSubmitting, values, setFieldValue, errors, touched }) => (
+                        <Form className="space-y-6">
+                            {createPlace.status === "loading" && <Loading />}
 
-            <Formik
-                innerRef={formikRef}
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={handleSubmit}
-            >
-                {({ isSubmitting, values, setFieldValue, errors, touched }) => (
-                    <Form>
-                        <div className="bg-gray-100 p-2 rounded max-h-[60vh] overflow-y-auto">
-
-                            {(createPlace.status === "loading" || categoriesLoading) && <Loading />}
-
-                            {/* Name */}
-                            <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                                <FormField label="Name" name="name" required />
-                            </div>
-
-                            {/* Category */}
-                            <div className="grid gap-4 mb-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))] mt-2">
-                                <div>
-                                    <label className="block text-lg text-black mb-1">
-                                        Category <span className="text-red-500">*</span>
-                                    </label>
-
-                                    <SelectBox
-                                        options={categories.map((cat) => ({
-                                            value: cat.value,
-                                            label: cat.label
-                                        }))}
-                                        handleChange={(value) => setFieldValue("categoryId", value)}
-                                        value={values.categoryId}
-                                        placeholder="Select a category"
-                                        showSearch
-                                        loading={categoriesLoading}
-                                    />
-
-                                    {errors.categoryId && touched.categoryId && (
-                                        <div className="text-red-500 text-sm mt-1">
-                                            {errors.categoryId}
+                            {/* Section 1: Basic Info */}
+                            <div className="modal-section">
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Location Overview</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div className="md:col-span-1">
+                                        <FormField label="Place Name" name="name" placeholder="e.g. Masjid Al-Noor" required />
+                                    </div>
+                                    <div className="md:col-span-1">
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-slate-700 font-semibold text-sm">Category <span className="text-red-500">*</span></label>
+                                            <SelectBox
+                                                options={PLACE_CATEGORIES.map((cat) => ({
+                                                    value: cat.value,
+                                                    label: cat.label
+                                                }))}
+                                                handleChange={(value) => setFieldValue("categoryId", value)}
+                                                value={values.categoryId}
+                                                placeholder="Select a category"
+                                                width="100%"
+                                                className="modern-select-box"
+                                            />
+                                            {errors.categoryId && touched.categoryId && (
+                                                <div className="text-red-500 text-xs font-medium">{errors.categoryId}</div>
+                                            )}
                                         </div>
-                                    )}
+                                    </div>
+                                    <div className="md:col-span-2">
+                                        <FormField label="Description" name="description" placeholder="Provide a brief description of the place..." type="textarea" />
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* Description */}
-                            <div className="grid gap-4 mt-2 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                                <FormField label="Description" name="description" as="textarea" />
-                            </div>
-
-                            {/* Address */}
-                            <div className="grid gap-4 mt-2 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                                <FormField label="Address" name="address" required />
-                            </div>
-
-                            {/* Google Address */}
-                            <div className="grid gap-4 mt-2 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                                <FormField label="Google Address" name="googleAddress" />
-                            </div>
-
-                            {/* Location */}
-                            <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                                <FormField label="Latitude" name="lat" type="number" required />
-                                <FormField label="Longitude" name="lng" type="number" required />
-                            </div>
-
-                            {/* Contact */}
-                            <h3 className="font-semibold mt-4 mb-2 text-lg">Contact <span className="text-red-500">*</span></h3>
-                            <FieldArray name="contact">
-                                {({ push, remove }) => (
-                                    <div className="space-y-2">
-                                        {values.contact.map((_, index) => (
-                                            <div
-                                                key={index}
-                                                className="flex flex-wrap gap-2 items-start"
-                                            >
-                                                <div className="flex-1 min-w-[200px]">
-                                                    <Input
-                                                        value={values.contact[index].name}
-                                                        onChange={(e) =>
-                                                            setFieldValue(`contact.${index}.name`, e.target.value)
-                                                        }
-                                                        placeholder="Name (e.g. Office, Mobile)"
-                                                        size="large"
-                                                    />
-                                                    {errors.contact?.[index]?.name && touched.contact?.[index]?.name && (
-                                                        <div className="text-red-500 text-xs mt-1">{errors.contact[index].name}</div>
-                                                    )}
-                                                </div>
-                                                <div className="flex-1 min-w-[200px]">
-                                                    <Input
-                                                        value={values.contact[index].number}
-                                                        onChange={(e) =>
-                                                            setFieldValue(`contact.${index}.number`, e.target.value)
-                                                        }
-                                                        placeholder="Phone number"
-                                                        size="large"
-                                                    />
-                                                    {errors.contact?.[index]?.number && touched.contact?.[index]?.number && (
-                                                        <div className="text-red-500 text-xs mt-1">{errors.contact[index].number}</div>
-                                                    )}
-                                                </div>
-
-                                                {values.contact.length > 1 && (
-                                                    <Button
-                                                        type="text"
-                                                        danger
-                                                        onClick={() => remove(index)}
-                                                        icon={<FaTrash />}
-                                                        className="mt-2"
-                                                    />
-                                                )}
-                                            </div>
-                                        ))}
-
-                                        <Button
-                                            type="dashed"
-                                            onClick={() => push({ name: "", number: "" })}
-                                            icon={<FaPlus />}
-                                            className="w-full"
-                                        >
-                                            Add Contact
-                                        </Button>
+                            {/* Section 2: Geographic Details */}
+                            <div className="modal-section">
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Geographic Details</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div className="md:col-span-2">
+                                        <FormField label="Physical Address" name="address" placeholder="Full address" required icon={<FaChevronRight className="opacity-20 translate-y-0.5" />} />
                                     </div>
-                                )}
-                            </FieldArray>
-
-                            {/* Additional Info */}
-                            <h3 className="font-semibold mt-6 mb-2 text-lg">Additional Info</h3>
-                            <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-                                <FormField label="Timing" name="timing" />
-                                <FormField label="Services" name="services" />
+                                    <div className="md:col-span-2">
+                                        <FormField label="Google Map Link / Location" name="googleAddress" placeholder="Link to Google Maps location" icon={<FaMapMarkerAlt className="opacity-30" />} />
+                                    </div>
+                                    <FormField label="Latitude" name="lat" type="number" placeholder="0.000000" required />
+                                    <FormField label="Longitude" name="lng" type="number" placeholder="0.000000" required />
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Footer */}
-                        <div className="flex justify-end mt-4 gap-4">
-                            <Button onClick={handleCloseModal} className="modal-cancel-button">
-                                Cancel
-                            </Button>
+                            {/* Section 3: Contacts (Dynamic FieldArray) */}
+                            <div className="modal-section">
+                                <div className="flex items-center justify-between mb-4">
+                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Contact Information</p>
+                                    <span className="text-[10px] font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full uppercase tracking-tighter">At least one required</span>
+                                </div>
 
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                loading={isSubmitting && createPlace.status !== "error"}
-                                className="modal-add-button"
-                            >
-                                Add
-                            </Button>
-                        </div>
-                    </Form>
-                )}
-            </Formik>
+                                <FieldArray name="contact">
+                                    {({ push, remove }) => (
+                                        <div className="space-y-3">
+                                            {values.contact.map((_, index) => (
+                                                <div key={index} className="flex gap-3 items-start animate-in fade-in slide-in-from-top-2 duration-300">
+                                                    <div className="flex-1 bg-slate-50 p-2 rounded-xl flex gap-3 border border-slate-100 shadow-sm">
+                                                        <div className="flex-1">
+                                                            <Input
+                                                                value={values.contact[index].name}
+                                                                onChange={(e) => setFieldValue(`contact.${index}.name`, e.target.value)}
+                                                                placeholder="Label (e.g. Office)"
+                                                                className="!border-none !bg-transparent !shadow-none !h-[40px] font-semibold"
+                                                            />
+                                                        </div>
+                                                        <div className="w-[1px] h-6 bg-slate-200 self-center" />
+                                                        <div className="flex-[1.5] flex items-center">
+                                                            <FaPhoneAlt size={12} className="text-slate-300 mx-2" />
+                                                            <Input
+                                                                value={values.contact[index].number}
+                                                                onChange={(e) => setFieldValue(`contact.${index}.number`, e.target.value)}
+                                                                placeholder="Number"
+                                                                className="!border-none !bg-transparent !shadow-none !h-[40px]"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    {values.contact.length > 1 && (
+                                                        <Button
+                                                            type="text"
+                                                            danger
+                                                            onClick={() => remove(index)}
+                                                            icon={<FaTrash size={14} />}
+                                                            className="!h-[56px] !w-[56px] !rounded-xl bg-red-50/50 hover:bg-red-50 flex items-center justify-center"
+                                                        />
+                                                    )}
+                                                </div>
+                                            ))}
 
+                                            <Button
+                                                type="dashed"
+                                                onClick={() => push({ name: "", number: "" })}
+                                                icon={<FaPlus size={12} />}
+                                                className="w-full !h-[50px] !rounded-xl !border-2 !border-dashed !border-slate-200 !text-slate-400 hover:!text-teal-600 hover:!border-teal-200 font-bold transition-all"
+                                            >
+                                                Add Another Contact
+                                            </Button>
+                                        </div>
+                                    )}
+                                </FieldArray>
+                            </div>
+
+                            {/* Section 4: Operational Data */}
+                            <div className="modal-section !mb-0">
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Operational Data</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <FormField label="Operational Timings" name="timing" placeholder="e.g. 9:00 AM - 5:00 PM" icon={<FaClock className="opacity-30" />} />
+                                    <FormField label="Offered Services" name="services" placeholder="e.g. Prayer, Education" icon={<FaTools className="opacity-30" />} />
+                                </div>
+                            </div>
+
+                            {/* Modal Footer Actions */}
+                            <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
+                                <Button
+                                    onClick={handleCloseModal}
+                                    className="modal-footer-btn-secondary"
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    loading={createPlace.isLoading || isSubmitting}
+                                    className="modal-footer-btn-primary"
+                                >
+                                    Register Place
+                                </Button>
+                            </div>
+                        </Form>
+                    )}
+                </Formik>
+            </div>
         </Modal>
     );
 }

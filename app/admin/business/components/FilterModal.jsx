@@ -1,51 +1,115 @@
 "use client";
-import React from "react";
-import { Button, Modal, Select } from "antd";
+import React, { useState, useEffect } from "react";
+import { Modal, Input, Button } from "antd";
+import { FaSearch, FaFilter, FaUndo } from "react-icons/fa";
+import SelectBox from "@/components/SelectBox";
 
-const { Option } = Select;
+const STATUS_OPTIONS = [
+    { value: "PENDING", label: "Pending" },
+    { value: "ACTIVE", label: "Active" },
+    { value: "REJECTED", label: "Rejected" },
+    { value: "SUSPENDED", label: "Suspended" },
+];
 
-function FilterModal({ modal, setModal, setFilters }) {
+function FilterModal({ isOpen, onClose, filters, setFilters }) {
+    const [localFilters, setLocalFilters] = useState({
+        status: filters?.status || null,
+        search: filters?.search || "",
+    });
 
-    const handleApply = (status) => {
-        setFilters((prev) => ({ ...prev, status, currentPage: 1 }));
-        setModal({ name: null, state: false, data: null });
+    useEffect(() => {
+        if (isOpen) {
+            setLocalFilters({
+                status: filters?.status || null,
+                search: filters?.search || "",
+            });
+        }
+    }, [isOpen, filters]);
+
+    const handleApply = () => {
+        setFilters((prev) => ({
+            ...prev,
+            status: localFilters.status,
+            search: localFilters.search,
+            currentPage: 1,
+        }));
+        onClose();
     };
 
     const handleReset = () => {
-        setFilters((prev) => ({ ...prev, status: null, currentPage: 1 }));
-        setModal({ name: null, state: false, data: null });
+        const resetValues = { status: null, search: "" };
+        setLocalFilters(resetValues);
+        setFilters((prev) => ({
+            ...prev,
+            ...resetValues,
+            currentPage: 1,
+        }));
+        onClose();
     };
 
     return (
         <Modal
-            title="Filter Businesses"
-            className="!rounded"
-            centered
-            width={400}
-            open={modal?.name === "Filter" && modal?.state}
-            onCancel={() => setModal({ name: null, state: false, data: null })}
+            open={isOpen}
+            onCancel={onClose}
             footer={null}
+            centered
+            width={440}
+            title={
+                <div className="flex items-center gap-3 px-2 pt-1">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
+                        <FaFilter size={16} />
+                    </div>
+                    <div>
+                        <span className="text-xl font-bold text-slate-900 block">Business Filters</span>
+                        <span className="text-xs text-slate-500 font-normal">Filter by status or search by name</span>
+                    </div>
+                </div>
+            }
+            className="modern-modal"
         >
-            <div className="p-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Status
-                </label>
-                <Select
-                    className="w-full mb-6"
-                    size="large"
-                    placeholder="Select status"
-                    onChange={handleApply}
-                    allowClear
-                    onClear={handleReset}
-                >
-                    <Option value="PENDING">Pending</Option>
-                    <Option value="APPROVED">Approved</Option>
-                    <Option value="REJECTED">Rejected</Option>
-                </Select>
+            <div className="flex flex-col gap-6 p-2 pt-6">
+                {/* Search Term */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-slate-700 font-semibold text-sm">Search Businesses</label>
+                    <Input
+                        placeholder="Search by name, category or phone..."
+                        value={localFilters.search}
+                        onChange={(e) => setLocalFilters((prev) => ({ ...prev, search: e.target.value }))}
+                        prefix={<FaSearch className="text-slate-400 mr-2" />}
+                        allowClear
+                        className="!h-[44px] !rounded-xl !border-2 !border-slate-100 focus:!border-teal-500"
+                    />
+                </div>
 
-                <div className="flex justify-end gap-3">
-                    <Button onClick={handleReset} className="modal-cancel-button">
-                        Reset
+                {/* Status Selection */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-slate-700 font-semibold text-sm">Status Filter</label>
+                    <SelectBox
+                        placeholder="All Statuses"
+                        allowClear
+                        value={localFilters.status}
+                        handleChange={(value) => setLocalFilters((prev) => ({ ...prev, status: value }))}
+                        className="modern-select-box"
+                        width="100%"
+                        options={STATUS_OPTIONS}
+                    />
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-3 mt-6 pt-6 border-t border-slate-100">
+                    <Button
+                        onClick={handleReset}
+                        icon={<FaUndo size={12} />}
+                        className="modal-footer-btn-secondary flex-1"
+                    >
+                        Reset All
+                    </Button>
+                    <Button
+                        type="primary"
+                        onClick={handleApply}
+                        className="modal-footer-btn-primary flex-1"
+                    >
+                        Apply Filters
                     </Button>
                 </div>
             </div>

@@ -2,9 +2,9 @@ import React from "react";
 
 function InnerPageCard({ title, children }) {
   return (
-    <div className="p-4 bg-white min-h-[85vh] rounded-xl shadow-sm border border-gray-100">
+    <div className="p-8 bg-white min-h-[85vh] rounded-[24px] shadow-sm border border-slate-100">
       {title && (
-        <h1 className="text-2xl font-semibold text-gray-900 mb-4">
+        <h1 className="text-2xl font-bold text-slate-900 mb-6 tracking-tight">
           {title}
         </h1>
       )}

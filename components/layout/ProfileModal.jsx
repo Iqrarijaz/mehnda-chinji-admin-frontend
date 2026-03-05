@@ -1,9 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Avatar, Divider, Tag, Input, message, Tooltip } from "antd";
-import { UserOutlined, LogoutOutlined, MailOutlined, PhoneOutlined, SafetyCertificateOutlined, CheckOutlined, CloseOutlined, CameraOutlined } from "@ant-design/icons";
+import {
+    UserOutlined,
+    LogoutOutlined,
+    MailOutlined,
+    PhoneOutlined,
+    SafetyCertificateOutlined,
+    CheckOutlined,
+    CloseOutlined,
+    CameraOutlined,
+    ShieldCheckOutlined
+} from "@ant-design/icons";
+import { FaShieldAlt, FaSignOutAlt, FaUserCircle, FaCheckCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { LOGOUT } from "@/app/api/login";
+
 const ProfileModal = ({ open, onCancel }) => {
     const router = useRouter();
     const [user, setUser] = useState(null);
@@ -35,7 +47,6 @@ const ProfileModal = ({ open, onCancel }) => {
             await LOGOUT();
             message.success("Logged out successfully");
         } catch (error) {
-            // Even if server logout fails, still clear local storage
             console.error("Server logout failed:", error);
         } finally {
             localStorage.clear();
@@ -83,26 +94,26 @@ const ProfileModal = ({ open, onCancel }) => {
             onCancel={onCancel}
             footer={null}
             centered
-            width={350}
-            className="profile-modal-custom"
+            width={400}
+            className="modern-modal profile-modal-modern"
         >
-            <div className="flex flex-col items-center py-4">
+            <div className="flex flex-col items-center py-2">
                 {/* Profile Header Section */}
-                <div className="relative mb-6">
-                    <div className="relative group p-1 bg-gradient-to-tr from-[#0F172A] to-blue-500 rounded-full">
+                <div className="relative mb-6 mt-2">
+                    <div className="relative p-1.5 bg-gradient-to-tr from-teal-600 to-teal-400 rounded-full shadow-lg">
                         <Avatar
-                            size={110}
+                            size={100}
                             icon={<UserOutlined />}
-                            className="bg-white text-[#0F172A] border-4 border-white shadow-xl"
+                            className="bg-white text-teal-600 border-4 border-white"
                             src={user?.adminData?.profileImage}
                         />
                         {!isEditing && (
-                            <Tooltip title="Edit Profile">
+                            <Tooltip title="Update Photo">
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    className="absolute bottom-1 right-1 bg-[#0F172A] text-white p-2.5 rounded-full shadow-lg hover:bg-black transition-all transform hover:scale-110 border-2 border-white flex items-center justify-center"
+                                    className="absolute bottom-0 right-0 bg-teal-600 text-white p-2 rounded-full shadow-md hover:bg-teal-700 transition-all border-2 border-white flex items-center justify-center transform hover:scale-110"
                                 >
-                                    <CameraOutlined style={{ fontSize: '14px' }} />
+                                    <CameraOutlined style={{ fontSize: '12px' }} />
                                 </button>
                             </Tooltip>
                         )}
@@ -110,74 +121,71 @@ const ProfileModal = ({ open, onCancel }) => {
                 </div>
 
                 {/* Name and Role Section */}
-                {isEditing ? (
-                    <div className="w-full px-8 mb-4">
+                <div className="text-center px-6 w-full mb-6">
+                    {isEditing ? (
                         <Input
-                            prefix={<UserOutlined className="text-gray-400 mr-1" />}
+                            prefix={<UserOutlined className="text-slate-400 mr-2" />}
                             value={editForm.name}
                             onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                             placeholder="Full Name"
-                            className="text-center font-semibold text-base rounded h-11 border-blue-100 hover:border-[#0F172A] focus:border-[#0F172A]"
+                            className="!h-[44px] !rounded-xl !border-2 !border-slate-100 focus:!border-teal-500 !text-center !font-bold !text-slate-800"
                         />
-                    </div>
-                ) : (
-                    <div className="text-center mb-1">
-                        <h2 className="text-2xl font-extrabold text-[#0F172A] tracking-tight">
-                            {user?.adminData?.name || "Administrator"}
-                        </h2>
-                    </div>
-                )}
+                    ) : (
+                        <>
+                            <h2 className="text-2xl font-black text-slate-800 tracking-tight leading-tight">
+                                {user?.adminData?.name || "Administrator"}
+                            </h2>
+                            <p className="text-[10px] font-black text-teal-600 uppercase tracking-[0.2em] mt-1 opacity-80">
+                                {user?.adminData?.role?.replace(/_/g, " ") || "SUPER ADMIN"}
+                            </p>
+                        </>
+                    )}
+                </div>
 
-                <Tag bordered={false} className="bg-blue-50 text-blue-600 rounded-full px-5 py-0.5 mb-6 font-bold text-[11px] tracking-widest uppercase shadow-sm">
-                    {user?.adminData?.role?.replace(/_/g, " ") || "SUPER ADMIN"}
-                </Tag>
-
-                <Divider className="my-2 border-gray-100" />
+                {/* Verification Badge - Redesigned */}
+                <div className="w-full px-8 mb-6">
+                    <div className="flex items-center justify-center gap-2.5 bg-teal-50/50 py-3 px-4 rounded-2xl border border-teal-100/50 shadow-sm">
+                        <FaCheckCircle className="text-teal-500" size={16} />
+                        <span className="text-[11px] font-black text-teal-700 uppercase tracking-widest">Account Active & Verified</span>
+                    </div>
+                </div>
 
                 {/* Details Section */}
-                <div className="w-full space-y-3 px-6 py-4">
-                    <div className="group flex flex-col gap-1">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Email Address</span>
-                        <div className="flex items-center gap-3 text-gray-500 bg-gray-50/50 p-3.5 rounded-2xl border border-gray-100/80 transition-all">
-                            <MailOutlined className="text-[#0F172A] text-lg" />
-                            <span className="text-sm font-medium truncate">{user?.adminData?.email || "N/A"}</span>
-                            <div className="ml-auto">
-                                <SafetyCertificateOutlined className="text-green-500" />
-                            </div>
+                <div className="w-full space-y-4 px-8 mb-8">
+                    <div className="flex flex-col gap-1.5">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] ml-1">Email Terminal</span>
+                        <div className="flex items-center gap-3 text-slate-600 bg-slate-50/50 p-3.5 rounded-xl border border-slate-100 transition-all">
+                            <MailOutlined className="text-teal-600" />
+                            <span className="text-sm font-semibold truncate">{user?.adminData?.email || "N/A"}</span>
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-1">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Contact Number</span>
+                    <div className="flex flex-col gap-1.5">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] ml-1">Secure Contact</span>
                         {isEditing ? (
                             <Input
-                                prefix={<PhoneOutlined className="text-[#0F172A] mr-2" />}
+                                prefix={<PhoneOutlined className="text-teal-600 mr-2" />}
                                 value={editForm.phone}
                                 onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
                                 placeholder="Phone Number"
-                                className="rounded-2xl h-12 border-gray-200 hover:border-[#0F172A] focus:border-[#0F172A]"
+                                className="!h-[44px] !rounded-xl !border-2 !border-slate-100 focus:!border-teal-500"
                             />
                         ) : (
-                            <div className="flex items-center gap-3 text-gray-700 bg-white p-3.5 rounded-2xl border border-gray-100 shadow-sm transition-all hover:border-blue-100">
-                                <PhoneOutlined className="text-[#0F172A] text-lg" />
-                                <span className="text-sm font-semibold">{user?.adminData?.phone || "N/A"}</span>
+                            <div className="flex items-center gap-3 text-slate-700 bg-white p-3.5 rounded-xl border border-slate-100 shadow-sm transition-all hover:border-teal-100">
+                                <PhoneOutlined className="text-teal-600" />
+                                <span className="text-sm font-bold">{user?.adminData?.phone || "N/A"}</span>
                             </div>
                         )}
-                    </div>
-
-                    <div className="flex items-center gap-3 text-gray-500 bg-green-50/30 p-3 rounded-2xl border border-green-100/50 mt-4">
-                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                        <span className="text-[11px] font-bold text-green-700 uppercase tracking-wider">Account Active & Verified</span>
                     </div>
                 </div>
 
                 {/* Action Buttons */}
-                <div className="w-full px-6 mt-4">
+                <div className="w-full px-8 pb-4">
                     {isEditing ? (
                         <div className="flex gap-3 w-full">
                             <Button
                                 onClick={handleCancelEdit}
-                                className="flex-1 h-12 rounded-2xl border-gray-200 font-bold text-gray-500 hover:text-red-500 hover:border-red-100"
+                                className="modal-footer-btn-secondary flex-1"
                                 icon={<CloseOutlined />}
                             >
                                 Cancel
@@ -185,22 +193,22 @@ const ProfileModal = ({ open, onCancel }) => {
                             <Button
                                 type="primary"
                                 onClick={handleSave}
-                                className="flex-1 h-12 rounded-2xl bg-[#0F172A] border-none font-bold shadow-lg shadow-blue-900/10"
+                                className="modal-footer-btn-primary flex-1 !shadow-teal-900/10"
                                 icon={<CheckOutlined />}
                             >
-                                Save Changes
+                                Save
                             </Button>
                         </div>
                     ) : (
                         <Button
                             type="primary"
                             danger
-                            icon={<LogoutOutlined />}
+                            icon={<FaSignOutAlt />}
                             onClick={handleLogout}
                             loading={isLoggingOut}
-                            className="w-full h-12 rounded-2xl font-bold flex items-center justify-center hover:scale-[1.01] transition-all shadow-lg shadow-red-900/10 border-none bg-gradient-to-r from-red-600 to-red-500"
+                            className="modal-footer-btn-danger w-full !bg-gradient-to-r !from-red-600 !to-red-500 !border-none !shadow-xl !shadow-red-500/10"
                         >
-                            Sign Out
+                            Sign Out Account
                         </Button>
                     )}
                 </div>

@@ -1,37 +1,31 @@
 import { Input } from "antd";
 import React from "react";
-import { IoSearchCircle } from "react-icons/io5";
+import { FiSearch } from "react-icons/fi";
 
 function SearchInput({ setFilters }) {
   return (
-    <Input
-      onBlur={() => {
-        setFilters((oldValues) => ({
-          ...oldValues,
-          onChangeSearch: false,
-        }));
-      }}
-      placeholder="Search..."
-      className="custom-search-input border-2 border-[#0F172A] rounded"
-      prefix={<IoSearchCircle size={30} color="#0F172A" className="me-2" />}
-      onChange={(event) => {
-        const value = event?.target?.value;
-        if (value.includes("-")) {
-          const newValue = value.replace(/-/g, "");
+    <div className="search-input-wrap relative flex items-center">
+      <Input
+        onBlur={() => {
           setFilters((oldValues) => ({
             ...oldValues,
-            search: newValue.trim(),
-            onChangeSearch: true,
+            onChangeSearch: false,
           }));
-          return;
-        }
-        setFilters((oldValues) => ({
-          ...oldValues,
-          search: value.trim(),
-          onChangeSearch: true,
-        }));
-      }}
-    />
+        }}
+        placeholder="Search..."
+        className="!h-[42px] !rounded-xl !border-2 !border-slate-100 focus:!border-primary focus:!shadow-none hover:!border-slate-200 transition-all font-sans text-slate-600"
+        prefix={<FiSearch size={18} className="text-slate-400 mr-2" />}
+        onChange={(event) => {
+          const value = event?.target?.value;
+          setFilters((oldValues) => ({
+            ...oldValues,
+            search: value ? value.trim() : "",
+            onChangeSearch: true,
+            page: 1,
+          }));
+        }}
+      />
+    </div>
   );
 }
 

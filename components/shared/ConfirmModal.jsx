@@ -1,7 +1,11 @@
 import React from "react";
-import { Modal } from "antd";
+import { Modal, Button } from "antd";
 import { FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
 
+/**
+ * Modern SaaS Confirmation Modal
+ * Standardized for both Primary (Info) and Danger (Delete) actions.
+ */
 const ConfirmModal = ({
     isOpen,
     onClose,
@@ -10,103 +14,58 @@ const ConfirmModal = ({
     description,
     confirmText = "Confirm",
     cancelText = "Cancel",
-    variant = "primary",  // 'primary' or 'danger'
+    variant = "primary", // 'primary' or 'danger'
     loading = false
 }) => {
-
     const isDanger = variant === "danger";
-
-    // Colours derived from variant — mirrors the toast palette
-    const palette = isDanger
-        ? { bg: "#fee2e2", border: "#fca5a5", iconColor: "#dc2626", blob: "#f87171", btnBg: "#dc2626", btnHover: "#b91c1c", ring: "#dc2626" }
-        : { bg: "#dbeafe", border: "#93c5fd", iconColor: "#2563eb", blob: "#60a5fa", btnBg: "#0F172A", btnHover: "#1e293b", ring: "#0F172A" };
 
     return (
         <Modal
             open={isOpen}
-            onCancel={onClose}
+            onCancel={loading ? undefined : onClose}
             footer={null}
             centered
-            closable={false}
-            width={350}
-            className="confirm-modal-custom"
-            styles={{
-                content: {
-                    background: palette.bg,
-                    border: `1px solid ${palette.border}`,
-                    overflow: "hidden",
-                    position: "relative",
-                    padding: 0,
-                }
-            }}
+            closable={!loading}
+            width={440}
+            className="modern-modal"
         >
-            {/* Decorative blob — bottom-left, same as toast */}
-            <div
-                style={{
-                    position: "absolute",
-                    bottom: -24,
-                    left: -14,
-                    width: 100,
-                    height: 100,
-                    borderRadius: "50%",
-                    background: palette.blob,
-                    opacity: 0.18,
-                    pointerEvents: "none",
-                }}
-            />
-
-            <div className="flex flex-col items-center text-center p-5">
-
-                {/* White icon circle — same as toast icon */}
+            <div className="flex flex-col items-center text-center">
+                {/* Icon Container with subtle background wrap */}
                 <div
-                    style={{
-                        width: 52,
-                        height: 52,
-                        borderRadius: "50%",
-                        background: "#fff",
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginBottom: 12,
-                        color: palette.iconColor,
-                        flexShrink: 0,
-                    }}
+                    className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-sm border ${isDanger
+                            ? "bg-red-50 border-red-100 text-red-500"
+                            : "bg-teal-50 border-teal-100 text-teal-600"
+                        }`}
                 >
-                    {isDanger
-                        ? <FaExclamationTriangle size={22} />
-                        : <FaInfoCircle size={22} />
-                    }
+                    {isDanger ? <FaExclamationTriangle size={28} /> : <FaInfoCircle size={28} />}
                 </div>
 
-                <h3 className="text-lg font-bold mb-2" style={{ color: isDanger ? "#7f1d1d" : "#1e3a5f" }}>
-                    {title}
-                </h3>
+                {/* Text Content */}
+                <div className="mb-8">
+                    <h3 className="text-xl font-bold text-slate-900 mb-2 leading-tight">
+                        {title}
+                    </h3>
+                    <p className="text-slate-600 text-[15px] leading-relaxed px-4">
+                        {description}
+                    </p>
+                </div>
 
-                <p className="mb-6 text-sm px-2" style={{ color: isDanger ? "#991b1b" : "#1e40af", opacity: 0.8 }}>
-                    {description}
-                </p>
-
-                <div className="flex gap-2 w-full">
-                    <button
+                {/* Actions Footer */}
+                <div className="flex items-center gap-3 w-full">
+                    <Button
+                        disabled={loading}
                         onClick={onClose}
-                        className="flex-1 px-3 py-2 border rounded text-sm font-medium transition-colors focus:outline-none"
-                        style={{ borderColor: palette.border, color: isDanger ? "#7f1d1d" : "#1e3a5f", background: "rgba(255,255,255,0.55)" }}
+                        className="modal-footer-btn-secondary flex-1"
                     >
                         {cancelText}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                        loading={loading}
                         onClick={onConfirm}
-                        disabled={loading}
-                        className="flex-1 px-3 py-2 rounded text-sm text-white font-medium transition-colors focus:outline-none"
-                        style={{
-                            background: palette.btnBg,
-                            opacity: loading ? 0.7 : 1,
-                            cursor: loading ? "not-allowed" : "pointer",
-                        }}
+                        className={`flex-1 ${isDanger ? 'modal-footer-btn-danger' : 'modal-footer-btn-primary'}`}
                     >
                         {loading ? "Processing..." : confirmText}
-                    </button>
+                    </Button>
                 </div>
             </div>
         </Modal>

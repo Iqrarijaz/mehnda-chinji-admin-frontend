@@ -1,53 +1,56 @@
 "use client";
 import React from "react";
-import { Modal } from "antd";
+import { Modal, Button } from "antd";
+import { FaClock, FaSignOutAlt, FaShieldAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { FaClock } from "react-icons/fa";
 
-const SessionExpiredModal = ({ isOpen, onClose }) => {
+const SessionExpiredModal = ({ open, handleClose }) => {
     const router = useRouter();
 
-    const handleLogin = () => {
-        // Clear all stored data
-        localStorage.clear();
-        // Close modal and redirect to login
-        if (onClose) onClose();
-        router.push("/");
+    const handleLoginRedirect = () => {
+        handleClose();
+        router.push("/login");
     };
 
     return (
         <Modal
-            open={isOpen}
+            open={open}
+            onCancel={handleClose}
             footer={null}
             centered
             closable={false}
             maskClosable={false}
-            width={380}
-            className="session-expired-modal"
+            width={440}
+            className="modern-modal"
         >
-            <div className="flex flex-col items-center text-center p-6 bg-white rounded-lg">
-                {/* Icon */}
-                <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mb-4">
-                    <FaClock size={28} className="text-amber-500" />
+            <div className="flex flex-col items-center text-center p-4">
+                {/* Visual Icon */}
+                <div className="w-20 h-20 rounded-full bg-orange-50 flex items-center justify-center text-orange-500 mb-6 animate-pulse">
+                    <FaClock size={36} />
                 </div>
 
-                {/* Title */}
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Session Expired
-                </h3>
-
-                {/* Description */}
-                <p className="text-gray-500 mb-6 text-sm px-2">
-                    Your session has expired due to inactivity. Please log in again to continue using the application.
+                {/* Content */}
+                <h2 className="text-2xl font-black text-slate-900 mb-2">Session Expired</h2>
+                <p className="text-slate-500 text-sm leading-relaxed mb-8 max-w-[280px]">
+                    Your login session has timed out for security reasons. Please sign in again to continue.
                 </p>
 
-                {/* Login Button */}
-                <button
-                    onClick={handleLogin}
-                    className="w-full px-4 py-3 bg-[#0F172A] hover:bg-[#1e293b] rounded-lg text-white font-semibold transition-all transform hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 shadow-lg"
-                >
-                    Login Again
-                </button>
+                {/* Actions */}
+                <div className="w-full space-y-3">
+                    <Button
+                        type="primary"
+                        onClick={handleLoginRedirect}
+                        icon={<FaSignOutAlt className="rotate-180" />}
+                        className="modal-footer-btn-primary w-full !h-[52px] !text-base"
+                    >
+                        Sign In Again
+                    </Button>
+
+                    <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest pt-2">
+                        <FaShieldAlt size={10} />
+                        Security Protected Session
+                    </div>
+                </div>
             </div>
         </Modal>
     );

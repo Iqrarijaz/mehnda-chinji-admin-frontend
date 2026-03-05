@@ -1,31 +1,18 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Modal, Input } from "antd";
-import { FaSearch, FaTimes } from "react-icons/fa";
-import SelectBox from "@/components/SelectBox";
+import { Modal, Input, Button, Select } from "antd";
+import { FaSearch, FaFilter, FaUndo, FaTint, FaCheckCircle, FaMapMarkerAlt } from "react-icons/fa";
 
-const bloodGroups = [
-    { value: "A+", label: "A+" },
-    { value: "A-", label: "A-" },
-    { value: "B+", label: "B+" },
-    { value: "B-", label: "B-" },
-    { value: "AB+", label: "AB+" },
-    { value: "AB-", label: "AB-" },
-    { value: "O+", label: "O+" },
-    { value: "O-", label: "O-" }
-];
+const { Option } = Select;
 
-const availabilityOptions = [
-    { value: "true", label: "Available" },
-    { value: "false", label: "Busy / Not Available" }
-];
+const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
 function FilterModal({ isOpen, onClose, filters, onChange }) {
     const [localFilters, setLocalFilters] = useState({
-        bloodGroup: filters?.bloodGroup || "",
-        available: filters?.available || "",
-        search: filters?.search || "",
-        city: filters?.city || ""
+        bloodGroup: "",
+        available: "",
+        search: "",
+        city: ""
     });
 
     useEffect(() => {
@@ -41,10 +28,7 @@ function FilterModal({ isOpen, onClose, filters, onChange }) {
 
     const handleApply = () => {
         onChange({
-            bloodGroup: localFilters.bloodGroup,
-            available: localFilters.available,
-            search: localFilters.search,
-            city: localFilters.city,
+            ...localFilters,
             page: 1
         });
         onClose();
@@ -68,91 +52,103 @@ function FilterModal({ isOpen, onClose, filters, onChange }) {
             onCancel={onClose}
             footer={null}
             centered
-            width={350}
+            width={440}
             title={
-                <div className="flex items-center gap-2 text-lg font-semibold">
-                    <FaSearch className="text-red-600" />
-                    Blood Donor Filters
+                <div className="flex items-center gap-3 px-2 pt-1">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
+                        <FaFilter size={16} />
+                    </div>
+                    <div>
+                        <span className="text-xl font-bold text-slate-900 block">Donor Filters</span>
+                        <span className="text-xs text-slate-500 font-normal">Refine the life-saver directory</span>
+                    </div>
                 </div>
             }
-            className="filter-modal"
+            className="modern-modal"
         >
-            <div className="flex flex-col gap-4 py-4">
-                {/* Search */}
-                <div>
-                    <label className="text-sm font-medium text-gray-700 mb-1 block">
-                        Search
-                    </label>
+            <div className="flex flex-col gap-6 p-2 pt-6">
+                {/* Search Term */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-slate-700 font-semibold text-sm">Keyword Search</label>
                     <Input
-                        placeholder="Search donors..."
+                        placeholder="Search by name..."
                         value={localFilters.search}
                         onChange={(e) => setLocalFilters(prev => ({ ...prev, search: e.target.value }))}
-                        prefix={<FaSearch className="text-gray-400" />}
+                        prefix={<FaSearch className="text-slate-400 mr-2" />}
                         allowClear
-                        className="w-full"
+                        className="!h-[44px] !rounded-xl !border-2 !border-slate-100 focus:!border-teal-500 shadow-sm"
                     />
                 </div>
 
-                {/* Blood Group Filter */}
-                <div>
-                    <label className="text-sm font-medium text-gray-700 mb-1 block">
-                        Blood Group
-                    </label>
-                    <SelectBox
-                        placeholder="Select blood group"
-                        allowClear
-                        value={localFilters.bloodGroup || undefined}
-                        handleChange={(value) => setLocalFilters(prev => ({ ...prev, bloodGroup: value || "" }))}
-                        className="w-full"
-                        width="100%"
-                        options={bloodGroups}
-                    />
+                <div className="grid grid-cols-2 gap-4">
+                    {/* Blood Group */}
+                    <div className="flex flex-col gap-2">
+                        <label className="text-slate-700 font-semibold text-sm">Blood Type</label>
+                        <Select
+                            placeholder="Any Group"
+                            allowClear
+                            value={localFilters.bloodGroup || undefined}
+                            onChange={(val) => setLocalFilters(prev => ({ ...prev, bloodGroup: val || "" }))}
+                            className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100 shadow-sm"
+                            size="large"
+                        >
+                            {bloodGroups.map(bg => (
+                                <Option key={bg} value={bg}>
+                                    <div className="flex items-center gap-2">
+                                        <FaTint className="text-red-500" size={10} />
+                                        <span>{bg}</span>
+                                    </div>
+                                </Option>
+                            ))}
+                        </Select>
+                    </div>
+
+                    {/* Availability */}
+                    <div className="flex flex-col gap-2">
+                        <label className="text-slate-700 font-semibold text-sm">Status</label>
+                        <Select
+                            placeholder="Any Status"
+                            allowClear
+                            value={localFilters.available || undefined}
+                            onChange={(val) => setLocalFilters(prev => ({ ...prev, available: val || "" }))}
+                            className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100 shadow-sm"
+                            size="large"
+                        >
+                            <Option value="true">Available</Option>
+                            <Option value="false">Busy / Away</Option>
+                        </Select>
+                    </div>
                 </div>
 
-                {/* Availability Filter */}
-                <div>
-                    <label className="text-sm font-medium text-gray-700 mb-1 block">
-                        Availability
-                    </label>
-                    <SelectBox
-                        placeholder="Select availability"
-                        allowClear
-                        value={localFilters.available || undefined}
-                        handleChange={(value) => setLocalFilters(prev => ({ ...prev, available: value || "" }))}
-                        className="w-full"
-                        width="100%"
-                        options={availabilityOptions}
-                    />
-                </div>
-
-                {/* City Filter */}
-                <div>
-                    <label className="text-sm font-medium text-gray-700 mb-1 block">
-                        City
-                    </label>
+                {/* City Search */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-slate-700 font-semibold text-sm">Filter by City</label>
                     <Input
-                        placeholder="Filter by city..."
+                        placeholder="e.g. Lahore, Karachi"
                         value={localFilters.city}
                         onChange={(e) => setLocalFilters(prev => ({ ...prev, city: e.target.value }))}
+                        prefix={<FaMapMarkerAlt className="text-slate-400 mr-2" />}
                         allowClear
-                        className="w-full px-4 py-2 border rounded-lg"
+                        className="!h-[44px] !rounded-xl !border-2 !border-slate-100 focus:!border-teal-500 shadow-sm"
                     />
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-3 mt-2">
-                    <button
+                <div className="flex gap-3 mt-6 pt-6 border-t border-slate-100">
+                    <Button
                         onClick={handleReset}
-                        className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                        icon={<FaUndo size={12} />}
+                        className="modal-footer-btn-secondary flex-1"
                     >
                         Reset
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                        type="primary"
                         onClick={handleApply}
-                        className="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 rounded-lg text-white font-medium transition-colors"
+                        className="modal-footer-btn-primary flex-1 bg-red-600 hover:bg-red-700 border-none"
                     >
                         Apply Filters
-                    </button>
+                    </Button>
                 </div>
             </div>
         </Modal>

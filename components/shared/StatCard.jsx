@@ -4,7 +4,7 @@ import React from "react";
 export default function StatCard({
     title,
     count,
-    color = "#6366f1",
+    color = "#006666",
     bg = "#ffffff",
     border = "transparent",
     icon = null,
@@ -12,10 +12,10 @@ export default function StatCard({
     onClick,
     subtitle,
 }) {
-    const cardBg = active ? color : bg;
-    const cardBorder = active ? color : border;
+    const cardBg = active ? "#006666" : bg;
+    const cardBorder = active ? "#006666" : border;
     const textColor = active ? "#ffffff" : "#1e293b";
-    const accentBar = active ? "rgba(255,255,255,0.25)" : color;
+    const accentBar = active ? "rgba(255,255,255,0.25)" : "#006666";
 
     return (
         <button

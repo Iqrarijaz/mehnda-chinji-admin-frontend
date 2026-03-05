@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { Button, Modal, Input } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
+import { FaUserShield, FaAlignLeft } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
 import FormField from "@/components/InnerPage/FormField";
@@ -13,8 +14,8 @@ import PermissionsSelector from "./PermissionsSelector";
 
 // Validation schema
 const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Role name is required"),
-    description: Yup.string().required("Description is required"),
+    name: Yup.string().required("Role title is required"),
+    description: Yup.string().required("Role description is required"),
 });
 
 function UpdateRoleModal({ modal, setModal }) {
@@ -50,89 +51,98 @@ function UpdateRoleModal({ modal, setModal }) {
 
     return (
         <Modal
-            title="Update Role"
-            className="!rounded"
+            title={
+                <div className="flex items-center gap-3 px-2 pt-1">
+                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
+                        <FaUserShield size={18} />
+                    </div>
+                    <div>
+                        <span className="text-xl font-bold text-slate-900 block">Edit Role</span>
+                        <span className="text-xs text-slate-500 font-normal">Modify access levels and description</span>
+                    </div>
+                </div>
+            }
             centered
-            width={800}
+            width={720}
             open={modal?.name === "Edit" && modal?.state}
             onCancel={handleCloseModal}
             footer={null}
+            className="modern-modal"
         >
-            <div className="mb-4 flex justify-end">
-                <Button
-                    className="reset-button"
-                    onClick={() => formikRef.current?.resetForm({ values: initialValues })}
+            <div className="p-2 pt-4">
+                <Formik
+                    innerRef={formikRef}
+                    enableReinitialize
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={handleSubmit}
                 >
-                    Reset
-                </Button>
-            </div>
-
-            <Formik
-                innerRef={formikRef}
-                enableReinitialize
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={handleSubmit}
-            >
-                {({ values, errors, touched, setFieldValue, handleChange, handleBlur }) => (
-                    <Form>
-                        <div className="bg-gray-100 p-4 rounded max-h-[60vh] overflow-y-auto">
+                    {({ values, errors, touched, setFieldValue, handleChange, handleBlur, isSubmitting }) => (
+                        <Form className="space-y-6">
                             {updateRole.status === "loading" && <Loading />}
 
-                            {/* Name */}
-                            <FormField
-                                label="Role Name"
-                                name="name"
-                                placeholder="Enter role name"
-                                required
-                            />
+                            <div className="modal-section">
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Role Definition</p>
+                                <div className="space-y-4">
+                                    <FormField
+                                        label="Role Title"
+                                        name="name"
+                                        placeholder="Role name"
+                                        required
+                                        icon={<FaUserShield className="opacity-30" />}
+                                    />
 
-                            {/* Description */}
-                            <div className="mb-3">
-                                <label className="text-black font-[500] mb-1 block">
-                                    Description <span className="text-red-500">*</span>
-                                </label>
-                                <Input.TextArea
-                                    name="description"
-                                    placeholder="Enter description"
-                                    value={values.description}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    rows={2}
-                                    className="w-full"
-                                />
-                                {touched.description && errors.description && (
-                                    <div className="text-red-500 text-sm mt-1">{errors.description}</div>
-                                )}
+                                    <div className="flex flex-col gap-2">
+                                        <label className="text-slate-700 font-semibold text-sm">Role Description <span className="text-red-500">*</span></label>
+                                        <div className="relative">
+                                            <FaAlignLeft className="absolute top-4 left-4 text-slate-300 pointer-events-none" />
+                                            <Input.TextArea
+                                                name="description"
+                                                placeholder="Explain what this role allows..."
+                                                value={values.description}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                rows={3}
+                                                className="!pl-11 !rounded-2xl !border-2 !border-slate-100 focus:!border-teal-500 !py-3"
+                                            />
+                                        </div>
+                                        {touched.description && errors.description && (
+                                            <div className="text-red-500 text-xs font-medium">{errors.description}</div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
 
-                            {/* Permissions */}
-                            <div className="mb-3">
-                                <label className="text-black font-[500] mb-2 block">Permissions</label>
-                                <PermissionsSelector
-                                    selectedPermissions={values.permissions}
-                                    onChange={(newPermissions) => setFieldValue("permissions", newPermissions)}
-                                />
+                            <div className="modal-section !mb-0">
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Access Permissions</p>
+                                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                    <PermissionsSelector
+                                        selectedPermissions={values.permissions}
+                                        onChange={(newPermissions) => setFieldValue("permissions", newPermissions)}
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Footer */}
-                        <div className="flex justify-end mt-4 gap-4">
-                            <Button onClick={handleCloseModal} className="modal-cancel-button">
-                                Cancel
-                            </Button>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                loading={updateRole.isLoading}
-                                className="modal-add-button"
-                            >
-                                Update
-                            </Button>
-                        </div>
-                    </Form>
-                )}
-            </Formik>
+                            <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
+                                <Button
+                                    onClick={handleCloseModal}
+                                    className="modal-footer-btn-secondary"
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    loading={updateRole.isLoading || isSubmitting}
+                                    className="modal-footer-btn-primary"
+                                >
+                                    Save Changes
+                                </Button>
+                            </div>
+                        </Form>
+                    )}
+                </Formik>
+            </div>
         </Modal>
     );
 }

@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
-import { Modal, Tag } from "antd";
+import { Modal, Tag, Divider } from "antd";
+import { FaUser, FaCalendarAlt, FaInfoCircle, FaHeart, FaCommentAlt } from "react-icons/fa";
 import { timestampToDate } from "@/utils/date";
 import { getTagColor } from "@/utils/tagColor";
 
@@ -13,147 +14,157 @@ function ViewModal({ viewModal, setViewModal }) {
 
     const renderMetadata = () => {
         if (!data?.metadata || Object.keys(data.metadata).length === 0) {
-            return <p className="text-gray-500">No additional metadata</p>;
+            return <p className="text-slate-400 italic text-sm">No additional metadata provided.</p>;
         }
 
         const { type, metadata } = data;
 
         if (type === "DEATH") {
             return (
-                <div className="space-y-2">
-                    {metadata.deceasedName && (
-                        <div>
-                            <span className="font-semibold">Deceased Name: </span>
-                            {metadata.deceasedName}
-                        </div>
-                    )}
-                    {metadata.dateOfDeath && (
-                        <div>
-                            <span className="font-semibold">Date of Death: </span>
-                            {new Date(metadata.dateOfDeath).toLocaleDateString()}
-                        </div>
-                    )}
-                    {metadata.relationship && (
-                        <div>
-                            <span className="font-semibold">Relationship: </span>
-                            {metadata.relationship}
-                        </div>
-                    )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Deceased Name</span>
+                        <p className="font-semibold text-slate-900">{metadata.deceasedName}</p>
+                    </div>
+                    <div className="space-y-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Relationship</span>
+                        <p className="font-semibold text-slate-900">{metadata.relationship}</p>
+                    </div>
+                    <div className="space-y-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Date of Death</span>
+                        <p className="font-semibold text-slate-900">{new Date(metadata.dateOfDeath).toLocaleDateString()}</p>
+                    </div>
                 </div>
             );
         }
 
         if (type === "ACCIDENT") {
             return (
-                <div className="space-y-2">
-                    {metadata.location && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Location</span>
+                        <p className="font-semibold text-slate-900">{metadata.location}</p>
+                    </div>
+                    <div className="space-y-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Severity</span>
                         <div>
-                            <span className="font-semibold">Location: </span>
-                            {metadata.location}
-                        </div>
-                    )}
-                    {metadata.severity && (
-                        <div>
-                            <span className="font-semibold">Severity: </span>
-                            <Tag color={metadata.severity === "HIGH" ? "red" : metadata.severity === "MEDIUM" ? "orange" : "green"}>
+                            <Tag color={metadata.severity === "HIGH" ? "red" : metadata.severity === "MEDIUM" ? "orange" : "green"} className="rounded-md px-3">
                                 {metadata.severity}
                             </Tag>
                         </div>
-                    )}
+                    </div>
                 </div>
             );
         }
 
-        return null;
+        return <pre className="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg">{JSON.stringify(metadata, null, 2)}</pre>;
     };
 
     return (
         <Modal
-            title="Post Details"
+            title={
+                <div className="flex items-center gap-3 px-2 pt-1">
+                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
+                        <FaInfoCircle size={18} />
+                    </div>
+                    <div>
+                        <span className="text-xl font-bold text-slate-900 block">Post Details</span>
+                        <span className="text-xs text-slate-500 font-normal">Expanded view of the post and its metadata</span>
+                    </div>
+                </div>
+            }
             open={open}
             onCancel={handleClose}
             footer={null}
-            width={700}
-            className="!rounded"
+            width={720}
+            className="modern-modal"
         >
-            {data && (
-                <div className="flex flex-col gap-4">
-                    {/* Type Badge */}
-                    <div className="flex items-center gap-2">
-                        <Tag
-                            color={getTagColor(data.type)}
-                            className="!text-xs !font-semibold"
-                        >
-                            {data.type}
-                        </Tag>
-                        <Tag color={data.status === "ACTIVE" ? "green" : "red"}>
-                            {data.status}
-                        </Tag>
-                    </div>
-
-                    {/* Content */}
-                    <div>
-                        <label className="font-semibold text-sm">Content:</label>
-                        <p className="mt-1 text-gray-700 whitespace-pre-wrap">{data.content}</p>
-                    </div>
-
-                    {/* Images */}
-                    {data.images && data.images.length > 0 && (
-                        <div>
-                            <label className="font-semibold text-sm">Images:</label>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                                {data.images.map((img, index) => (
-                                    <img
-                                        key={index}
-                                        src={img}
-                                        alt={`Post image ${index + 1}`}
-                                        className="w-24 h-24 object-cover rounded border"
-                                        onError={(e) => {
-                                            e.target.src = "https://via.placeholder.com/100?text=No+Image";
-                                        }}
-                                    />
-                                ))}
+            <div className="p-2">
+                {data && (
+                    <div className="space-y-8">
+                        {/* Header Info */}
+                        <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center overflow-hidden">
+                                    {data.createdBy?.profileImage ? (
+                                        <img src={data.createdBy.profileImage} alt="User" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <FaUser className="text-slate-300" />
+                                    )}
+                                </div>
+                                <div>
+                                    <p className="font-bold text-slate-900 text-sm leading-none mb-1">{data.createdBy?.name || "Unknown User"}</p>
+                                    <div className="flex items-center gap-2 text-slate-400 text-[11px]">
+                                        <FaCalendarAlt size={10} />
+                                        {timestampToDate(data.createdAt)}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <Tag color={getTagColor(data.type)} className="rounded-full px-4 border-none font-semibold text-[10px] uppercase tracking-wider">
+                                    {data.type}
+                                </Tag>
+                                <Tag color={data.status === "ACTIVE" ? "green" : "red"} className="rounded-full px-4 border-none font-semibold text-[10px] uppercase tracking-wider">
+                                    {data.status}
+                                </Tag>
                             </div>
                         </div>
-                    )}
 
-                    {/* Metadata Section */}
-                    <div>
-                        <label className="font-semibold text-sm">Additional Information:</label>
-                        <div className="mt-2 p-3 bg-gray-50 rounded">
+                        {/* Content */}
+                        <div className="px-1">
+                            <p className="text-slate-700 text-[16px] leading-relaxed whitespace-pre-wrap">
+                                {data.content}
+                            </p>
+                        </div>
+
+                        {/* Images */}
+                        {data.images && data.images.length > 0 && (
+                            <div className="space-y-3">
+                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-1">Attached Media</span>
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    {data.images.map((img, index) => (
+                                        <div key={index} className="aspect-square rounded-2xl overflow-hidden border-2 border-slate-100 shadow-sm group relative">
+                                            <img
+                                                src={img}
+                                                alt={`Post image ${index + 1}`}
+                                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Metadata Section */}
+                        <div className="modal-section !mb-0">
+                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Type-Specific Details</p>
                             {renderMetadata()}
                         </div>
-                    </div>
 
-                    {/* Statistics */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="p-3 bg-blue-50 rounded">
-                            <div className="text-sm text-gray-600">Likes</div>
-                            <div className="text-2xl font-bold text-blue-600">
-                                {data.likesCount || 0}
+                        {/* Statistics Grid */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="p-4 bg-teal-50/50 rounded-2xl border border-teal-100/50 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-teal-600 shadow-sm">
+                                        <FaHeart size={16} />
+                                    </div>
+                                    <span className="text-sm font-semibold text-slate-600">Total Likes</span>
+                                </div>
+                                <span className="text-2xl font-black text-teal-700">{data.likesCount || 0}</span>
+                            </div>
+                            <div className="p-4 bg-blue-50/50 rounded-2xl border border-blue-100/50 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-blue-600 shadow-sm">
+                                        <FaCommentAlt size={16} />
+                                    </div>
+                                    <span className="text-sm font-semibold text-slate-600">Comments</span>
+                                </div>
+                                <span className="text-2xl font-black text-blue-700">{data.commentsCount || 0}</span>
                             </div>
                         </div>
-                        <div className="p-3 bg-green-50 rounded">
-                            <div className="text-sm text-gray-600">Comments</div>
-                            <div className="text-2xl font-bold text-green-600">
-                                {data.commentsCount || 0}
-                            </div>
-                        </div>
                     </div>
-
-                    {/* Metadata */}
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                            <span className="font-semibold">Created By:</span>
-                            <p>{data.createdBy?.name || "N/A"}</p>
-                        </div>
-                        <div>
-                            <span className="font-semibold">Created At:</span>
-                            <p>{timestampToDate(data.createdAt)}</p>
-                        </div>
-                    </div>
-                </div>
-            )}
+                )}
+            </div>
         </Modal>
     );
 }

@@ -1,100 +1,103 @@
-import Loading from "@/animations/homePageLoader";
-import { DELETE_SYSTEM_LOG } from "@/app/api/admin/developers/systemLogs";
-import { Button, Modal } from "antd";
+"use client";
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
+import { Button, Modal } from "antd";
+import { FaExclamationTriangle, FaTrashAlt, FaTerminal } from "react-icons/fa";
+
+import Loading from "@/animations/homePageLoader";
+import { DELETE_SYSTEM_LOG } from "@/app/api/admin/developers/systemLogs";
 
 function DeleteSystemLogsModal({ isModalOpen, setIsModalOpen }) {
-  // Accessing query client from react-query
   const queryClient = useQueryClient();
-
-  // Destructuring modal state
   const { record, name, state } = isModalOpen;
 
-  // Mutation hook for deleting system log
   const deleteMutation = useMutation({
-    // Unique key for the mutation
     mutationKey: ["deleteMutation"],
-    // Mutation function to call DELETE_SYSTEM_LOG API
     mutationFn: async (values) => {
       return await DELETE_SYSTEM_LOG(values);
     },
-    // On successful mutation
     onSuccess: (data) => {
-      // Invalidate systemLogsList query to trigger refetch
       queryClient.invalidateQueries(["systemLogsList"]);
-      // Show success toast message
-      toast.success(data?.message);
-      // Close the modal by resetting isModalOpen state
-      setIsModalOpen({
-        name: null,
-        state: false,
-        record: null,
-      });
+      toast.success(data?.message || "Log entry deleted successfully");
+      handleClose();
     },
-    // On error during mutation
     onError: (error) => {
-      console.log(error);
-      // Show error toast message
-      toast.error(error?.response?.data?.error);
+      toast.error(error?.response?.data?.error || "Failed to delete log entry");
     },
   });
 
-  // Function to handle modal cancel action
-  function handleModalCancel() {
-    try {
-      // Close the modal by resetting isModalOpen state
-      setIsModalOpen({
-        name: null,
-        state: false,
-        record: null,
-      });
-    } catch (error) {
-      console.log({ error });
-    }
-  }
+  const handleClose = () => {
+    setIsModalOpen({
+      name: null,
+      state: false,
+      record: null,
+    });
+  };
 
-  // Function to handle delete action
-  function handleDeleteMutation() {
-    try {
-      // Trigger delete mutation with _id of the record to delete
-      deleteMutation.mutate({ _id: record?._id });
-    } catch (error) {
-      console.log({ error });
-    }
-  }
+  const handleDelete = () => {
+    deleteMutation.mutate({ _id: record?._id });
+  };
 
-  // JSX structure for the modal component
+  const isOpen = name === "Delete" && state;
+
   return (
     <Modal
-      title="Delete System Log"
-      className="!rounded-2xl"
+      open={isOpen}
+      onCancel={handleClose}
+      footer={null}
       centered
-      width={600}
-      // Control modal visibility based on name and state
-      open={name === "Delete" ? state : false}
-      // Disable close icon in modal header
-      closeIcon={false}
-      // Hide modal footer
-      footer={false}
+      width={440}
+      closable={false}
+      className="modern-modal"
     >
-      <div className="mb-6 relative">
-        {/* Confirmation message */}
-        Are you sure you want to delete this system log?
-        {/* Display loading indicator if delete mutation is in progress */}
-        {deleteMutation?.status === "loading" && <Loading />}
-      </div>
-      {/* Modal actions */}
-      <div className="flex justify-end gap-6">
-        {/* Cancel button */}
-        <Button className="cancel-button" onClick={handleModalCancel}>
-          Cancel
-        </Button>
-        {/* Delete button */}
-        <Button className="apply-button" onClick={handleDeleteMutation}>
-          Delete
-        </Button>
+      <div className="flex flex-col items-center text-center p-4">
+        {deleteMutation.status === "loading" && <Loading />}
+
+        {/* Warning Icon */}
+        <div className="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center text-red-500 mb-6">
+          <FaExclamationTriangle size={36} />
+        </div>
+
+        {/* Content */}
+        <h2 className="text-2xl font-black text-slate-900 mb-2">Delete Log Entry?</h2>
+        <p className="text-slate-500 text-sm leading-relaxed mb-8">
+          You are about to permanently delete this system log entry. This action cannot be undone.
+        </p>
+
+        {/* Identifier Card */}
+        {record?._id && (
+          <div className="w-full bg-slate-50 rounded-2xl p-4 border border-slate-100 flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-slate-400 shadow-sm">
+              <FaTerminal size={14} />
+            </div>
+            <div className="text-left overflow-hidden">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-tight">Log Identifier</p>
+              <p className="text-sm font-mono text-slate-600 truncate">{record._id}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="w-full space-y-3">
+          <Button
+            type="primary"
+            danger
+            onClick={handleDelete}
+            loading={deleteMutation.isLoading}
+            icon={<FaTrashAlt size={14} />}
+            className="modal-footer-btn-danger w-full !h-[52px] !text-base"
+          >
+            Delete Permanently
+          </Button>
+          <Button
+            type="text"
+            onClick={handleClose}
+            className="modal-footer-btn-secondary w-full !h-[44px] !border-none hover:!bg-slate-100"
+          >
+            Keep Log Entry
+          </Button>
+        </div>
       </div>
     </Modal>
   );

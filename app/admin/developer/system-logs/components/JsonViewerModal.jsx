@@ -1,45 +1,73 @@
-import Loading from "@/animations/homePageLoader";
-import { Button, Modal } from "antd";
+"use client";
 import React from "react";
+import { Button, Modal } from "antd";
 import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
+import { FaCode, FaTerminal } from "react-icons/fa";
 
 function JsonViewerModal({ isModalOpen, setIsModalOpen }) {
   const { name, state, record } = isModalOpen;
 
-  function handleModalOk() {
-    try {
-      // Set the isModalOpen state to false to close the modal
-      setIsModalOpen({
-        name: null,
-        state: false,
-      });
-    } catch (error) {
-      console.log({ error });
-    }
-  }
+  const handleClose = () => {
+    setIsModalOpen({
+      name: null,
+      state: false,
+      record: null
+    });
+  };
 
-  // Function to handle delete mutation
+  const isOpen = (name === "Error Details" || name === "Request Body") && state;
+
   return (
     <Modal
-      title={name}
-      className="!rounded-2xl"
-      centered
-      width={600}
-      open={
-        name === "Error Details" || name === "Request Body" ? state : false
+      title={
+        <div className="flex items-center gap-3 px-2 pt-1">
+          <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
+            <FaTerminal size={16} />
+          </div>
+          <div>
+            <span className="text-xl font-bold text-slate-900 block">{name}</span>
+            <span className="text-xs text-slate-500 font-normal">Technical data inspection</span>
+          </div>
+        </div>
       }
-      onCancel={handleModalOk}
-      closeIcon={true}
-      footer={false}
+      centered
+      width={720}
+      open={isOpen}
+      onCancel={handleClose}
+      footer={null}
+      className="modern-modal"
     >
-      <JsonView
-        className="mt-6 overflow-x-auto"
-        name={record}
-        src={record}
-        nameStyle={{ color: "#000" }}
-        style={{ color: "#000" }}
-      />
+      <div className="p-2 pt-4">
+        <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 shadow-xl overflow-hidden">
+          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-800">
+            <FaCode className="text-teal-400" size={14} />
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Raw Payload Output</span>
+          </div>
+          <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
+            <JsonView
+              src={record}
+              theme="dark"
+              displayDataTypes={false}
+              enableClipboard={true}
+              style={{
+                backgroundColor: 'transparent',
+                fontSize: '13px',
+                fontFamily: '"Fira Code", "JetBrains Mono", monospace'
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end pt-6 mt-6 border-t border-slate-100">
+          <Button
+            onClick={handleClose}
+            className="modal-footer-btn-secondary !px-12"
+          >
+            Close Inspector
+          </Button>
+        </div>
+      </div>
     </Modal>
   );
 }

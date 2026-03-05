@@ -6,6 +6,7 @@ import { Button, Modal, Select, Input } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import md5 from "md5";
+import { FaUserEdit, FaUserShield, FaEnvelope, FaPhone, FaLock, FaChevronRight, FaInfoCircle } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
 import FormField from "@/components/InnerPage/FormField";
@@ -16,10 +17,10 @@ const { Option } = Select;
 
 // Validation schema
 const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
+    name: Yup.string().required("Full name is required"),
+    email: Yup.string().email("Invalid email address").required("Email is required"),
     phone: Yup.string(),
-    accessRoleId: Yup.string().required("Role is required"),
+    accessRoleId: Yup.string().required("Permission role is required"),
     password: Yup.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -27,7 +28,6 @@ function UpdateAdminUserModal({ modal, setModal }) {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
 
-    // Fetch active roles for dropdown
     const { data: rolesData, isLoading: rolesLoading } = useQuery(
         "activeRolesList",
         GET_ACTIVE_ROLES,
@@ -63,16 +63,12 @@ function UpdateAdminUserModal({ modal, setModal }) {
 
     const handleSubmit = (values) => {
         const payload = { ...values };
-
-        // Hash password only when provided
         if (payload.password) {
             payload.password = md5(payload.password);
         } else {
-            delete payload.password; // Don't send password if not changing
+            delete payload.password;
         }
-
         payload._id = modal?.data?._id;
-
         updateAdminUser.mutate(payload);
     };
 
@@ -82,135 +78,123 @@ function UpdateAdminUserModal({ modal, setModal }) {
 
     return (
         <Modal
-            title="Update Admin User"
-            className="!rounded"
+            title={
+                <div className="flex items-center gap-3 px-2 pt-1">
+                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
+                        <FaUserEdit size={18} />
+                    </div>
+                    <div>
+                        <span className="text-xl font-bold text-slate-900 block">Edit Admin User</span>
+                        <span className="text-xs text-slate-500 font-normal">Modify team member credentials and access</span>
+                    </div>
+                </div>
+            }
             centered
-            width={600}
+            width={640}
             open={modal?.name === "Edit" && modal?.state}
             onCancel={handleCloseModal}
             footer={null}
+            className="modern-modal"
         >
-            <div className="mb-4 flex justify-end">
-                <Button
-                    className="reset-button"
-                    onClick={() => formikRef.current?.resetForm({ values: initialValues })}
+            <div className="p-2 pt-4">
+                <Formik
+                    enableReinitialize
+                    innerRef={formikRef}
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={handleSubmit}
                 >
-                    Reset
-                </Button>
-            </div>
-
-            <Formik
-                innerRef={formikRef}
-                enableReinitialize
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={handleSubmit}
-            >
-                {({ values, errors, touched, setFieldValue, handleChange, handleBlur }) => (
-                    <Form>
-                        <div className="bg-gray-100 p-4 rounded max-h-[60vh] overflow-y-auto">
+                    {({ values, errors, touched, setFieldValue, handleChange, handleBlur, isSubmitting }) => (
+                        <Form className="space-y-6">
                             {updateAdminUser.status === "loading" && <Loading />}
 
-                            {/* Name */}
-                            <FormField
-                                label="Name"
-                                name="name"
-                                placeholder="Enter name"
-                                required
-                            />
+                            <div className="modal-section">
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Personal Identity</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <FormField label="Full Name" name="name" placeholder="John Doe" required icon={<FaChevronRight className="opacity-20 translate-y-0.5" />} />
+                                    <FormField label="Email Address" name="email" type="email" placeholder="john@example.com" disabled required icon={<FaEnvelope className="opacity-20" />} />
+                                    <FormField label="Phone Number" name="phone" placeholder="+1..." icon={<FaPhone className="opacity-20" />} />
 
-                            {/* Email */}
-                            <FormField
-                                label="Email"
-                                name="email"
-                                type="email"
-                                placeholder="Enter email"
-                                disabled
-                                required
-                            />
-
-                            {/* Phone */}
-                            <FormField
-                                label="Phone"
-                                name="phone"
-                                placeholder="Enter phone number"
-                            />
-
-                            {/* Password */}
-                            <div className="mb-3">
-                                <label className="text-black font-[500] mb-1 block">Password</label>
-                                <Input.Password
-                                    name="password"
-                                    placeholder="Enter new password (leave empty to keep current)"
-                                    value={values.password}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    className="w-full"
-                                />
-                                {touched.password && errors.password && (
-                                    <div className="text-red-500 text-sm mt-1">{errors.password}</div>
-                                )}
-                                <span className="text-xs text-gray-500">Leave empty to keep current password</span>
+                                    <div className="flex flex-col gap-2">
+                                        <div className="flex justify-between items-center">
+                                            <label className="text-slate-700 font-semibold text-sm">Update Password</label>
+                                            <span className="text-[10px] text-slate-400 font-bold uppercase">Optional</span>
+                                        </div>
+                                        <div className="relative">
+                                            <FaLock className="absolute top-1/2 -translate-y-1/2 left-4 text-slate-300 pointer-events-none" />
+                                            <Input.Password
+                                                name="password"
+                                                placeholder="Leave empty to keep current"
+                                                value={values.password}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                className="!pl-11 !h-[44px] !rounded-xl !border-2 !border-slate-100 focus:!border-teal-500"
+                                            />
+                                        </div>
+                                        {touched.password && errors.password && <div className="text-red-500 text-xs font-medium">{errors.password}</div>}
+                                    </div>
+                                </div>
                             </div>
 
-                            {/* Role */}
-                            <div className="mb-3">
-                                <label className="text-black font-[500] mb-1 block">
-                                    Role <span className="text-red-500">*</span>
-                                </label>
-                                <Select
-                                    value={values.accessRoleId}
-                                    onChange={(value) => {
-                                        const selectedRole = rolesData?.data?.find(r => r._id === value);
-                                        setFieldValue("accessRoleId", value);
-                                        setFieldValue("role", selectedRole?.name || "");
-                                    }}
-                                    placeholder="Select role"
-                                    className="w-full"
-                                    loading={rolesLoading}
+                            <div className="modal-section !mb-0">
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Access Control & Status</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div className="flex flex-col gap-2">
+                                        <label className="text-slate-700 font-semibold text-sm">Permission Role <span className="text-red-500">*</span></label>
+                                        <Select
+                                            value={values.accessRoleId}
+                                            onChange={(value) => {
+                                                const selectedRole = rolesData?.data?.find(r => r._id === value);
+                                                setFieldValue("accessRoleId", value);
+                                                setFieldValue("role", selectedRole?.name || "");
+                                            }}
+                                            placeholder="Select assigned role"
+                                            className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100 shadow-sm"
+                                            size="large"
+                                            loading={rolesLoading}
+                                        >
+                                            {rolesData?.data?.map((role) => (
+                                                <Option key={role._id} value={role._id}>{role.name}</Option>
+                                            ))}
+                                        </Select>
+                                        {touched.accessRoleId && errors.accessRoleId && <div className="text-red-500 text-xs font-medium">{errors.accessRoleId}</div>}
+                                    </div>
+
+                                    <div className="flex flex-col gap-2">
+                                        <label className="text-slate-700 font-semibold text-sm">Account Status</label>
+                                        <Select
+                                            value={values.status}
+                                            onChange={(value) => setFieldValue("status", value)}
+                                            className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100 shadow-sm"
+                                            size="large"
+                                        >
+                                            <Option value="ACTIVE">Authorized / Active</Option>
+                                            <Option value="INACTIVE">Suspended / Inactive</Option>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
+                                <Button
+                                    onClick={handleCloseModal}
+                                    className="modal-footer-btn-secondary flex-1"
                                 >
-                                    {rolesData?.data?.map((role) => (
-                                        <Option key={role._id} value={role._id}>
-                                            {role.name}
-                                        </Option>
-                                    ))}
-                                </Select>
-                                {touched.accessRoleId && errors.accessRoleId && (
-                                    <div className="text-red-500 text-sm mt-1">{errors.accessRoleId}</div>
-                                )}
-                            </div>
-
-                            {/* Status */}
-                            <div className="mb-3">
-                                <label className="text-black font-[500] mb-1 block">Status</label>
-                                <Select
-                                    value={values.status}
-                                    onChange={(value) => setFieldValue("status", value)}
-                                    className="w-full"
+                                    Cancel
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    loading={updateAdminUser.isLoading || isSubmitting}
+                                    className="modal-footer-btn-primary flex-1"
                                 >
-                                    <Option value="ACTIVE">Active</Option>
-                                    <Option value="INACTIVE">Inactive</Option>
-                                </Select>
+                                    Save Changes
+                                </Button>
                             </div>
-                        </div>
-
-                        {/* Footer */}
-                        <div className="flex justify-end mt-4 gap-4">
-                            <Button onClick={handleCloseModal} className="modal-cancel-button">
-                                Cancel
-                            </Button>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                loading={updateAdminUser.isLoading}
-                                className="modal-add-button"
-                            >
-                                Update
-                            </Button>
-                        </div>
-                    </Form>
-                )}
-            </Formik>
+                        </Form>
+                    )}
+                </Formik>
+            </div>
         </Modal>
     );
 }

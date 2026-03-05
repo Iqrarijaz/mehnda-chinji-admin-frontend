@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Modal, Input } from "antd";
-import { FaSearch, FaTimes } from "react-icons/fa";
+import { Modal, Input, Button } from "antd";
+import { FaSearch, FaFilter, FaUndo } from "react-icons/fa";
 import SelectBox from "@/components/SelectBox";
 
 // Post types for filter
@@ -48,16 +48,11 @@ function FilterModal({ isOpen, onClose, filters, setFilters }) {
     };
 
     const handleReset = () => {
-        setLocalFilters({
-            type: null,
-            status: null,
-            search: ""
-        });
+        const resetValues = { type: null, status: null, search: "" };
+        setLocalFilters(resetValues);
         setFilters(prev => ({
             ...prev,
-            type: null,
-            status: null,
-            search: "",
+            ...resetValues,
             currentPage: 1
         }));
         onClose();
@@ -69,77 +64,86 @@ function FilterModal({ isOpen, onClose, filters, setFilters }) {
             onCancel={onClose}
             footer={null}
             centered
-            width={350}
+            width={440}
             title={
-                <div className="flex items-center gap-2 text-lg font-semibold">
-                    <FaSearch className="text-primary" />
-                    Filters
+                <div className="flex items-center gap-3 px-2 pt-1">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
+                        <FaFilter size={16} />
+                    </div>
+                    <div>
+                        <span className="text-xl font-bold text-slate-900 block">Advanced Filters</span>
+                        <span className="text-xs text-slate-500 font-normal">Narrow down your search results</span>
+                    </div>
                 </div>
             }
-            className="filter-modal"
+            className="modern-modal"
         >
-            <div className="flex flex-col gap-4 py-4">
+            <div className="flex flex-col gap-6 p-2 pt-6">
                 {/* Search */}
-                <div>
-                    <label className="text-sm font-medium text-gray-700 mb-1 block">
-                        Search
+                <div className="flex flex-col gap-2">
+                    <label className="text-slate-700 font-semibold text-sm">
+                        Search Content
                     </label>
                     <Input
-                        placeholder="Search posts..."
+                        placeholder="Search by text content..."
                         value={localFilters.search}
                         onChange={(e) => setLocalFilters(prev => ({ ...prev, search: e.target.value }))}
-                        prefix={<FaSearch className="text-gray-400" />}
+                        prefix={<FaSearch className="text-slate-400 mr-2" />}
                         allowClear
-                        className="w-full"
+                        className="!h-[44px] !rounded-xl !border-2 !border-slate-100 focus:!border-teal-500"
                     />
                 </div>
 
-                {/* Type Filter */}
-                <div>
-                    <label className="text-sm font-medium text-gray-700 mb-1 block">
-                        Post Type
-                    </label>
-                    <SelectBox
-                        placeholder="Select type"
-                        allowClear
-                        value={localFilters.type}
-                        handleChange={(value) => setLocalFilters(prev => ({ ...prev, type: value }))}
-                        className="w-full"
-                        width="100%"
-                        options={POST_TYPES}
-                    />
-                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    {/* Type Filter */}
+                    <div className="flex flex-col gap-2">
+                        <label className="text-slate-700 font-semibold text-sm">
+                            Post Type
+                        </label>
+                        <SelectBox
+                            placeholder="All Types"
+                            allowClear
+                            value={localFilters.type}
+                            handleChange={(value) => setLocalFilters(prev => ({ ...prev, type: value }))}
+                            className="modern-select-box"
+                            width="100%"
+                            options={POST_TYPES}
+                        />
+                    </div>
 
-                {/* Status Filter */}
-                <div>
-                    <label className="text-sm font-medium text-gray-700 mb-1 block">
-                        Status
-                    </label>
-                    <SelectBox
-                        placeholder="Select status"
-                        allowClear
-                        value={localFilters.status}
-                        handleChange={(value) => setLocalFilters(prev => ({ ...prev, status: value }))}
-                        className="w-full"
-                        width="100%"
-                        options={STATUS_OPTIONS}
-                    />
+                    {/* Status Filter */}
+                    <div className="flex flex-col gap-2">
+                        <label className="text-slate-700 font-semibold text-sm">
+                            Status
+                        </label>
+                        <SelectBox
+                            placeholder="All Status"
+                            allowClear
+                            value={localFilters.status}
+                            handleChange={(value) => setLocalFilters(prev => ({ ...prev, status: value }))}
+                            className="modern-select-box"
+                            width="100%"
+                            options={STATUS_OPTIONS}
+                        />
+                    </div>
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-3 mt-2">
-                    <button
+                <div className="flex gap-3 mt-6 pt-6 border-t border-slate-100">
+                    <Button
                         onClick={handleReset}
-                        className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                        icon={<FaUndo size={12} />}
+                        className="modal-footer-btn-secondary flex-1"
                     >
-                        Reset
-                    </button>
-                    <button
+                        Reset All
+                    </Button>
+                    <Button
+                        type="primary"
                         onClick={handleApply}
-                        className="flex-1 px-4 py-2.5 bg-[#0F172A] hover:bg-[#1e293b] rounded-lg text-white font-medium transition-colors"
+                        className="modal-footer-btn-primary flex-1"
                     >
                         Apply Filters
-                    </button>
+                    </Button>
                 </div>
             </div>
         </Modal>

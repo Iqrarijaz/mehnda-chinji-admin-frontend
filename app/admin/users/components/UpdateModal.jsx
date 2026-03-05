@@ -49,73 +49,106 @@ function UpdateUserModal({ modal, setModal }) {
         updateUser.mutate({ _id: modal?.data?._id, ...values });
     };
 
+    const handleCancel = () => {
+        setModal({ name: null, state: false, data: null });
+    };
+
     return (
         <Modal
-            title="Update User"
+            title={<span className="text-xl font-bold text-slate-900 px-2 pt-1">Update User Details</span>}
             centered
-            width={600}
+            width={640}
             open={modal.name === "Update" && modal.state}
-            onCancel={() => setModal({ name: null, state: false, data: null })}
+            onCancel={handleCancel}
             footer={null}
+            className="modern-modal"
         >
-            <Formik
-                innerRef={formikRef}
-                enableReinitialize
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={handleSubmit}
-            >
-                {({ isSubmitting, values, setFieldValue, errors, touched }) => (
-                    <Form className="space-y-4">
-                        {updateUser.status === "loading" && <Loading />}
+            <div className="p-2 pt-4">
+                <Formik
+                    innerRef={formikRef}
+                    enableReinitialize
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={handleSubmit}
+                >
+                    {({ isSubmitting, values, setFieldValue, errors, touched }) => (
+                        <Form className="space-y-6">
+                            {updateUser.status === "loading" && <Loading />}
 
-                        <FormField label="Full Name" name="name" required />
-                        <FormField label="Email" name="email" type="email" required />
+                            <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100 space-y-4">
+                                <FormField
+                                    label="Full Name"
+                                    name="name"
+                                    placeholder="Enter full name"
+                                    required
+                                />
+                                <FormField
+                                    label="Email Address"
+                                    name="email"
+                                    type="email"
+                                    placeholder="email@example.com"
+                                    required
+                                />
+                            </div>
 
-                        <div className="flex flex-col gap-1">
-                            <label className="text-black font-semibold">Role <span className="text-red-500">*</span></label>
-                            <Select
-                                value={values.role}
-                                onChange={(val) => setFieldValue("role", val)}
-                                size="large"
-                            >
-                                <Option value="USER">USER</Option>
-                                <Option value="ADMIN">ADMIN</Option>
-                                <Option value="SUPER_ADMIN">SUPER_ADMIN</Option>
-                            </Select>
-                            {errors.role && touched.role && <span className="text-red-500 text-sm">{errors.role}</span>}
-                        </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-slate-700 font-semibold text-sm">Role <span className="text-red-500">*</span></label>
+                                    <Select
+                                        value={values.role}
+                                        onChange={(val) => setFieldValue("role", val)}
+                                        className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
+                                        size="large"
+                                    >
+                                        <Option value="USER">USER</Option>
+                                        <Option value="ADMIN">ADMIN</Option>
+                                        <Option value="SUPER_ADMIN">SUPER_ADMIN</Option>
+                                    </Select>
+                                    {errors.role && touched.role && <span className="text-red-500 text-xs font-medium">{errors.role}</span>}
+                                </div>
 
-                        <div className="flex flex-col gap-1">
-                            <label className="text-black font-semibold">Gender <span className="text-red-500">*</span></label>
-                            <Select
-                                value={values.gender}
-                                onChange={(val) => setFieldValue("gender", val)}
-                                size="large"
-                            >
-                                <Option value="MALE">MALE</Option>
-                                <Option value="FEMALE">FEMALE</Option>
-                                <Option value="OTHER">OTHER</Option>
-                            </Select>
-                            {errors.gender && touched.gender && <span className="text-red-500 text-sm">{errors.gender}</span>}
-                        </div>
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-slate-700 font-semibold text-sm">Gender <span className="text-red-500">*</span></label>
+                                    <Select
+                                        value={values.gender}
+                                        onChange={(val) => setFieldValue("gender", val)}
+                                        className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
+                                        size="large"
+                                    >
+                                        <Option value="MALE">MALE</Option>
+                                        <Option value="FEMALE">FEMALE</Option>
+                                        <Option value="OTHER">OTHER</Option>
+                                    </Select>
+                                    {errors.gender && touched.gender && <span className="text-red-500 text-xs font-medium">{errors.gender}</span>}
+                                </div>
+                            </div>
 
-                        <FormField label="Phone" name="phone" />
+                            <FormField
+                                label="Phone Number"
+                                name="phone"
+                                placeholder="+92 ..."
+                            />
 
-                        <div className="flex justify-end gap-3 pt-4 border-t">
-                            <Button onClick={() => setModal({ name: null, state: false, data: null })}>Cancel</Button>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                loading={isSubmitting}
-                                className="bg-primary hover:bg-primary/90"
-                            >
-                                Update User
-                            </Button>
-                        </div>
-                    </Form>
-                )}
-            </Formik>
+                            <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
+                                <Button
+                                    onClick={handleCancel}
+                                    className="modal-footer-btn-secondary"
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    loading={isSubmitting}
+                                    className="modal-footer-btn-primary"
+                                >
+                                    Save Changes
+                                </Button>
+                            </div>
+                        </Form>
+                    )}
+                </Formik>
+            </div>
         </Modal>
     );
 }
