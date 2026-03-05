@@ -38,6 +38,7 @@ function UsersTable({ modal, setModal, usersList, onChange, setFilters }) {
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries("usersList");
+            queryClient.invalidateQueries("usersStatusCounts");
             toast.success(data?.message || "Status updated successfully");
             closeConfirmModal();
         },
@@ -68,6 +69,7 @@ function UsersTable({ modal, setModal, usersList, onChange, setFilters }) {
         mutationFn: DELETE_USER,
         onSuccess: (data) => {
             queryClient.invalidateQueries("usersList");
+            queryClient.invalidateQueries("usersStatusCounts");
             toast.success(data?.message);
             closeConfirmModal();
         },

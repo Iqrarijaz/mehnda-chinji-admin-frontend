@@ -11,6 +11,8 @@ import AddPostModal from "./components/AddModal";
 import UpdatePostModal from "./components/UpdateModal";
 import SelectBox from "@/components/SelectBox";
 import FilterModal from "./components/FilterModal";
+import LikesModal from "./components/LikesModal";
+import CommentsModal from "./components/CommentsModal";
 import { GET_POSTS } from "@/app/api/admin/posts";
 import { FaFilter, FaThLarge, FaTable } from "react-icons/fa";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -18,9 +20,10 @@ import InnerPageCard from "@/components/layout/InnerPageCard";
 
 const POST_TYPES = [
     { value: "GENERAL", label: "General" },
-    { value: "DEATH", label: "Death" },
+    { value: "DEATH", label: "Death Announcement" },
+    { value: "ACCIDENT", label: "Accident" },
     { value: "EVENT", label: "Event" },
-    { value: "ANNOUNCEMENT", label: "Announcement" },
+    { value: "ANNOUNCEMENT", label: "Announcement" }
 ];
 const STATUS_OPTIONS = [
     { value: "ACTIVE", label: "Active" },
@@ -29,6 +32,8 @@ const STATUS_OPTIONS = [
 
 export default function PostsPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
+    const [likesModal, setLikesModal] = useState({ open: false, postId: null });
+    const [commentsModal, setCommentsModal] = useState({ open: false, postId: null });
     const [filterModalOpen, setFilterModalOpen] = useState(false);
     const [viewMode, setViewMode] = useState("cards");
     const [filters, setFilters] = useState({
@@ -43,7 +48,7 @@ export default function PostsPage() {
     });
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
-    const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
+    const onChange = useCallback((data) => setFilters((old) => ({ ...old, ...data })), []);
 
     // Table view query
     const postsList = useQuery({
@@ -90,10 +95,10 @@ export default function PostsPage() {
         }
     }, [hasMore, infinitePostsQuery]);
 
-    const handleTypeFilter = (value) =>
-        setFilters((prev) => ({ ...prev, type: value || null, currentPage: 1 }));
-    const handleStatusFilter = (value) =>
-        setFilters((prev) => ({ ...prev, status: value || null, currentPage: 1 }));
+    const handleTypeFilter = useCallback((value) =>
+        setFilters((prev) => ({ ...prev, type: value || null, currentPage: 1 })), []);
+    const handleStatusFilter = useCallback((value) =>
+        setFilters((prev) => ({ ...prev, status: value || null, currentPage: 1 })), []);
 
     const hasActiveFilters = filters?.type || filters?.status || filters?.search;
 
@@ -151,15 +156,43 @@ export default function PostsPage() {
 
             <div className="flex flex-col mb-4">
                 {viewMode === "cards" ? (
-                    <PostCardList modal={modal} setModal={setModal} postsList={unifiedPostsList} loadMore={loadMore} hasMore={hasMore} setFilters={setFilters} />
+                    <PostCardList
+                        modal={modal}
+                        setModal={setModal}
+                        postsList={unifiedPostsList}
+                        loadMore={loadMore}
+                        hasMore={hasMore}
+                        setFilters={setFilters}
+                        setLikesModal={setLikesModal}
+                        setCommentsModal={setCommentsModal}
+                    />
                 ) : (
-                    <PostsTable modal={modal} setModal={setModal} postsList={unifiedPostsList} onChange={onChange} setFilters={setFilters} />
+                    <PostsTable
+                        modal={modal}
+                        setModal={setModal}
+                        postsList={unifiedPostsList}
+                        onChange={onChange}
+                        setFilters={setFilters}
+                        setLikesModal={setLikesModal}
+                        setCommentsModal={setCommentsModal}
+                    />
                 )}
             </div>
 
             <FilterModal isOpen={filterModalOpen} onClose={() => setFilterModalOpen(false)} filters={filters} setFilters={setFilters} />
             <AddPostModal modal={modal} setModal={setModal} />
             <UpdatePostModal modal={modal} setModal={setModal} />
+
+            <LikesModal
+                isOpen={likesModal.open}
+                postId={likesModal.postId}
+                onClose={() => setLikesModal({ open: false, postId: null })}
+            />
+            <CommentsModal
+                isOpen={commentsModal.open}
+                postId={commentsModal.postId}
+                onClose={() => setCommentsModal({ open: false, postId: null })}
+            />
         </InnerPageCard>
     );
 }

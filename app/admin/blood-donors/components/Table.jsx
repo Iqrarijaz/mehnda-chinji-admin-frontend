@@ -32,6 +32,7 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange }) {
         mutationFn: UPDATE_BLOOD_DONOR,
         onSuccess: () => {
             queryClient.invalidateQueries("bloodDonorsList");
+            queryClient.invalidateQueries("bloodDonorsStatusCounts");
             toast.success("Availability updated successfully");
         },
         onError: (err) => {
@@ -43,6 +44,7 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange }) {
         mutationFn: DELETE_BLOOD_DONOR,
         onSuccess: () => {
             queryClient.invalidateQueries("bloodDonorsList");
+            queryClient.invalidateQueries("bloodDonorsStatusCounts");
             toast.success("Donor deleted successfully");
             closeConfirmModal();
         },

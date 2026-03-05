@@ -180,7 +180,7 @@ function MainLayout({ children }) {
 
           <div className="p-4 border-t border-white/5 bg-[#0F172A] text-center">
             <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">
-              Mehnda Chinji Admin v1.0
+              Rehbar Admin v1.0
             </p>
           </div>
         </div>

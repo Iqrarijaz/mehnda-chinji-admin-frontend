@@ -44,6 +44,7 @@ function AddDonorModal({ modal, setModal }) {
         onSuccess: (data) => {
             toast.success(data?.message || "Donor added successfully");
             queryClient.invalidateQueries("bloodDonorsList");
+            queryClient.invalidateQueries("bloodDonorsStatusCounts");
             handleCloseModal();
         },
         onError: (error) => {

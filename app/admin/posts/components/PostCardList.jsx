@@ -7,7 +7,16 @@ import PostCard from "./PostCard";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import Loading from "@/animations/homePageLoader";
 
-function PostCardList({ modal, setModal, postsList, loadMore, hasMore, setFilters }) {
+function PostCardList({
+    modal,
+    setModal,
+    postsList,
+    loadMore,
+    hasMore,
+    setFilters,
+    setLikesModal,
+    setCommentsModal
+}) {
     const queryClient = useQueryClient();
     const [expandedPostIds, setExpandedPostIds] = useState(new Set());
     const [confirmModal, setConfirmModal] = useState({
@@ -83,15 +92,15 @@ function PostCardList({ modal, setModal, postsList, loadMore, hasMore, setFilter
         },
     });
 
-    const handleEdit = (post) => {
+    const handleEdit = useCallback((post) => {
         setModal({
             name: "Update",
             data: post,
             state: true
         });
-    };
+    }, [setModal]);
 
-    const handleStatusChange = (post) => {
+    const handleStatusChange = useCallback((post) => {
         const isActive = post?.status === "ACTIVE";
         setConfirmModal({
             isOpen: true,
@@ -102,9 +111,9 @@ function PostCardList({ modal, setModal, postsList, loadMore, hasMore, setFilter
             variant: 'primary',
             onConfirm: () => manageStatusMutation.mutate({ _id: post._id })
         });
-    };
+    }, [manageStatusMutation]);
 
-    const handleDelete = (post) => {
+    const handleDelete = useCallback((post) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Deletion',
@@ -114,7 +123,7 @@ function PostCardList({ modal, setModal, postsList, loadMore, hasMore, setFilter
             variant: 'danger',
             onConfirm: () => deleteMutation.mutate({ _id: post._id })
         });
-    };
+    }, [deleteMutation]);
 
     const posts = postsList?.data?.data || [];
     const isLoading = postsList?.status === "loading";
@@ -156,6 +165,8 @@ function PostCardList({ modal, setModal, postsList, loadMore, hasMore, setFilter
                                 onStatusChange={handleStatusChange}
                                 isExpanded={expandedPostIds.has(post._id)}
                                 onToggleExpand={() => toggleExpand(post._id)}
+                                setLikesModal={setLikesModal}
+                                setCommentsModal={setCommentsModal}
                             />
                         </div>
                     );

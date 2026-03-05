@@ -14,7 +14,7 @@ import { GrSystem } from "react-icons/gr";
 import { MdPolicy } from "react-icons/md";
 import { RiListSettingsFill } from "react-icons/ri";
 import { IoSettings } from "react-icons/io5";
-import { MdEmail } from "react-icons/md";
+import { MdReport, MdEmail } from "react-icons/md";
 import { FaDroplet } from "react-icons/fa6";
 
 const MenuList = [
@@ -84,6 +84,12 @@ const MenuList = [
     link: "/admin/support",
     icon: <FaQuestionCircle size={20} />,
     permission: "support.read"
+  },
+  {
+    name: "Reports",
+    link: "/admin/reports",
+    icon: <MdReport size={20} />,
+    permission: "reports.read"
   },
   // {
   //   name: "CMS",

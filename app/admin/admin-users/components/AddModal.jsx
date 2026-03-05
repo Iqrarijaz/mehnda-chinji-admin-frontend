@@ -54,6 +54,7 @@ function AddAdminUserModal({ modal, setModal }) {
         onSuccess: (data) => {
             toast.success(data?.message || "Admin user created successfully");
             queryClient.invalidateQueries("adminUsersList");
+            queryClient.invalidateQueries("adminUsersStatusCounts");
             handleCloseModal();
         },
         onError: (error) => {

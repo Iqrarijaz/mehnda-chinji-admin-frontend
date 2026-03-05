@@ -1,6 +1,6 @@
 "use client";
 import { Modal, Pagination, Table, Tag } from "antd";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import Loading from "@/animations/homePageLoader";
@@ -15,7 +15,7 @@ import ViewModal from "./ViewModal";
 import { getTagColor } from "@/utils/tagColor";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 
-function PostsTable({ modal, setModal, postsList, onChange, setFilters }) {
+function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikesModal, setCommentsModal }) {
     const queryClient = useQueryClient();
     const [viewModal, setViewModal] = useState({ open: false, data: null });
     const [confirmModal, setConfirmModal] = useState({
@@ -37,6 +37,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters }) {
         mutationFn: UPDATE_POST_STATUS,
         onSuccess: (data) => {
             queryClient.invalidateQueries("postsList");
+            queryClient.invalidateQueries("postsListInfinite");
             toast.success(data?.message);
             closeConfirmModal();
         },
@@ -51,6 +52,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters }) {
         mutationFn: DELETE_POST,
         onSuccess: (data) => {
             queryClient.invalidateQueries("postsList");
+            queryClient.invalidateQueries("postsListInfinite");
             toast.success(data?.message);
             closeConfirmModal();
         },
@@ -60,7 +62,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters }) {
         },
     });
 
-    const handleStatus = (data) => {
+    const handleStatus = useCallback((data) => {
         const isActive = data?.status === "ACTIVE";
         setConfirmModal({
             isOpen: true,
@@ -73,9 +75,9 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters }) {
                 _id: data._id
             })
         });
-    };
+    }, [manageStatusMutation]);
 
-    const handleDelete = (data) => {
+    const handleDelete = useCallback((data) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Deletion',
@@ -87,7 +89,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters }) {
                 _id: data._id,
             })
         });
-    };
+    }, [deleteMutation]);
 
     const handleSorting = (pagination, filters, sorter) => {
         setFilters(prev => ({
@@ -121,18 +123,6 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters }) {
 
     const columns = [
         {
-            title: "Title",
-            dataIndex: "title",
-            key: "title",
-            sorter: (a, b) => a.title?.localeCompare(b.title),
-            width: 200,
-            render: (title) => (
-                <div className="capitalize overflow-hidden whitespace-nowrap text-ellipsis" title={title}>
-                    {title}
-                </div>
-            ),
-        },
-        {
             title: "Type",
             dataIndex: "type",
             key: "type",
@@ -165,8 +155,11 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters }) {
             width: 80,
             align: "center",
             sorter: (a, b) => a.likesCount - b.likesCount,
-            render: (count) => (
-                <div className="font-semibold">
+            render: (count, record) => (
+                <div
+                    className="font-semibold cursor-pointer hover:text-blue-600 transition-colors"
+                    onClick={() => setLikesModal({ open: true, postId: record._id })}
+                >
                     {count || 0}
                 </div>
             ),
@@ -178,8 +171,11 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters }) {
             width: 100,
             align: "center",
             sorter: (a, b) => a.commentsCount - b.commentsCount,
-            render: (count) => (
-                <div className="font-semibold">
+            render: (count, record) => (
+                <div
+                    className="font-semibold cursor-pointer hover:text-green-600 transition-colors"
+                    onClick={() => setCommentsModal({ open: true, postId: record._id })}
+                >
                     {count || 0}
                 </div>
             ),

@@ -28,6 +28,7 @@ function UpdateBusinessModal({ modal, setModal }) {
             queryClient.invalidateQueries({
                 predicate: (query) => query.queryKey[0] === "businessList",
             });
+            queryClient.invalidateQueries("businessStatusCounts");
             setModal({ name: null, state: false, data: null });
         },
         onError: (error) => {

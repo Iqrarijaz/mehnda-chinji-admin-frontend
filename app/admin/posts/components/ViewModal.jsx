@@ -43,46 +43,21 @@ function ViewModal({ viewModal, setViewModal }) {
             );
         }
 
-        if (type === "EVENT") {
+        if (type === "ACCIDENT") {
             return (
                 <div className="space-y-2">
-                    {metadata.eventName && (
-                        <div>
-                            <span className="font-semibold">Event Name: </span>
-                            {metadata.eventName}
-                        </div>
-                    )}
-                    {metadata.eventDate && (
-                        <div>
-                            <span className="font-semibold">Event Date: </span>
-                            {new Date(metadata.eventDate).toLocaleString()}
-                        </div>
-                    )}
                     {metadata.location && (
                         <div>
                             <span className="font-semibold">Location: </span>
                             {metadata.location}
                         </div>
                     )}
-                </div>
-            );
-        }
-
-        if (type === "ANNOUNCEMENT") {
-            return (
-                <div className="space-y-2">
-                    {metadata.priority && (
+                    {metadata.severity && (
                         <div>
-                            <span className="font-semibold">Priority: </span>
-                            <Tag color={metadata.priority === "HIGH" ? "red" : metadata.priority === "MEDIUM" ? "orange" : "green"}>
-                                {metadata.priority}
+                            <span className="font-semibold">Severity: </span>
+                            <Tag color={metadata.severity === "HIGH" ? "red" : metadata.severity === "MEDIUM" ? "orange" : "green"}>
+                                {metadata.severity}
                             </Tag>
-                        </div>
-                    )}
-                    {metadata.expiryDate && (
-                        <div>
-                            <span className="font-semibold">Expiry Date: </span>
-                            {new Date(metadata.expiryDate).toLocaleDateString()}
                         </div>
                     )}
                 </div>
@@ -103,20 +78,17 @@ function ViewModal({ viewModal, setViewModal }) {
         >
             {data && (
                 <div className="flex flex-col gap-4">
-                    {/* Title */}
-                    <div>
-                        <h3 className="text-lg font-semibold mb-1">{data.title}</h3>
-                        <div className="flex items-center gap-2">
-                            <Tag
-                                color={getTagColor(data.type)}
-                                className="!text-xs !font-semibold"
-                            >
-                                {data.type}
-                            </Tag>
-                            <Tag color={data.status === "ACTIVE" ? "green" : "red"}>
-                                {data.status}
-                            </Tag>
-                        </div>
+                    {/* Type Badge */}
+                    <div className="flex items-center gap-2">
+                        <Tag
+                            color={getTagColor(data.type)}
+                            className="!text-xs !font-semibold"
+                        >
+                            {data.type}
+                        </Tag>
+                        <Tag color={data.status === "ACTIVE" ? "green" : "red"}>
+                            {data.status}
+                        </Tag>
                     </div>
 
                     {/* Content */}

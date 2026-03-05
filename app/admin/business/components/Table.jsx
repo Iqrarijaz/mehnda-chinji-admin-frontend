@@ -32,7 +32,10 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
     const statusMutation = useMutation({
         mutationFn: UPDATE_BUSINESS_STATUS,
         onSuccess: (data) => {
-            queryClient.invalidateQueries("businessList");
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "businessList",
+            });
+            queryClient.invalidateQueries("businessStatusCounts");
             toast.success(data?.message || "Status updated");
             closeConfirmModal();
         },
@@ -45,7 +48,10 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
     const deleteMutation = useMutation({
         mutationFn: DELETE_BUSINESS,
         onSuccess: (data) => {
-            queryClient.invalidateQueries("businessList");
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "businessList",
+            });
+            queryClient.invalidateQueries("businessStatusCounts");
             toast.success(data?.message || "Business deleted");
             closeConfirmModal();
         },

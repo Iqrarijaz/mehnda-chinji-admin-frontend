@@ -12,7 +12,9 @@ function PostCard({
     onDelete,
     onStatusChange,
     isExpanded,
-    onToggleExpand
+    onToggleExpand,
+    setLikesModal,
+    setCommentsModal
 }) {
     const isActive = post?.status === "ACTIVE";
     const [imageViewerOpen, setImageViewerOpen] = useState(false);
@@ -54,9 +56,7 @@ function PostCard({
         if (count === 0) {
             return (
                 <div className="w-full h-40 md:h-48 flex items-center justify-center bg-gray-100 text-gray-400">
-                    <span className="text-2xl font-bold">
-                        {post?.title?.charAt(0)?.toUpperCase() || "P"}
-                    </span>
+                    <FaImages size={32} />
                 </div>
             );
         }
@@ -69,7 +69,7 @@ function PostCard({
                 >
                     <img
                         src={imageUrl}
-                        alt={post.title}
+                        alt="Post image"
                         className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
                     />
                 </div>
@@ -87,7 +87,7 @@ function PostCard({
                 >
                     <img
                         src={imageUrl}
-                        alt={post.title}
+                        alt="Post image"
                         className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
                     />
                 </div>
@@ -162,19 +162,28 @@ function PostCard({
                 </div>
 
                 <div className="flex flex-col p-4">
-                    <h3 className="text-sm font-bold py-2 text-gray-900 line-clamp-2">
-                        {post?.title}
-                    </h3>
 
                     {renderContent()}
 
                     {/* Stats & Time */}
                     <div className="flex items-center gap-3 mb-4 text-[11px] text-gray-500 pt-3 border-t">
-                        <div className="flex items-center gap-1 cursor-default">
+                        <div
+                            className="flex items-center gap-1 cursor-pointer hover:text-red-500 transition-colors"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setLikesModal({ open: true, postId: post._id });
+                            }}
+                        >
                             <FaHeart className="text-red-400" size={12} />
                             <span>{post?.likesCount || 0}</span>
                         </div>
-                        <div className="flex items-center gap-1 cursor-pointer hover:text-blue-500 transition-colors">
+                        <div
+                            className="flex items-center gap-1 cursor-pointer hover:text-blue-500 transition-colors"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setCommentsModal({ open: true, postId: post._id });
+                            }}
+                        >
                             <FaComment className="text-blue-400" size={12} />
                             <span>{post?.commentsCount || 0}</span>
                         </div>

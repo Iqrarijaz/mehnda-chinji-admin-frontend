@@ -2,14 +2,15 @@
 import React, { useRef, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Button, Modal, Select, Input } from "antd";
+import { Button, Modal, Select, Input, Upload } from "antd";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 
 import Loading from "@/animations/homePageLoader";
 import FormField from "@/components/InnerPage/FormField";
-import { UPDATE_POST } from "@/app/api/admin/posts";
+import { UPDATE_POST, UPLOAD_POST_IMAGES, DELETE_POST_IMAGE } from "@/app/api/admin/posts";
 import { useQueryClient } from "react-query";
+import { PlusOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -18,13 +19,13 @@ const { Option } = Select;
 const POST_TYPES = [
     { value: "GENERAL", label: "General" },
     { value: "DEATH", label: "Death Announcement" },
+    { value: "ACCIDENT", label: "Accident" },
     { value: "EVENT", label: "Event" },
     { value: "ANNOUNCEMENT", label: "Announcement" }
 ];
 
 // Validation schema
 const validationSchema = Yup.object().shape({
-    title: Yup.string().required("Title is required"),
     content: Yup.string().required("Content is required"),
     type: Yup.string().required("Type is required"),
 });
@@ -38,15 +39,63 @@ function UpdatePostModal({ modal, setModal }) {
         mutationFn: UPDATE_POST,
         onSuccess: (data) => {
             toast.success(data?.message || "Post updated successfully");
-            queryClient.invalidateQueries({
-                predicate: (query) => query.queryKey[0] === "postsList",
-            });
+            queryClient.invalidateQueries("postsList");
+            queryClient.invalidateQueries("postsListInfinite");
             handleCloseModal();
         },
         onError: (error) => {
             toast.error(error?.response?.data?.message || "Something went wrong");
         },
     });
+
+    const uploadImages = useMutation({
+        mutationKey: ["uploadImages"],
+        mutationFn: UPLOAD_POST_IMAGES,
+    });
+
+    const deleteImage = useMutation({
+        mutationKey: ["deleteImage"],
+        mutationFn: DELETE_POST_IMAGE,
+    });
+
+    const handleUpload = async (options, setFieldValue, currentImages) => {
+        const { file, onSuccess, onError } = options;
+
+        if (currentImages.length >= 5) {
+            toast.warning("Maximum 5 images allowed");
+            onError("Limit reached");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("images", file);
+
+        try {
+            const response = await uploadImages.mutateAsync(formData);
+            const newImageUrl = response.data[0];
+            setFieldValue("images", [...currentImages, newImageUrl]);
+            onSuccess(newImageUrl);
+        } catch (error) {
+            console.error("Upload error:", error);
+            toast.error("Failed to upload image");
+            onError(error);
+        }
+    };
+
+    const handleRemove = async (file, setFieldValue, currentImages) => {
+        const imageUrl = file.url || file.response;
+        if (!imageUrl) return;
+
+        try {
+            await deleteImage.mutateAsync({ imageUrl });
+            const updatedImages = currentImages.filter(img => img !== imageUrl);
+            setFieldValue("images", updatedImages);
+            toast.info("Image removed");
+        } catch (error) {
+            console.error("Delete error:", error);
+            toast.error("Failed to delete image");
+        }
+    };
 
     const handleSubmit = (values) => {
         // Build metadata based on type
@@ -57,22 +106,15 @@ function UpdatePostModal({ modal, setModal }) {
                 dateOfDeath: values.metadata?.dateOfDeath || "",
                 relationship: values.metadata?.relationship || "",
             };
-        } else if (values.type === "EVENT") {
+        } else if (values.type === "ACCIDENT") {
             metadata = {
-                eventName: values.metadata?.eventName || "",
-                eventDate: values.metadata?.eventDate || "",
                 location: values.metadata?.location || "",
-            };
-        } else if (values.type === "ANNOUNCEMENT") {
-            metadata = {
-                priority: values.metadata?.priority || "",
-                expiryDate: values.metadata?.expiryDate || "",
+                severity: values.metadata?.severity || "",
             };
         }
 
         const payload = {
             _id: modal?.data?._id,
-            title: values.title,
             content: values.content,
             type: values.type,
             images: values.images,
@@ -95,7 +137,6 @@ function UpdatePostModal({ modal, setModal }) {
 
     // Prepare initial values from modal data
     const initialValues = {
-        title: modal?.data?.title || "",
         content: modal?.data?.content || "",
         type: modal?.data?.type || "GENERAL",
         images: modal?.data?.images || [],
@@ -122,17 +163,6 @@ function UpdatePostModal({ modal, setModal }) {
                     <Form className="flex flex-col gap-4">
                         {updatePost.status === "loading" && <Loading />}
 
-                        {/* Title */}
-                        <FormField
-                            label="Title"
-                            name="title"
-                            placeholder="Enter post title"
-                            value={values.title}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={touched.title && errors.title}
-                            required
-                        />
 
                         {/* Type Selection */}
                         <div className="flex flex-col gap-1">
@@ -204,43 +234,22 @@ function UpdatePostModal({ modal, setModal }) {
                             </>
                         )}
 
-                        {values.type === "EVENT" && (
+                        {values.type === "ACCIDENT" && (
                             <>
-                                <FormField
-                                    label="Event Name"
-                                    name="metadata.eventName"
-                                    placeholder="Enter event name"
-                                    value={values.metadata?.eventName || ""}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                />
-                                <FormField
-                                    label="Event Date"
-                                    name="metadata.eventDate"
-                                    type="datetime-local"
-                                    value={values.metadata?.eventDate || ""}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                />
                                 <FormField
                                     label="Location"
                                     name="metadata.location"
-                                    placeholder="Enter event location"
+                                    placeholder="Enter accident location"
                                     value={values.metadata?.location || ""}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                 />
-                            </>
-                        )}
-
-                        {values.type === "ANNOUNCEMENT" && (
-                            <>
                                 <div className="flex flex-col gap-1">
-                                    <label className="text-sm font-medium">Priority</label>
+                                    <label className="text-sm font-medium">Severity</label>
                                     <Select
-                                        value={values.metadata?.priority || ""}
-                                        onChange={(value) => setFieldValue("metadata.priority", value)}
-                                        placeholder="Select priority"
+                                        value={values.metadata?.severity || ""}
+                                        onChange={(value) => setFieldValue("metadata.severity", value)}
+                                        placeholder="Select severity"
                                         className="w-full"
                                     >
                                         <Option value="LOW">Low</Option>
@@ -248,30 +257,32 @@ function UpdatePostModal({ modal, setModal }) {
                                         <Option value="HIGH">High</Option>
                                     </Select>
                                 </div>
-                                <FormField
-                                    label="Expiry Date"
-                                    name="metadata.expiryDate"
-                                    type="date"
-                                    value={values.metadata?.expiryDate || ""}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                />
                             </>
                         )}
 
-                        {/* Images (placeholder for now) */}
+                        {/* Images */}
                         <div className="flex flex-col gap-1">
-                            <label className="text-sm font-medium">Images (URLs)</label>
-                            <TextArea
-                                placeholder="Enter image URLs separated by commas"
-                                value={Array.isArray(values.images) ? values.images.join(", ") : ""}
-                                onChange={(e) => {
-                                    const urls = e.target.value.split(",").map(url => url.trim()).filter(url => url);
-                                    setFieldValue("images", urls);
-                                }}
-                                rows={2}
-                            />
-                            <span className="text-xs text-gray-500">Enter image URLs separated by commas</span>
+                            <label className="text-sm font-medium">Images (Max 5)</label>
+                            <Upload
+                                listType="picture-card"
+                                fileList={Array.isArray(values.images) ? values.images.map((url, index) => ({
+                                    uid: index,
+                                    name: `image-${index}`,
+                                    status: 'done',
+                                    url: url,
+                                })) : []}
+                                customRequest={(options) => handleUpload(options, setFieldValue, values.images)}
+                                onRemove={(file) => handleRemove(file, setFieldValue, values.images)}
+                                accept="image/*"
+                            >
+                                {values.images.length < 5 && (
+                                    <div>
+                                        <PlusOutlined />
+                                        <div style={{ marginTop: 8 }}>Upload</div>
+                                    </div>
+                                )}
+                            </Upload>
+                            <span className="text-xs text-gray-500">Upload up to 5 images for this post.</span>
                         </div>
 
                         {/* Submit Button */}

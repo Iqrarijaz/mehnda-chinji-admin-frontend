@@ -29,6 +29,7 @@ function UpdateUserModal({ modal, setModal }) {
         onSuccess: (data) => {
             toast.success(data?.message || "User updated successfully");
             queryClient.invalidateQueries("usersList");
+            queryClient.invalidateQueries("usersStatusCounts");
             setModal({ name: null, state: false, data: null });
         },
         onError: (error) => {

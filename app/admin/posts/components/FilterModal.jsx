@@ -7,7 +7,8 @@ import SelectBox from "@/components/SelectBox";
 // Post types for filter
 const POST_TYPES = [
     { value: "GENERAL", label: "General" },
-    { value: "DEATH", label: "Death" },
+    { value: "DEATH", label: "Death Announcement" },
+    { value: "ACCIDENT", label: "Accident" },
     { value: "EVENT", label: "Event" },
     { value: "ANNOUNCEMENT", label: "Announcement" }
 ];

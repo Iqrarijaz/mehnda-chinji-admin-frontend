@@ -36,7 +36,10 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
     const requestStatusMutation = useMutation({
         mutationFn: UPDATE_PLACE_REQUEST_STATUS,
         onSuccess: (data) => {
-            queryClient.invalidateQueries("placesList");
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "placesList",
+            });
+            queryClient.invalidateQueries("placeStatusCounts");
             toast.success(data?.message);
             closeConfirmModal();
         },
@@ -50,7 +53,10 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
     const manageStatusMutation = useMutation({
         mutationFn: UPDATE_PLACE_STATUS,
         onSuccess: (data) => {
-            queryClient.invalidateQueries("placesList");
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "placesList",
+            });
+            queryClient.invalidateQueries("placeStatusCounts");
             toast.success(data?.message);
             closeConfirmModal();
         },
@@ -64,7 +70,10 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
     const deleteMutation = useMutation({
         mutationFn: DELETE_PLACE,
         onSuccess: (data) => {
-            queryClient.invalidateQueries("placesList");
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "placesList",
+            });
+            queryClient.invalidateQueries("placeStatusCounts");
             toast.success(data?.message);
             closeConfirmModal();
         },

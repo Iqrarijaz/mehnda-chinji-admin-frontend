@@ -41,6 +41,7 @@ function AddUserModal({ modal, setModal }) {
         onSuccess: (data) => {
             toast.success(data?.message || "User added successfully");
             queryClient.invalidateQueries("usersList");
+            queryClient.invalidateQueries("usersStatusCounts");
             handleCloseModal();
         },
         onError: (error) => {

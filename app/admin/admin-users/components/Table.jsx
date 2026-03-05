@@ -35,6 +35,7 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange }) => {
         mutationFn: UPDATE_ADMIN_USER_STATUS,
         onSuccess: (data) => {
             queryClient.invalidateQueries("adminUsersList");
+            queryClient.invalidateQueries("adminUsersStatusCounts");
             toast.success(data?.message || "Status updated successfully");
             closeConfirmModal();
         },
@@ -45,9 +46,11 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange }) => {
     });
 
     // Mutation for delete
-    const deleteMutation = useMutation(DELETE_ADMIN_USER, {
+    const deleteMutation = useMutation({
+        mutationFn: DELETE_ADMIN_USER,
         onSuccess: () => {
             queryClient.invalidateQueries("adminUsersList");
+            queryClient.invalidateQueries("adminUsersStatusCounts");
             toast.success("Admin user deleted successfully");
             closeConfirmModal();
         },

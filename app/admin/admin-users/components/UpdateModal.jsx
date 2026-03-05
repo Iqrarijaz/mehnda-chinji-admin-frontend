@@ -43,6 +43,7 @@ function UpdateAdminUserModal({ modal, setModal }) {
         onSuccess: (data) => {
             toast.success(data?.message || "Admin user updated successfully");
             queryClient.invalidateQueries("adminUsersList");
+            queryClient.invalidateQueries("adminUsersStatusCounts");
             handleCloseModal();
         },
         onError: (error) => {

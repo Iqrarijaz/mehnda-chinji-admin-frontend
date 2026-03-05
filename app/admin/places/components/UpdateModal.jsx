@@ -45,6 +45,7 @@ function UpdatePlaceModal({ modal, setModal }) {
             queryClient.invalidateQueries({
                 predicate: (query) => query.queryKey[0] === "placesList",
             });
+            queryClient.invalidateQueries("placeStatusCounts");
             setModal({ name: null, state: false, data: null });
         },
         onError: (error) => {

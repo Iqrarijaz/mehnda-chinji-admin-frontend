@@ -76,11 +76,11 @@ function Page() {
           <div className="relative z-10 text-center flex flex-col items-center max-w-md">
             <img
               src="/logo.png"
-              alt="Mehnda Chinji"
+              alt="Rehbar"
               className="h-48 w-auto mb-8 drop-shadow-2xl brightness-110"
             />
             <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">
-              Mehnda Chinji Admin
+              Rehbar Admin
             </h1>
             <p className="text-gray-400 text-lg leading-relaxed font-light">
               Elevating management through intelligent design and seamless control.
