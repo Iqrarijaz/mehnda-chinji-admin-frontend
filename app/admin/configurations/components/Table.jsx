@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Table, Tooltip, Switch, Menu, Dropdown, Button, Checkbox } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
-import { useState } from "react";
 import {
     EditOutlined,
     DeleteOutlined,
