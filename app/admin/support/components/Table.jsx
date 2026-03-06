@@ -1,12 +1,15 @@
-"use client";
-import { Pagination, Table, Tag, Tooltip } from "antd";
-import React from "react";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { FaEye, FaReply } from "react-icons/fa";
+import {
+    EyeOutlined,
+    MoreOutlined,
+    SettingOutlined,
+    MessageOutlined,
+    CommentOutlined
+} from "@ant-design/icons";
 import Loading from "@/animations/homePageLoader";
 import { timestampToDate } from "@/utils/date";
-import { CustomPopover } from "@/components/popHover";
-import { popoverContent } from "@/components/popHover/popHoverContent";
+import { Pagination, Table, Tag, Tooltip, Menu, Dropdown, Button, Checkbox } from "antd";
+import { TableSkeleton } from "@/components/shared/Skeletons";
+import { useState } from "react";
 
 const getTicketStatusColor = (status) => {
     switch (status) {
@@ -18,36 +21,88 @@ const getTicketStatusColor = (status) => {
 };
 
 function SupportTable({ modal, setModal, ticketsList, onChange }) {
+    // Column Visibility State
+    const [visibleColumns, setVisibleColumns] = useState(["ticketId", "userId", "subject", "status", "createdAt", "actions"]);
 
-    const actionMenu = [
-        {
-            heading: "View & Manage",
-            icon: <FaReply size={16} />,
-            handleFunction: (record) => setModal({
-                name: "Manage",
-                data: record,
-                state: true
-            }),
-        },
+    const handleSorting = (pagination, filters, sorter) => {
+        onChange({
+            ...filters,
+            sortingKey: sorter.field || "createdAt",
+            sortOrder: sorter.order === "ascend" ? 1 : -1,
+            page: pagination.current,
+        });
+    };
+
+    const actionMenu = (record) => (
+        <Menu className="!rounded-xl !p-2 !min-w-[160px] shadow-xl border border-slate-100">
+            <Menu.Item
+                key="manage"
+                icon={<CommentOutlined className="text-emerald-500" />}
+                onClick={() => setModal({
+                    name: "Manage",
+                    data: record,
+                    state: true
+                })}
+                className="!rounded-lg hover:!bg-emerald-50"
+            >
+                <span className="font-medium">View & Manage</span>
+            </Menu.Item>
+        </Menu>
+    );
+
+    const columnOptions = [
+        { label: "Ticket ID", value: "ticketId" },
+        { label: "User", value: "userId" },
+        { label: "Subject", value: "subject" },
+        { label: "Status", value: "status" },
+        { label: "Created At", value: "createdAt" },
     ];
 
-    const columns = [
+    const visibilityMenu = (
+        <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
+            <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Toggle Columns
+            </div>
+            <Checkbox.Group
+                value={visibleColumns}
+                onChange={setVisibleColumns}
+                className="flex flex-col gap-2"
+            >
+                {columnOptions.map(opt => (
+                    <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
+                        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
+                            {opt.label}
+                        </Checkbox>
+                    </Menu.Item>
+                ))}
+            </Checkbox.Group>
+        </Menu>
+    );
+
+    const allColumns = [
         {
             title: "Ticket ID",
             dataIndex: "ticketId",
             key: "ticketId",
-            width: 120,
-            render: (text) => <span className="font-mono font-bold text-primary">{text}</span>,
+            width: 140,
+            sorter: true,
+            render: (text) => (
+                <div className="flex items-center gap-2">
+                    <span className="font-mono font-bold text-[#006666] bg-[#006666]/5 px-2 py-0.5 rounded border border-[#006666]/10 text-xs uppercase tracking-wider">
+                        #{text}
+                    </span>
+                </div>
+            ),
         },
         {
             title: "User",
             dataIndex: "userId",
             key: "userId",
-            width: 180,
+            width: 220,
             render: (user) => (
                 <div className="flex flex-col">
-                    <span className="font-semibold">{user?.name}</span>
-                    <span className="text-xs text-gray-500">{user?.phoneNumber}</span>
+                    <span className="font-bold text-slate-800 leading-tight capitalize">{user?.name || "Unknown User"}</span>
+                    <span className="text-[11px] text-slate-400 font-medium">{user?.phoneNumber || "No Phone"}</span>
                 </div>
             ),
         },
@@ -55,11 +110,13 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
             title: "Subject",
             dataIndex: "subject",
             key: "subject",
-            width: 250,
+            width: 300,
             render: (subject) => (
-                <div className="overflow-hidden whitespace-nowrap text-ellipsis max-w-[200px]" title={subject}>
-                    {subject}
-                </div>
+                <Tooltip title={subject} placement="topLeft">
+                    <div className="text-slate-600 font-medium truncate cursor-help">
+                        {subject}
+                    </div>
+                </Tooltip>
             ),
         },
         {
@@ -67,20 +124,36 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
             dataIndex: "status",
             key: "status",
             align: "center",
-            width: 120,
+            width: 140,
+            sorter: true,
             render: (status) => {
                 const colors = {
-                    "open": "#f97316", // orange-500
-                    "in-progress": "#3b82f6", // blue-500
-                    "closed": "#22c55e", // green-500
+                    "open": "var(--warning)",
+                    "in-progress": "var(--info)",
+                    "closed": "var(--success)",
+                };
+                const bgColors = {
+                    "open": "rgba(245, 158, 11, 0.1)",
+                    "in-progress": "rgba(59, 130, 246, 0.1)",
+                    "closed": "rgba(34, 197, 94, 0.1)",
+                };
+                const dotColors = {
+                    "open": "#f59e0b",
+                    "in-progress": "#3b82f6",
+                    "closed": "#22c55e",
                 };
                 return (
-                    <span
-                        className="mr-0 text-[10px] px-2 py-1 rounded capitalize font-semibold text-white inline-block"
-                        style={{ backgroundColor: colors[status] || "#94a3b8" }}
+                    <div
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border"
+                        style={{
+                            backgroundColor: bgColors[status] || "rgba(148, 163, 184, 0.1)",
+                            color: dotColors[status] || "#64748b",
+                            borderColor: `${dotColors[status]}20` || "#64748b20"
+                        }}
                     >
+                        <span className="flex h-1.5 w-1.5 rounded-full" style={{ backgroundColor: dotColors[status] || "#64748b" }} />
                         {status.replace("-", " ")}
-                    </span>
+                    </div>
                 );
             },
         },
@@ -88,56 +161,66 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 150,
-            render: (text) => <div className="whitespace-nowrap">{timestampToDate(text)}</div>,
+            width: 160,
+            sorter: true,
+            render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
         },
         {
-            title: "Actions",
+            title: "",
             key: "actions",
-            width: 80,
-            align: "center",
+            width: 60,
+            align: "right",
             render: (record) => (
-                <div className="flex items-center justify-center">
-                    <CustomPopover
-                        triggerContent={
-                            <HiOutlineDotsHorizontal
-                                size={28}
-                                className="hover:text-secondary cursor-pointer"
-                            />
-                        }
-                        popoverContent={() => popoverContent(actionMenu, record)}
+                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+                    <Button
+                        type="text"
+                        icon={<MoreOutlined className="text-lg" />}
+                        className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
                     />
-                </div>
+                </Dropdown>
             ),
         }
     ];
 
-    return (
-        <>
-            <Table
-                rowKey="_id"
-                className="antd-table-custom rounded"
-                size="small"
-                tableLayout="fixed"
-                bordered
-                scroll={{ x: 800 }}
-                loading={{
-                    spinning: ticketsList?.isLoading,
-                    indicator: <Loading />,
-                }}
-                columns={columns}
-                dataSource={ticketsList?.data?.data?.tickets}
-                pagination={false}
-            />
+    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
 
-            <Pagination
-                className="flex justify-end mt-4"
-                pageSize={ticketsList?.data?.data?.pagination?.limit}
-                total={ticketsList?.data?.data?.pagination?.total}
-                current={ticketsList?.data?.data?.pagination?.page}
-                onChange={(page) => onChange({ page: Number(page) })}
-            />
-        </>
+    return (
+        <div className="space-y-4">
+            <div className="flex justify-end px-1">
+                <Dropdown overlay={visibilityMenu} trigger={['click']}>
+                    <Button
+                        icon={<SettingOutlined />}
+                        className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
+                    >
+                        Columns
+                    </Button>
+                </Dropdown>
+            </div>
+
+            <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+                <Table
+                    rowKey="_id"
+                    className="custom-ant-table"
+                    scroll={{ x: 1000, y: 600 }}
+                    sticky={true}
+                    loading={{
+                        spinning: ticketsList?.isLoading,
+                        indicator: <TableSkeleton rows={8} columns={5} />,
+                    }}
+                    columns={activeColumns}
+                    dataSource={ticketsList?.data?.data?.tickets}
+                    pagination={{
+                        current: ticketsList?.data?.data?.pagination?.page,
+                        pageSize: ticketsList?.data?.data?.pagination?.limit,
+                        total: ticketsList?.data?.data?.pagination?.total,
+                        showSizeChanger: true,
+                        className: "px-4 pb-4",
+                        onChange: (page, pageSize) => onChange({ page: Number(page), limit: pageSize }),
+                    }}
+                    onChange={handleSorting}
+                />
+            </div>
+        </div>
     );
 }
 

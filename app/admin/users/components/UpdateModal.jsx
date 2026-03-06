@@ -19,7 +19,9 @@ const validationSchema = Yup.object().shape({
     gender: Yup.string().required("Gender is required"),
 });
 
-function UpdateUserModal({ modal, setModal }) {
+import { FormSkeleton } from "@/components/shared/Skeletons";
+
+const UpdateUserModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
 
@@ -37,21 +39,21 @@ function UpdateUserModal({ modal, setModal }) {
         },
     });
 
-    const initialValues = {
+    const initialValues = React.useMemo(() => ({
         name: modal?.data?.name || "",
         email: modal?.data?.email || "",
         role: modal?.data?.role || "USER",
         phone: modal?.data?.phone || "",
         gender: modal?.data?.gender || "MALE",
-    };
+    }), [modal?.data]);
 
-    const handleSubmit = (values) => {
+    const handleSubmit = React.useCallback((values) => {
         updateUser.mutate({ _id: modal?.data?._id, ...values });
-    };
+    }, [updateUser, modal?.data?._id]);
 
-    const handleCancel = () => {
+    const handleCancel = React.useCallback(() => {
         setModal({ name: null, state: false, data: null });
-    };
+    }, [setModal]);
 
     return (
         <Modal
@@ -72,62 +74,66 @@ function UpdateUserModal({ modal, setModal }) {
                     onSubmit={handleSubmit}
                 >
                     {({ isSubmitting, values, setFieldValue, errors, touched }) => (
-                        <Form className="space-y-6">
-                            {updateUser.status === "loading" && <Loading />}
+                        <Form className="space-y-6 relative">
+                            {updateUser.isLoading ? (
+                                <FormSkeleton fields={4} />
+                            ) : (
+                                <>
+                                    <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100 space-y-4">
+                                        <FormField
+                                            label="Full Name"
+                                            name="name"
+                                            placeholder="Enter full name"
+                                            required
+                                        />
+                                        <FormField
+                                            label="Email Address"
+                                            name="email"
+                                            type="email"
+                                            placeholder="email@example.com"
+                                            required
+                                        />
+                                    </div>
 
-                            <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100 space-y-4">
-                                <FormField
-                                    label="Full Name"
-                                    name="name"
-                                    placeholder="Enter full name"
-                                    required
-                                />
-                                <FormField
-                                    label="Email Address"
-                                    name="email"
-                                    type="email"
-                                    placeholder="email@example.com"
-                                    required
-                                />
-                            </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-slate-700 font-semibold text-sm">Role <span className="text-red-500">*</span></label>
+                                            <Select
+                                                value={values.role}
+                                                onChange={(val) => setFieldValue("role", val)}
+                                                className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
+                                                size="large"
+                                            >
+                                                <Option value="USER">USER</Option>
+                                                <Option value="ADMIN">ADMIN</Option>
+                                                <Option value="SUPER_ADMIN">SUPER_ADMIN</Option>
+                                            </Select>
+                                            {errors.role && touched.role && <span className="text-red-500 text-xs font-medium">{errors.role}</span>}
+                                        </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="flex flex-col gap-2">
-                                    <label className="text-slate-700 font-semibold text-sm">Role <span className="text-red-500">*</span></label>
-                                    <Select
-                                        value={values.role}
-                                        onChange={(val) => setFieldValue("role", val)}
-                                        className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
-                                        size="large"
-                                    >
-                                        <Option value="USER">USER</Option>
-                                        <Option value="ADMIN">ADMIN</Option>
-                                        <Option value="SUPER_ADMIN">SUPER_ADMIN</Option>
-                                    </Select>
-                                    {errors.role && touched.role && <span className="text-red-500 text-xs font-medium">{errors.role}</span>}
-                                </div>
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-slate-700 font-semibold text-sm">Gender <span className="text-red-500">*</span></label>
+                                            <Select
+                                                value={values.gender}
+                                                onChange={(val) => setFieldValue("gender", val)}
+                                                className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
+                                                size="large"
+                                            >
+                                                <Option value="MALE">MALE</Option>
+                                                <Option value="FEMALE">FEMALE</Option>
+                                                <Option value="OTHER">OTHER</Option>
+                                            </Select>
+                                            {errors.gender && touched.gender && <span className="text-red-500 text-xs font-medium">{errors.gender}</span>}
+                                        </div>
+                                    </div>
 
-                                <div className="flex flex-col gap-2">
-                                    <label className="text-slate-700 font-semibold text-sm">Gender <span className="text-red-500">*</span></label>
-                                    <Select
-                                        value={values.gender}
-                                        onChange={(val) => setFieldValue("gender", val)}
-                                        className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
-                                        size="large"
-                                    >
-                                        <Option value="MALE">MALE</Option>
-                                        <Option value="FEMALE">FEMALE</Option>
-                                        <Option value="OTHER">OTHER</Option>
-                                    </Select>
-                                    {errors.gender && touched.gender && <span className="text-red-500 text-xs font-medium">{errors.gender}</span>}
-                                </div>
-                            </div>
-
-                            <FormField
-                                label="Phone Number"
-                                name="phone"
-                                placeholder="+92 ..."
-                            />
+                                    <FormField
+                                        label="Phone Number"
+                                        name="phone"
+                                        placeholder="+92 ..."
+                                    />
+                                </>
+                            )}
 
                             <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
                                 <Button
@@ -151,6 +157,6 @@ function UpdateUserModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
 
 export default UpdateUserModal;

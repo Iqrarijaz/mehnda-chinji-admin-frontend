@@ -1,18 +1,21 @@
-"use client";
-import { Pagination, Table, Switch, Tag } from "antd";
-import React, { useState } from "react";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  MoreOutlined,
+  SettingOutlined,
+  MailOutlined
+} from "@ant-design/icons";
 import Loading from "@/animations/homePageLoader";
 import { useRouter } from "next/navigation";
 import { timestampToDate } from "@/utils/date";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { CustomPopover } from "@/components/popHover";
-import { popoverContent } from "@/components/popHover/popHoverContent";
 import { PATH_ROUTER } from "@/routes";
 import { UPDATE_EMAIL_TEMPLATE_STATUS, DELETE_EMAIL_TEMPLATE } from "@/app/api/admin/settings/emailTemplates";
 import ConfirmModal from "@/components/shared/ConfirmModal";
+import { Pagination, Table, Switch, Tag, Menu, Dropdown, Button, Checkbox, Tooltip } from "antd";
+import { TableSkeleton } from "@/components/shared/Skeletons";
+import { useState } from "react";
 
 function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
   const router = useRouter();
@@ -27,6 +30,9 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
     variant: 'primary',
     onConfirm: null
   });
+
+  // Column Visibility State
+  const [visibleColumns, setVisibleColumns] = useState(["templateName", "subject", "description", "status", "createdAt", "actions"]);
 
   const closeConfirmModal = () => {
     setConfirmModal(prev => ({ ...prev, isOpen: false }));
@@ -43,7 +49,6 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       closeConfirmModal();
     },
     onError: (error) => {
-      console.error("Error:", error);
       toast.error(error?.response?.data?.message || "Failed to update status");
     },
   });
@@ -59,13 +64,11 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       closeConfirmModal();
     },
     onError: (error) => {
-      console.error("Error:", error);
       toast.error(error?.response?.data?.message || "Failed to delete template");
     },
   });
 
   const handleStatus = (record) => {
-    const newStatus = record.status === "active" ? "inactive" : "active";
     setConfirmModal({
       isOpen: true,
       title: 'Confirm Status Change',
@@ -89,29 +92,78 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
     });
   };
 
-  const actionMenu = [
-    {
-      heading: "Edit",
-      icon: <FaEdit size={16} />,
-      handleFunction: (record) => {
-        router.push(`${PATH_ROUTER?.EDIT_EMAIL_TEMPLATE}/${record._id}`);
-      },
-    },
-    {
-      heading: "Delete",
-      icon: <FaTrash size={16} />,
-      handleFunction: (record) => handleDelete(record),
-    },
+  const handleSorting = (pagination, filters, sorter) => {
+    onChange({
+      ...filters,
+      sortingKey: sorter.field || "templateName",
+      sortOrder: sorter.order === "ascend" ? 1 : -1,
+      page: pagination.current,
+    });
+  };
+
+  const actionMenu = (record) => (
+    <Menu className="!rounded-xl !p-2 !min-w-[140px] shadow-xl border border-slate-100">
+      <Menu.Item
+        key="edit"
+        icon={<EditOutlined className="text-blue-500" />}
+        onClick={() => {
+          router.push(`${PATH_ROUTER?.EDIT_EMAIL_TEMPLATE}/${record._id}`);
+        }}
+        className="!rounded-lg hover:!bg-blue-50"
+      >
+        <span className="font-medium">Edit Template</span>
+      </Menu.Item>
+      <Menu.Divider className="!my-1" />
+      <Menu.Item
+        key="delete"
+        icon={<DeleteOutlined className="text-red-500" />}
+        onClick={() => handleDelete(record)}
+        className="!rounded-lg hover:!bg-red-50"
+      >
+        <span className="font-medium text-red-600">Delete Template</span>
+      </Menu.Item>
+    </Menu>
+  );
+
+  const columnOptions = [
+    { label: "Template Name", value: "templateName" },
+    { label: "Subject", value: "subject" },
+    { label: "Description", value: "description" },
+    { label: "Status", value: "status" },
+    { label: "Created At", value: "createdAt" },
   ];
 
-  const columns = [
+  const visibilityMenu = (
+    <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
+      <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
+        Toggle Columns
+      </div>
+      <Checkbox.Group
+        value={visibleColumns}
+        onChange={setVisibleColumns}
+        className="flex flex-col gap-2"
+      >
+        {columnOptions.map(opt => (
+          <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
+            <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
+              {opt.label}
+            </Checkbox>
+          </Menu.Item>
+        ))}
+      </Checkbox.Group>
+    </Menu>
+  );
+
+  const allColumns = [
     {
       title: "Template Name",
       dataIndex: "templateName",
       key: "templateName",
-      width: 180,
+      width: 200,
+      sorter: true,
       render: (text) => (
-        <div className="capitalize font-medium text-gray-800">
+        <div className="capitalize font-bold text-slate-800 tracking-tight flex items-center gap-2">
+          <MailOutlined className="text-slate-400 text-xs" />
           {text}
         </div>
       ),
@@ -120,22 +172,26 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       title: "Subject",
       dataIndex: "template",
       key: "subject",
-      width: 200,
+      width: 250,
       render: (template) => (
-        <div className="text-gray-600 truncate">
-          {template?.subject || "-"}
-        </div>
+        <Tooltip title={template?.subject} placement="topLeft">
+          <div className="text-slate-600 font-medium truncate cursor-help">
+            {template?.subject || "—"}
+          </div>
+        </Tooltip>
       ),
     },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
-      width: 200,
+      width: 250,
       render: (text) => (
-        <div className="text-gray-600 truncate">
-          {text || "-"}
-        </div>
+        <Tooltip title={text} placement="topLeft">
+          <div className="text-slate-500 font-medium truncate cursor-help">
+            {text || "—"}
+          </div>
+        </Tooltip>
       ),
     },
     {
@@ -144,11 +200,13 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       key: "status",
       width: 100,
       align: "center",
+      sorter: true,
       render: (status, record) => (
         <Switch
           checked={status === "active"}
           onChange={() => handleStatus(record)}
-          className={status === "active" ? '' : 'ant-switch-red'}
+          className={status === "active" ? '!bg-[#006666]' : '!bg-slate-300'}
+          size="small"
         />
       ),
     },
@@ -156,71 +214,78 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       title: "Created At",
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 120,
-      render: (text) => (
-        <div className="text-gray-500 text-sm">
-          {timestampToDate(text)}
-        </div>
-      ),
+      width: 160,
+      sorter: true,
+      render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
     },
     {
-      title: "Actions",
+      title: "",
       key: "actions",
-      fixed: "right",
-      width: 80,
-      align: "center",
+      width: 60,
+      align: "right",
       render: (record) => (
-        <CustomPopover
-          triggerContent={
-            <HiOutlineDotsHorizontal
-              size={28}
-              className="hover:text-blue-500 cursor-pointer"
-            />
-          }
-          popoverContent={() => popoverContent(actionMenu, record)}
-        />
+        <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+          <Button
+            type="text"
+            icon={<MoreOutlined className="text-lg" />}
+            className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
+          />
+        </Dropdown>
       ),
     },
   ];
 
+  const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+
   return (
-    <>
-      <Table
-        rowKey="_id"
-        className="antd-table-custom rounded"
-        size="small"
-        tableLayout="fixed"
-        bordered
-        scroll={{ x: 800 }}
-        loading={{
-          spinning: emailTemplatesList?.isLoading || manageStatusMutation?.isLoading || deleteMutation?.isLoading,
-          indicator: <Loading />,
-        }}
-        columns={columns}
-        dataSource={emailTemplatesList?.data?.data || []}
-        pagination={false}
-      />
+    <div className="space-y-4">
+      <div className="flex justify-end px-1">
+        <Dropdown overlay={visibilityMenu} trigger={['click']}>
+          <Button
+            icon={<SettingOutlined />}
+            className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
+          >
+            Columns
+          </Button>
+        </Dropdown>
+      </div>
 
-      <Pagination
-        className="flex justify-end mt-4"
-        pageSize={filters.limit}
-        total={emailTemplatesList?.data?.pagination?.totalItems || 0}
-        current={filters.page}
-        onChange={(page, pageSize) => onChange({ page, limit: pageSize })}
-      />
+      <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+        <Table
+          rowKey="_id"
+          className="custom-ant-table"
+          scroll={{ x: 1000, y: 600 }}
+          sticky={true}
+          loading={{
+            spinning: emailTemplatesList?.isLoading || manageStatusMutation?.isLoading || deleteMutation?.isLoading,
+            indicator: <TableSkeleton rows={8} columns={5} />,
+          }}
+          columns={activeColumns}
+          dataSource={emailTemplatesList?.data?.data || []}
+          pagination={{
+            current: filters.page,
+            pageSize: filters.limit,
+            total: emailTemplatesList?.data?.pagination?.totalItems || 0,
+            showSizeChanger: true,
+            className: "px-4 pb-4",
+            onChange: (page, pageSize) => onChange({ page, limit: pageSize }),
+          }}
+          onChange={handleSorting}
+        />
 
-      <ConfirmModal
-        isOpen={confirmModal.isOpen}
-        onClose={closeConfirmModal}
-        onConfirm={confirmModal.onConfirm}
-        title={confirmModal.title}
-        description={confirmModal.description}
-        confirmText={confirmModal.confirmText}
-        cancelText={confirmModal.cancelText}
-        variant={confirmModal.variant}
-        loading={manageStatusMutation.isLoading || deleteMutation.isLoading}
-      />
-    </>
+        <ConfirmModal
+          isOpen={confirmModal.isOpen}
+          onClose={closeConfirmModal}
+          onConfirm={confirmModal.onConfirm}
+          title={confirmModal.title}
+          description={confirmModal.description}
+          confirmText={confirmModal.confirmText}
+          cancelText={confirmModal.cancelText}
+          variant={confirmModal.variant}
+          loading={manageStatusMutation.isLoading || deleteMutation.isLoading}
+        />
+      </div>
+    </div>
   );
 }
 

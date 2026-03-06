@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { FaGlobe, FaEdit, FaChevronRight } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
+import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_LOCATION, GET_LOCATION_BY_TYPE } from "@/app/api/admin/locations";
 
@@ -125,63 +126,67 @@ function UpdateLocationModal({ modal, setModal }) {
         >
           {({ isSubmitting, values, setFieldValue, errors, touched }) => (
             <Form className="space-y-6">
-              {updateLocation.status === "loading" && <Loading />}
+              {updateLocation.status === "loading" ? (
+                <FormSkeleton fields={4} />
+              ) : (
+                <>
+                  {/* Classification Section */}
+                  <div className="modal-section">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Geography Level</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div className="md:col-span-1">
+                        <div className="flex flex-col gap-2">
+                          <label className="text-slate-700 font-semibold text-sm">Location Type <span className="text-red-500">*</span></label>
+                          <Select
+                            value={values.type}
+                            onChange={(value) => setFieldValue("type", value)}
+                            placeholder="Select level"
+                            className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
+                            size="large"
+                          >
+                            {TYPES.map(t => <Option key={t.value} value={t.value}>{t.label}</Option>)}
+                          </Select>
+                          {touched.type && errors.type && <div className="text-red-500 text-xs font-medium">{errors.type}</div>}
+                        </div>
+                      </div>
 
-              {/* Classification Section */}
-              <div className="modal-section">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Geography Level</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="md:col-span-1">
-                    <div className="flex flex-col gap-2">
-                      <label className="text-slate-700 font-semibold text-sm">Location Type <span className="text-red-500">*</span></label>
-                      <Select
-                        value={values.type}
-                        onChange={(value) => setFieldValue("type", value)}
-                        placeholder="Select level"
-                        className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
-                        size="large"
-                      >
-                        {TYPES.map(t => <Option key={t.value} value={t.value}>{t.label}</Option>)}
-                      </Select>
-                      {touched.type && errors.type && <div className="text-red-500 text-xs font-medium">{errors.type}</div>}
+                      {values.type === "VILLAGE" && (
+                        <div className="md:col-span-1">
+                          <div className="flex flex-col gap-2">
+                            <label className="text-slate-700 font-semibold text-sm">Tehsil <span className="text-red-500">*</span></label>
+                            <Select
+                              value={values.tehsil}
+                              onChange={(value) => setFieldValue("tehsil", value)}
+                              placeholder="Select tehsil"
+                              loading={loadingTehsils}
+                              className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
+                              size="large"
+                              showSearch
+                              optionFilterProp="children"
+                            >
+                              {tehsils.map(t => (
+                                <Option key={t._id} value={t._id}>
+                                  {t.name?.en || t.name_en}
+                                </Option>
+                              ))}
+                            </Select>
+                            {touched.tehsil && errors.tehsil && <div className="text-red-500 text-xs font-medium">{errors.tehsil}</div>}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  {values.type === "VILLAGE" && (
-                    <div className="md:col-span-1">
-                      <div className="flex flex-col gap-2">
-                        <label className="text-slate-700 font-semibold text-sm">Tehsil <span className="text-red-500">*</span></label>
-                        <Select
-                          value={values.tehsil}
-                          onChange={(value) => setFieldValue("tehsil", value)}
-                          placeholder="Select tehsil"
-                          loading={loadingTehsils}
-                          className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
-                          size="large"
-                          showSearch
-                          optionFilterProp="children"
-                        >
-                          {tehsils.map(t => (
-                            <Option key={t._id} value={t._id}>
-                              {t.name?.en || t.name_en}
-                            </Option>
-                          ))}
-                        </Select>
-                        {touched.tehsil && errors.tehsil && <div className="text-red-500 text-xs font-medium">{errors.tehsil}</div>}
-                      </div>
+                  {/* Metadata Section */}
+                  <div className="modal-section !mb-0">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Localization</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <FormField label="Name (English)" name="name_en" placeholder="Village name" required icon={<FaChevronRight className="opacity-20 translate-y-0.5" />} />
+                      <FormField label="Name (Urdu)" name="name_ur" placeholder="گاؤں کا نام" required icon={<FaChevronRight className="opacity-20 translate-y-0.5" />} />
                     </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Metadata Section */}
-              <div className="modal-section !mb-0">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Localization</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <FormField label="Name (English)" name="name_en" placeholder="Village name" required icon={<FaChevronRight className="opacity-20 translate-y-0.5" />} />
-                  <FormField label="Name (Urdu)" name="name_ur" placeholder="گاؤں کا نام" required icon={<FaChevronRight className="opacity-20 translate-y-0.5" />} />
-                </div>
-              </div>
+                  </div>
+                </>
+              )}
 
               {/* Modal Footer Actions */}
               <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">

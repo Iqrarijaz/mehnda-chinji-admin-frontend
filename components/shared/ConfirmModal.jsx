@@ -6,7 +6,7 @@ import { FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
  * Modern SaaS Confirmation Modal
  * Standardized for both Primary (Info) and Danger (Delete) actions.
  */
-const ConfirmModal = ({
+const ConfirmModal = React.memo(({
     isOpen,
     onClose,
     onConfirm,
@@ -33,8 +33,8 @@ const ConfirmModal = ({
                 {/* Icon Container with subtle background wrap */}
                 <div
                     className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-sm border ${isDanger
-                            ? "bg-red-50 border-red-100 text-red-500"
-                            : "bg-teal-50 border-teal-100 text-teal-600"
+                        ? "bg-red-50 border-red-100 text-red-500"
+                        : "bg-teal-50 border-teal-100 text-teal-600"
                         }`}
                 >
                     {isDanger ? <FaExclamationTriangle size={28} /> : <FaInfoCircle size={28} />}
@@ -70,6 +70,6 @@ const ConfirmModal = ({
             </div>
         </Modal>
     );
-};
+});
 
 export default ConfirmModal;

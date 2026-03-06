@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-export default function StatCard({
+const StatCard = ({
     title,
     count,
     color = "#006666",
@@ -11,7 +11,7 @@ export default function StatCard({
     active = false,
     onClick,
     subtitle,
-}) {
+}) => {
     const cardBg = active ? "#006666" : bg;
     const cardBorder = active ? "#006666" : border;
     const textColor = active ? "#ffffff" : "#1e293b";
@@ -129,4 +129,6 @@ export default function StatCard({
             />
         </button>
     );
-}
+};
+
+export default React.memo(StatCard);

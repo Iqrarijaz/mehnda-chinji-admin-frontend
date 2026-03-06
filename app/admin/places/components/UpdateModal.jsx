@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { FaPlus, FaTrash, FaMapMarkerAlt, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaCheckCircle } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
+import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_PLACE } from "@/app/api/admin/places";
 import { PLACE_CATEGORIES } from "@/config/config";
@@ -103,126 +104,130 @@ function UpdatePlaceModal({ modal, setModal }) {
                 >
                     {({ isSubmitting, values, setFieldValue, errors, touched }) => (
                         <Form className="space-y-6">
-                            {updatePlace.status === "loading" && <Loading />}
-
-                            <div className="modal-section">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Core Identification</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div className="md:col-span-1">
-                                        <FormField label="Place Name" name="name" placeholder="Name" required />
-                                    </div>
-                                    <div className="md:col-span-1">
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-slate-700 font-semibold text-sm">Status <span className="text-red-500">*</span></label>
-                                            <Select
-                                                value={values.status}
-                                                onChange={(value) => setFieldValue("status", value)}
-                                                className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
-                                                size="large"
-                                            >
-                                                <Option value="PENDING">Pending Approval</Option>
-                                                <Option value="ACTIVE">Active / Verified</Option>
-                                                <Option value="REJECTED">Rejected</Option>
-                                                <Option value="INACTIVE">Inactive</Option>
-                                            </Select>
-                                        </div>
-                                    </div>
-                                    <div className="md:col-span-2">
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-slate-700 font-semibold text-sm">Category <span className="text-red-500">*</span></label>
-                                            <SelectBox
-                                                options={PLACE_CATEGORIES.map((cat) => ({
-                                                    value: cat.value,
-                                                    label: cat.label
-                                                }))}
-                                                handleChange={(value) => setFieldValue("categoryId", value)}
-                                                value={values.categoryId}
-                                                placeholder="Select category"
-                                                width="100%"
-                                                className="modern-select-box"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="md:col-span-2">
-                                        <FormField label="Description" name="description" placeholder="Short description..." type="textarea" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="modal-section">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Location Details</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div className="md:col-span-2">
-                                        <FormField label="Full Address" name="address" required icon={<FaChevronRight className="opacity-20" />} />
-                                    </div>
-                                    <div className="md:col-span-2">
-                                        <FormField label="Google Maps Link" name="googleAddress" icon={<FaMapMarkerAlt className="opacity-30" />} />
-                                    </div>
-                                    <FormField label="Latitude" name="lat" type="number" required />
-                                    <FormField label="Longitude" name="lng" type="number" required />
-                                </div>
-                            </div>
-
-                            <div className="modal-section">
-                                <div className="flex items-center justify-between mb-4">
-                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Manage Contacts</p>
-                                </div>
-                                <FieldArray name="contact">
-                                    {({ push, remove }) => (
-                                        <div className="space-y-3">
-                                            {values.contact.map((_, index) => (
-                                                <div key={index} className="flex gap-3 items-start animate-in fade-in slide-in-from-top-2 duration-300">
-                                                    <div className="flex-1 bg-slate-50 p-2 rounded-xl flex gap-3 border border-slate-100">
-                                                        <div className="flex-1">
-                                                            <Input
-                                                                value={values.contact[index].name}
-                                                                onChange={(e) => setFieldValue(`contact.${index}.name`, e.target.value)}
-                                                                placeholder="Label"
-                                                                className="!border-none !bg-transparent !shadow-none !h-[40px] font-semibold"
-                                                            />
-                                                        </div>
-                                                        <div className="w-[1px] h-6 bg-slate-200 self-center" />
-                                                        <div className="flex-[1.5] flex items-center">
-                                                            <FaPhoneAlt size={12} className="text-slate-300 mx-2" />
-                                                            <Input
-                                                                value={values.contact[index].number}
-                                                                onChange={(e) => setFieldValue(`contact.${index}.number`, e.target.value)}
-                                                                placeholder="Number"
-                                                                className="!border-none !bg-transparent !shadow-none !h-[40px]"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    {values.contact.length > 1 && (
-                                                        <Button
-                                                            type="text"
-                                                            danger
-                                                            onClick={() => remove(index)}
-                                                            icon={<FaTrash size={14} />}
-                                                            className="!h-[56px] !w-[56px] !rounded-xl bg-red-50/50 hover:bg-red-50 flex items-center justify-center p-0"
-                                                        />
-                                                    )}
+                            {updatePlace.status === "loading" ? (
+                                <FormSkeleton fields={8} />
+                            ) : (
+                                <>
+                                    <div className="modal-section">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Core Identification</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                            <div className="md:col-span-1">
+                                                <FormField label="Place Name" name="name" placeholder="Name" required />
+                                            </div>
+                                            <div className="md:col-span-1">
+                                                <div className="flex flex-col gap-2">
+                                                    <label className="text-slate-700 font-semibold text-sm">Status <span className="text-red-500">*</span></label>
+                                                    <Select
+                                                        value={values.status}
+                                                        onChange={(value) => setFieldValue("status", value)}
+                                                        className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
+                                                        size="large"
+                                                    >
+                                                        <Option value="PENDING">Pending Approval</Option>
+                                                        <Option value="ACTIVE">Active / Verified</Option>
+                                                        <Option value="REJECTED">Rejected</Option>
+                                                        <Option value="INACTIVE">Inactive</Option>
+                                                    </Select>
                                                 </div>
-                                            ))}
-                                            <Button
-                                                type="dashed"
-                                                onClick={() => push({ name: "", number: "" })}
-                                                icon={<FaPlus size={12} />}
-                                                className="w-full !h-[50px] !rounded-xl !border-2 !border-dashed !border-slate-200 !text-slate-400 hover:!text-teal-600 hover:!border-teal-200 font-bold"
-                                            >
-                                                Add Another Contact
-                                            </Button>
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <div className="flex flex-col gap-2">
+                                                    <label className="text-slate-700 font-semibold text-sm">Category <span className="text-red-500">*</span></label>
+                                                    <SelectBox
+                                                        options={PLACE_CATEGORIES.map((cat) => ({
+                                                            value: cat.value,
+                                                            label: cat.label
+                                                        }))}
+                                                        handleChange={(value) => setFieldValue("categoryId", value)}
+                                                        value={values.categoryId}
+                                                        placeholder="Select category"
+                                                        width="100%"
+                                                        className="modern-select-box"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <FormField label="Description" name="description" placeholder="Short description..." type="textarea" />
+                                            </div>
                                         </div>
-                                    )}
-                                </FieldArray>
-                            </div>
+                                    </div>
 
-                            <div className="modal-section !mb-0">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Other Information</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <FormField label="Operational Timings" name="timing" icon={<FaClock className="opacity-30" />} />
-                                    <FormField label="Offered Services" name="services" icon={<FaTools className="opacity-30" />} />
-                                </div>
-                            </div>
+                                    <div className="modal-section">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Location Details</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                            <div className="md:col-span-2">
+                                                <FormField label="Full Address" name="address" required icon={<FaChevronRight className="opacity-20" />} />
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <FormField label="Google Maps Link" name="googleAddress" icon={<FaMapMarkerAlt className="opacity-30" />} />
+                                            </div>
+                                            <FormField label="Latitude" name="lat" type="number" required />
+                                            <FormField label="Longitude" name="lng" type="number" required />
+                                        </div>
+                                    </div>
+
+                                    <div className="modal-section">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Manage Contacts</p>
+                                        </div>
+                                        <FieldArray name="contact">
+                                            {({ push, remove }) => (
+                                                <div className="space-y-3">
+                                                    {values.contact.map((_, index) => (
+                                                        <div key={index} className="flex gap-3 items-start animate-in fade-in slide-in-from-top-2 duration-300">
+                                                            <div className="flex-1 bg-slate-50 p-2 rounded-xl flex gap-3 border border-slate-100">
+                                                                <div className="flex-1">
+                                                                    <Input
+                                                                        value={values.contact[index].name}
+                                                                        onChange={(e) => setFieldValue(`contact.${index}.name`, e.target.value)}
+                                                                        placeholder="Label"
+                                                                        className="!border-none !bg-transparent !shadow-none !h-[40px] font-semibold"
+                                                                    />
+                                                                </div>
+                                                                <div className="w-[1px] h-6 bg-slate-200 self-center" />
+                                                                <div className="flex-[1.5] flex items-center">
+                                                                    <FaPhoneAlt size={12} className="text-slate-300 mx-2" />
+                                                                    <Input
+                                                                        value={values.contact[index].number}
+                                                                        onChange={(e) => setFieldValue(`contact.${index}.number`, e.target.value)}
+                                                                        placeholder="Number"
+                                                                        className="!border-none !bg-transparent !shadow-none !h-[40px]"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            {values.contact.length > 1 && (
+                                                                <Button
+                                                                    type="text"
+                                                                    danger
+                                                                    onClick={() => remove(index)}
+                                                                    icon={<FaTrash size={14} />}
+                                                                    className="!h-[56px] !w-[56px] !rounded-xl bg-red-50/50 hover:bg-red-50 flex items-center justify-center p-0"
+                                                                />
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                    <Button
+                                                        type="dashed"
+                                                        onClick={() => push({ name: "", number: "" })}
+                                                        icon={<FaPlus size={12} />}
+                                                        className="w-full !h-[50px] !rounded-xl !border-2 !border-dashed !border-slate-200 !text-slate-400 hover:!text-teal-600 hover:!border-teal-200 font-bold"
+                                                    >
+                                                        Add Another Contact
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        </FieldArray>
+                                    </div>
+
+                                    <div className="modal-section !mb-0">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Other Information</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                            <FormField label="Operational Timings" name="timing" icon={<FaClock className="opacity-30" />} />
+                                            <FormField label="Offered Services" name="services" icon={<FaTools className="opacity-30" />} />
+                                        </div>
+                                    </div>
+                                </>
+                            )}
 
                             <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
                                 <Button

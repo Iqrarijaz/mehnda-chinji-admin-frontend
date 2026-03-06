@@ -4,6 +4,8 @@ import { Modal, Tag, Button, Input, Upload, Divider, Select } from "antd";
 import { FaReply, FaPaperPlane, FaPaperclip, FaClock, FaUser, FaUserTie } from "react-icons/fa";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
+import Loading from "@/animations/homePageLoader";
+import { FormSkeleton } from "@/components/shared/Skeletons";
 import { GET_SUPPORT_TICKET_BY_ID, REPLY_TO_TICKET, UPDATE_TICKET_STATUS } from "@/app/api/admin/support";
 import { timestampToDate } from "@/utils/date";
 
@@ -165,7 +167,9 @@ function ManageTicketModal({ modal, setModal }) {
                         className="space-y-4 max-h-[40vh] overflow-y-auto p-2 scroll-smooth"
                     >
                         {!ticket ? (
-                            <div className="flex justify-center items-center py-10 text-gray-400 italic">Loading thread...</div>
+                            <div className="bg-white rounded-2xl p-6 border shadow-sm">
+                                <FormSkeleton fields={5} />
+                            </div>
                         ) : (
                             ticket.messages?.map((msg, i) => (
                                 <div key={i} className={`flex ${msg.sender === 'admin' ? 'justify-end' : 'justify-start'}`}>

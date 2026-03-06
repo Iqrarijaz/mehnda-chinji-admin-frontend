@@ -1,7 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { FaHeart, FaComment, FaEdit, FaTrash, FaChevronDown, FaChevronUp, FaImages } from "react-icons/fa";
-import { Switch } from "antd";
+import {
+    HeartFilled,
+    MessageFilled,
+    EditOutlined,
+    DeleteOutlined,
+    ClockCircleOutlined,
+    PictureOutlined,
+    UserOutlined
+} from "@ant-design/icons";
+import { Switch, Button, Avatar, Tooltip } from "antd";
 import { timestampToDate, timestampToDateWithTime } from "@/utils/date";
 import { getTagColor } from "@/utils/tagColor";
 import ImageViewer from "@/components/shared/ImageViewer";
@@ -24,14 +32,12 @@ function PostCard({
     const allImages = post?.media?.map(m => m.url) || post?.images || [];
     const hasMultipleImages = allImages.length > 1;
 
-    // Helper to handle potential Unsplash page URLs and convert to direct image links
     const getProxiedImageUrl = (url) => {
         if (!url) return null;
         if (url.includes("unsplash.com/photos/")) {
             const parts = url.split("/");
             const lastPart = parts[parts.length - 1];
             if (lastPart) {
-                // If the last part has a slug (hyphenated), the ID is the last segment
                 const subParts = lastPart.split("-");
                 const id = subParts[subParts.length - 1];
                 return `https://images.unsplash.com/photo-1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80&ixid=${id}`;
@@ -55,169 +61,164 @@ function PostCard({
 
         if (count === 0) {
             return (
-                <div className="w-full h-40 md:h-48 flex items-center justify-center bg-gray-100 text-gray-400">
-                    <FaImages size={32} />
+                <div className="w-full h-48 flex flex-col items-center justify-center bg-slate-50 text-slate-300 gap-2 border-b border-slate-100">
+                    <PictureOutlined className="text-4xl" />
+                    <span className="text-xs font-medium uppercase tracking-wider">No Media</span>
                 </div>
             );
         }
 
-        if (count === 1) {
-            return (
-                <div
-                    className="relative w-full h-48 md:h-56 cursor-pointer overflow-hidden"
-                    onClick={(e) => handleImageClick(e, 0)}
-                >
-                    <img
-                        src={imageUrl}
-                        alt="Post image"
-                        className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
-                    />
-                </div>
-            );
-        }
-
-        // Multiple images: One large and 2-3 small ones in a row below it or side-by-side
-        // Layout: Top (Main), Bottom (Thumbnails) inside the header
         return (
-            <div className="relative w-full h-48 md:h-56 flex flex-col gap-1 overflow-hidden">
-                {/* Main Large Image */}
-                <div
-                    className="flex-1 w-full cursor-pointer relative"
+            <div className="relative group overflow-hidden border-b border-slate-100 h-56">
+                <img
+                    src={imageUrl}
+                    alt="Post media"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     onClick={(e) => handleImageClick(e, 0)}
-                >
-                    <img
-                        src={imageUrl}
-                        alt="Post image"
-                        className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
-                    />
-                </div>
-
-                {/* Small thumbnails row */}
-                <div className="flex gap-1 h-[30%] w-full">
-                    {safeImages.slice(1, 4).map((img, idx) => (
-                        <div
-                            key={idx}
-                            className="relative flex-1 cursor-pointer overflow-hidden"
-                            onClick={(e) => handleImageClick(e, idx + 1)}
-                        >
-                            <img
-                                src={img}
-                                className="w-full h-full object-cover border-t border-white/20 hover:opacity-80 transition-opacity"
-                            />
-                            {idx === 2 && count > 4 && (
-                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-[10px] font-bold">
-                                    +{count - 4}
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                    {/* If there were only 2 images total, the slice(1,4) will have 1 image. 
-                        If we want to fill the width, we can flex it. */}
-                </div>
+                />
+                {count > 1 && (
+                    <div className="absolute bottom-3 right-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded-lg text-white text-[10px] font-bold flex items-center gap-1.5 shadow-lg">
+                        <PictureOutlined />
+                        {count} Images
+                    </div>
+                )}
+                <div
+                    className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                />
             </div>
         );
     };
 
-    const renderContent = () => {
-        const isLongContent = post?.content?.length > 50;
-        if (!isLongContent) return <p className="text-gray-700 text-sm py-2 whitespace-pre-wrap">{post?.content}</p>;
-
-        return (
-            <div className="py-2">
-                <p className="text-gray-700 text-sm whitespace-pre-wrap">
-                    {isExpanded ? post?.content : `${post?.content?.substring(0, 50)}...`}
-                </p>
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onToggleExpand();
-                    }}
-                    className="text-blue-600 text-[10px] font-bold hover:underline mt-1"
-                >
-                    {isExpanded ? "See Less" : "See More"}
-                </button>
-            </div>
-        );
-    };
-
-    // Regular small card - Now flexible for masonry
     return (
         <>
-            <div
-                className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border flex flex-col w-full break-inside-avoid mb-6"
-            >
-                {/* Image Header Section */}
-                <div className="relative">
-                    {renderImageHeader()}
-
-                    {/* Tag Overlay */}
-                    <div className="absolute top-2 left-2 z-10">
+            <div className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col w-full break-inside-avoid mb-6 group/card">
+                {/* Header */}
+                <div className="p-4 flex items-center justify-between border-b border-slate-50">
+                    <div className="flex items-center gap-3">
+                        <Avatar
+                            icon={<UserOutlined />}
+                            className="!bg-teal-50 !text-teal-600 border border-teal-100"
+                        />
+                        <div className="flex flex-col">
+                            <span className="text-xs font-bold text-slate-900 group-hover/card:text-[#006666] transition-colors line-clamp-1">
+                                {post?.authorName || "Anonymous User"}
+                            </span>
+                            <div className="flex items-center gap-2 text-[10px] text-slate-400 font-medium">
+                                <ClockCircleOutlined className="text-slate-300" />
+                                {timestampToDateWithTime(post?.createdAt)}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-1">
                         <span
-                            className="text-[10px] px-2 py-0.5 rounded font-semibold text-white shadow-lg bg-black/40 backdrop-blur-sm"
-                            style={{ backgroundColor: getTagColor(post?.type) }}
+                            className="text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider border shadow-sm"
+                            style={{
+                                backgroundColor: `${getTagColor(post?.type)}15`,
+                                color: getTagColor(post?.type),
+                                borderColor: `${getTagColor(post?.type)}30`
+                            }}
                         >
                             {post?.type || "GENERAL"}
                         </span>
                     </div>
                 </div>
 
-                <div className="flex flex-col p-4">
+                {/* Media */}
+                {renderImageHeader()}
 
-                    {renderContent()}
+                {/* Content */}
+                <div className="p-4 flex-1">
+                    {post?.title && (
+                        <h3 className="text-sm font-bold text-slate-800 mb-2 leading-snug line-clamp-2">
+                            {post.title}
+                        </h3>
+                    )}
+                    <div className="relative">
+                        <p className="text-slate-600 text-xs leading-relaxed">
+                            {isExpanded ? post?.content : (
+                                <>
+                                    {post?.content?.substring(0, 120)}
+                                    {post?.content?.length > 120 && "..."}
+                                </>
+                            )}
+                        </p>
+                        {post?.content?.length > 120 && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onToggleExpand();
+                                }}
+                                className="text-[#006666] text-[10px] font-bold hover:underline mt-2 block transition-all"
+                            >
+                                {isExpanded ? "Show Less" : "Read More"}
+                            </button>
+                        )}
+                    </div>
+                </div>
 
-                    {/* Stats & Time */}
-                    <div className="flex items-center gap-3 mb-4 text-[11px] text-gray-500 pt-3 border-t">
+                {/* Engagement Stats */}
+                <div className="px-4 py-3 flex items-center gap-4 border-t border-slate-50 bg-slate-50/30">
+                    <Tooltip title="View Likes">
                         <div
-                            className="flex items-center gap-1 cursor-pointer hover:text-red-500 transition-colors"
+                            className="flex items-center gap-1.5 cursor-pointer group/stat"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setLikesModal({ open: true, postId: post._id });
                             }}
                         >
-                            <FaHeart className="text-red-400" size={12} />
-                            <span>{post?.likesCount || 0}</span>
+                            <div className="w-7 h-7 rounded-full bg-red-50 flex items-center justify-center group-hover/stat:bg-red-100 transition-colors">
+                                <HeartFilled className="text-red-500 text-[11px]" />
+                            </div>
+                            <span className="text-xs font-bold text-slate-600 group-hover/stat:text-red-600">
+                                {post?.likesCount || 0}
+                            </span>
                         </div>
+                    </Tooltip>
+                    <Tooltip title="View Comments">
                         <div
-                            className="flex items-center gap-1 cursor-pointer hover:text-blue-500 transition-colors"
+                            className="flex items-center gap-1.5 cursor-pointer group/stat"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setCommentsModal({ open: true, postId: post._id });
                             }}
                         >
-                            <FaComment className="text-blue-400" size={12} />
-                            <span>{post?.commentsCount || 0}</span>
+                            <div className="w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center group-hover/stat:bg-blue-100 transition-colors">
+                                <MessageFilled className="text-blue-500 text-[11px]" />
+                            </div>
+                            <span className="text-xs font-bold text-slate-600 group-hover/stat:text-blue-600">
+                                {post?.commentsCount || 0}
+                            </span>
                         </div>
-                        <div className="text-[10px] text-gray-400 ml-auto">
-                            {timestampToDateWithTime(post?.createdAt)}
-                        </div>
-                    </div>
+                    </Tooltip>
+                </div>
 
-                    {/* Actions */}
-                    <div className="flex items-center justify-between pt-3 border-t">
-                        <div className="flex items-center gap-2">
-                            <Switch
-                                checked={isActive}
-                                onChange={() => onStatusChange(post)}
-                                size="small"
-                                className={isActive ? '' : 'ant-switch-red'}
-                            />
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <button
+                {/* Footer Actions */}
+                <div className="p-4 pt-3 flex items-center justify-between border-t border-slate-100">
+                    <div className="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Status</span>
+                        <Switch
+                            checked={isActive}
+                            onChange={() => onStatusChange(post)}
+                            size="small"
+                            className={isActive ? '!bg-[#006666]' : '!bg-slate-300'}
+                        />
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Tooltip title="Edit Post">
+                            <Button
+                                icon={<EditOutlined />}
                                 onClick={() => onEdit(post)}
-                                className="p-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
-                                title="Edit"
-                            >
-                                <FaEdit size={14} />
-                            </button>
-                            <button
+                                className="!rounded-xl !border-slate-100 hover:!border-[#006666] hover:!text-[#006666] !flex items-center justify-center !h-9 !w-9 bg-white shadow-sm"
+                            />
+                        </Tooltip>
+                        <Tooltip title="Delete Post">
+                            <Button
+                                icon={<DeleteOutlined />}
                                 onClick={() => onDelete(post)}
-                                className="p-2 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
-                                title="Delete"
-                            >
-                                <FaTrash size={14} />
-                            </button>
-                        </div>
+                                danger
+                                className="!rounded-xl !border-red-100 hover:!border-red-500 !flex items-center justify-center !h-9 !w-9 bg-white shadow-sm"
+                            />
+                        </Tooltip>
                     </div>
                 </div>
             </div>

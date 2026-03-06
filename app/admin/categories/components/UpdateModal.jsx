@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { FaLayerGroup, FaEdit } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
+import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_CATEGORY } from "@/app/api/admin/categories";
 
@@ -82,34 +83,38 @@ function UpdateCategoryModal({ modal, setModal }) {
         >
           {({ isSubmitting, values, setFieldValue, errors, touched }) => (
             <Form className="space-y-6">
-              {updateCategory.status === "loading" && <Loading />}
+              {updateCategory.status === "loading" ? (
+                <FormSkeleton fields={3} />
+              ) : (
+                <>
+                  <div className="modal-section">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Localization</p>
+                    <div className="space-y-4">
+                      <FormField label="Name (English)" name="name_en" placeholder="e.g. Restaurants" required />
+                      <FormField label="Name (Urdu)" name="name_ur" placeholder="e.g. ریسٹورنٹ" required />
+                    </div>
+                  </div>
 
-              <div className="modal-section">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Localization</p>
-                <div className="space-y-4">
-                  <FormField label="Name (English)" name="name_en" placeholder="e.g. Restaurants" required />
-                  <FormField label="Name (Urdu)" name="name_ur" placeholder="e.g. ریسٹورنٹ" required />
-                </div>
-              </div>
-
-              <div className="modal-section !mb-0">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Configuration</p>
-                <div className="flex flex-col gap-2">
-                  <label className="text-slate-700 font-semibold text-sm">Target Type <span className="text-red-500">*</span></label>
-                  <Select
-                    value={values.type}
-                    onChange={(value) => setFieldValue("type", value)}
-                    className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
-                    size="large"
-                  >
-                    <Option value="PLACES">Places (Locations)</Option>
-                    <Option value="SERVICES">Services (Utility)</Option>
-                  </Select>
-                  {touched.type && errors.type && (
-                    <div className="text-red-500 text-xs font-medium">{errors.type}</div>
-                  )}
-                </div>
-              </div>
+                  <div className="modal-section !mb-0">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Configuration</p>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-slate-700 font-semibold text-sm">Target Type <span className="text-red-500">*</span></label>
+                      <Select
+                        value={values.type}
+                        onChange={(value) => setFieldValue("type", value)}
+                        className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
+                        size="large"
+                      >
+                        <Option value="PLACES">Places (Locations)</Option>
+                        <Option value="SERVICES">Services (Utility)</Option>
+                      </Select>
+                      {touched.type && errors.type && (
+                        <div className="text-red-500 text-xs font-medium">{errors.type}</div>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
                 <Button

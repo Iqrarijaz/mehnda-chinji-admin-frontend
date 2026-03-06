@@ -1,19 +1,23 @@
-"use client";
-import { Modal, Pagination, Table, Tag, Tooltip } from "antd";
-import React, { useState } from "react";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
+import {
+    EditOutlined,
+    DeleteOutlined,
+    EyeOutlined,
+    MoreOutlined,
+    SettingOutlined,
+    CheckCircleOutlined,
+    CloseCircleOutlined
+} from "@ant-design/icons";
 import Loading from "@/animations/homePageLoader";
-import { Switch } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { CustomPopover } from "@/components/popHover";
 import { timestampToDate } from "@/utils/date";
 import { DELETE_PLACE, UPDATE_PLACE_STATUS, UPDATE_PLACE_REQUEST_STATUS } from "@/app/api/admin/places";
-import { popoverContent } from "@/components/popHover/popHoverContent";
 import ViewModal from "./ViewModal";
 import { getTagColor } from "@/utils/tagColor";
 import ConfirmModal from "@/components/shared/ConfirmModal";
+import { Modal, Pagination, Table, Tag, Tooltip, Switch, Menu, Dropdown, Button, Checkbox, Popover } from "antd";
+import { TableSkeleton } from "@/components/shared/Skeletons";
+import { useState } from "react";
 
 function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
     const queryClient = useQueryClient();
@@ -28,6 +32,9 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
         cancelText: "Cancel"
     });
 
+    // Column Visibility State
+    const [visibleColumns, setVisibleColumns] = useState(["name", "category", "address", "contact", "status", "isActive", "createdAt", "actions"]);
+
     const closeConfirmModal = () => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
     };
@@ -40,7 +47,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
                 predicate: (query) => query.queryKey[0] === "placesList",
             });
             queryClient.invalidateQueries("placeStatusCounts");
-            toast.success(data?.message);
+            toast.success(data?.message || "Request status updated");
             closeConfirmModal();
         },
         onError: (error) => {
@@ -57,7 +64,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
                 predicate: (query) => query.queryKey[0] === "placesList",
             });
             queryClient.invalidateQueries("placeStatusCounts");
-            toast.success(data?.message);
+            toast.success(data?.message || "Status updated");
             closeConfirmModal();
         },
         onError: (error) => {
@@ -74,7 +81,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
                 predicate: (query) => query.queryKey[0] === "placesList",
             });
             queryClient.invalidateQueries("placeStatusCounts");
-            toast.success(data?.message);
+            toast.success(data?.message || "Place deleted");
             closeConfirmModal();
         },
         onError: (error) => {
@@ -139,57 +146,104 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
     const handleSorting = (pagination, filters, sorter) => {
         setFilters(prev => ({
             ...prev,
-            sortingKey: sorter.field,
-            sortOrder: sorter.order === "ascend" ? 1 : -1
+            sortingKey: sorter.field || "_id",
+            sortOrder: sorter.order === "ascend" ? 1 : -1,
+            currentPage: pagination.current,
         }));
     };
 
-    const actionMenu = [
-        {
-            heading: "View",
-            icon: <FaEye size={16} />,
-            handleFunction: (record) => setViewModal({ open: true, data: record }),
-        },
-        {
-            heading: "Edit",
-            icon: <FaEdit size={16} />,
-            handleFunction: (record) => setModal({
-                name: "Update",
-                data: record,
-                state: true
-            }),
-        },
-        {
-            heading: "Approve",
-            icon: <span style={{ color: '#16a34a', fontWeight: 700, fontSize: 13 }}>✓</span>,
-            handleFunction: (record) => handleApprove(record),
-        },
-        {
-            heading: "Reject",
-            icon: <span style={{ color: '#dc2626', fontWeight: 700, fontSize: 13 }}>✕</span>,
-            handleFunction: (record) => handleReject(record),
-        },
-        {
-            heading: "Delete",
-            icon: <FaTrash size={16} />,
-            handleFunction: (record) => handleDelete(record),
-        },
+    const actionMenu = (record) => (
+        <Menu className="!rounded-xl !p-2 !min-w-[160px] shadow-xl border border-slate-100">
+            <Menu.Item
+                key="view"
+                icon={<EyeOutlined className="text-emerald-500" />}
+                onClick={() => setViewModal({ open: true, data: record })}
+                className="!rounded-lg hover:!bg-emerald-50"
+            >
+                <span className="font-medium">View Details</span>
+            </Menu.Item>
+            <Menu.Item
+                key="edit"
+                icon={<EditOutlined className="text-blue-500" />}
+                onClick={() => setModal({
+                    name: "Update",
+                    data: record,
+                    state: true
+                })}
+                className="!rounded-lg hover:!bg-blue-50"
+            >
+                <span className="font-medium">Edit Place</span>
+            </Menu.Item>
+            <Menu.Divider className="!my-1" />
+            <Menu.Item
+                key="approve"
+                icon={<CheckCircleOutlined className="text-green-600" />}
+                onClick={() => handleApprove(record)}
+                className="!rounded-lg hover:!bg-green-50"
+            >
+                <span className="font-medium text-green-600">Approve</span>
+            </Menu.Item>
+            <Menu.Item
+                key="reject"
+                icon={<CloseCircleOutlined className="text-orange-600" />}
+                onClick={() => handleReject(record)}
+                className="!rounded-lg hover:!bg-orange-50"
+            >
+                <span className="font-medium text-orange-600">Reject</span>
+            </Menu.Item>
+            <Menu.Divider className="!my-1" />
+            <Menu.Item
+                key="delete"
+                icon={<DeleteOutlined className="text-red-500" />}
+                onClick={() => handleDelete(record)}
+                className="!rounded-lg hover:!bg-red-50"
+            >
+                <span className="font-medium text-red-600">Delete Place</span>
+            </Menu.Item>
+        </Menu>
+    );
+
+    const columnOptions = [
+        { label: "Name", value: "name" },
+        { label: "Category", value: "category" },
+        { label: "Address", value: "address" },
+        { label: "Contact", value: "contact" },
+        { label: "Reg. Status", value: "status" },
+        { label: "Active", value: "isActive" },
+        { label: "Created At", value: "createdAt" },
     ];
 
-    const columns = [
+    const visibilityMenu = (
+        <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
+            <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Toggle Columns
+            </div>
+            <Checkbox.Group
+                value={visibleColumns}
+                onChange={setVisibleColumns}
+                className="flex flex-col gap-2"
+            >
+                {columnOptions.map(opt => (
+                    <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
+                        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
+                            {opt.label}
+                        </Checkbox>
+                    </Menu.Item>
+                ))}
+            </Checkbox.Group>
+        </Menu>
+    );
+
+    const allColumns = [
         {
             title: "Name",
             dataIndex: "name",
             key: "name",
-            sorter: (a, b) => a.name?.localeCompare(b.name),
-            width: 250,
+            sorter: true,
+            width: 200,
             render: (name) => (
-                <Tooltip
-                    title={name}
-                    placement="topLeft"
-                    overlayStyle={{ maxWidth: 300 }}
-                >
-                    <div className="capitalize overflow-hidden whitespace-nowrap text-ellipsis cursor-pointer">
+                <Tooltip title={name} placement="topLeft">
+                    <div className="capitalize font-bold text-slate-800 truncate cursor-help">
                         {name}
                     </div>
                 </Tooltip>
@@ -201,9 +255,10 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
             key: "category",
             width: 120,
             align: "center",
+            sorter: true,
             render: (category) => (
                 <span
-                    className="mr-0 text-[10px] px-2 py-1 rounded capitalize font-semibold text-white"
+                    className="px-3 py-1 rounded-full capitalize font-bold text-white shadow-sm text-[10px]"
                     style={{ backgroundColor: getTagColor(category) }}
                 >
                     {category || "N/A"}
@@ -216,13 +271,9 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
             key: "address",
             width: 250,
             render: (address) => (
-                <Tooltip
-                    title={address}
-                    placement="topLeft"
-                    overlayStyle={{ maxWidth: 350 }}
-                >
-                    <div className="overflow-hidden whitespace-nowrap text-ellipsis cursor-pointer">
-                        {address || "-"}
+                <Tooltip title={address} placement="topLeft">
+                    <div className="text-slate-500 font-medium truncate cursor-help">
+                        {address || "—"}
                     </div>
                 </Tooltip>
             ),
@@ -232,30 +283,57 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
             dataIndex: "contact",
             key: "contact",
             width: 150,
-            render: (contact) => (
-                <div className="overflow-hidden whitespace-nowrap">
-                    {contact?.length > 0 ? `${contact[0].name}: ${contact[0].number}` : "-"}
-                    {contact?.length > 1 && <span className="text-gray-500 ml-1">(+{contact.length - 1})</span>}
-                </div>
-            ),
+            render: (contact) => {
+                if (!contact || contact.length === 0) return <span className="text-slate-400">—</span>;
+
+                const primary = contact[0];
+                const others = contact.slice(1);
+
+                return (
+                    <div className="flex items-center gap-2">
+                        <div className="text-slate-600 font-medium truncate max-w-[120px]">
+                            {primary.name}: {primary.number}
+                        </div>
+                        {others.length > 0 && (
+                            <Popover
+                                content={
+                                    <div className="space-y-2 p-1">
+                                        {contact.map((c, i) => (
+                                            <div key={i} className="flex flex-col border-b border-slate-50 last:border-0 pb-1 last:pb-0">
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase leading-none">{c.name}</span>
+                                                <span className="text-sm font-medium text-slate-700">{c.number}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                }
+                                title={<span className="text-xs font-bold text-slate-400 uppercase tracking-wider">All Contacts</span>}
+                                trigger="hover"
+                                placement="topRight"
+                            >
+                                <Tag className="!m-0 !rounded-full !bg-teal-50 !text-teal-600 !border-teal-100 !px-2 !py-0 !text-[10px] font-bold cursor-pointer hover:!bg-teal-100 transition-colors">
+                                    +{others.length}
+                                </Tag>
+                            </Popover>
+                        )}
+                    </div>
+                );
+            }
         },
         {
-            title: "Request Status",
+            title: "Reg. Status",
             dataIndex: "status",
             key: "status",
             align: "center",
             width: 120,
+            sorter: true,
             render: (status) => {
-                const colorMap = {
-                    APPROVED: "#16a34a",
-                    REJECTED: "#dc2626",
-                    PENDING: "#ea580c",
+                const colors = {
+                    APPROVED: "bg-emerald-500",
+                    REJECTED: "bg-red-500",
+                    PENDING: "bg-orange-500",
                 };
                 return (
-                    <span
-                        className="mr-0 text-[10px] px-2 py-1 rounded capitalize font-semibold text-white"
-                        style={{ backgroundColor: colorMap[status] || "#6b7280" }}
-                    >
+                    <span className={`${colors[status] || "bg-slate-400"} px-3 py-1 rounded-full capitalize font-bold text-white shadow-sm text-[10px]`}>
                         {status || "PENDING"}
                     </span>
                 );
@@ -266,12 +344,13 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
             dataIndex: "isActive",
             key: "isActive",
             align: "center",
-            width: 80,
+            width: 100,
             render: (isActive, record) => (
                 <Switch
                     checked={isActive}
                     onChange={() => handleStatus(record)}
-                    className={isActive ? '' : 'ant-switch-red'}
+                    className={isActive ? '!bg-[#006666]' : '!bg-slate-300'}
+                    size="small"
                 />
             ),
         },
@@ -279,72 +358,81 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 120,
-            render: (text) => <div className="whitespace-nowrap">{timestampToDate(text)}</div>,
+            width: 150,
+            sorter: true,
+            render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
         },
         {
-            title: "Actions",
+            title: "",
             key: "actions",
-            width: 80,
-            align: "center",
+            width: 60,
+            align: "right",
             render: (record) => (
-                <div className="flex items-center justify-center">
-                    <CustomPopover
-                        triggerContent={
-                            <HiOutlineDotsHorizontal
-                                size={28}
-                                className="hover:text-secondary cursor-pointer"
-                            />
-                        }
-                        popoverContent={() => popoverContent(actionMenu, record)}
+                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+                    <Button
+                        type="text"
+                        icon={<MoreOutlined className="text-lg" />}
+                        className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
                     />
-                </div>
+                </Dropdown>
             ),
         }
     ];
 
+    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+
     return (
-        <>
-            <Table
-                rowKey="_id"
-                className="antd-table-custom rounded"
-                size="small"
-                tableLayout="fixed"
-                bordered
-                scroll={{ x: 1200 }}
-                loading={{
-                    spinning: placesList?.status === "loading",
-                    indicator: <Loading />,
-                }}
-                columns={columns}
-                dataSource={placesList?.data?.data}
-                pagination={false}
-                onChange={handleSorting}
-            />
+        <div className="space-y-4">
+            <div className="flex justify-end px-1">
+                <Dropdown overlay={visibilityMenu} trigger={['click']}>
+                    <Button
+                        icon={<SettingOutlined />}
+                        className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
+                    >
+                        Columns
+                    </Button>
+                </Dropdown>
+            </div>
 
-            <Pagination
-                className="flex justify-end mt-4"
-                pageSize={placesList?.data?.pagination?.itemsPerPage}
-                total={placesList?.data?.pagination?.totalItems}
-                current={placesList?.data?.pagination?.currentPage}
-                onChange={(page) => onChange({ currentPage: Number(page) })}
-            />
+            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+                <Table
+                    rowKey="_id"
+                    className="custom-ant-table"
+                    scroll={{ x: 1200, y: 600 }}
+                    sticky={true}
+                    loading={{
+                        spinning: placesList?.status === "loading",
+                        indicator: <TableSkeleton rows={8} columns={8} />,
+                    }}
+                    columns={activeColumns}
+                    dataSource={placesList?.data?.data}
+                    pagination={{
+                        current: placesList?.data?.pagination?.currentPage,
+                        pageSize: placesList?.data?.pagination?.itemsPerPage,
+                        total: placesList?.data?.pagination?.totalItems,
+                        showSizeChanger: true,
+                        className: "px-4 pb-4",
+                        onChange: (page, pageSize) => onChange({ currentPage: Number(page), itemsPerPage: pageSize }),
+                    }}
+                    onChange={handleSorting}
+                />
+                {(manageStatusMutation.isLoading || deleteMutation.isLoading || requestStatusMutation.isLoading) && <Loading />}
 
-            {/* View Modal */}
-            <ViewModal viewModal={viewModal} setViewModal={setViewModal} />
+                <ViewModal viewModal={viewModal} setViewModal={setViewModal} />
 
-            <ConfirmModal
-                isOpen={confirmModal.isOpen}
-                onClose={closeConfirmModal}
-                onConfirm={confirmModal.onConfirm}
-                title={confirmModal.title}
-                description={confirmModal.description}
-                confirmText={confirmModal.confirmText}
-                cancelText={confirmModal.cancelText}
-                variant={confirmModal.variant}
-                loading={manageStatusMutation.isLoading || deleteMutation.isLoading || requestStatusMutation.isLoading}
-            />
-        </>
+                <ConfirmModal
+                    isOpen={confirmModal.isOpen}
+                    onClose={closeConfirmModal}
+                    onConfirm={confirmModal.onConfirm}
+                    title={confirmModal.title}
+                    description={confirmModal.description}
+                    confirmText={confirmModal.confirmText}
+                    cancelText={confirmModal.cancelText}
+                    variant={confirmModal.variant}
+                    loading={manageStatusMutation.isLoading || deleteMutation.isLoading || requestStatusMutation.isLoading}
+                />
+            </div>
+        </div>
     );
 }
 

@@ -1,19 +1,23 @@
-"use client";
-import { Modal, Pagination, Table, Tag } from "antd";
-import React, { useState, useCallback } from "react";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
+import {
+    EditOutlined,
+    DeleteOutlined,
+    EyeOutlined,
+    MoreOutlined,
+    SettingOutlined,
+    LikeOutlined,
+    MessageOutlined
+} from "@ant-design/icons";
 import Loading from "@/animations/homePageLoader";
-import { Switch } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { CustomPopover } from "@/components/popHover";
-import { timestampToDate, timestampToDateWithTime } from "@/utils/date";
+import { timestampToDateWithTime } from "@/utils/date";
 import { DELETE_POST, UPDATE_POST_STATUS } from "@/app/api/admin/posts";
-import { popoverContent } from "@/components/popHover/popHoverContent";
 import ViewModal from "./ViewModal";
 import { getTagColor } from "@/utils/tagColor";
 import ConfirmModal from "@/components/shared/ConfirmModal";
+import { Modal, Pagination, Table, Tag, Switch, Menu, Dropdown, Button, Checkbox, Tooltip } from "antd";
+import { useCallback, useState } from "react";
+import { TableSkeleton } from "@/components/shared/Skeletons";
 
 function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikesModal, setCommentsModal }) {
     const queryClient = useQueryClient();
@@ -28,6 +32,9 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
         cancelText: "Cancel"
     });
 
+    // Column Visibility State
+    const [visibleColumns, setVisibleColumns] = useState(["type", "content", "likesCount", "commentsCount", "status", "createdAt", "actions"]);
+
     const closeConfirmModal = () => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
     };
@@ -38,7 +45,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
         onSuccess: (data) => {
             queryClient.invalidateQueries("postsList");
             queryClient.invalidateQueries("postsListInfinite");
-            toast.success(data?.message);
+            toast.success(data?.message || "Status updated");
             closeConfirmModal();
         },
         onError: (error) => {
@@ -53,7 +60,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
         onSuccess: (data) => {
             queryClient.invalidateQueries("postsList");
             queryClient.invalidateQueries("postsListInfinite");
-            toast.success(data?.message);
+            toast.success(data?.message || "Post deleted");
             closeConfirmModal();
         },
         onError: (error) => {
@@ -94,43 +101,87 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
     const handleSorting = (pagination, filters, sorter) => {
         setFilters(prev => ({
             ...prev,
-            sortingKey: sorter.field,
-            sortOrder: sorter.order === "ascend" ? 1 : -1
+            sortingKey: sorter.field || "_id",
+            sortOrder: sorter.order === "ascend" ? 1 : -1,
+            currentPage: pagination.current,
         }));
     };
 
-    const actionMenu = [
-        {
-            heading: "View",
-            icon: <FaEye size={16} />,
-            handleFunction: (record) => setViewModal({ open: true, data: record }),
-        },
-        {
-            heading: "Edit",
-            icon: <FaEdit size={16} />,
-            handleFunction: (record) => setModal({
-                name: "Update",
-                data: record,
-                state: true
-            }),
-        },
-        {
-            heading: "Delete",
-            icon: <FaTrash size={16} />,
-            handleFunction: (record) => handleDelete(record),
-        },
+    const actionMenu = (record) => (
+        <Menu className="!rounded-xl !p-2 !min-w-[140px] shadow-xl border border-slate-100">
+            <Menu.Item
+                key="view"
+                icon={<EyeOutlined className="text-emerald-500" />}
+                onClick={() => setViewModal({ open: true, data: record })}
+                className="!rounded-lg hover:!bg-emerald-50"
+            >
+                <span className="font-medium">View Post</span>
+            </Menu.Item>
+            <Menu.Item
+                key="edit"
+                icon={<EditOutlined className="text-blue-500" />}
+                onClick={() => setModal({
+                    name: "Update",
+                    data: record,
+                    state: true
+                })}
+                className="!rounded-lg hover:!bg-blue-50"
+            >
+                <span className="font-medium">Edit Post</span>
+            </Menu.Item>
+            <Menu.Divider className="!my-1" />
+            <Menu.Item
+                key="delete"
+                icon={<DeleteOutlined className="text-red-500" />}
+                onClick={() => handleDelete(record)}
+                className="!rounded-lg hover:!bg-red-50"
+            >
+                <span className="font-medium text-red-600">Delete Post</span>
+            </Menu.Item>
+        </Menu>
+    );
+
+    const columnOptions = [
+        { label: "Type", value: "type" },
+        { label: "Content", value: "content" },
+        { label: "Likes", value: "likesCount" },
+        { label: "Comments", value: "commentsCount" },
+        { label: "Status", value: "status" },
+        { label: "Created At", value: "createdAt" },
     ];
 
-    const columns = [
+    const visibilityMenu = (
+        <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
+            <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Toggle Columns
+            </div>
+            <Checkbox.Group
+                value={visibleColumns}
+                onChange={setVisibleColumns}
+                className="flex flex-col gap-2"
+            >
+                {columnOptions.map(opt => (
+                    <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
+                        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
+                            {opt.label}
+                        </Checkbox>
+                    </Menu.Item>
+                ))}
+            </Checkbox.Group>
+        </Menu>
+    );
+
+    const allColumns = [
         {
             title: "Type",
             dataIndex: "type",
             key: "type",
             width: 120,
             align: "center",
+            sorter: true,
             render: (type) => (
                 <span
-                    className="mr-0 text-[10px] px-2 py-1 rounded capitalize font-semibold text-white"
+                    className="px-3 py-1 rounded-full capitalize font-bold text-white shadow-sm text-[10px]"
                     style={{ backgroundColor: getTagColor(type) }}
                 >
                     {type || "GENERAL"}
@@ -141,43 +192,49 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             title: "Content",
             dataIndex: "content",
             key: "content",
-            width: 250,
+            width: 300,
             render: (content) => (
-                <div className="overflow-hidden whitespace-nowrap text-ellipsis" title={content}>
-                    {content?.substring(0, 80)}{content?.length > 80 ? '...' : ''}
-                </div>
+                <Tooltip title={content} placement="topLeft">
+                    <div className="text-slate-700 font-medium truncate cursor-help">
+                        {content?.substring(0, 100)}{content?.length > 100 ? '...' : ''}
+                    </div>
+                </Tooltip>
             ),
         },
         {
             title: "Likes",
             dataIndex: "likesCount",
             key: "likesCount",
-            width: 80,
+            width: 100,
             align: "center",
-            sorter: (a, b) => a.likesCount - b.likesCount,
+            sorter: true,
             render: (count, record) => (
-                <div
-                    className="font-semibold cursor-pointer hover:text-blue-600 transition-colors"
+                <Button
+                    type="text"
+                    icon={<LikeOutlined className="text-blue-500" />}
                     onClick={() => setLikesModal({ open: true, postId: record._id })}
+                    className="!rounded-lg hover:!bg-blue-50 !h-8 font-bold text-slate-600"
                 >
                     {count || 0}
-                </div>
+                </Button>
             ),
         },
         {
             title: "Comments",
             dataIndex: "commentsCount",
             key: "commentsCount",
-            width: 100,
+            width: 120,
             align: "center",
-            sorter: (a, b) => a.commentsCount - b.commentsCount,
+            sorter: true,
             render: (count, record) => (
-                <div
-                    className="font-semibold cursor-pointer hover:text-green-600 transition-colors"
+                <Button
+                    type="text"
+                    icon={<MessageOutlined className="text-emerald-500" />}
                     onClick={() => setCommentsModal({ open: true, postId: record._id })}
+                    className="!rounded-lg hover:!bg-emerald-50 !h-8 font-bold text-slate-600"
                 >
                     {count || 0}
-                </div>
+                </Button>
             ),
         },
         {
@@ -186,11 +243,13 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             key: "status",
             align: "center",
             width: 100,
+            sorter: true,
             render: (status, record) => (
                 <Switch
                     checked={status === "ACTIVE"}
                     onChange={() => handleStatus(record)}
-                    className={status === "ACTIVE" ? '' : 'ant-switch-red'}
+                    className={status === "ACTIVE" ? '!bg-[#006666]' : '!bg-slate-300'}
+                    size="small"
                 />
             ),
         },
@@ -198,72 +257,80 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 170,
-            render: (text) => <div className="whitespace-nowrap">{timestampToDateWithTime(text)}</div>,
+            width: 180,
+            sorter: true,
+            render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap">{timestampToDateWithTime(text)}</div>,
         },
         {
-            title: "Actions",
+            title: "",
             key: "actions",
-            width: 80,
-            align: "center",
+            width: 60,
+            align: "right",
             render: (record) => (
-                <div className="flex items-center justify-center">
-                    <CustomPopover
-                        triggerContent={
-                            <HiOutlineDotsHorizontal
-                                size={28}
-                                className="hover:text-secondary cursor-pointer"
-                            />
-                        }
-                        popoverContent={() => popoverContent(actionMenu, record)}
+                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+                    <Button
+                        type="text"
+                        icon={<MoreOutlined className="text-lg" />}
+                        className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
                     />
-                </div>
+                </Dropdown>
             ),
         }
     ];
 
+    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+
     return (
-        <>
-            <Table
-                rowKey="_id"
-                className="antd-table-custom rounded"
-                size="small"
-                tableLayout="fixed"
-                bordered
-                scroll={{ x: 1200 }}
-                loading={{
-                    spinning: postsList?.status === "loading",
-                    indicator: <Loading />,
-                }}
-                columns={columns}
-                dataSource={postsList?.data?.data}
-                pagination={false}
-                onChange={handleSorting}
-            />
+        <div className="space-y-4">
+            <div className="flex justify-end px-1">
+                <Dropdown overlay={visibilityMenu} trigger={['click']}>
+                    <Button
+                        icon={<SettingOutlined />}
+                        className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
+                    >
+                        Columns
+                    </Button>
+                </Dropdown>
+            </div>
 
-            <Pagination
-                className="flex justify-end mt-4"
-                pageSize={postsList?.data?.pagination?.itemsPerPage}
-                total={postsList?.data?.pagination?.totalItems}
-                current={postsList?.data?.pagination?.currentPage}
-                onChange={(page) => onChange({ currentPage: Number(page) })}
-            />
+            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+                <Table
+                    rowKey="_id"
+                    className="custom-ant-table"
+                    scroll={{ x: 1200, y: 600 }}
+                    sticky={true}
+                    loading={{
+                        spinning: postsList?.status === "loading",
+                        indicator: <TableSkeleton rows={5} columns={3} />,
+                    }}
+                    columns={activeColumns}
+                    dataSource={postsList?.data?.data}
+                    pagination={{
+                        current: postsList?.data?.pagination?.currentPage,
+                        pageSize: postsList?.data?.pagination?.itemsPerPage,
+                        total: postsList?.data?.pagination?.totalItems,
+                        showSizeChanger: true,
+                        className: "px-4 pb-4",
+                        onChange: (page, pageSize) => onChange({ currentPage: Number(page), itemsPerPage: pageSize }),
+                    }}
+                    onChange={handleSorting}
+                />
 
-            {/* View Modal */}
-            <ViewModal viewModal={viewModal} setViewModal={setViewModal} />
+                <ViewModal viewModal={viewModal} setViewModal={setViewModal} />
 
-            <ConfirmModal
-                isOpen={confirmModal.isOpen}
-                onClose={closeConfirmModal}
-                onConfirm={confirmModal.onConfirm}
-                title={confirmModal.title}
-                description={confirmModal.description}
-                confirmText={confirmModal.confirmText}
-                cancelText={confirmModal.cancelText}
-                variant={confirmModal.variant}
-                loading={manageStatusMutation.isLoading || deleteMutation.isLoading}
-            />
-        </>
+                <ConfirmModal
+                    isOpen={confirmModal.isOpen}
+                    onClose={closeConfirmModal}
+                    onConfirm={confirmModal.onConfirm}
+                    title={confirmModal.title}
+                    description={confirmModal.description}
+                    confirmText={confirmModal.confirmText}
+                    cancelText={confirmModal.cancelText}
+                    variant={confirmModal.variant}
+                    loading={manageStatusMutation.isLoading || deleteMutation.isLoading}
+                />
+            </div>
+        </div>
     );
 }
 

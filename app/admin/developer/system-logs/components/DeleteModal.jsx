@@ -6,6 +6,7 @@ import { Button, Modal } from "antd";
 import { FaExclamationTriangle, FaTrashAlt, FaTerminal } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
+import { FormSkeleton } from "@/components/shared/Skeletons";
 import { DELETE_SYSTEM_LOG } from "@/app/api/admin/developers/systemLogs";
 
 function DeleteSystemLogsModal({ isModalOpen, setIsModalOpen }) {
@@ -51,8 +52,12 @@ function DeleteSystemLogsModal({ isModalOpen, setIsModalOpen }) {
       closable={false}
       className="modern-modal"
     >
-      <div className="flex flex-col items-center text-center p-4">
-        {deleteMutation.status === "loading" && <Loading />}
+      <div className="flex flex-col items-center text-center p-4 w-full">
+        {deleteMutation.status === "loading" && (
+          <div className="w-full mb-6">
+            <FormSkeleton fields={2} />
+          </div>
+        )}
 
         {/* Warning Icon */}
         <div className="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center text-red-500 mb-6">

@@ -6,6 +6,7 @@ import { DELETE_POST, UPDATE_POST_STATUS } from "@/app/api/admin/posts";
 import PostCard from "./PostCard";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import Loading from "@/animations/homePageLoader";
+import { SkeletonPulse } from "@/components/shared/Skeletons";
 
 function PostCardList({
     modal,
@@ -131,8 +132,19 @@ function PostCardList({
 
     if (isLoading && posts.length === 0) {
         return (
-            <div className="flex items-center justify-center py-20">
-                <Loading />
+            <div className="grid grid-cols-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6">
+                {[...Array(8)].map((_, i) => (
+                    <div key={i} className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 h-[300px]">
+                        <SkeletonPulse className="h-10 w-10 rounded-full mb-4" />
+                        <SkeletonPulse className="h-4 w-3/4 mb-2" />
+                        <SkeletonPulse className="h-4 w-1/2 mb-6" />
+                        <SkeletonPulse className="h-32 w-full rounded-2xl mb-4" />
+                        <div className="flex justify-between mt-auto">
+                            <SkeletonPulse className="h-8 w-20 rounded-lg" />
+                            <SkeletonPulse className="h-8 w-20 rounded-lg" />
+                        </div>
+                    </div>
+                ))}
             </div>
         );
     }

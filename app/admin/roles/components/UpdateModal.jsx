@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { FaUserShield, FaAlignLeft } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
+import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_ROLE } from "@/app/api/admin/roles";
 import PermissionsSelector from "./PermissionsSelector";
@@ -79,49 +80,53 @@ function UpdateRoleModal({ modal, setModal }) {
                 >
                     {({ values, errors, touched, setFieldValue, handleChange, handleBlur, isSubmitting }) => (
                         <Form className="space-y-6">
-                            {updateRole.status === "loading" && <Loading />}
+                            {updateRole.status === "loading" ? (
+                                <FormSkeleton fields={4} />
+                            ) : (
+                                <>
+                                    <div className="modal-section">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Role Definition</p>
+                                        <div className="space-y-4">
+                                            <FormField
+                                                label="Role Title"
+                                                name="name"
+                                                placeholder="Role name"
+                                                required
+                                                icon={<FaUserShield className="opacity-30" />}
+                                            />
 
-                            <div className="modal-section">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Role Definition</p>
-                                <div className="space-y-4">
-                                    <FormField
-                                        label="Role Title"
-                                        name="name"
-                                        placeholder="Role name"
-                                        required
-                                        icon={<FaUserShield className="opacity-30" />}
-                                    />
+                                            <div className="flex flex-col gap-2">
+                                                <label className="text-slate-700 font-semibold text-sm">Role Description <span className="text-red-500">*</span></label>
+                                                <div className="relative">
+                                                    <FaAlignLeft className="absolute top-4 left-4 text-slate-300 pointer-events-none" />
+                                                    <Input.TextArea
+                                                        name="description"
+                                                        placeholder="Explain what this role allows..."
+                                                        value={values.description}
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        rows={3}
+                                                        className="!pl-11 !rounded-2xl !border-2 !border-slate-100 focus:!border-teal-500 !py-3"
+                                                    />
+                                                </div>
+                                                {touched.description && errors.description && (
+                                                    <div className="text-red-500 text-xs font-medium">{errors.description}</div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-slate-700 font-semibold text-sm">Role Description <span className="text-red-500">*</span></label>
-                                        <div className="relative">
-                                            <FaAlignLeft className="absolute top-4 left-4 text-slate-300 pointer-events-none" />
-                                            <Input.TextArea
-                                                name="description"
-                                                placeholder="Explain what this role allows..."
-                                                value={values.description}
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                rows={3}
-                                                className="!pl-11 !rounded-2xl !border-2 !border-slate-100 focus:!border-teal-500 !py-3"
+                                    <div className="modal-section !mb-0">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Access Permissions</p>
+                                        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                            <PermissionsSelector
+                                                selectedPermissions={values.permissions}
+                                                onChange={(newPermissions) => setFieldValue("permissions", newPermissions)}
                                             />
                                         </div>
-                                        {touched.description && errors.description && (
-                                            <div className="text-red-500 text-xs font-medium">{errors.description}</div>
-                                        )}
                                     </div>
-                                </div>
-                            </div>
-
-                            <div className="modal-section !mb-0">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Access Permissions</p>
-                                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                                    <PermissionsSelector
-                                        selectedPermissions={values.permissions}
-                                        onChange={(newPermissions) => setFieldValue("permissions", newPermissions)}
-                                    />
-                                </div>
-                            </div>
+                                </>
+                            )}
 
                             <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
                                 <Button

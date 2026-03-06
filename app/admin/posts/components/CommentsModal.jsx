@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import { FaTrash, FaCommentDots } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Loading from "@/animations/homePageLoader";
+import { FormSkeleton } from "@/components/shared/Skeletons";
 import { GET_POST_COMMENTS, DELETE_POST_COMMENT } from "@/app/api/admin/posts";
 import { timestampToDateWithTime } from "@/utils/date";
 
@@ -52,8 +53,8 @@ function CommentsModal({ isOpen, onClose, postId }) {
             <div className="p-2 pt-4">
                 <div className="max-h-[550px] overflow-y-auto pr-2 custom-scrollbar">
                     {isLoading ? (
-                        <div className="py-24 flex justify-center">
-                            <Loading />
+                        <div className="py-4">
+                            <FormSkeleton fields={5} />
                         </div>
                     ) : error ? (
                         <div className="py-20 text-center text-red-500 bg-red-50 rounded-2xl border border-red-100 p-8">

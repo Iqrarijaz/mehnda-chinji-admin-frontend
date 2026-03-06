@@ -112,13 +112,13 @@ export default function PostsPage() {
                     <div className="hidden md:flex items-center bg-gray-100 rounded-lg p-1">
                         <button
                             onClick={() => setViewMode("cards")}
-                            className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm transition-colors ${viewMode === "cards" ? "bg-[#0F172A] text-white" : "text-gray-600 hover:text-gray-900"}`}
+                            className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm transition-colors ${viewMode === "cards" ? "bg-[#006666] text-white shadow-lg shadow-teal-900/10" : "text-gray-600 hover:text-gray-900"}`}
                         >
                             <FaThLarge size={12} /> Cards
                         </button>
                         <button
                             onClick={() => setViewMode("table")}
-                            className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm transition-colors ${viewMode === "table" ? "bg-[#0F172A] text-white" : "text-gray-600 hover:text-gray-900"}`}
+                            className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm transition-colors ${viewMode === "table" ? "bg-[#006666] text-white shadow-lg shadow-teal-900/10" : "text-gray-600 hover:text-gray-900"}`}
                         >
                             <FaTable size={12} /> Table
                         </button>
@@ -129,10 +129,10 @@ export default function PostsPage() {
                 <div className="flex md:hidden gap-2">
                     <button
                         onClick={() => setFilterModalOpen(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white rounded-lg hover:bg-[#1e293b] transition-colors relative"
+                        className="flex items-center gap-2 px-4 py-2 bg-[#006666] text-white rounded-lg hover:bg-[#004d4d] transition-colors relative shadow-lg shadow-teal-900/10"
                     >
                         <FaFilter size={14} />
-                        {hasActiveFilters && <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full" />}
+                        {hasActiveFilters && <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white" />}
                     </button>
                     <button
                         onClick={() => setViewMode(viewMode === "cards" ? "table" : "cards")}

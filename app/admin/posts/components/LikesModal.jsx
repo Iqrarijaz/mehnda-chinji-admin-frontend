@@ -4,6 +4,7 @@ import { Modal, Table, Avatar } from "antd";
 import { useQuery } from "react-query";
 import { FaHeart } from "react-icons/fa";
 import Loading from "@/animations/homePageLoader";
+import { FormSkeleton } from "@/components/shared/Skeletons";
 import { GET_POST_LIKES } from "@/app/api/admin/posts";
 import { timestampToDateWithTime } from "@/utils/date";
 
@@ -72,8 +73,8 @@ function LikesModal({ isOpen, onClose, postId }) {
         >
             <div className="p-2">
                 {isLoading ? (
-                    <div className="py-20 flex justify-center">
-                        <Loading />
+                    <div className="py-4">
+                        <FormSkeleton fields={5} />
                     </div>
                 ) : error ? (
                     <div className="py-20 text-center flex flex-col items-center gap-2">

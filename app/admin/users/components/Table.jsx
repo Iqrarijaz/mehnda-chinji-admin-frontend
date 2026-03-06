@@ -1,190 +1,214 @@
 "use client";
-import { Pagination, Table, Tooltip, Switch, Tag } from "antd";
-import React, { useState } from "react";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { FaEdit, FaTrash, FaKey } from "react-icons/fa";
-import Loading from "@/animations/homePageLoader";
+import React from "react";
+import { Table, Switch, Tag, Avatar, Menu, Dropdown, Button } from "antd";
+import {
+    EditOutlined,
+    DeleteOutlined,
+    MoreOutlined,
+    LockOutlined,
+    SettingOutlined
+} from "@ant-design/icons";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { CustomPopover } from "@/components/popHover";
-import { timestampToDate } from "@/utils/date";
-import { DELETE_USER, UPDATE_USER } from "@/app/api/admin/users";
-import { popoverContent } from "@/components/popHover/popHoverContent";
-import { getTagColor } from "@/utils/tagColor";
+import { HiOutlineUsers } from "react-icons/hi2";
+import { Checkbox } from "antd";
+
+import Loading from "@/animations/homePageLoader";
 import ConfirmModal from "@/components/shared/ConfirmModal";
-import { UPDATE_USER_STATUS } from "@/app/api/admin/admin-users"; // Borrowing from admin-users if applicable or adding to users
+import { TableSkeleton } from "@/components/shared/Skeletons";
+import EmptyState from "@/components/shared/EmptyState";
+import { DELETE_USER, UPDATE_USER } from "@/app/api/admin/users";
+import { timestampToDate } from "@/utils/date";
 
-function UsersTable({ modal, setModal, usersList, onChange, setFilters }) {
+const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilters }) => {
     const queryClient = useQueryClient();
-    const [confirmModal, setConfirmModal] = useState({
-        isOpen: false,
-        title: "",
-        description: "",
+    const [confirmModal, setConfirmModal] = React.useState({
+        state: false,
         onConfirm: null,
-        variant: "primary",
-        confirmText: "Confirm",
-        cancelText: "Cancel"
+        title: "",
+        content: ""
     });
 
-    const closeConfirmModal = () => {
-        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-    };
+    // Column Visibility State
+    const [visibleColumns, setVisibleColumns] = React.useState(["user", "role", "gender", "status", "actions"]);
 
-    // Status mutation
-    const manageStatusMutation = useMutation({
-        mutationFn: async (data) => {
-            // If we don't have a specific UPDATE_USER_STATUS, we can use UPDATE_USER
-            return await UPDATE_USER(data);
-        },
+    const handleSorting = React.useCallback((pagination, filters, sorter) => {
+        onChange({
+            sortingKey: sorter.field || "_id",
+            sortOrder: sorter.order === "ascend" ? 1 : -1,
+            page: pagination.current,
+            limit: pagination.pageSize,
+        });
+    }, [onChange]);
+
+    const handleStatus = useMutation({
+        mutationKey: ["updateUserStatus"],
+        mutationFn: (payload) => UPDATE_USER(payload),
         onSuccess: (data) => {
-            queryClient.invalidateQueries("usersList");
-            queryClient.invalidateQueries("usersStatusCounts");
             toast.success(data?.message || "Status updated successfully");
-            closeConfirmModal();
-        },
-        onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to update status");
-            closeConfirmModal();
-        },
-    });
-
-    const handleStatus = (record) => {
-        const newStatus = record.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
-        setConfirmModal({
-            isOpen: true,
-            title: 'Confirm Status Change',
-            description: `Are you sure you want to ${record.status === "ACTIVE" ? 'deactivate' : 'activate'} "${record.name}"?`,
-            confirmText: 'Yes, Change',
-            cancelText: 'No, Keep',
-            variant: 'primary',
-            onConfirm: () => manageStatusMutation.mutate({
-                _id: record._id,
-                status: newStatus
-            })
-        });
-    };
-
-    // Delete mutation
-    const deleteMutation = useMutation({
-        mutationFn: DELETE_USER,
-        onSuccess: (data) => {
             queryClient.invalidateQueries("usersList");
             queryClient.invalidateQueries("usersStatusCounts");
-            toast.success(data?.message);
-            closeConfirmModal();
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to delete user");
-            closeConfirmModal();
+            toast.error(error?.response?.data?.message || "Something went wrong");
         },
     });
 
-    const handleDelete = (data) => {
-        setConfirmModal({
-            isOpen: true,
-            title: 'Confirm Deletion',
-            description: 'Are you sure you want to delete this user? This action cannot be undone.',
-            confirmText: 'Yes, Delete',
-            cancelText: 'Cancel',
-            variant: 'danger',
-            onConfirm: () => deleteMutation.mutate({
-                _id: data._id,
-            })
-        });
-    };
+    const handleDelete = useMutation({
+        mutationKey: ["deleteUser"],
+        mutationFn: (id) => DELETE_USER({ _id: id }),
+        onSuccess: (data) => {
+            toast.success(data?.message || "User deleted successfully");
+            queryClient.invalidateQueries("usersList");
+            queryClient.invalidateQueries("usersStatusCounts");
+            setConfirmModal({ state: false, onConfirm: null, title: "", content: "" });
+        },
+        onError: (error) => {
+            toast.error(error?.response?.data?.message || "Something went wrong");
+        },
+    });
 
-    const handleSorting = (pagination, filters, sorter) => {
-        setFilters(prev => ({
-            ...prev,
-            sortingKey: sorter.field,
-            sortOrder: sorter.order === "ascend" ? 1 : -1
-        }));
-    };
+    const closeConfirmModal = React.useCallback(() => {
+        setConfirmModal({ state: false, onConfirm: null, title: "", content: "" });
+    }, []);
 
-    const actionMenu = [
-        {
-            heading: "Edit",
-            icon: <FaEdit size={16} />,
-            handleFunction: (record) => setModal({
-                name: "Update",
-                data: record,
-                state: true
-            }),
-        },
-        {
-            heading: "Reset Password",
-            icon: <FaKey size={16} />,
-            handleFunction: (record) => setModal({
-                name: "ResetPassword",
-                data: record,
-                state: true
-            }),
-        },
-        {
-            heading: "Delete",
-            icon: <FaTrash size={16} />,
-            handleFunction: (record) => handleDelete(record),
-        },
+    const actionMenu = React.useMemo(() => (record) => (
+        <Menu className="!rounded-xl !p-2 !min-w-[140px] shadow-xl border border-slate-100">
+            <Menu.Item
+                key="edit"
+                icon={<EditOutlined className="text-blue-500" />}
+                onClick={() => setModal({ name: "Update", data: record, state: true })}
+                className="!rounded-lg hover:!bg-blue-50"
+            >
+                <span className="font-medium">Edit Details</span>
+            </Menu.Item>
+
+            <Menu.Item
+                key="reset"
+                icon={<LockOutlined className="text-orange-500" />}
+                onClick={() => setModal({ name: "ResetPassword", data: record, state: true })}
+                className="!rounded-lg hover:!bg-orange-50"
+            >
+                <span className="font-medium">Reset Password</span>
+            </Menu.Item>
+
+            <Menu.Divider className="!my-1" />
+
+            <Menu.Item
+                key="delete"
+                icon={<DeleteOutlined className="text-red-500" />}
+                onClick={() => setConfirmModal({
+                    state: true,
+                    title: "Delete User",
+                    content: `Are you sure you want to delete ${record.name}? This action cannot be undone.`,
+                    onConfirm: () => handleDelete.mutate(record._id)
+                })}
+                className="!rounded-lg hover:!bg-red-50"
+            >
+                <span className="font-medium text-red-600">Delete User</span>
+            </Menu.Item>
+        </Menu>
+    ), [setModal, handleDelete]);
+
+    const columnOptions = [
+        { label: "User Info", value: "user" },
+        { label: "Role", value: "role" },
+        { label: "Gender", value: "gender" },
+        { label: "Contact", value: "phone" },
+        { label: "Status", value: "status" },
+        { label: "Created At", value: "createdAt" },
     ];
 
-    const columns = [
+    const visibilityMenu = (
+        <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
+            <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Toggle Columns
+            </div>
+            <Checkbox.Group
+                value={visibleColumns}
+                onChange={setVisibleColumns}
+                className="flex flex-col gap-2"
+            >
+                {columnOptions.map(opt => (
+                    <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
+                        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
+                            {opt.label}
+                        </Checkbox>
+                    </Menu.Item>
+                ))}
+            </Checkbox.Group>
+        </Menu>
+    );
+
+    const allColumns = React.useMemo(() => [
         {
-            title: "Name",
+            title: "User Information",
+            key: "user",
             dataIndex: "name",
-            key: "name",
             sorter: true,
-            width: 150,
-            render: (name) => (
-                <div className="capitalize overflow-hidden whitespace-nowrap text-ellipsis">
-                    {name}
+            render: (_, record) => (
+                <div className="flex items-center gap-3">
+                    <Avatar
+                        size={42}
+                        src={record.image}
+                        className="bg-slate-100 text-[#006666] font-bold border-2 border-white shadow-sm"
+                    >
+                        {record.name?.charAt(0)}
+                    </Avatar>
+                    <div className="flex flex-col">
+                        <span className="font-bold text-slate-800">{record.name}</span>
+                        <span className="text-xs text-slate-500 font-medium">{record.email}</span>
+                    </div>
                 </div>
             ),
         },
         {
-            title: "Email",
-            dataIndex: "email",
-            key: "email",
+            title: "Role",
+            key: "role",
+            dataIndex: "role",
             sorter: true,
-            width: 200,
-            render: (email) => (
-                <div className="overflow-hidden whitespace-nowrap text-ellipsis">
-                    {email}
-                </div>
+            width: 160,
+            render: (role) => (
+                <Tag className="!rounded-full !px-3 font-bold !border-none !bg-slate-100 !text-slate-600 text-[10px]">
+                    {role}
+                </Tag>
             ),
-        },
-        {
-            title: "Phone",
-            dataIndex: "phone",
-            key: "phone",
-            width: 150,
-            render: (phone) => <span>{phone || "-"}</span>,
         },
         {
             title: "Gender",
-            dataIndex: "gender",
             key: "gender",
-            width: 100,
-            align: "center",
+            dataIndex: "gender",
+            sorter: true,
+            width: 160,
             render: (gender) => (
-                <span
-                    className="mr-0 text-[10px] px-2 py-1 rounded capitalize font-semibold text-white"
-                    style={{ backgroundColor: getTagColor(gender) }}
-                >
-                    {gender || "N/A"}
+                <span className="text-[11px] text-slate-500 font-semibold px-1 capitalize">
+                    {gender || "—"}
                 </span>
             ),
+        },
+        {
+            title: "Contact",
+            dataIndex: "phone",
+            key: "phone",
+            sorter: true,
+            render: (phone) => <span className="font-medium text-slate-600">{phone || "N/A"}</span>,
         },
         {
             title: "Status",
             dataIndex: "status",
             key: "status",
-            align: "center",
-            width: 100,
+            width: 160,
             render: (status, record) => (
                 <Switch
                     checked={status === "ACTIVE"}
-                    onChange={() => handleStatus(record)}
-                    className={status === "ACTIVE" ? '' : 'ant-switch-red'}
+                    onChange={(checked) =>
+                        handleStatus.mutate({
+                            _id: record._id,
+                            status: checked ? "ACTIVE" : "INACTIVE",
+                        })
+                    }
+                    className={status === "ACTIVE" ? "!bg-[#006666]" : "!bg-slate-300"}
+                    size="small"
                 />
             ),
         },
@@ -192,70 +216,92 @@ function UsersTable({ modal, setModal, usersList, onChange, setFilters }) {
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 150,
-            render: (text) => <div className="whitespace-nowrap">{timestampToDate(text)}</div>,
+            sorter: true,
+            render: (date) => <span className="text-slate-500 font-medium">{timestampToDate(date)}</span>,
         },
         {
-            title: "Actions",
+            title: "",
             key: "actions",
-            width: 80,
-            align: "center",
-            render: (record) => (
-                <div className="flex items-center justify-center">
-                    <CustomPopover
-                        triggerContent={
-                            <HiOutlineDotsHorizontal
-                                size={28}
-                                className="hover:text-secondary cursor-pointer"
-                            />
-                        }
-                        popoverContent={() => popoverContent(actionMenu, record)}
+            align: "right",
+            width: 60,
+            render: (_, record) => (
+                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+                    <Button
+                        type="text"
+                        icon={<MoreOutlined className="text-lg" />}
+                        className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
                     />
-                </div>
+                </Dropdown>
             ),
-        }
-    ];
+        },
+    ], [actionMenu, handleStatus]);
+
+    const activeColumns = React.useMemo(() =>
+        allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
+        [allColumns, visibleColumns]);
+
+
+    if (!usersList.data?.data?.docs || usersList.data.data.docs.length === 0) {
+        return (
+            <EmptyState
+                icon={<HiOutlineUsers className="w-12 h-12 text-teal-100" />}
+                title="No users found"
+                description="We couldn't find any users matching your criteria. Try adjusting your filters or search."
+                actionTitle="Add New User"
+                onAction={() => setModal({ name: "Add", data: null, state: true })}
+                className="my-8"
+            />
+        );
+    }
 
     return (
-        <>
-            <Table
-                rowKey="_id"
-                className="antd-table-custom rounded"
-                size="small"
-                tableLayout="fixed"
-                bordered
-                scroll={{ x: 800 }}
-                loading={{
-                    spinning: usersList?.isLoading,
-                    indicator: <Loading />,
-                }}
-                columns={columns}
-                dataSource={usersList?.data?.data?.docs}
-                pagination={false}
-                onChange={handleSorting}
-            />
+        <div className="space-y-4">
+            <div className="flex justify-end px-1">
+                <Dropdown overlay={visibilityMenu} trigger={['click']}>
+                    <Button
+                        icon={<SettingOutlined />}
+                        className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
+                    >
+                        Columns
+                    </Button>
+                </Dropdown>
+            </div>
 
-            <Pagination
-                className="flex justify-end mt-4"
-                pageSize={usersList?.data?.data?.limit}
-                total={usersList?.data?.data?.totalDocs}
-                current={usersList?.data?.data?.page}
-                onChange={(page) => onChange({ page: Number(page) })}
-            />
+            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+                <Table
+                    columns={activeColumns}
+                    dataSource={usersList.data?.data?.docs}
+                    loading={{
+                        spinning: usersList.isLoading,
+                        indicator: <TableSkeleton rows={8} columns={5} />
+                    }}
+                    pagination={{
+                        current: usersList.data?.data?.page,
+                        pageSize: usersList.data?.data?.limit,
+                        total: usersList.data?.data?.totalDocs,
+                        showSizeChanger: true,
+                        className: "px-4 pb-4",
+                    }}
+                    onChange={handleSorting}
+                    rowKey="_id"
+                    scroll={{ x: 800, y: 600 }}
+                    sticky={true}
+                    className="custom-ant-table"
+                />
+                {(handleStatus.isLoading || handleDelete.isLoading) && <Loading />}
 
-            <ConfirmModal
-                isOpen={confirmModal.isOpen}
-                onClose={closeConfirmModal}
-                onConfirm={confirmModal.onConfirm}
-                title={confirmModal.title}
-                description={confirmModal.description}
-                confirmText={confirmModal.confirmText}
-                cancelText={confirmModal.cancelText}
-                variant={confirmModal.variant}
-                loading={deleteMutation.isLoading || manageStatusMutation.isLoading}
-            />
-        </>
+                <ConfirmModal
+                    isOpen={confirmModal.state}
+                    onConfirm={confirmModal.onConfirm}
+                    onClose={closeConfirmModal}
+                    title={confirmModal.title}
+                    description={confirmModal.content}
+                    loading={handleDelete.isLoading}
+                    variant="danger"
+                />
+            </div>
+        </div>
     );
-}
+});
 
 export default UsersTable;

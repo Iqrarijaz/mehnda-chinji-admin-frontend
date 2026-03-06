@@ -6,7 +6,7 @@ import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { cn } from "@/utils/helper";
 import MenuList from "./MenuList";
 
-const Sidebar = ({ open, setOpen, isMobile }) => {
+const Sidebar = React.memo(({ open, setOpen, isMobile }) => {
     const pathname = usePathname();
     const [expandedMenus, setExpandedMenus] = useState({});
 
@@ -21,11 +21,11 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
         });
     }, [pathname]);
 
-    const toggleSubmenu = (menuName) => {
+    const toggleSubmenu = React.useCallback((menuName) => {
         setExpandedMenus(prev => ({ ...prev, [menuName]: !prev[menuName] }));
-    };
+    }, []);
 
-    const hasPermission = (item) => {
+    const hasPermission = React.useCallback((item) => {
         try {
             const userData = JSON.parse(localStorage.getItem("userData") || "{}");
             const user = userData?.adminData || userData;
@@ -35,10 +35,12 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
         } catch (e) {
             return false;
         }
-    };
+    }, []);
 
-    const isActive = (link) => pathname === link;
-    const isSubMenuActive = (subItems) => subItems?.some(sub => pathname.startsWith(sub.link));
+    const isActive = React.useCallback((link) => pathname === link, [pathname]);
+    const isSubMenuActive = React.useCallback((subItems) => subItems?.some(sub => pathname.startsWith(sub.link)), [pathname]);
+
+    const filteredMenu = React.useMemo(() => MenuList.filter(hasPermission), [hasPermission]);
 
     const renderMenuItem = (item) => {
         const hasSubItems = item.subItems && item.subItems.length > 0;
@@ -120,7 +122,7 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
                 </Link>
             </div>
             <nav className="flex-1 p-3 space-y-1 overflow-y-auto custom-scrollbar">
-                {MenuList.filter(hasPermission).map(renderMenuItem)}
+                {filteredMenu.map(renderMenuItem)}
             </nav>
             <div className="p-4 border-t">
                 <div className={cn("flex items-center gap-3", !open && "justify-center")}>
@@ -135,6 +137,7 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
             </div>
         </aside>
     );
-};
+});
 
 export default Sidebar;
+

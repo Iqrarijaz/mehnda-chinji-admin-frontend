@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { FaLock } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
+import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { RESET_USER_PASSWORD } from "@/app/api/admin/users";
 
@@ -74,29 +75,33 @@ function ResetPasswordModal({ modal, setModal }) {
                 >
                     {({ isSubmitting }) => (
                         <Form className="space-y-6">
-                            {resetPassword.status === "loading" && <Loading />}
+                            {resetPassword.status === "loading" ? (
+                                <FormSkeleton fields={2} />
+                            ) : (
+                                <>
+                                    <p className="text-slate-500 text-sm bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                        Enter a new secure password for <strong>{modal?.data?.name || "this user"}</strong>.
+                                        Make sure it's at least 6 characters long.
+                                    </p>
 
-                            <p className="text-slate-500 text-sm bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                Enter a new secure password for <strong>{modal?.data?.name || "this user"}</strong>.
-                                Make sure it's at least 6 characters long.
-                            </p>
-
-                            <div className="space-y-5">
-                                <FormField
-                                    label="New Password"
-                                    name="password"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    required
-                                />
-                                <FormField
-                                    label="Confirm New Password"
-                                    name="confirmPassword"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    required
-                                />
-                            </div>
+                                    <div className="space-y-5">
+                                        <FormField
+                                            label="New Password"
+                                            name="password"
+                                            type="password"
+                                            placeholder="••••••••"
+                                            required
+                                        />
+                                        <FormField
+                                            label="Confirm New Password"
+                                            name="confirmPassword"
+                                            type="password"
+                                            placeholder="••••••••"
+                                            required
+                                        />
+                                    </div>
+                                </>
+                            )}
 
                             <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
                                 <Button

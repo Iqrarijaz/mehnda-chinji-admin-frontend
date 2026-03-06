@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { FaStore, FaMapMarkerAlt, FaPhoneAlt, FaTag, FaCheckCircle } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
+import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_BUSINESS } from "@/app/api/admin/business";
 
@@ -88,50 +89,54 @@ function UpdateBusinessModal({ modal, setModal }) {
                 >
                     {({ values, setFieldValue, isSubmitting }) => (
                         <Form className="space-y-6">
-                            {updateMutation.status === "loading" && <Loading />}
-
-                            {/* Status & Identity Section */}
-                            <div className="modal-section">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Core Information</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div className="md:col-span-1">
-                                        <FormField label="Business Name" name="name" placeholder="Business name" required />
-                                    </div>
-                                    <div className="md:col-span-1">
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-slate-700 font-semibold text-sm">Operation Status</label>
-                                            <Select
-                                                value={values.status}
-                                                onChange={(value) => setFieldValue("status", value)}
-                                                className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
-                                                size="large"
-                                            >
-                                                <Option value="PENDING">Pending Approval</Option>
-                                                <Option value="ACTIVE">Active / Verified</Option>
-                                                <Option value="REJECTED">Rejected</Option>
-                                                <Option value="SUSPENDED">Suspended</Option>
-                                            </Select>
+                            {updateMutation.status === "loading" ? (
+                                <FormSkeleton fields={7} />
+                            ) : (
+                                <>
+                                    {/* Status & Identity Section */}
+                                    <div className="modal-section">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Core Information</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                            <div className="md:col-span-1">
+                                                <FormField label="Business Name" name="name" placeholder="Business name" required />
+                                            </div>
+                                            <div className="md:col-span-1">
+                                                <div className="flex flex-col gap-2">
+                                                    <label className="text-slate-700 font-semibold text-sm">Operation Status</label>
+                                                    <Select
+                                                        value={values.status}
+                                                        onChange={(value) => setFieldValue("status", value)}
+                                                        className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
+                                                        size="large"
+                                                    >
+                                                        <Option value="PENDING">Pending Approval</Option>
+                                                        <Option value="ACTIVE">Active / Verified</Option>
+                                                        <Option value="REJECTED">Rejected</Option>
+                                                        <Option value="SUSPENDED">Suspended</Option>
+                                                    </Select>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            {/* Details Section */}
-                            <div className="modal-section">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Categorization & Contact</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <FormField label="Category (English)" name="categoryEn" placeholder="Category" required icon={<FaTag className="opacity-30" />} />
-                                    <FormField label="Category (Urdu)" name="categoryUr" placeholder="Category" icon={<FaTag className="opacity-30" />} />
-                                    <FormField label="Primary Phone" name="phone" placeholder="Phone number" required icon={<FaPhoneAlt className="opacity-30" />} />
-                                    <FormField label="Physical Address" name="address" placeholder="Address" required icon={<FaMapMarkerAlt className="opacity-30" />} />
-                                </div>
-                            </div>
+                                    {/* Details Section */}
+                                    <div className="modal-section">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Categorization & Contact</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                            <FormField label="Category (English)" name="categoryEn" placeholder="Category" required icon={<FaTag className="opacity-30" />} />
+                                            <FormField label="Category (Urdu)" name="categoryUr" placeholder="Category" icon={<FaTag className="opacity-30" />} />
+                                            <FormField label="Primary Phone" name="phone" placeholder="Phone number" required icon={<FaPhoneAlt className="opacity-30" />} />
+                                            <FormField label="Physical Address" name="address" placeholder="Address" required icon={<FaMapMarkerAlt className="opacity-30" />} />
+                                        </div>
+                                    </div>
 
-                            {/* Description Section */}
-                            <div className="modal-section !mb-0">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Description</p>
-                                <FormField label="Business Details" name="description" placeholder="About the business..." type="textarea" />
-                            </div>
+                                    {/* Description Section */}
+                                    <div className="modal-section !mb-0">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Description</p>
+                                        <FormField label="Business Details" name="description" placeholder="About the business..." type="textarea" />
+                                    </div>
+                                </>
+                            )}
 
                             {/* Modal Footer Actions */}
                             <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">

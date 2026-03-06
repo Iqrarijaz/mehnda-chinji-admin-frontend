@@ -14,6 +14,8 @@ import { useDebounce } from "@/hooks/useDebounce";
 import StatCard from "@/components/shared/StatCard";
 import InnerPageCard from "@/components/layout/InnerPageCard";
 
+import { StatCardSkeleton } from "@/components/shared/Skeletons";
+
 export default function UsersPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
     const [filters, setFilters] = useState({
@@ -35,45 +37,53 @@ export default function UsersPage() {
         onError: () => toast.error("Failed to fetch users."),
     });
 
-    const { data: countsData } = useQuery({
+    const { data: countsData, isLoading: countsLoading } = useQuery({
         queryKey: ["usersStatusCounts"],
         queryFn: GET_USER_STATUS_COUNTS,
     });
 
-    const counts = countsData?.data || { active: 0, inactive: 0, male: 0, female: 0 };
+    const counts = React.useMemo(() =>
+        countsData?.data || { active: 0, inactive: 0, male: 0, female: 0 },
+        [countsData]);
 
-    const statCards = [
+    const statCards = React.useMemo(() => [
         { label: "Active", key: "ACTIVE", count: counts.active, color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0", field: "status" },
         { label: "Inactive", key: "INACTIVE", count: counts.inactive, color: "#dc2626", bg: "#fef2f2", border: "#fecaca", field: "status" },
         { label: "Male", key: "MALE", count: counts.male, color: "#2563eb", bg: "#eff6ff", border: "#bfdbfe", field: "gender" },
         { label: "Female", key: "FEMALE", count: counts.female, color: "#db2777", bg: "#fdf2f8", border: "#f9a8d4", field: "gender" },
-    ];
+    ], [counts]);
 
-    const onChange = (data) => setFilters((prev) => ({ ...prev, ...data }));
+    const onChange = React.useCallback((data) => setFilters((prev) => ({ ...prev, ...data })), []);
+
+    const handleStatClick = React.useCallback((field, key) => {
+        setFilters((prev) => ({
+            ...prev,
+            [field]: prev[field] === key ? null : key,
+            page: 1,
+        }));
+    }, []);
 
     return (
         <InnerPageCard title="App Users">
 
             {/* Status Count Cards */}
             <div className="flex gap-3 mb-5" style={{ flexWrap: "wrap" }}>
-                {statCards.map((card) => (
-                    <StatCard
-                        key={card.key}
-                        title={card.label}
-                        count={card.count}
-                        color={card.color}
-                        bg={card.bg}
-                        border={card.border}
-                        active={filters[card.field] === card.key}
-                        onClick={() =>
-                            setFilters((prev) => ({
-                                ...prev,
-                                [card.field]: prev[card.field] === card.key ? null : card.key,
-                                page: 1,
-                            }))
-                        }
-                    />
-                ))}
+                {countsLoading ? (
+                    Array.from({ length: 4 }).map((_, i) => <StatCardSkeleton key={i} />)
+                ) : (
+                    statCards.map((card) => (
+                        <StatCard
+                            key={card.key}
+                            title={card.label}
+                            count={card.count}
+                            color={card.color}
+                            bg={card.bg}
+                            border={card.border}
+                            active={filters[card.field] === card.key}
+                            onClick={() => handleStatClick(card.field, card.key)}
+                        />
+                    ))
+                )}
             </div>
 
             <div className="flex justify-end mb-4 gap-4 items-center">

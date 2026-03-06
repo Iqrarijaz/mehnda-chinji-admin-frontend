@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { FaStore, FaMapMarkerAlt, FaPhoneAlt, FaTag } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
+import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { CREATE_BUSINESS } from "@/app/api/admin/business";
 
@@ -92,37 +93,41 @@ function AddBusinessModal({ modal, setModal }) {
                 >
                     {({ isSubmitting }) => (
                         <Form className="space-y-6">
-                            {createMutation.status === "loading" && <Loading />}
-
-                            {/* Basic Info Section */}
-                            <div className="modal-section">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Identity & Ownership</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div className="md:col-span-2">
-                                        <FormField label="Business Name" name="name" placeholder="e.g. Al-Falah General Store" required />
+                            {createMutation.status === "loading" ? (
+                                <FormSkeleton fields={7} />
+                            ) : (
+                                <>
+                                    {/* Basic Info Section */}
+                                    <div className="modal-section">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Identity & Ownership</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                            <div className="md:col-span-2">
+                                                <FormField label="Business Name" name="name" placeholder="e.g. Al-Falah General Store" required />
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <FormField label="Owner User ID" name="userId" placeholder="MongoDB ObjectId of the user" required />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="md:col-span-2">
-                                        <FormField label="Owner User ID" name="userId" placeholder="MongoDB ObjectId of the user" required />
+
+                                    {/* Details Section */}
+                                    <div className="modal-section">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Categorization & Contact</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                            <FormField label="Category (English)" name="categoryEn" placeholder="e.g. Retail" required icon={<FaTag className="opacity-30" />} />
+                                            <FormField label="Category (Urdu)" name="categoryUr" placeholder="e.g. ریٹیل" icon={<FaTag className="opacity-30" />} />
+                                            <FormField label="Contact Phone" name="phone" placeholder="+92 300 1234567" required icon={<FaPhoneAlt className="opacity-30" />} />
+                                            <FormField label="Business Address" name="address" placeholder="123 Street, City" required icon={<FaMapMarkerAlt className="opacity-30" />} />
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            {/* Details Section */}
-                            <div className="modal-section">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Categorization & Contact</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <FormField label="Category (English)" name="categoryEn" placeholder="e.g. Retail" required icon={<FaTag className="opacity-30" />} />
-                                    <FormField label="Category (Urdu)" name="categoryUr" placeholder="e.g. ریٹیل" icon={<FaTag className="opacity-30" />} />
-                                    <FormField label="Contact Phone" name="phone" placeholder="+92 300 1234567" required icon={<FaPhoneAlt className="opacity-30" />} />
-                                    <FormField label="Business Address" name="address" placeholder="123 Street, City" required icon={<FaMapMarkerAlt className="opacity-30" />} />
-                                </div>
-                            </div>
-
-                            {/* Description Section */}
-                            <div className="modal-section !mb-0">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Additional Information</p>
-                                <FormField label="Description" name="description" placeholder="Brief about what this business does..." type="textarea" />
-                            </div>
+                                    {/* Description Section */}
+                                    <div className="modal-section !mb-0">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Additional Information</p>
+                                        <FormField label="Description" name="description" placeholder="Brief about what this business does..." type="textarea" />
+                                    </div>
+                                </>
+                            )}
 
                             {/* Modal Footer Actions */}
                             <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">

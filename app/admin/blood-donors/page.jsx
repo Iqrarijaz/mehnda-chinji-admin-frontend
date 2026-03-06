@@ -12,6 +12,7 @@ import { GET_BLOOD_DONORS, GET_BLOOD_DONOR_STATUS_COUNTS } from "@/app/api/admin
 import { useDebounce } from "@/hooks/useDebounce";
 import StatCard from "@/components/shared/StatCard";
 import InnerPageCard from "@/components/layout/InnerPageCard";
+import { StatCardSkeleton } from "@/components/shared/Skeletons";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -34,7 +35,7 @@ export default function BloodDonorsPage() {
         keepPreviousData: true,
     });
 
-    const { data: countsData } = useQuery({
+    const { data: countsData, isLoading: countsLoading } = useQuery({
         queryKey: ["bloodDonorsStatusCounts"],
         queryFn: GET_BLOOD_DONOR_STATUS_COUNTS,
     });
@@ -54,24 +55,28 @@ export default function BloodDonorsPage() {
 
             {/* Status Count Cards */}
             <div className="flex gap-3 mb-5" style={{ flexWrap: "wrap" }}>
-                {statCards.map((card) => (
-                    <StatCard
-                        key={card.key}
-                        title={card.label}
-                        count={card.count}
-                        color={card.color}
-                        bg={card.bg}
-                        border={card.border}
-                        active={filters.available === card.key}
-                        onClick={() =>
-                            setFilters((prev) => ({
-                                ...prev,
-                                available: prev.available === card.key ? null : card.key,
-                                page: 1,
-                            }))
-                        }
-                    />
-                ))}
+                {countsLoading ? (
+                    Array.from({ length: 2 }).map((_, i) => <StatCardSkeleton key={i} />)
+                ) : (
+                    statCards.map((card) => (
+                        <StatCard
+                            key={card.key}
+                            title={card.label}
+                            count={card.count}
+                            color={card.color}
+                            bg={card.bg}
+                            border={card.border}
+                            active={filters.available === card.key}
+                            onClick={() =>
+                                setFilters((prev) => ({
+                                    ...prev,
+                                    available: prev.available === card.key ? null : card.key,
+                                    page: 1,
+                                }))
+                            }
+                        />
+                    ))
+                )}
             </div>
 
             <div className="flex justify-end mb-4 gap-4 items-center">

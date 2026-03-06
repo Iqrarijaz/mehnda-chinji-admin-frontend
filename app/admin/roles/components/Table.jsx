@@ -1,15 +1,18 @@
-"use client";
-import React, { useState } from "react";
-import { Table, Pagination } from "antd";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { FaEdit, FaTrash } from "react-icons/fa";
-import { useMutation, useQueryClient } from "react-query";
-import { DELETE_ROLE } from "@/app/api/admin/roles";
-import { toast } from "react-toastify";
-import { CustomPopover } from "@/components/popHover";
-import { popoverContent } from "@/components/popHover/popHoverContent";
+import {
+    EditOutlined,
+    DeleteOutlined,
+    MoreOutlined,
+    SettingOutlined,
+    SecurityScanOutlined
+} from "@ant-design/icons";
 import Loading from "@/animations/homePageLoader";
+import { useMutation, useQueryClient } from "react-query";
+import { toast } from "react-toastify";
+import { DELETE_ROLE } from "@/app/api/admin/roles";
 import ConfirmModal from "@/components/shared/ConfirmModal";
+import { Pagination, Table, Tag, Tooltip, Menu, Dropdown, Button, Checkbox } from "antd";
+import { TableSkeleton } from "@/components/shared/Skeletons";
+import { useState } from "react";
 
 const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
     const queryClient = useQueryClient();
@@ -23,6 +26,9 @@ const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
         confirmText: "Confirm",
         cancelText: "Cancel"
     });
+
+    // Column Visibility State
+    const [visibleColumns, setVisibleColumns] = useState(["name", "description", "permissions", "actions"]);
 
     const closeConfirmModal = () => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
@@ -53,31 +59,76 @@ const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
         });
     };
 
-    const actionMenu = [
-        {
-            heading: "Edit",
-            icon: <FaEdit size={16} />,
-            handleFunction: (record) =>
-                setModal({
+    const handleSorting = (pagination, filters, sorter) => {
+        onChange({
+            ...filters,
+            sortingKey: sorter.field || "name",
+            sortOrder: sorter.order === "ascend" ? 1 : -1,
+            currentPage: pagination.current,
+        });
+    };
+
+    const actionMenu = (record) => (
+        <Menu className="!rounded-xl !p-2 !min-w-[140px] shadow-xl border border-slate-100">
+            <Menu.Item
+                key="edit"
+                icon={<EditOutlined className="text-blue-500" />}
+                onClick={() => setModal({
                     name: "Edit",
                     data: record,
                     state: true,
-                }),
-        },
-        {
-            heading: "Delete",
-            icon: <FaTrash size={16} />,
-            handleFunction: (record) => handleDelete(record),
-        },
+                })}
+                className="!rounded-lg hover:!bg-blue-50"
+            >
+                <span className="font-medium">Edit Role</span>
+            </Menu.Item>
+            <Menu.Divider className="!my-1" />
+            <Menu.Item
+                key="delete"
+                icon={<DeleteOutlined className="text-red-500" />}
+                onClick={() => handleDelete(record)}
+                className="!rounded-lg hover:!bg-red-50"
+            >
+                <span className="font-medium text-red-600">Delete Role</span>
+            </Menu.Item>
+        </Menu>
+    );
+
+    const columnOptions = [
+        { label: "Name", value: "name" },
+        { label: "Description", value: "description" },
+        { label: "Permissions", value: "permissions" },
     ];
 
-    const columns = [
+    const visibilityMenu = (
+        <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
+            <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Toggle Columns
+            </div>
+            <Checkbox.Group
+                value={visibleColumns}
+                onChange={setVisibleColumns}
+                className="flex flex-col gap-2"
+            >
+                {columnOptions.map(opt => (
+                    <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
+                        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
+                            {opt.label}
+                        </Checkbox>
+                    </Menu.Item>
+                ))}
+            </Checkbox.Group>
+        </Menu>
+    );
+
+    const allColumns = [
         {
             title: "Name",
             dataIndex: "name",
             key: "name",
             width: 200,
-            render: (text) => <span className="font-medium">{text}</span>,
+            sorter: true,
+            render: (text) => <span className="font-bold text-slate-800 tracking-tight">{text}</span>,
         },
         {
             title: "Description",
@@ -85,82 +136,99 @@ const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
             key: "description",
             width: 400,
             render: (text) => (
-                <div className="overflow-hidden whitespace-nowrap text-ellipsis" title={text}>
-                    {text || "-"}
-                </div>
+                <Tooltip title={text} placement="topLeft">
+                    <div className="text-slate-500 font-medium truncate cursor-help">
+                        {text || "—"}
+                    </div>
+                </Tooltip>
             ),
         },
         {
             title: "Permissions",
             dataIndex: "permissions",
             key: "permissions",
-            width: 120,
+            width: 150,
             align: "center",
             render: (permissions) => (
-                <span className="text-[10px] px-2 py-1 rounded bg-blue-500 text-white font-semibold">
-                    {permissions?.length || 0} permissions
-                </span>
+                <Tag
+                    icon={<SecurityScanOutlined />}
+                    color="blue"
+                    className="!rounded-full !px-3 font-bold !border-0 text-[10px]"
+                >
+                    {permissions?.length || 0} PERMISSIONS
+                </Tag>
             ),
         },
         {
-            title: "Actions",
+            title: "",
             key: "actions",
-            width: 80,
-            align: "center",
+            width: 60,
+            align: "right",
             render: (record) => (
-                <div className="flex items-center justify-center">
-                    <CustomPopover
-                        triggerContent={
-                            <HiOutlineDotsHorizontal
-                                size={28}
-                                className="hover:text-secondary cursor-pointer"
-                            />
-                        }
-                        popoverContent={() => popoverContent(actionMenu, record)}
+                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+                    <Button
+                        type="text"
+                        icon={<MoreOutlined className="text-lg" />}
+                        className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
                     />
-                </div>
+                </Dropdown>
             ),
         },
     ];
 
+    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+
     return (
-        <>
-            <Table
-                rowKey="_id"
-                className="antd-table-custom rounded"
-                size="small"
-                tableLayout="fixed"
-                bordered
-                scroll={{ x: 800 }}
-                loading={{
-                    spinning: rolesList.isLoading,
-                    indicator: <Loading />,
-                }}
-                columns={columns}
-                dataSource={rolesList?.data?.data?.docs || []}
-                pagination={false}
-            />
+        <div className="space-y-4">
+            <div className="flex justify-end px-1">
+                <Dropdown overlay={visibilityMenu} trigger={['click']}>
+                    <Button
+                        icon={<SettingOutlined />}
+                        className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
+                    >
+                        Columns
+                    </Button>
+                </Dropdown>
+            </div>
 
-            <Pagination
-                className="flex justify-end mt-4"
-                pageSize={filters.itemsPerPage}
-                total={rolesList?.data?.data?.totalDocs || 0}
-                current={filters.currentPage}
-                onChange={(page, pageSize) => onChange({ currentPage: page, itemsPerPage: pageSize })}
-            />
+            <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+                <Table
+                    rowKey="_id"
+                    className="custom-ant-table"
+                    scroll={{ x: 1000, y: 600 }}
+                    sticky={true}
+                    loading={{
+                        spinning: rolesList.isLoading,
+                        indicator: <TableSkeleton rows={8} columns={3} />,
+                    }}
+                    columns={activeColumns}
+                    dataSource={rolesList?.data?.data?.docs || []}
+                    pagination={{
+                        current: filters.currentPage,
+                        pageSize: filters.itemsPerPage,
+                        total: rolesList?.data?.data?.totalDocs || 0,
+                        showSizeChanger: true,
+                        className: "px-4 pb-4",
+                        onChange: (page, pageSize) => onChange({ currentPage: page, itemsPerPage: pageSize }),
+                    }}
+                    onChange={handleSorting}
+                />
 
-            <ConfirmModal
-                isOpen={confirmModal.isOpen}
-                onClose={closeConfirmModal}
-                onConfirm={confirmModal.onConfirm}
-                title={confirmModal.title}
-                description={confirmModal.description}
-                confirmText={confirmModal.confirmText}
-                cancelText={confirmModal.cancelText}
-                variant={confirmModal.variant}
-                loading={deleteMutation.isLoading}
-            />
-        </>
+                {deleteMutation.isLoading && <Loading />}
+
+                <ConfirmModal
+                    isOpen={confirmModal.isOpen}
+                    onClose={closeConfirmModal}
+                    onConfirm={confirmModal.onConfirm}
+                    title={confirmModal.title}
+                    description={confirmModal.description}
+                    confirmText={confirmModal.confirmText}
+                    cancelText={confirmModal.cancelText}
+                    variant={confirmModal.variant}
+                    loading={deleteMutation.isLoading}
+                />
+            </div>
+        </div>
     );
 };
 

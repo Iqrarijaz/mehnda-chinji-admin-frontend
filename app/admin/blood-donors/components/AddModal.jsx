@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { FaHeartbeat, FaUser, FaPhone, FaMapMarkerAlt, FaIdCard, FaTint, FaChevronRight } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
+import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { CREATE_BLOOD_DONOR } from "@/app/api/admin/blood-donors";
 
@@ -97,63 +98,67 @@ function AddDonorModal({ modal, setModal }) {
                 >
                     {({ isSubmitting, values, setFieldValue, errors, touched, handleChange, handleBlur }) => (
                         <Form className="space-y-6">
-                            {createDonor.status === "loading" && <Loading />}
+                            {createDonor.status === "loading" ? (
+                                <FormSkeleton fields={6} />
+                            ) : (
+                                <>
+                                    <div className="modal-section">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Identity & Vitals</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                            <FormField label="Full Name" name="name" placeholder="Donor Name" required icon={<FaUser className="opacity-20" />} />
+                                            <FormField label="Linked User Account" name="userId" placeholder="User ID (Hex)" required icon={<FaIdCard className="opacity-20" />} />
 
-                            <div className="modal-section">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Identity & Vitals</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <FormField label="Full Name" name="name" placeholder="Donor Name" required icon={<FaUser className="opacity-20" />} />
-                                    <FormField label="Linked User Account" name="userId" placeholder="User ID (Hex)" required icon={<FaIdCard className="opacity-20" />} />
+                                            <div className="flex flex-col gap-2">
+                                                <label className="text-slate-700 font-semibold text-sm">Blood Group <span className="text-red-500">*</span></label>
+                                                <Select
+                                                    value={values.bloodGroup}
+                                                    onChange={(val) => setFieldValue("bloodGroup", val)}
+                                                    size="large"
+                                                    placeholder="Select Type"
+                                                    className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100 shadow-sm"
+                                                >
+                                                    {bloodGroups.map(bg => (
+                                                        <Option key={bg} value={bg}>
+                                                            <div className="flex items-center gap-2">
+                                                                <FaTint className="text-red-500" size={12} />
+                                                                <span className="font-bold">{bg}</span>
+                                                            </div>
+                                                        </Option>
+                                                    ))}
+                                                </Select>
+                                                {errors.bloodGroup && touched.bloodGroup && <div className="text-red-500 text-xs font-medium">{errors.bloodGroup}</div>}
+                                            </div>
 
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-slate-700 font-semibold text-sm">Blood Group <span className="text-red-500">*</span></label>
-                                        <Select
-                                            value={values.bloodGroup}
-                                            onChange={(val) => setFieldValue("bloodGroup", val)}
-                                            size="large"
-                                            placeholder="Select Type"
-                                            className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100 shadow-sm"
-                                        >
-                                            {bloodGroups.map(bg => (
-                                                <Option key={bg} value={bg}>
-                                                    <div className="flex items-center gap-2">
-                                                        <FaTint className="text-red-500" size={12} />
-                                                        <span className="font-bold">{bg}</span>
-                                                    </div>
-                                                </Option>
-                                            ))}
-                                        </Select>
-                                        {errors.bloodGroup && touched.bloodGroup && <div className="text-red-500 text-xs font-medium">{errors.bloodGroup}</div>}
+                                            <FormField label="Mobile Number" name="phone" placeholder="Contact number" required icon={<FaPhone className="opacity-20" />} />
+                                        </div>
                                     </div>
 
-                                    <FormField label="Mobile Number" name="phone" placeholder="Contact number" required icon={<FaPhone className="opacity-20" />} />
-                                </div>
-                            </div>
+                                    <div className="modal-section">
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Location & Availability</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                            <FormField label="Primary City" name="city" placeholder="e.g. Lahore" required icon={<FaMapMarkerAlt className="opacity-20" />} />
+                                            <FormField label="Village / Local Area" name="village" placeholder="e.g. Model Town" icon={<FaChevronRight className="opacity-20 translate-y-0.5" />} />
 
-                            <div className="modal-section">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Location & Availability</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <FormField label="Primary City" name="city" placeholder="e.g. Lahore" required icon={<FaMapMarkerAlt className="opacity-20" />} />
-                                    <FormField label="Village / Local Area" name="village" placeholder="e.g. Model Town" icon={<FaChevronRight className="opacity-20 translate-y-0.5" />} />
-
-                                    <div className="md:col-span-2 p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
-                                                <FaCheckCircle size={14} />
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-bold text-slate-700 leading-tight">Current Availability</p>
-                                                <p className="text-[10px] text-slate-500 font-medium tracking-tight">Show this donor in emergency search results</p>
+                                            <div className="md:col-span-2 p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                                                        <FaCheckCircle size={14} />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-bold text-slate-700 leading-tight">Current Availability</p>
+                                                        <p className="text-[10px] text-slate-500 font-medium tracking-tight">Show this donor in emergency search results</p>
+                                                    </div>
+                                                </div>
+                                                <Switch
+                                                    checked={values.available}
+                                                    onChange={(val) => setFieldValue("available", val)}
+                                                    className={values.available ? "!bg-teal-500" : "!bg-slate-300"}
+                                                />
                                             </div>
                                         </div>
-                                        <Switch
-                                            checked={values.available}
-                                            onChange={(val) => setFieldValue("available", val)}
-                                            className={values.available ? "!bg-teal-500" : "!bg-slate-300"}
-                                        />
                                     </div>
-                                </div>
-                            </div>
+                                </>
+                            )}
 
                             <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
                                 <Button

@@ -12,6 +12,7 @@ import { GET_BUSINESSES, GET_BUSINESS_STATUS_COUNTS } from "@/app/api/admin/busi
 import { useDebounce } from "@/hooks/useDebounce";
 import StatCard from "@/components/shared/StatCard";
 import InnerPageCard from "@/components/layout/InnerPageCard";
+import { StatCardSkeleton } from "@/components/shared/Skeletons";
 
 export default function BusinessPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -31,7 +32,7 @@ export default function BusinessPage() {
         onError: () => toast.error("Something went wrong. Please try again later."),
     });
 
-    const { data: countsData } = useQuery({
+    const { data: countsData, isLoading: countsLoading } = useQuery({
         queryKey: ["businessStatusCounts"],
         queryFn: GET_BUSINESS_STATUS_COUNTS,
     });
@@ -51,24 +52,28 @@ export default function BusinessPage() {
 
             {/* Status Count Cards */}
             <div className="flex gap-3 mb-5" style={{ flexWrap: "wrap" }}>
-                {statCards.map((card) => (
-                    <StatCard
-                        key={card.key}
-                        title={card.label}
-                        count={card.count}
-                        color={card.color}
-                        bg={card.bg}
-                        border={card.border}
-                        active={filters.status === card.key}
-                        onClick={() =>
-                            setFilters((prev) => ({
-                                ...prev,
-                                status: prev.status === card.key ? null : card.key,
-                                currentPage: 1,
-                            }))
-                        }
-                    />
-                ))}
+                {countsLoading ? (
+                    Array.from({ length: 3 }).map((_, i) => <StatCardSkeleton key={i} />)
+                ) : (
+                    statCards.map((card) => (
+                        <StatCard
+                            key={card.key}
+                            title={card.label}
+                            count={card.count}
+                            color={card.color}
+                            bg={card.bg}
+                            border={card.border}
+                            active={filters.status === card.key}
+                            onClick={() =>
+                                setFilters((prev) => ({
+                                    ...prev,
+                                    status: prev.status === card.key ? null : card.key,
+                                    currentPage: 1,
+                                }))
+                            }
+                        />
+                    ))
+                )}
             </div>
 
             <div className="flex justify-end mb-4 gap-4 items-center">

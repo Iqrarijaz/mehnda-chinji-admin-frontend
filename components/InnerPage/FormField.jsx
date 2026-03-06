@@ -1,7 +1,7 @@
 import React from "react";
 import { ErrorMessage, Field } from "formik";
 
-const FormField = ({ label, name, placeholder, type = "text", disabled, required }) => {
+const FormField = React.memo(({ label, name, placeholder, type = "text", disabled, required }) => {
   return (
     <div className="mb-5">
       <div className="grid">
@@ -21,6 +21,6 @@ const FormField = ({ label, name, placeholder, type = "text", disabled, required
       <ErrorMessage name={name} component="div" className="text-red-500 text-xs mt-1 font-medium" />
     </div>
   );
-};
+});
 
 export default FormField;
