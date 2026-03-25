@@ -30,7 +30,7 @@ function ColumnVisibilityDropdown({ options, columnOptions, visibleColumns, setV
         <Dropdown overlay={visibilityMenu} trigger={["click"]} placement="bottomRight">
             <Button
                 icon={<SettingOutlined className="!text-xs" />}
-                className={`!rounded-lg !h-[32px] !px-3 !border-slate-200 !text-slate-600 !text-xs font-bold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-1.5 ${className}`}
+                className={`!rounded-xl !h-[36px] !px-3 !border-slate-200 !text-slate-600 !text-xs font-bold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-1.5 ${className}`}
             >
                 Columns
             </Button>

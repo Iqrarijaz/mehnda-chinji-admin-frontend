@@ -242,7 +242,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
         [allColumns, visibleColumns]);
 
 
-    if (!usersList.data?.data?.docs || usersList.data.data.docs.length === 0) {
+    if (!usersList.isLoading && (!usersList.data?.data?.docs || usersList.data?.data?.docs?.length === 0)) {
         return (
             <EmptyState
                 icon={<HiOutlineUsers className="w-12 h-12 text-teal-100" />}

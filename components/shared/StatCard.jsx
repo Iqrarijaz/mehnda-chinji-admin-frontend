@@ -3,6 +3,7 @@ import React from "react";
 
 const StatCard = ({
     title,
+    shortTitle,
     count,
     color = "#006666",
     bg = "#ffffff",
@@ -20,14 +21,16 @@ const StatCard = ({
     return (
         <button
             onClick={onClick}
+            className="stat-card"
             style={{
                 position: "relative",
-                maxWidth: 200,
-                flex: 1,
+                width: "fit-content",
+                minWidth: "fit-content",
+                flex: "0 0 auto", 
                 background: cardBg,
                 border: `1.5px solid ${cardBorder}`,
                 borderRadius: 14,
-                padding: "4px 20px",
+                padding: "8px 20px",
                 cursor: "pointer",
                 textAlign: "left",
                 overflow: "hidden",
@@ -61,21 +64,23 @@ const StatCard = ({
                 }}
             >
                 {/* Left: Count + Title */}
-                <div style={{ display: "flex", alignItems: "baseline" }}>
+                <div style={{ display: "flex", alignItems: "baseline", flexWrap: "wrap" }}>
                     <span
+                        className="stat-count text-[#006666]"
                         style={{
                             fontSize: 26,
                             fontWeight: 800,
                             color: active ? "#ffffff" : color,
                             lineHeight: 1,
                             letterSpacing: "-1px",
-                            marginRight: 10, // ✅ 10px space
+                            marginRight: 10,
                         }}
                     >
                         {count ?? 0}
                     </span>
 
                     <span
+                        className="stat-title"
                         style={{
                             fontSize: 13,
                             fontWeight: 700,
@@ -84,7 +89,8 @@ const StatCard = ({
                             letterSpacing: "0.07em",
                         }}
                     >
-                        {title}
+                        <span className="stat-title-full">{title}</span>
+                        {shortTitle && <span className="stat-title-short hidden uppercase">{shortTitle}</span>}
                     </span>
                 </div>
 

@@ -1092,3 +1092,70 @@ body::-webkit-scrollbar-thumb {
     opacity: 0.8 !important;
   }
 }
+
+// ─── Stat Card & Mobile Refinements ──────────────────────────────────────────
+
+.stat-card {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  
+  &:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.02);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .stat-card {
+    padding: 12px 16px !important;
+    
+    
+    .stat-count {
+      font-size: 20px !important;
+      margin-right: 6px !important;
+    }
+    
+    .stat-title {
+      font-size: 10px !important;
+      letter-spacing: 0.02em !important;
+      
+      .stat-title-full {
+        display: none !important;
+      }
+      
+      .stat-title-short {
+        display: inline !important;
+      }
+    }
+  }
+
+  .mobile-filter-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    
+    &:active {
+      background: #e2e8f0;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-card {
+    padding: 8px 12px !important;
+    
+    
+    .stat-count {
+      font-size: 18px !important;
+    }
+  }
+}

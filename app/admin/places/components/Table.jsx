@@ -17,9 +17,8 @@ import ConfirmModal from "@/components/shared/ConfirmModal";
 import { Modal, Pagination, Table, Tag, Tooltip, Switch, Menu, Dropdown, Button, Checkbox, Popover } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
-import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
-function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
+function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibleColumns }) {
     const queryClient = useQueryClient();
     const [viewModal, setViewModal] = useState({ open: false, data: null });
     const [confirmModal, setConfirmModal] = useState({
@@ -32,8 +31,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
         cancelText: "Cancel"
     });
 
-    // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["name", "category", "address", "contact", "status", "isActive", "createdAt", "actions"]);
+
 
     const closeConfirmModal = () => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
@@ -203,15 +201,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
         </Menu>
     );
 
-    const columnOptions = [
-        { label: "Name", value: "name" },
-        { label: "Category", value: "category" },
-        { label: "Address", value: "address" },
-        { label: "Contact", value: "contact" },
-        { label: "Reg. Status", value: "status" },
-        { label: "Active", value: "isActive" },
-        { label: "Created At", value: "createdAt" },
-    ];
+
 
     const allColumns = [
         {
@@ -362,14 +352,6 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
 
     return (
         <div className="space-y-3">
-            <div className="flex justify-end px-1">
-                <ColumnVisibilityDropdown
-                    options={columnOptions}
-                    visibleColumns={visibleColumns}
-                    setVisibleColumns={setVisibleColumns}
-                />
-            </div>
-
             <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
                 <Table
                     rowKey="_id"
