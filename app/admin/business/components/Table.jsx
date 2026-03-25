@@ -4,7 +4,8 @@ import {
     EllipsisOutlined,
     CheckOutlined,
     CloseOutlined,
-    SettingOutlined
+    SettingOutlined,
+    EyeOutlined
 } from "@ant-design/icons";
 import Loading from "@/animations/homePageLoader";
 import { useMutation, useQueryClient } from "react-query";
@@ -12,6 +13,7 @@ import { toast } from "react-toastify";
 import { timestampToDate } from "@/utils/date";
 import { DELETE_BUSINESS, UPDATE_BUSINESS_STATUS } from "@/app/api/admin/business";
 import ConfirmModal from "@/components/shared/ConfirmModal";
+import ViewModal from "./ViewModal";
 import { Menu, Dropdown, Button, Table, Tooltip } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
@@ -32,6 +34,7 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
 
     // Column Visibility State
     const [visibleColumns, setVisibleColumns] = useState(["name", "categoryEn", "status", "createdAt", "actions"]);
+    const [viewModal, setViewModal] = useState({ state: false, data: null });
 
     const closeConfirmModal = () =>
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
@@ -104,6 +107,15 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
     const actionMenu = (record) => (
         <Menu className="!rounded-xl !p-2 !min-w-[150px] shadow-xl border border-slate-100">
             <Menu.Item
+                key="view"
+                icon={<EyeOutlined className="text-[#006666]" />}
+                onClick={() => setViewModal({ state: true, data: record })}
+                className="!rounded-lg hover:!bg-teal-50"
+            >
+                <span className="font-medium">View Details</span>
+            </Menu.Item>
+
+            <Menu.Item
                 key="edit"
                 icon={<EditOutlined className="text-blue-500" />}
                 onClick={() => setModal({ name: "Update", data: record, state: true })}
@@ -161,19 +173,26 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
 
     const allColumns = [
         {
-            title: "Business Details",
+            title: "Business Name",
             key: "name",
-            width: 250,
+            dataIndex: "name",
+            width: 200,
             sorter: true,
-            render: (record) => (
-                <div className="flex flex-col min-w-0">
-                    <span className="font-bold text-slate-800 text-xs truncate leading-tight block">
-                        {record.name}
-                    </span>
-                    <span className="text-[11px] text-slate-400 font-medium block mt-0.5 leading-tight truncate">
-                        {record.categoryEn || "No Category"}
-                    </span>
-                </div>
+            render: (name) => (
+                <span className="font-bold text-slate-800 text-xs truncate leading-tight block">
+                    {name}
+                </span>
+            ),
+        },
+        {
+            title: "Business Type",
+            key: "categoryEn",
+            dataIndex: "categoryEn",
+            width: 170,
+            render: (category) => (
+                <span className="text-[11px] text-slate-400 font-medium block mt-0.5 leading-tight truncate">
+                    {category || "No Category"}
+                </span>
             ),
         },
         {
@@ -285,6 +304,12 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
                     cancelText={confirmModal.cancelText}
                     variant={confirmModal.variant}
                     loading={statusMutation.isLoading || deleteMutation.isLoading}
+                />
+
+                <ViewModal
+                    open={viewModal.state}
+                    data={viewModal.data}
+                    onCancel={() => setViewModal({ state: false, data: null })}
                 />
             </div>
         </div>

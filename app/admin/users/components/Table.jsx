@@ -157,11 +157,20 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             dataIndex: "role",
             sorter: true,
             width: 170,
-            render: (role) => (
-                <Tag className="!rounded-full !px-2.5 !py-0.5 font-bold !border-none !bg-slate-100 !text-slate-600 text-[9px] uppercase tracking-wider">
-                    {role}
-                </Tag>
-            ),
+            render: (role) => {
+                const roleColors = {
+                    ADMIN: "bg-blue-100/50 text-blue-700 border-blue-200",
+                    SUPER_ADMIN: "bg-purple-100/50 text-purple-700 border-purple-200",
+                    USER: "bg-slate-100 text-slate-700 border-slate-200",
+                    BLOOD_DONOR: "bg-red-100/50 text-red-700 border-red-200",
+                    BUSINESS_OWNER: "bg-teal-100/50 text-teal-700 border-teal-200",
+                };
+                return (
+                    <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold border uppercase tracking-wider ${roleColors[role] || "bg-slate-100 text-slate-700 border-slate-200"}`}>
+                        {role}
+                    </span>
+                );
+            },
         },
         {
             title: "Gender",

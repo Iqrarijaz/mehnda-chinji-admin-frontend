@@ -124,7 +124,7 @@ function MainLayout({ children }) {
         className={`
           sidebar overflow-y-auto custom-scrollbar
           transition-all duration-300 z-50
-          ${open ? "w-64" : "w-0 overflow-hidden"}
+          ${open ? "w-64 border-r border-white/10 shadow-xl" : "w-0 overflow-hidden border-none shadow-none"}
           h-screen sticky top-0 hidden md:flex flex-col
         `}
       >

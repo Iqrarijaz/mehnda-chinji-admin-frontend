@@ -1,12 +1,25 @@
 "use client";
-const { createContext, useState } = require("react");
+const { createContext, useState, useEffect } = require("react");
 
 export const MenuContext = createContext();
 
 const MenuContextProvider = ({ children }) => {
-  const [open, toggleMenu] = useState(true);
-  const [activeSubMenu, setActiveSubMenu] = useState(null); // Track the currently open submenu
-  const [selectedMenu, setSelectedMenu] = useState(null); // Track the selected menu
+  const [open, setOpen] = useState(true);
+  const [activeSubMenu, setActiveSubMenu] = useState(null);
+  const [selectedMenu, setSelectedMenu] = useState(null);
+
+  // Persistence
+  useEffect(() => {
+    const saved = localStorage.getItem("sidebarOpen");
+    if (saved !== null) {
+      setOpen(saved === "true");
+    }
+  }, []);
+
+  const toggleMenu = (val) => {
+    setOpen(val);
+    localStorage.setItem("sidebarOpen", val);
+  };
 
   const toggleSubMenu = (name) => {
     if (activeSubMenu === name) {
