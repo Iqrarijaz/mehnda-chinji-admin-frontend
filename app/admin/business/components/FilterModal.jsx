@@ -1,26 +1,32 @@
-import React from "react";
-import { Modal, Button } from "antd";
-import SearchInput from "@/components/InnerPage/SearchInput";
+import { FaFilter } from "react-icons/fa";
+import CustomButton from "@/components/shared/CustomButton";
 
 function FilterModal({ open, onCancel, filters, setFilters }) {
     return (
         <Modal
-            title={<span className="text-lg font-bold text-[#006666]">Search Businesses</span>}
+            title={
+                <div className="flex items-center gap-2 px-0 py-1">
+                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                        <FaFilter size={14} />
+                    </div>
+                    <div>
+                        <span className="text-lg font-bold text-teal-700 block mt-1">Filter Businesses</span>
+                    </div>
+                </div>
+            }
             open={open}
             onCancel={onCancel}
             footer={[
-                <Button key="close" onClick={onCancel} className="!rounded-lg !h-10 !px-6 font-medium">
-                    Close
-                </Button>
+                <CustomButton key="close" label="Close" type="secondary" onClick={onCancel} className="!h-[32px] !text-xs" />
             ]}
             width={400}
             className="modern-modal"
             centered
         >
-            <div className="flex flex-col gap-5 py-4">
-                <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Search by Name or Type</label>
-                    <SearchInput setFilters={setFilters} className="w-full" />
+            <div className="flex flex-col gap-4 py-1">
+                <div className="space-y-1">
+                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Search Business</label>
+                    <SearchInput setFilters={setFilters} placeholder="Search..." className="w-full !h-[32px] !text-xs !rounded-lg" />
                 </div>
             </div>
         </Modal>

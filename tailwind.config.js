@@ -16,9 +16,17 @@ module.exports = {
         primary: "#006666",
         secondary: "#FF9B45",
       },
-      // fontFamily: {
-      //   inter: ["Inter", "font-mono"],
-      // }
+      borderRadius: {
+        'none': '0',
+        'sm': '4px',
+        'DEFAULT': '4px',
+        'md': '4px',
+        'lg': '4px',
+        'xl': '4px',
+        '2xl': '4px',
+        '3xl': '4px',
+        'full': '9999px',
+      },
     },
   },
   plugins: [],

@@ -84,9 +84,9 @@ function AddPlaceModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-2 px-0">
-                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
-                        <FaMapMarkerAlt size={18} />
+                <div className="flex items-center gap-2 px-0 py-1">
+                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-teal-600">
+                        <FaMapMarkerAlt size={16} />
                     </div>
                     <div>
                         <span className="text-lg font-bold text-teal-700 block mt-1">Add New Place</span>
@@ -118,11 +118,11 @@ function AddPlaceModal({ modal, setModal }) {
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Location Overview</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="md:col-span-1">
-                                                <FormField label="Place Name" name="name" placeholder="e.g. Masjid Al-Noor" required className="!h-[32px] !text-xs" />
+                                                <FormField label="Place Name" name="name" placeholder="Name" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
                                             </div>
                                             <div className="md:col-span-1">
-                                                <div className="flex flex-col gap-1.5">
-                                                    <label className="text-slate-700 font-semibold text-xs">Category <span className="text-red-500">*</span></label>
+                                                <div className="flex flex-col gap-1.5 overflow-hidden">
+                                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Category <span className="text-red-500">*</span></label>
                                                     <SelectBox
                                                         options={PLACE_CATEGORIES.map((cat) => ({
                                                             value: cat.value,
@@ -130,17 +130,17 @@ function AddPlaceModal({ modal, setModal }) {
                                                         }))}
                                                         handleChange={(value) => setFieldValue("categoryId", value)}
                                                         value={values.categoryId}
-                                                        placeholder="Select a category"
+                                                        placeholder="Select Category"
                                                         width="100%"
                                                         className="modern-select-box"
                                                     />
                                                     {errors.categoryId && touched.categoryId && (
-                                                        <div className="text-red-500 text-[10px] font-medium">{errors.categoryId}</div>
+                                                        <div className="text-red-500 text-[10px] font-medium ml-1">{errors.categoryId}</div>
                                                     )}
                                                 </div>
                                             </div>
                                             <div className="md:col-span-2">
-                                                <FormField label="Description" name="description" placeholder="Provide a brief description..." type="textarea" className="!h-20 !text-xs" />
+                                                <FormField label="Description" name="description" placeholder="Brief description..." type="textarea" className="!h-16 !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
                                             </div>
                                         </div>
                                     </div>
@@ -150,13 +150,13 @@ function AddPlaceModal({ modal, setModal }) {
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Geographic Details</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="md:col-span-2">
-                                                <FormField label="Physical Address" name="address" placeholder="Full address" required icon={<FaChevronRight className="opacity-20 translate-y-0.5" />} className="!h-[32px] !text-xs" />
+                                                <FormField label="Physical Address" name="address" placeholder="Full address" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
                                             </div>
                                             <div className="md:col-span-2">
-                                                <FormField label="Google Map Link" name="googleAddress" placeholder="Link to Google Maps location" icon={<FaMapMarkerAlt className="opacity-30" />} className="!h-[32px] !text-xs" />
+                                                <FormField label="Google Map Link" name="googleAddress" placeholder="Maps URL" className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
                                             </div>
-                                            <FormField label="Latitude" name="lat" type="number" placeholder="0.000000" required className="!h-[32px] !text-xs" />
-                                            <FormField label="Longitude" name="lng" type="number" placeholder="0.000000" required className="!h-[32px] !text-xs" />
+                                            <FormField label="Latitude" name="lat" type="number" placeholder="0.00" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
+                                            <FormField label="Longitude" name="lng" type="number" placeholder="0.00" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
                                         </div>
                                     </div>
 
@@ -171,44 +171,43 @@ function AddPlaceModal({ modal, setModal }) {
                                                 <div className="space-y-2">
                                                     {values.contact.map((_, index) => (
                                                         <div key={index} className="flex gap-2 items-start">
-                                                            <div className="flex-1 bg-slate-50 p-1.5 rounded-lg flex gap-2 border border-slate-100 shadow-sm">
+                                                            <div className="flex-1 bg-slate-50 p-1 rounded-md flex gap-2 border border-slate-100">
                                                                 <div className="flex-1">
                                                                     <Input
                                                                         value={values.contact[index].name}
                                                                         onChange={(e) => setFieldValue(`contact.${index}.name`, e.target.value)}
                                                                         placeholder="Label"
-                                                                        className="!border-none !bg-transparent !shadow-none !h-[32px] !text-xs font-semibold"
+                                                                        className="!border-none !bg-transparent !shadow-none !h-[28px] !text-xs font-bold text-slate-600"
                                                                     />
                                                                 </div>
-                                                                <div className="w-[1px] h-5 bg-slate-200 self-center" />
+                                                                <div className="w-[1px] h-4 bg-slate-200 self-center" />
                                                                 <div className="flex-[1.5] flex items-center">
-                                                                    <FaPhoneAlt size={10} className="text-slate-300 mx-1.5" />
                                                                     <Input
                                                                         value={values.contact[index].number}
                                                                         onChange={(e) => setFieldValue(`contact.${index}.number`, e.target.value)}
                                                                         placeholder="Number"
-                                                                        className="!border-none !bg-transparent !shadow-none !h-[32px] !text-xs"
+                                                                        className="!border-none !bg-transparent !shadow-none !h-[28px] !text-xs"
                                                                     />
                                                                 </div>
                                                             </div>
                                                             {values.contact.length > 1 && (
                                                                 <CustomButton
-                                                                    type="text"
-                                                                    danger
+                                                                    type="secondary"
                                                                     onClick={() => remove(index)}
-                                                                    icon={<FaTrash size={12} />}
-                                                                    className="!h-[32px] !w-[32px] !rounded-lg bg-red-50/50 hover:bg-red-50 flex items-center justify-center p-0"
+                                                                    icon={<FaTrash size={10} />}
+                                                                    className="!h-[30px] !w-[30px] !rounded-md flex items-center justify-center p-0"
+                                                                    danger
                                                                 />
                                                             )}
                                                         </div>
                                                     ))}
 
                                                     <CustomButton
-                                                        type="dashed"
+                                                        type="secondary"
                                                         onClick={() => push({ name: "", number: "" })}
                                                         icon={<FaPlus size={10} />}
-                                                        className="w-full !h-[32px] !rounded-lg !border-2 !border-dashed !border-slate-200 !text-slate-400 hover:!text-teal-600 hover:!border-teal-200 font-medium transition-all text-xs"
-                                                        label="Add Another Contact"
+                                                        className="w-full !h-[30px] !rounded-md font-bold text-[10px] uppercase tracking-tight"
+                                                        label="Add More Contact"
                                                     />
                                                 </div>
                                             )}
@@ -219,8 +218,8 @@ function AddPlaceModal({ modal, setModal }) {
                                     <div className="modal-section !mb-0">
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Operational Data</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                            <FormField label="Timings" name="timing" placeholder="e.g. 9:00 AM - 5:00 PM" icon={<FaClock className="opacity-30" size={10} />} className="!h-[32px] !text-xs" />
-                                            <FormField label="Services" name="services" placeholder="e.g. Prayer, Education" icon={<FaTools className="opacity-30" size={10} />} className="!h-[32px] !text-xs" />
+                                            <FormField label="Timings" name="timing" placeholder="9:00 AM - 5:00 PM" className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
+                                            <FormField label="Services" name="services" placeholder="Prayer, Help" className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
                                         </div>
                                     </div>
                                 </>

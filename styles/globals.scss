@@ -30,7 +30,7 @@ body {
 
 .menu-icon {
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 8px !important;
   display: flex;
   justify-content: center;
@@ -73,7 +73,7 @@ body {
 
 .antd-table-custom {
   background: white;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   border: 1px solid #e2e8f0 !important;
   overflow: hidden;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
@@ -81,7 +81,7 @@ body {
 
 .ant-table {
   background: transparent !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
 
   .ant-table-container {
     border-radius: 12px !important;
@@ -103,7 +103,7 @@ body {
 }
 
 .ant-pagination-item {
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   border: 1px solid #e2e8f0 !important;
 }
 
@@ -127,7 +127,7 @@ body {
     justify-content: center;
     width: 32px;
     height: 32px;
-    border-radius: 12px;
+    border-radius: 4px;
     transition: all 0.2s;
     cursor: pointer;
     border: 1px solid #e2e8f0;
@@ -186,6 +186,7 @@ body {
   background: #006666 !important; // Teal Sidebar to match mobile header
   box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
+  will-change: width, transform, opacity;
 }
 
 // ===========selected menu class side bar
@@ -195,10 +196,10 @@ body {
   justify-items: center !important;
   align-items: center !important;
   padding: 8px 12px !important;
-  color: #9ca3af !important; // Gray-400 for dark bg
+  color: #d1d5db !important; // Gray-300 for better contrast on dark teal
   border: none !important;
-  border-radius: 12px !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border-radius: 4px !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
   font-weight: 500;
   position: relative;
   overflow: hidden;
@@ -209,10 +210,10 @@ body {
 
 // Hover state - subtle white gradient highlight
 .side_menu_item:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
   color: #ffffff !important;
   border-left: 3px solid #ffffff !important;
-  transform: translateX(4px);
+  transform: translateX(2px);
 }
 
 // Selected/Active state - premium gradient with gloss
@@ -233,7 +234,7 @@ body {
   right: 0;
   bottom: 0;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%); // More pronounced gloss
-  border-radius: 12px;
+  border-radius: 4px;
   pointer-events: none;
 }
 
@@ -243,7 +244,7 @@ body {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, #006666 100%) !important;
   color: white !important;
   border: none !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
@@ -279,7 +280,7 @@ body {
 
   &::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    border-radius: 4px;
 
     &:hover {
       background: rgba(255, 255, 255, 0.2);
@@ -297,7 +298,7 @@ body {
   color: white !important;
   background-color: #006666 !important; // Teal
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   margin-left: 6px !important;
   padding: 8px 16px !important;
   height: 36px !important;
@@ -318,7 +319,7 @@ body {
   color: white !important;
   background-color: #006666 !important; // Match sidebar
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   height: 38px !important;
   font-size: 14px !important;
   font-weight: 500 !important;
@@ -342,7 +343,7 @@ body {
   height: 36px !important;
   padding: 8px 12px !important;
   border: 2px solid #006666 !important; // Primary Teal
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   background-color: #ffffff !important;
   display: flex !important;
   align-items: center !important;
@@ -371,7 +372,7 @@ body {
 
   .ant-select-selector {
     border: 2px solid #006666 !important; // Primary Teal
-    border-radius: 12px !important;
+    border-radius: 4px !important;
     height: 36px !important;
     display: flex;
     align-items: center;
@@ -411,7 +412,7 @@ body {
   color: white !important;
   background-color: #006666 !important;
   border: 2px solid #006666 !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   margin-left: 6px !important;
   padding: 2px 8px !important;
   height: 32px !important;
@@ -433,7 +434,7 @@ body {
   color: #374151 !important;
   background-color: white !important;
   border: 2px solid #d1d5db !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   margin-left: 6px !important;
   padding: 2px 8px !important;
   height: 32px !important;
@@ -471,11 +472,11 @@ body {
 
 .ant-select {
   height: 36px !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
 
   .ant-select-selector {
     border: 2px solid #006666 !important;
-    border-radius: 12px !important;
+    border-radius: 4px !important;
     padding: 0 16px !important;
     height: 36px !important;
     display: flex;
@@ -495,12 +496,13 @@ body {
   .ant-select-selector {
     height: 32px !important;
     padding: 0 12px !important;
-    border-radius: 10px !important;
+    border-radius: 4px !important;
     border: 2px solid #e2e8f0 !important;
     font-size: 12px !important;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       border-color: #006666 !important;
       box-shadow: 0 0 0 4px rgba(0, 102, 102, 0.05) !important;
     }
@@ -518,27 +520,32 @@ body {
   }
 }
 
+// Modern Modal and Bottom Sheet Styles
 .modern-modal {
   .ant-modal-content {
     padding: 0 !important;
-    border-radius: 24px !important;
+    border-radius: 4px !important;
     overflow: hidden;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
     border: 1px solid rgba(0, 0, 0, 0.05);
+
+    @media (max-width: 768px) {
+      border-radius: 4px 4px 0 0 !important; // Top corners only for bottom sheet
+    }
   }
 
   .ant-modal-header {
     margin-bottom: 0 !important;
-    padding: 10px 16px !important;
+    padding: 18px 24px !important;
     background: #fff;
     border-bottom: 1px solid #f1f5f9 !important;
 
     @media (max-width: 768px) {
-      padding: 6px 12px !important;
+      padding: 16px 20px !important;
     }
 
     .ant-modal-title {
-      font-size: 0.9rem !important;
+      font-size: 1.1rem !important;
       font-weight: 700 !important;
       color: #006666 !important;
       letter-spacing: -0.025em;
@@ -546,51 +553,109 @@ body {
   }
 
   .ant-modal-body {
-    padding: 12px 16px !important;
+    padding: 24px !important;
+    max-height: 60vh;
+    overflow-y: auto;
+
+    // Custom scrollbar for modal content
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 4px;
+    }
 
     @media (max-width: 768px) {
-      padding: 10px 12px !important;
+      padding: 20px !important;
+      max-height: 70vh;
     }
   }
 
-  .ant-modal-close {
-    top: 12px !important;
-    right: 12px !important;
-    
-    @media (max-width: 768px) {
-      top: 8px !important;
-      right: 8px !important;
-    }
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    transition: all 0.2s;
+  .ant-modal-footer {
+    margin-top: 0 !important;
+    padding: 16px 24px !important;
+    background: #f8fafc;
+    border-top: 1px solid #f1f5f9 !important;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
 
-    &:hover {
-      background-color: #f1f5f9;
-      color: #000;
+    @media (max-width: 768px) {
+      padding: 16px 20px !important;
+      position: sticky;
+      bottom: 0;
+      width: 100%;
+      z-index: 10;
     }
   }
 
-  // Section styling inside modals
-  .modal-section {
-    background-color: #f8fafc;
-    border: 1px solid #f1f5f9;
-    border-radius: 12px !important;
-    padding: 10px;
+  // Positioning for mobile bottom sheet
+  @media (max-width: 768px) {
+    &.ant-modal {
+      top: auto !important;
+      bottom: 0 !important;
+      margin: 0 !important;
+      padding-bottom: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
+}
+
+// Animation for bottom sheet (slide up)
+.modal-slide-up-enter {
+  transform: translateY(100%);
+}
+
+.modal-slide-up-enter-active {
+  transform: translateY(0);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-slide-up-exit {
+  transform: translateY(0);
+}
+
+.modal-slide-up-exit-active {
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Section styling inside modals
+.modal-section {
+  background-color: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 4px !important;
+  padding: 16px;
+  margin-bottom: 16px;
+
+  @media (max-width: 768px) {
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+
+  .section-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     margin-bottom: 10px;
-
-    @media (max-width: 768px) {
-      padding: 6px;
-      margin-bottom: 8px;
-    }
+    padding-left: 2px;
   }
 }
 
 // Global button overrides for modals
 .modal-footer-btn {
   height: 36px !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   font-weight: 600 !important;
   padding: 0 20px !important;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -643,7 +708,7 @@ body {
 
 .ant-input {
   padding: 8px 16px !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   transition: all 0.2s;
 
   &:focus,
@@ -653,7 +718,7 @@ body {
 }
 
 .ant-modal-content {
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   padding: 12px !important;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
@@ -662,7 +727,7 @@ body {
   color: rgba(0, 0, 0, 0.603) !important;
   width: 100% !important;
   padding: 6px 16px !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   border: 2px solid #e0dede8c !important;
 }
 
@@ -672,7 +737,7 @@ body {
 }
 
 .place-holder-table {
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   background-color: white !important;
 }
 
@@ -682,7 +747,7 @@ body {
 
 .select-field {
   width: 100% !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   background-color: white !important;
 }
 
@@ -698,7 +763,7 @@ body {
 .reset-button {
   background-color: #f3f4f6 !important;
   border: 2px solid #e5e7eb !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   padding: 6px !important;
   font-size: 12px !important;
   font-weight: 500 !important;
@@ -739,7 +804,7 @@ body {
 .upload-background-image-antd .ant-upload {
   background-color: white !important;
   height: 190px !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   border: none !important;
   margin: 0px !important;
   margin-top: 3px !important;
@@ -765,7 +830,7 @@ body {
   color: white !important;
   background-color: #ef4444 !important;
   border: 2px solid #ef4444 !important;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   margin-left: 6px !important;
   padding: 2px 8px !important;
   height: 32px !important;
@@ -797,8 +862,8 @@ body {
   font-size: 20px;
   padding: 8px 30px 8px 130px;
   text-align: start;
-  border-top-right-radius: 10px !important;
-  border-bottom-right-radius: 10px !important;
+  border-top-right-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
 }
 
 .building_logo_img {
@@ -844,7 +909,7 @@ body {
 .ant-tag {
   user-select: none;
   border: 2px solid #e0dede8c;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   background-color: white !important;
   padding: 6px 6px !important;
   display: flex;
@@ -858,7 +923,7 @@ body {
   user-select: none;
   color: rgba(0, 0, 0, 0.603) !important;
   border: 2px solid #e0dede8c;
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   background-color: white !important;
   padding: 6px 6px !important;
   display: flex;
@@ -938,12 +1003,12 @@ body::-webkit-scrollbar {
 
 body::-webkit-scrollbar-track {
   background: var(--sb-track-color);
-  border-radius: 12px;
+  border-radius: 4px;
 }
 
 body::-webkit-scrollbar-thumb {
   background: var(--sb-thumb-color);
-  border-radius: 12px;
+  border-radius: 4px;
 
 }
 
@@ -959,12 +1024,12 @@ body::-webkit-scrollbar-thumb {
 
 ::-webkit-scrollbar-track {
   background: var(--sb-track-color);
-  border-radius: 12px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--sb-thumb-color);
-  border-radius: 12px;
+  border-radius: 4px;
 }
 
 .custom-scrollbar {
@@ -974,12 +1039,12 @@ body::-webkit-scrollbar-thumb {
 
   &::-webkit-scrollbar-track {
     background: var(--sb-track-color);
-    border-radius: 12px;
+    border-radius: 4px;
   }
 
   &::-webkit-scrollbar-thumb {
     background: var(--sb-thumb-color);
-    border-radius: 12px;
+    border-radius: 4px;
   }
 }
 
@@ -991,7 +1056,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .Toastify__toast {
-  border-radius: 12px !important;
+  border-radius: 4px !important;
   padding: 16px 18px 16px 16px !important;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
   position: relative;
@@ -1110,7 +1175,7 @@ body::-webkit-scrollbar-thumb {
 
 .Toastify__progress-bar {
   height: 3px !important;
-  border-radius: 0 0 12px 12px !important;
+  border-radius: 0 0 4px 4px !important;
 }
 
 .Toastify__progress-bar--success {
@@ -1143,7 +1208,7 @@ body::-webkit-scrollbar-thumb {
 
 .stat-card {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  
+
   &:hover {
     transform: translateY(-2px);
     filter: brightness(1.02);
@@ -1157,21 +1222,21 @@ body::-webkit-scrollbar-thumb {
 @media (max-width: 768px) {
   .stat-card {
     padding: 12px 16px !important;
-    
-    
+
+
     .stat-count {
       font-size: 20px !important;
       margin-right: 6px !important;
     }
-    
+
     .stat-title {
       font-size: 10px !important;
       letter-spacing: 0.02em !important;
-      
+
       .stat-title-full {
         display: none !important;
       }
-      
+
       .stat-title-short {
         display: inline !important;
       }
@@ -1184,11 +1249,11 @@ body::-webkit-scrollbar-thumb {
     justify-content: center;
     width: 36px;
     height: 36px;
-    border-radius: 12px;
+    border-radius: 4px;
     background: #f1f5f9;
     color: #475569;
     border: 1px solid #e2e8f0;
-    
+
     &:active {
       background: #e2e8f0;
     }
@@ -1198,10 +1263,10 @@ body::-webkit-scrollbar-thumb {
 @media (max-width: 480px) {
   .stat-card {
     padding: 8px 12px !important;
-    
-    
+
+
     .stat-count {
       font-size: 18px !important;
     }
   }
-}
+}

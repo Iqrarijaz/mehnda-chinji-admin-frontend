@@ -71,7 +71,7 @@ function Page() {
         <div className="w-full max-w-sm">
           {/* Logo Section */}
           <div className="flex flex-col items-center mb-8">
-            <div className="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center mb-4 p-2">
+            <div className="w-16 h-16 bg-white rounded shadow-sm flex items-center justify-center mb-4 p-2">
               <img
                 src="/icon.png"
                 alt="Rehbar"
@@ -84,7 +84,7 @@ function Page() {
           </div>
 
           {/* Login Card */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 sm:p-8">
+          <div className="bg-white rounded border border-gray-100 p-6 sm:p-8 shadow-sm">
             <div className="mb-6 text-center">
               <h2 className="text-xl font-medium text-gray-800">
                 Welcome Back

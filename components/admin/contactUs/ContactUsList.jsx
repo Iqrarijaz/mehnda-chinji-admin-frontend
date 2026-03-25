@@ -43,7 +43,7 @@ function ContactUsList({ modal, setModal, contactList, onChange, onDelete, onUpd
     };
 
     const actionMenu = (record) => (
-        <Menu className="!rounded-xl !p-2 !min-w-[160px] shadow-xl border border-slate-100">
+        <Menu className="!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100">
             <Menu.Item
                 key="view"
                 icon={<EyeOutlined className="text-blue-500" />}
@@ -52,7 +52,7 @@ function ContactUsList({ modal, setModal, contactList, onChange, onDelete, onUpd
                     data: record,
                     state: true
                 })}
-                className="!rounded-lg hover:!bg-blue-50"
+                className="!rounded hover:!bg-blue-50"
             >
                 <span className="font-medium">View Details</span>
             </Menu.Item>
@@ -145,7 +145,7 @@ function ContactUsList({ modal, setModal, contactList, onChange, onDelete, onUpd
                     <Button
                         type="text"
                         icon={<EllipsisOutlined className="text-lg rotate-90" />}
-                        className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
                     />
                 </Dropdown>
             ),
@@ -164,7 +164,7 @@ function ContactUsList({ modal, setModal, contactList, onChange, onDelete, onUpd
                 />
             </div>
 
-            <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+            <div className="modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

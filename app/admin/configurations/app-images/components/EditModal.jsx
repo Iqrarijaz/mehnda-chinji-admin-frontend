@@ -88,13 +88,12 @@ function EditAppImagesModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2 pt-1">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-                        <FaImages size={18} />
+                <div className="flex items-center gap-2 px-0 py-1">
+                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                        <FaImages size={16} />
                     </div>
                     <div>
-                        <span className="text-xl font-bold text-slate-900 block">Edit Image Set</span>
-                        <span className="text-xs text-slate-500 font-normal">Update the name, key, or images for this set</span>
+                        <span className="text-lg font-bold text-blue-700 block mt-1">Edit Image Set</span>
                     </div>
                 </div>
             }
@@ -103,56 +102,54 @@ function EditAppImagesModal({ modal, setModal }) {
             footer={null}
             centered
             width={600}
-            className="modern-modal"
-        >
-            <div className="p-1 pt-2">
+            >
+            <div className="p-1">
                 <div className="space-y-4">
-                    <div className="modal-section">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Basic Information</p>
-                        <div className="grid grid-cols-1 gap-3">
+                    <div className="modal-section space-y-3">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Basic Information</p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                             {/* Name */}
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-slate-700 font-semibold text-xs">Name <span className="text-red-500">*</span></label>
+                            <div className="flex flex-col gap-1.5 flex-1">
+                                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Title <span className="text-red-500">*</span></label>
                                 <Input
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     placeholder="e.g. Home Banner"
-                                    className="!h-[40px] !rounded-lg !border-2 !border-slate-100 focus:!border-teal-500 font-medium text-sm"
+                                    className="!h-[32px] !text-xs !rounded-lg !border-slate-200 focus:!border-teal-500"
                                 />
-                                {errors.name && <span className="text-red-500 text-[10px] font-medium">{errors.name}</span>}
+                                {errors.name && <span className="text-red-500 text-[10px] font-medium ml-1">{errors.name}</span>}
                             </div>
 
                             {/* Key */}
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-slate-700 font-semibold text-xs">Key <span className="text-red-500">*</span></label>
+                            <div className="flex flex-col gap-1.5 flex-1">
+                                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Key <span className="text-red-500">*</span></label>
                                 <Input
                                     value={key}
                                     onChange={(e) => setKey(e.target.value.toUpperCase())}
-                                    placeholder="e.g. HOME_BANNER"
-                                    className="!h-[40px] !rounded-lg !border-2 !border-slate-100 focus:!border-teal-500 font-mono font-bold tracking-wider text-sm"
+                                    placeholder="ID_KEY"
+                                    className="!h-[32px] !text-xs !rounded-lg !border-slate-200 focus:!border-teal-500 font-mono"
                                 />
-                                {errors.key && <span className="text-red-500 text-[10px] font-medium">{errors.key}</span>}
-                                <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tight">Auto-converted to uppercase</p>
+                                {errors.key && <span className="text-red-500 text-[10px] font-medium ml-1">{errors.key}</span>}
                             </div>
                         </div>
                     </div>
 
-                    <div className="modal-section">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Media Management</p>
+                    <div className="modal-section space-y-3">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Media Management</p>
                         {/* Existing Images */}
                         {existingImages.length > 0 && (
-                            <div className="mb-4">
-                                <label className="text-slate-700 font-semibold text-xs block mb-2">Current Images</label>
-                                <div className="grid grid-cols-4 gap-2">
+                            <div className="space-y-1.5 relative px-1">
+                                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight pl-1">Current Images</label>
+                                <div className="grid grid-cols-5 gap-2">
                                     {existingImages.map((url, idx) => (
-                                        <div key={idx} className="relative group rounded-lg overflow-hidden border border-slate-100 shadow-sm aspect-square bg-slate-50">
+                                        <div key={idx} className="relative group rounded-md overflow-hidden border border-slate-100 aspect-video bg-slate-50">
                                             <img src={url} alt="" className="w-full h-full object-cover" />
                                             <button
                                                 type="button"
                                                 onClick={() => removeExisting(idx)}
-                                                className="absolute top-1 right-1 bg-red-500/90 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:scale-110 shadow-lg"
+                                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-sm"
                                             >
-                                                <FaTimes size={10} />
+                                                <FaTimes size={8} />
                                             </button>
                                         </div>
                                     ))}
@@ -161,53 +158,49 @@ function EditAppImagesModal({ modal, setModal }) {
                         )}
 
                         {/* New Uploads */}
-                        <div className="flex flex-col gap-1.5">
-                            <label className="text-slate-700 font-semibold text-xs">Add New Images</label>
+                        <div className="flex flex-col gap-1.5 px-1">
+                            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight pl-1">Add New Images</label>
                             <div
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={handleDrop}
                                 onClick={() => fileInputRef.current?.click()}
-                                className="border-2 border-dashed border-slate-200 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-teal-400 hover:bg-teal-50/30 transition-all text-center group"
+                                className="border border-dashed border-slate-200 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:border-teal-400 hover:bg-teal-50/20 transition-all text-center group"
                             >
-                                <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center mb-2 group-hover:bg-teal-50 transition-colors">
-                                    <FaImages size={20} className="text-slate-300 group-hover:text-teal-400 transition-colors" />
-                                </div>
-                                <p className="text-xs font-semibold text-slate-600">Drag & drop images here</p>
-                                <p className="text-[10px] text-slate-400 mt-1">or <span className="text-teal-600 font-bold">browse</span></p>
+                                <FaImages size={16} className="text-slate-300 group-hover:text-teal-400 mb-1" />
+                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Drop or <span className="text-teal-600">browse</span> images</p>
                                 <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handleFileChange} className="hidden" />
                             </div>
-                            {errors.images && <span className="text-red-500 text-[10px] font-medium">{errors.images}</span>}
+                            {errors.images && <span className="text-red-500 text-[10px] font-medium ml-1">{errors.images}</span>}
 
                             {/* New Preview Grid */}
                             {newFiles.length > 0 && (
-                                <div className="grid grid-cols-4 gap-2 mt-2">
+                                <div className="grid grid-cols-5 gap-2 mt-2">
                                     {newFiles.map((item, idx) => (
-                                        <div key={idx} className="relative group rounded-lg overflow-hidden border border-emerald-100 shadow-sm aspect-square bg-slate-50">
+                                        <div key={idx} className="relative group rounded-md overflow-hidden border border-emerald-100 aspect-video bg-slate-50">
                                             <img src={item.preview} alt="" className="w-full h-full object-cover" />
-                                            <div className="absolute inset-0 bg-emerald-500/5 pointer-events-none" />
                                             <button
                                                 type="button"
                                                 onClick={() => removeNew(idx)}
-                                                className="absolute top-1 right-1 bg-red-500/90 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:scale-110 shadow-lg"
+                                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-sm"
                                             >
-                                                <FaTimes size={10} />
+                                                <FaTimes size={8} />
                                             </button>
                                             <div className="absolute bottom-0 left-0 right-0 bg-emerald-600 text-[8px] text-white font-bold py-0.5 text-center uppercase tracking-tighter shadow-sm">New</div>
                                         </div>
                                     ))}
                                     <div
                                         onClick={() => fileInputRef.current?.click()}
-                                        className="aspect-square border-2 border-dashed border-slate-200 rounded-lg flex items-center justify-center cursor-pointer hover:border-teal-400 hover:bg-teal-50/30 transition-all text-slate-300 hover:text-teal-500"
+                                        className="aspect-video border border-dashed border-slate-200 rounded-md flex items-center justify-center cursor-pointer hover:border-teal-400 hover:bg-teal-50/20 transition-all text-slate-300 hover:text-teal-500"
                                     >
-                                        <FaPlus size={14} />
+                                        <FaPlus size={10} />
                                     </div>
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    {/* Footer */}
-                    <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                     {/* Footer */}
+                    <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                         <CustomButton
                             label="Cancel"
                             type="secondary"
@@ -215,7 +208,6 @@ function EditAppImagesModal({ modal, setModal }) {
                         />
                         <CustomButton
                             label="Update Image Set"
-                            type="primary"
                             onClick={handleSubmit}
                             loading={updateMutation.isLoading}
                         />

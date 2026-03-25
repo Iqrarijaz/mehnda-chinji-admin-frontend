@@ -64,13 +64,12 @@ function ViewModal({ viewModal, setViewModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
-                        <FaInfoCircle size={18} />
+                <div className="flex items-center gap-2 px-0 py-1">
+                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                        <FaInfoCircle size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-slate-900 block">Post Details</span>
-                        <span className="text-xs text-slate-500 font-normal">Expanded view of the post and its metadata</span>
+                        <span className="text-lg font-bold text-teal-700 block mt-1">Post Details</span>
                     </div>
                 </div>
             }
@@ -81,7 +80,7 @@ function ViewModal({ viewModal, setViewModal }) {
                     label="Back to Feed"
                     type="secondary"
                     onClick={handleClose}
-                    className="w-full !h-[48px] font-bold"
+                    className="w-full"
                 />
             }
             width={600}
@@ -89,30 +88,30 @@ function ViewModal({ viewModal, setViewModal }) {
         >
             <div className="p-1">
                 {data && (
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                         {/* Header Info */}
-                        <div className="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-100">
-                            <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center overflow-hidden">
+                        <div className="flex items-center justify-between bg-slate-50/50 p-2.5 rounded-lg border border-slate-100">
+                            <div className="flex items-center gap-2.5">
+                                <div className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center overflow-hidden">
                                     {data.createdBy?.profileImage ? (
                                         <img src={data.createdBy.profileImage} alt="User" className="w-full h-full object-cover" />
                                     ) : (
-                                        <FaUser size={14} className="text-slate-300" />
+                                        <FaUser size={12} className="text-slate-300" />
                                     )}
                                 </div>
                                 <div>
-                                    <p className="font-bold text-slate-900 text-xs leading-none mb-1">{data.createdBy?.name || "Unknown User"}</p>
-                                    <div className="flex items-center gap-2 text-slate-400 text-[10px]">
-                                        <FaCalendarAlt size={9} />
+                                    <p className="font-bold text-slate-900 text-[11px] leading-none mb-1">{data.createdBy?.name || "Unknown User"}</p>
+                                    <div className="flex items-center gap-2 text-slate-400 text-[9px]">
+                                        <FaCalendarAlt size={8} />
                                         {timestampToDate(data.createdAt)}
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex gap-2">
-                                <Tag color={getTagColor(data.type)} className="rounded-full px-3 border-none font-semibold text-[9px] uppercase tracking-wider !mr-0">
+                            <div className="flex gap-1.5">
+                                <Tag color={getTagColor(data.type)} className="rounded-md px-2 border-none font-bold text-[8px] uppercase tracking-wider !mr-0">
                                     {data.type}
                                 </Tag>
-                                <Tag color={data.status === "ACTIVE" ? "green" : "red"} className="rounded-full px-3 border-none font-semibold text-[9px] uppercase tracking-wider !mr-0">
+                                <Tag color={data.status === "ACTIVE" ? "success" : "error"} className="rounded-md px-2 border-none font-bold text-[8px] uppercase tracking-wider !mr-0">
                                     {data.status}
                                 </Tag>
                             </div>
@@ -127,15 +126,15 @@ function ViewModal({ viewModal, setViewModal }) {
 
                         {/* Images */}
                         {data.images && data.images.length > 0 && (
-                            <div className="space-y-2">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Attached Media</span>
-                                <div className="grid grid-cols-3 gap-2">
+                            <div className="space-y-1.5">
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Attached Media</span>
+                                <div className="grid grid-cols-4 gap-2">
                                     {data.images.map((img, index) => (
-                                        <div key={index} className="aspect-square rounded-xl overflow-hidden border-2 border-slate-100 shadow-sm group relative">
+                                        <div key={index} className="aspect-square rounded-lg overflow-hidden border border-slate-100 shadow-sm group relative">
                                             <img
                                                 src={img}
                                                 alt={`Post image ${index + 1}`}
-                                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                className="w-full h-full object-cover"
                                             />
                                         </div>
                                     ))}
@@ -144,30 +143,30 @@ function ViewModal({ viewModal, setViewModal }) {
                         )}
 
                         {/* Metadata Section */}
-                        <div className="modal-section">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Type-Specific Details</p>
+                        <div className="modal-section !mb-0">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Technical Details</p>
                             {renderMetadata()}
                         </div>
 
                         {/* Statistics Grid */}
-                        <div className="grid grid-cols-2 gap-3">
-                            <div className="p-3 bg-teal-50/50 rounded-xl border border-teal-100/50 flex items-center justify-between">
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="p-2.5 bg-teal-50/50 rounded-lg border border-teal-100/30 flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-teal-600 shadow-sm">
-                                        <FaHeart size={14} />
+                                    <div className="w-7 h-7 rounded-md bg-white flex items-center justify-center text-teal-600 shadow-sm">
+                                        <FaHeart size={12} />
                                     </div>
-                                    <span className="text-xs font-semibold text-slate-600">Likes</span>
+                                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-tight">Likes</span>
                                 </div>
-                                <span className="text-xl font-black text-teal-700">{data.likesCount || 0}</span>
+                                <span className="text-lg font-black text-teal-700 tracking-tight">{data.likesCount || 0}</span>
                             </div>
-                            <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100/50 flex items-center justify-between">
+                            <div className="p-2.5 bg-blue-50/50 rounded-lg border border-blue-100/30 flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-blue-600 shadow-sm">
-                                        <FaCommentAlt size={14} />
+                                    <div className="w-7 h-7 rounded-md bg-white flex items-center justify-center text-blue-600 shadow-sm">
+                                        <FaCommentAlt size={12} />
                                     </div>
-                                    <span className="text-xs font-semibold text-slate-600">Comments</span>
+                                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-tight">Comments</span>
                                 </div>
-                                <span className="text-xl font-black text-blue-700">{data.commentsCount || 0}</span>
+                                <span className="text-lg font-black text-blue-700 tracking-tight">{data.commentsCount || 0}</span>
                             </div>
                         </div>
                     </div>

@@ -115,7 +115,7 @@ function ManageTicketModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-[#006666]">
+                    <div className="w-10 h-10 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
                         <MessageOutlined className="text-lg" />
                     </div>
                     <div>
@@ -134,9 +134,9 @@ function ManageTicketModal({ modal, setModal }) {
             centered
             className="modern-modal"
         >
-            <div className="bg-slate-50/50 p-3 rounded-2xl max-h-[85vh] overflow-y-auto custom-scrollbar border border-slate-100/50 mt-4">
+            <div className="bg-slate-50/50 p-3 rounded border border-slate-100/50 mt-4 max-h-[85vh] overflow-y-auto custom-scrollbar">
                 {/* Info & Status Bar */}
-                <div className="bg-white rounded-xl p-3 mb-3 shadow-sm flex items-center justify-between border border-slate-100">
+                <div className="bg-white rounded p-3 mb-3 shadow-sm flex items-center justify-between border border-slate-100">
                     <div className="flex flex-col">
                         <div className="flex items-center gap-2">
                             <span className="font-bold text-slate-800 text-sm capitalize leading-tight">{ticket?.userId?.name}</span>
@@ -160,14 +160,14 @@ function ManageTicketModal({ modal, setModal }) {
                 </div>
 
                 {/* Subject & Description */}
-                <div className="bg-white rounded-xl p-4 mb-3 shadow-sm border border-slate-100 space-y-2.5">
+                <div className="bg-white rounded p-4 mb-3 shadow-sm border border-slate-100 space-y-2.5">
                     <div>
                         <label className="text-slate-400 font-bold text-[9px] uppercase tracking-widest mb-1 block">Subject Line</label>
                         <div className="text-slate-900 font-bold text-sm leading-tight">{ticket?.subject}</div>
                     </div>
                     <div className="pt-2 border-t border-slate-50">
                         <label className="text-slate-400 font-bold text-[9px] uppercase tracking-widest mb-1 block">Issue Description</label>
-                        <div className="text-slate-600 text-[11px] leading-relaxed whitespace-pre-wrap bg-slate-50/50 p-3 rounded-lg border border-slate-100/50 italic font-medium">
+                        <div className="text-slate-600 text-[11px] leading-relaxed whitespace-pre-wrap bg-slate-50/50 p-3 rounded border border-slate-100/50 italic font-medium">
                             "{ticket?.description}"
                         </div>
                     </div>
@@ -181,13 +181,13 @@ function ManageTicketModal({ modal, setModal }) {
                         className="space-y-3 max-h-[35vh] overflow-y-auto p-1 scroll-smooth"
                     >
                         {!ticket ? (
-                            <div className="bg-white rounded-xl p-6 border border-slate-100">
+                            <div className="bg-white rounded p-6 border border-slate-100">
                                 <FormSkeleton fields={4} />
                             </div>
                         ) : (
                             ticket.messages?.map((msg, i) => (
                                 <div key={i} className={`flex ${msg.sender === 'admin' ? 'justify-end' : 'justify-start'}`}>
-                                    <div className={`max-w-[85%] rounded-2xl p-3 shadow-sm ${msg.sender === 'admin' ? 'bg-[#006666] text-white' : 'bg-white border border-slate-100 text-slate-700'}`}>
+                                    <div className={`max-w-[85%] rounded p-3 shadow-sm ${msg.sender === 'admin' ? 'bg-[#006666] text-white' : 'bg-white border border-slate-100 text-slate-700'}`}>
                                         <div className={`flex items-center gap-2 mb-1.5 border-b pb-1 ${msg.sender === 'admin' ? 'border-white/10' : 'border-slate-50'}`}>
                                             {msg.sender === 'admin' ? <FaUserTie size={10} className="text-teal-200" /> : <FaUser size={10} className="text-emerald-500" />}
                                             <span className={`text-[9px] uppercase font-black tracking-tight ${msg.sender === 'admin' ? 'text-teal-50' : 'text-slate-400'}`}>
@@ -203,7 +203,7 @@ function ManageTicketModal({ modal, setModal }) {
                                             <div className="mt-2 flex flex-wrap gap-1.5">
                                                 {msg.attachments.map((url, j) => (
                                                     <a key={j} href={url} target="_blank" rel="noreferrer" className="block relative group">
-                                                        <img src={url} alt="attachment" className="w-16 h-16 object-cover rounded-lg border border-white/20 hover:scale-105 transition-transform" />
+                                                        <img src={url} alt="attachment" className="w-16 h-16 object-cover rounded border border-white/20 hover:scale-105 transition-transform" />
                                                     </a>
                                                 ))}
                                             </div>
@@ -217,14 +217,14 @@ function ManageTicketModal({ modal, setModal }) {
 
                 {/* Input Area */}
                 {ticket?.status !== "closed" && (
-                    <div className="bg-white rounded-xl p-3 shadow-sm border border-slate-100">
+                    <div className="bg-white rounded p-3 shadow-sm border border-slate-100">
                         <label className="text-slate-400 font-bold text-[9px] uppercase tracking-widest mb-1.5 block">Compose Response</label>
                         <TextArea
                             value={reply}
                             onChange={(e) => setReply(e.target.value)}
                             placeholder="Type a message to the user..."
                             autoSize={{ minRows: 2, maxRows: 4 }}
-                            className="mb-2 !text-xs !bg-slate-50/50 !border-slate-100 focus:!border-[#006666] !rounded-lg"
+                            className="mb-2 !text-xs !bg-slate-50/50 !border-slate-100 focus:!border-[#006666] !rounded"
                         />
                         <div className="flex justify-between items-center">
                             <Upload

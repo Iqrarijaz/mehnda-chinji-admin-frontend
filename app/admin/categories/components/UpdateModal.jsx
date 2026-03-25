@@ -57,13 +57,12 @@ function UpdateCategoryModal({ modal, setModal }) {
   return (
     <Modal
       title={
-        <div className="flex items-center gap-3 px-2">
-          <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
-            <FaEdit size={18} />
+        <div className="flex items-center gap-2 px-0 py-1">
+          <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+            <FaEdit size={16} />
           </div>
           <div>
-            <span className="text-lg font-bold text-slate-900 block">Edit Category</span>
-            <span className="text-xs text-slate-500 font-normal">Update localization and classification</span>
+            <span className="text-lg font-bold text-teal-700 block mt-1">Edit Category</span>
           </div>
         </div>
       }
@@ -83,7 +82,7 @@ function UpdateCategoryModal({ modal, setModal }) {
           onSubmit={handleSubmit}
         >
           {({ isSubmitting, values, setFieldValue, errors, touched }) => (
-            <Form className="space-y-4">
+            <Form className="space-y-2">
               {updateCategory.status === "loading" ? (
                 <FormSkeleton fields={2} />
               ) : (
@@ -91,8 +90,8 @@ function UpdateCategoryModal({ modal, setModal }) {
                   <div className="modal-section">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Localization</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <FormField label="Name (English)" name="name_en" placeholder="e.g. Restaurants" required className="!h-[36px] !text-sm" />
-                      <FormField label="Name (Urdu)" name="name_ur" placeholder="e.g. ریسٹورنٹ" required className="!h-[36px] !text-sm" />
+                      <FormField label="Name (English)" name="name_en" placeholder="e.g. Restaurants" required className="!h-[32px] !text-xs" />
+                      <FormField label="Name (Urdu)" name="name_ur" placeholder="e.g. ریسٹورنٹ" required className="!h-[32px] !text-xs" />
                     </div>
                   </div>
 
@@ -107,7 +106,8 @@ function UpdateCategoryModal({ modal, setModal }) {
                           { value: "PLACES", label: "Places (Locations)" },
                           { value: "SERVICES", label: "Services (Utility)" },
                         ]}
-                        height="36px"
+                        height="32px"
+                        className="modern-select-box"
                       />
                       {touched.type && errors.type && (
                         <div className="text-red-500 text-[10px] font-medium">{errors.type}</div>
@@ -117,7 +117,7 @@ function UpdateCategoryModal({ modal, setModal }) {
                 </>
               )}
 
-              <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+              <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                 <CustomButton
                   label="Cancel"
                   type="secondary"

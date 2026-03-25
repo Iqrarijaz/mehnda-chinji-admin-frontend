@@ -29,8 +29,11 @@ const StatCard = ({
                 flex: "0 0 auto", 
                 background: cardBg,
                 border: `1.5px solid ${cardBorder}`,
-                borderRadius: 14,
-                padding: "8px 20px",
+                borderRadius: 4,
+                padding: "0 14px",
+                height: 36,
+                display: "flex",
+                alignItems: "center",
                 cursor: "pointer",
                 textAlign: "left",
                 overflow: "hidden",
@@ -68,12 +71,11 @@ const StatCard = ({
                     <span
                         className="stat-count text-[#006666]"
                         style={{
-                            fontSize: 26,
-                            fontWeight: 800,
+                            fontSize: 18,
+                            fontWeight: 700,
                             color: active ? "#ffffff" : color,
                             lineHeight: 1,
-                            letterSpacing: "-1px",
-                            marginRight: 10,
+                            marginRight: 6,
                         }}
                     >
                         {count ?? 0}
@@ -82,11 +84,11 @@ const StatCard = ({
                     <span
                         className="stat-title"
                         style={{
-                            fontSize: 13,
+                            fontSize: 10,
                             fontWeight: 700,
                             color: textColor,
                             textTransform: "uppercase",
-                            letterSpacing: "0.07em",
+                            letterSpacing: "0.05em",
                         }}
                     >
                         <span className="stat-title-full">{title}</span>
@@ -103,7 +105,7 @@ const StatCard = ({
                             justifyContent: "center",
                             width: 20,
                             height: 20,
-                            borderRadius: 9,
+                            borderRadius: 4,
                             background: active
                                 ? "rgba(255,255,255,0.2)"
                                 : `${color}18`,
@@ -128,7 +130,7 @@ const StatCard = ({
                     background: active
                         ? "rgba(255,255,255,0.35)"
                         : color,
-                    borderRadius: "0 0 14px 14px",
+                    borderRadius: "0 0 4px 4px",
                     opacity: active ? 1 : 0.55,
                 }}
             />

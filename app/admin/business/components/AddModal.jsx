@@ -68,13 +68,12 @@ function AddBusinessModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-[#006666]">
-                        <FaStore size={18} />
+                <div className="flex items-center gap-2 px-0 py-1">
+                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                        <FaStore size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-slate-900 block">Register Business</span>
-                        <span className="text-xs text-slate-500 font-normal">Add a new commercial entity to the platform</span>
+                        <span className="text-lg font-bold text-teal-700 block mt-1">Register Business</span>
                     </div>
                 </div>
             }
@@ -85,7 +84,7 @@ function AddBusinessModal({ modal, setModal }) {
             footer={null}
             className="modern-modal"
         >
-            <div className="p-1 mt-4">
+            <div className="p-1">
                 <Formik
                     innerRef={formikRef}
                     initialValues={initialValues}
@@ -93,97 +92,92 @@ function AddBusinessModal({ modal, setModal }) {
                     onSubmit={handleSubmit}
                 >
                     {({ isSubmitting }) => (
-                        <Form className="space-y-4">
+                        <Form className="space-y-3">
                             {createBusiness.status === "loading" ? (
                                 <FormSkeleton fields={5} />
                             ) : (
                                 <>
                                     {/* Basic Info Section */}
-                                    <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-100/50 space-y-4">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Identity & Ownership</p>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="bg-slate-50/50 p-3 rounded border border-slate-100/50 space-y-3">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Identity & Ownership</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="md:col-span-2">
                                                 <FormField
                                                     label="Business Name"
                                                     name="name"
-                                                    placeholder="e.g. Al-Falah General Store"
+                                                    placeholder="Name"
                                                     required
-                                                    className="!h-[36px] !text-xs !rounded-lg"
-                                                    labelClassName="!text-xs !font-bold !text-slate-600"
+                                                    className="!h-[32px] !text-xs !rounded-lg"
+                                                    labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                                 />
                                             </div>
                                             <div className="md:col-span-2">
                                                 <FormField
                                                     label="Owner User ID"
                                                     name="userId"
-                                                    placeholder="MongoDB ObjectId of the user"
+                                                    placeholder="User ID"
                                                     required
-                                                    className="!h-[36px] !text-xs !rounded-lg"
-                                                    labelClassName="!text-xs !font-bold !text-slate-600"
+                                                    className="!h-[32px] !text-xs !rounded-lg"
+                                                    labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                                 />
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* Details Section */}
-                                    <div className="p-4 rounded-xl border border-slate-100 space-y-4">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Categorization & Contact</p>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="p-3 rounded border border-slate-100 space-y-3">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Categorization & Contact</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <FormField
-                                                label="Category (English)"
+                                                label="Category (EN)"
                                                 name="categoryEn"
-                                                placeholder="e.g. Retail"
+                                                placeholder="Retail"
                                                 required
-                                                className="!h-[36px] !text-xs !rounded-lg"
-                                                labelClassName="!text-xs !font-bold !text-slate-600"
-                                                icon={<FaTag className="opacity-20 text-[10px]" />}
+                                                className="!h-[32px] !text-xs !rounded-lg"
+                                                labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
                                             <FormField
-                                                label="Category (Urdu)"
+                                                label="Category (UR)"
                                                 name="categoryUr"
-                                                placeholder="e.g. ریٹیل"
-                                                className="!h-[36px] !text-xs !rounded-lg font-notoUrdu"
-                                                labelClassName="!text-xs !font-bold !text-slate-600"
-                                                icon={<FaTag className="opacity-20 text-[10px]" />}
+                                                placeholder="ریٹیل"
+                                                className="!h-[32px] !text-xs !rounded-lg font-notoUrdu text-right"
+                                                labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
                                             <FormField
-                                                label="Contact Phone"
+                                                label="Phone"
                                                 name="phone"
-                                                placeholder="+92 300 1234567"
+                                                placeholder="+92..."
                                                 required
-                                                className="!h-[36px] !text-xs !rounded-lg"
-                                                labelClassName="!text-xs !font-bold !text-slate-600"
-                                                icon={<FaPhoneAlt className="opacity-20 text-[10px]" />}
+                                                className="!h-[32px] !text-xs !rounded-lg"
+                                                labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
                                             <FormField
-                                                label="Business Address"
+                                                label="Address"
                                                 name="address"
-                                                placeholder="123 Street, City"
+                                                placeholder="Full Address"
                                                 required
-                                                className="!h-[36px] !text-xs !rounded-lg"
-                                                labelClassName="!text-xs !font-bold !text-slate-600"
-                                                icon={<FaMapMarkerAlt className="opacity-20 text-[10px]" />}
+                                                className="!h-[32px] !text-xs !rounded-lg"
+                                                labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
                                         </div>
                                     </div>
 
                                     {/* Description Section */}
-                                    <div className="px-1">
+                                    <div className="px-1 mt-1">
                                         <FormField
                                             label="Description"
                                             name="description"
-                                            placeholder="Brief about what this business does..."
+                                            placeholder="Brief description..."
                                             type="textarea"
-                                            className="!text-xs !rounded-lg"
-                                            labelClassName="!text-xs !font-bold !text-slate-600"
-                                            autoSize={{ minRows: 2, maxRows: 4 }}
+                                            className="!text-xs !rounded-lg !h-16"
+                                            labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                         />
                                     </div>
                                 </>
                             )}
 
                             {/* Modal Footer Actions */}
-                            <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

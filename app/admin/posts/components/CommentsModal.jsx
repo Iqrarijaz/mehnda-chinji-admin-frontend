@@ -1,4 +1,4 @@
-import { Modal, List, Avatar, Popconfirm, Tooltip } from "antd";
+import { Modal, List, Avatar, Popconfirm, Tooltip, Button } from "antd";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { FaTrash, FaCommentDots } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -32,13 +32,12 @@ function CommentsModal({ isOpen, onClose, postId }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2 pt-1">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-                        <FaCommentDots size={18} />
+                <div className="flex items-center gap-2 px-0 py-1">
+                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                        <FaCommentDots size={16} />
                     </div>
                     <div>
-                        <span className="text-xl font-bold text-slate-900 block">Post Comments</span>
-                        <span className="text-xs text-slate-500 font-normal">Manage interactions and feedback</span>
+                        <span className="text-lg font-bold text-blue-700 block mt-1">Post Comments</span>
                     </div>
                 </div>
             }
@@ -49,14 +48,14 @@ function CommentsModal({ isOpen, onClose, postId }) {
                     label="Back to Posts"
                     type="secondary"
                     onClick={onClose}
-                    className="w-full !h-[48px] font-bold"
+                    className="w-full"
                 />
             }
             width={680}
             className="modern-modal"
             destroyOnClose
         >
-            <div className="p-2 pt-4">
+            <div className="p-1">
                 <div className="max-h-[550px] overflow-y-auto pr-2 custom-scrollbar">
                     {isLoading ? (
                         <div className="py-4">
@@ -83,7 +82,7 @@ function CommentsModal({ isOpen, onClose, postId }) {
                             }}
                             renderItem={(item) => (
                                 <List.Item
-                                    className="group hover:bg-slate-50/80 p-5 rounded-2xl transition-all duration-200 border-none mb-2"
+                                    className="group hover:bg-slate-50/50 p-2.5 rounded-lg transition-all duration-200 border-none mb-1"
                                     actions={[
                                         <Popconfirm
                                             key="delete"
@@ -99,8 +98,8 @@ function CommentsModal({ isOpen, onClose, postId }) {
                                                 <Button
                                                     type="text"
                                                     danger
-                                                    icon={<FaTrash size={14} />}
-                                                    className="opacity-0 group-hover:opacity-100 transition-opacity bg-white hover:bg-red-50 border border-slate-100 shadow-sm !rounded-lg !w-10 !h-10 flex items-center justify-center p-0"
+                                                    icon={<FaTrash size={12} />}
+                                                    className="opacity-0 group-hover:opacity-100 transition-opacity bg-white hover:bg-red-50 border border-slate-100 shadow-sm !rounded-md !w-8 !h-8 flex items-center justify-center p-0"
                                                 />
                                             </Tooltip>
                                         </Popconfirm>
@@ -110,7 +109,7 @@ function CommentsModal({ isOpen, onClose, postId }) {
                                         avatar={
                                             <Avatar
                                                 src={item.user?.profileImage}
-                                                size={44}
+                                                size={32}
                                                 className="bg-slate-100 border border-slate-200 shadow-sm"
                                             >
                                                 {item.user?.name?.charAt(0)}
@@ -118,16 +117,16 @@ function CommentsModal({ isOpen, onClose, postId }) {
                                         }
                                         title={
                                             <div className="flex items-center justify-between">
-                                                <span className="font-bold text-[15px] text-slate-800 capitalize">
+                                                <span className="font-bold text-[13px] text-slate-800 capitalize leading-tight">
                                                     {item.user?.name || "Anonymous User"}
                                                 </span>
-                                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
                                                     {timestampToDateWithTime(item.createdAt)}
                                                 </span>
                                             </div>
                                         }
                                         description={
-                                            <div className="mt-2 text-slate-600 text-[14px] leading-relaxed whitespace-pre-wrap bg-white p-3 rounded-xl border border-slate-100/50 shadow-sm italic">
+                                            <div className="mt-1 text-slate-600 text-xs leading-relaxed whitespace-pre-wrap bg-white/50 p-2 rounded-lg border border-slate-100/50 italic">
                                                 "{item.text}"
                                             </div>
                                         }

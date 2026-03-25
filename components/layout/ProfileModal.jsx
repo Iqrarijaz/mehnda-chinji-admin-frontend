@@ -128,7 +128,7 @@ const ProfileModal = ({ open, onCancel }) => {
                             value={editForm.name}
                             onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                             placeholder="Full Name"
-                            className="!h-[44px] !rounded-xl !border-2 !border-slate-100 focus:!border-teal-500 !text-center !font-bold !text-slate-800"
+                            className="!h-[44px] !rounded !border-2 !border-slate-100 focus:!border-teal-500 !text-center !font-bold !text-slate-800"
                         />
                     ) : (
                         <>
@@ -144,7 +144,7 @@ const ProfileModal = ({ open, onCancel }) => {
 
                 {/* Verification Badge - Redesigned */}
                 <div className="w-full px-8 mb-6">
-                    <div className="flex items-center justify-center gap-2.5 bg-teal-50/50 py-3 px-4 rounded-2xl border border-teal-100/50 shadow-sm">
+                    <div className="flex items-center justify-center gap-2.5 bg-teal-50/50 py-3 px-4 rounded border border-teal-100/50 shadow-sm">
                         <FaCheckCircle className="text-teal-500" size={16} />
                         <span className="text-[11px] font-black text-teal-700 uppercase tracking-widest">Account Active & Verified</span>
                     </div>
@@ -154,7 +154,7 @@ const ProfileModal = ({ open, onCancel }) => {
                 <div className="w-full space-y-4 px-8 mb-8">
                     <div className="flex flex-col gap-1.5">
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] ml-1">Email Terminal</span>
-                        <div className="flex items-center gap-3 text-slate-600 bg-slate-50/50 p-3.5 rounded-xl border border-slate-100 transition-all">
+                        <div className="flex items-center gap-3 text-slate-600 bg-slate-50/50 p-3.5 rounded border border-slate-100 transition-all">
                             <MailOutlined className="text-teal-600" />
                             <span className="text-sm font-semibold truncate">{user?.adminData?.email || "N/A"}</span>
                         </div>
@@ -168,10 +168,10 @@ const ProfileModal = ({ open, onCancel }) => {
                                 value={editForm.phone}
                                 onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
                                 placeholder="Phone Number"
-                                className="!h-[44px] !rounded-xl !border-2 !border-slate-100 focus:!border-teal-500"
+                                className="!h-[44px] !rounded !border-2 !border-slate-100 focus:!border-teal-500"
                             />
                         ) : (
-                            <div className="flex items-center gap-3 text-slate-700 bg-white p-3.5 rounded-xl border border-slate-100 shadow-sm transition-all hover:border-teal-100">
+                            <div className="flex items-center gap-3 text-slate-700 bg-white p-3.5 rounded border border-slate-100 shadow-sm transition-all hover:border-teal-100">
                                 <PhoneOutlined className="text-teal-600" />
                                 <span className="text-sm font-bold">{user?.adminData?.phone || "N/A"}</span>
                             </div>

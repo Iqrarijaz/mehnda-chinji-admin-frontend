@@ -43,7 +43,7 @@ function ContactUsDetailModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                    <div className="w-10 h-10 rounded bg-blue-50 flex items-center justify-center text-blue-600">
                         <InfoCircleOutlined className="text-xl" />
                     </div>
                     <div>
@@ -62,9 +62,9 @@ function ContactUsDetailModal({ modal, setModal }) {
             centered
             className="modern-modal"
         >
-            <div className="bg-slate-50/50 p-4 rounded-2xl max-h-[80vh] overflow-y-auto custom-scrollbar border border-slate-100/50 mt-4">
+            <div className="bg-slate-50/50 p-4 rounded border border-slate-100/50 mt-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
                 {/* Status & Source Bar */}
-                <div className="bg-white rounded-xl p-4 mb-4 shadow-sm flex items-center justify-between border border-slate-100">
+                <div className="bg-white rounded p-4 mb-4 shadow-sm flex items-center justify-between border border-slate-100">
                     <div className="flex items-center gap-3">
                         <Tag color={getStatusColor(contact?.status)} className="m-0 font-bold px-2 py-0.5 rounded-full uppercase text-[10px]">
                             {contact?.status}
@@ -90,7 +90,7 @@ function ContactUsDetailModal({ modal, setModal }) {
 
                 {/* Sender Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
+                    <div className="bg-white rounded p-4 shadow-sm border border-slate-100">
                         <label className="text-slate-400 font-bold text-[9px] uppercase tracking-widest mb-1.5 block">Sender Name</label>
                         <div className="flex items-center gap-2">
                             <UserOutlined className="text-slate-400" />
@@ -107,9 +107,9 @@ function ContactUsDetailModal({ modal, setModal }) {
                 </div>
 
                 {/* Message Content */}
-                <div className="bg-white rounded-xl p-4 mb-4 shadow-sm border border-slate-100">
+                <div className="bg-white rounded p-4 mb-4 shadow-sm border border-slate-100">
                     <label className="text-slate-400 font-bold text-[9px] uppercase tracking-widest mb-2 block">Message Description</label>
-                    <div className="text-slate-600 text-[13px] leading-relaxed whitespace-pre-wrap bg-slate-50/50 p-4 rounded-xl border border-slate-100/50 italic font-medium min-h-[120px]">
+                    <div className="text-slate-600 text-[13px] leading-relaxed whitespace-pre-wrap bg-slate-50/50 p-4 rounded border border-slate-100/50 italic font-medium min-h-[120px]">
                         "{contact?.description}"
                     </div>
                 </div>

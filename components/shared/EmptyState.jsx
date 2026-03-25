@@ -14,7 +14,7 @@ const EmptyState = ({
 }) => {
     return (
         <div className={cn(
-            "flex flex-col items-center justify-center p-12 text-center bg-white border border-dashed border-slate-200 rounded-3xl",
+            "flex flex-col items-center justify-center p-12 text-center bg-white border border-dashed border-slate-200 rounded",
             className
         )}>
             <div className="mb-4 p-4 bg-slate-50 rounded-full">
@@ -28,7 +28,7 @@ const EmptyState = ({
                 <Button
                     type="primary"
                     onClick={onAction}
-                    className="!h-[42px] !px-6 !rounded-xl !bg-[#006666] !border-none font-bold shadow-lg shadow-teal-900/10 hover:!bg-[#004d4d] transition-all"
+                    className="!h-[42px] !px-6 !rounded !bg-[#006666] !border-none font-bold shadow-lg shadow-teal-900/10 hover:!bg-[#004d4d] transition-all"
                 >
                     {actionTitle}
                 </Button>

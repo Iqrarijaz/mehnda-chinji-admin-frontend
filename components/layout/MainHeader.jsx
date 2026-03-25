@@ -8,7 +8,8 @@ function MainHeader() {
   const { open, toggleMenu } = useContext(MenuContext);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  const handleToggle = () => {
+  const handleToggle = (e) => {
+    e.preventDefault();
     toggleMenu(!open);
   };
 

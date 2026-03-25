@@ -77,7 +77,7 @@ function PostCard({
                     onClick={(e) => handleImageClick(e, 0)}
                 />
                 {count > 1 && (
-                    <div className="absolute bottom-3 right-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded-lg text-white text-[10px] font-bold flex items-center gap-1.5 shadow-lg">
+                    <div className="absolute bottom-3 right-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded text-white text-[10px] font-bold flex items-center gap-1.5 shadow-lg">
                         <PictureOutlined />
                         {count} Images
                     </div>
@@ -91,7 +91,7 @@ function PostCard({
 
     return (
         <>
-            <div className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col w-full break-inside-avoid mb-6 group/card">
+            <div className="bg-white rounded overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col w-full break-inside-avoid mb-6 group/card">
                 {/* Header */}
                 <div className="p-4 flex items-center justify-between border-b border-slate-50">
                     <div className="flex items-center gap-3">
@@ -194,7 +194,7 @@ function PostCard({
 
                 {/* Footer Actions */}
                 <div className="p-4 pt-3 flex items-center justify-between border-t border-slate-100">
-                    <div className="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
+                    <div className="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded border border-slate-100">
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Status</span>
                         <Switch
                             checked={isActive}
@@ -208,7 +208,7 @@ function PostCard({
                             <Button
                                 icon={<EditOutlined />}
                                 onClick={() => onEdit(post)}
-                                className="!rounded-xl !border-slate-100 hover:!border-[#006666] hover:!text-[#006666] !flex items-center justify-center !h-9 !w-9 bg-white shadow-sm"
+                                className="!rounded !border-slate-100 hover:!border-[#006666] hover:!text-[#006666] !flex items-center justify-center !h-9 !w-9 bg-white shadow-sm"
                             />
                         </Tooltip>
                         <Tooltip title="Delete Post">

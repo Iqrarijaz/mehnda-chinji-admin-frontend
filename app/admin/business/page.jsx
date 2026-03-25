@@ -120,7 +120,7 @@ export default function BusinessPage() {
               title="Add Business"
               icon={false}
               onClick={() => setModal({ name: "Add", data: null, state: true })}
-              className="!h-[36px] !rounded-xl !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+              className="!h-[36px] !rounded !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
             />
           </div>
         </div>

@@ -1,11 +1,13 @@
 "use client";
 import React from "react";
-import { Modal, Form, Input, Button } from "antd";
+import { Modal, Form, Input } from "antd";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { CREATE_ROLE, UPDATE_ROLE } from "@/app/api/admin/roles";
+import { FaEdit, FaShieldAlt } from "react-icons/fa";
+import CustomButton from "@/components/shared/CustomButton";
 
 import PermissionsSelector from "./PermissionsSelector";
 
@@ -40,12 +42,21 @@ const AddEditRoleModal = ({ modal, setModal }) => {
 
     return (
         <Modal
-            title={`${isEdit ? "Edit" : "Add"} Role`}
+            title={
+                <div className="flex items-center gap-2 px-0 py-1">
+                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                        {isEdit ? <FaEdit size={16} /> : <FaShieldAlt size={16} />}
+                    </div>
+                    <span className="text-lg font-bold text-blue-700 block mt-1">{isEdit ? "Edit" : "Add"} Role</span>
+                </div>
+            }
             open={modal.state}
             onCancel={handleCancel}
             footer={null}
             destroyOnClose
-            width={800}
+            width={700}
+            className="modern-modal"
+            centered
         >
             <Formik
                 initialValues={{
@@ -67,53 +78,50 @@ const AddEditRoleModal = ({ modal, setModal }) => {
                     isSubmitting,
                     setFieldValue,
                 }) => (
-                    <Form layout="vertical" onFinish={handleSubmit}>
-                        <Form.Item
-                            label="Role Name"
-                            validateStatus={errors.name && touched.name ? "error" : ""}
-                            help={errors.name && touched.name ? errors.name : ""}
-                        >
+                    <Form layout="vertical" onFinish={handleSubmit} className="space-y-2">
+                        <div className="space-y-1">
+                            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Role Name <span className="text-red-500">*</span></label>
                             <Input
                                 name="name"
                                 placeholder="Enter role name"
                                 value={values.name}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
+                                className="!h-[32px] !text-xs !rounded-lg"
                             />
-                        </Form.Item>
+                            {errors.name && touched.name && <div className="text-red-500 text-[10px] font-medium ml-1">{errors.name}</div>}
+                        </div>
 
-                        <Form.Item
-                            label="Description"
-                            validateStatus={errors.description && touched.description ? "error" : ""}
-                            help={errors.description && touched.description ? errors.description : ""}
-                        >
+                        <div className="space-y-1">
+                            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Description <span className="text-red-500">*</span></label>
                             <Input.TextArea
                                 name="description"
-                                placeholder="Enter description"
+                                placeholder="Describe role access..."
                                 value={values.description}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                rows={2}
+                                className="!rounded-lg !text-xs !py-1 !h-16"
                             />
-                        </Form.Item>
+                            {errors.description && touched.description && <div className="text-red-500 text-[10px] font-medium ml-1">{errors.description}</div>}
+                        </div>
 
-                        <Form.Item label="Permissions">
-                            <PermissionsSelector
-                                selectedPermissions={values.permissions}
-                                onChange={(newPermissions) => setFieldValue("permissions", newPermissions)}
-                            />
-                        </Form.Item>
+                        <div className="space-y-1">
+                            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Access Permissions</label>
+                            <div className="bg-slate-50/50 p-2 rounded-lg border border-slate-100 mt-1">
+                                <PermissionsSelector
+                                    selectedPermissions={values.permissions}
+                                    onChange={(newPermissions) => setFieldValue("permissions", newPermissions)}
+                                />
+                            </div>
+                        </div>
 
-                        <div className="flex justify-end gap-2 mt-4">
-                            <Button onClick={handleCancel}>Cancel</Button>
-                            <Button
-                                type="primary"
+                        <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                            <CustomButton label="Cancel" type="secondary" onClick={handleCancel} />
+                            <CustomButton
+                                label={isEdit ? "Update Role" : "Create Role"}
                                 htmlType="submit"
                                 loading={isSubmitting || mutation.isLoading}
-                                className="bg-[#0F172A]"
-                            >
-                                {isEdit ? "Update" : "Create"}
-                            </Button>
+                            />
                         </div>
                     </Form>
                 )}

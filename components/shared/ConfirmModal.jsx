@@ -33,7 +33,7 @@ const ConfirmModal = React.memo(({
             <div className="flex flex-col items-center text-center">
                 {/* Icon Container with subtle background wrap */}
                 <div
-                    className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-sm border ${isDanger
+                    className={`w-16 h-16 rounded flex items-center justify-center mb-6 shadow-sm border ${isDanger
                         ? "bg-red-50 border-red-100 text-red-500"
                         : "bg-teal-50 border-teal-100 text-teal-600"
                         }`}

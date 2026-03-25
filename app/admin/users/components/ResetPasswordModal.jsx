@@ -52,13 +52,12 @@ function ResetPasswordModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
-                        <FaLock size={16} />
+                <div className="flex items-center gap-2 px-0 py-1">
+                    <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
+                        <FaLock size={14} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-slate-900 block">Reset Password</span>
-                        <span className="text-xs text-slate-500 font-normal">Security update for user account</span>
+                        <span className="text-lg font-bold text-red-700 block mt-1">Reset Password</span>
                     </div>
                 </div>
             }
@@ -77,25 +76,26 @@ function ResetPasswordModal({ modal, setModal }) {
                     onSubmit={handleSubmit}
                 >
                     {({ isSubmitting }) => (
-                        <Form className="space-y-4">
+                        <Form className="space-y-2">
                             {resetPassword.status === "loading" ? (
                                 <FormSkeleton fields={2} />
                             ) : (
                                 <>
-                                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 mb-2">
-                                        <p className="text-slate-600 text-xs leading-relaxed">
-                                            Creating a new secure password for <span className="font-bold text-slate-900">{modal?.data?.name || "this user"}</span>.
+                                    <div className="p-2 bg-slate-50/50 rounded-md border border-slate-100 mb-1">
+                                        <p className="text-slate-500 text-[10px] leading-tight font-medium uppercase tracking-tight">
+                                            Resetting password for: <span className="font-bold text-slate-800">{modal?.data?.name || "this user"}</span>
                                         </p>
                                     </div>
 
-                                    <div className="space-y-3">
+                                    <div className="space-y-2">
                                         <FormField
                                             label="New Password"
                                             name="password"
                                             type="password"
                                             placeholder="••••••••"
                                             required
-                                            className="!h-[36px] !text-sm"
+                                            className="!h-[32px] !text-xs !rounded-lg"
+                                            labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                         />
                                         <FormField
                                             label="Confirm New Password"
@@ -103,13 +103,14 @@ function ResetPasswordModal({ modal, setModal }) {
                                             type="password"
                                             placeholder="••••••••"
                                             required
-                                            className="!h-[36px] !text-sm"
+                                            className="!h-[32px] !text-xs !rounded-lg"
+                                            labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                         />
                                     </div>
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

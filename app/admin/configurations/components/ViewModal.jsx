@@ -14,96 +14,86 @@ function ViewConfigurationModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2 pt-1">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-                        <FaFileCode size={18} />
+                <div className="flex items-center gap-2 px-0 py-1">
+                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                        <FaFileCode size={16} />
                     </div>
                     <div>
-                        <span className="text-xl font-bold text-slate-900 block">Configuration Detail</span>
-                        <span className="text-xs text-slate-500 font-normal">Technical specification and state</span>
+                        <span className="text-lg font-bold text-blue-700 block mt-1">Configuration Detail</span>
                     </div>
                 </div>
             }
             open={isOpen}
             onCancel={handleClose}
-            footer={null}
+            footer={
+                <CustomButton label="Close Details" type="secondary" onClick={handleClose} className="w-full" />
+            }
             centered
             width={720}
-            className="modern-modal"
-        >
-            <div className="p-2 pt-4">
-                <div className="space-y-6">
+            >
+            <div className="p-1">
+                <div className="space-y-4">
                     {/* Status & Metadata Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <FaShieldAlt className="text-slate-400" size={16} />
-                                <span className="text-sm font-bold text-slate-700 uppercase tracking-tight">System Status</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div className="p-3 bg-slate-50/50 rounded-lg border border-slate-100 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <FaShieldAlt className="text-slate-400" size={14} />
+                                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-tight">System Status</span>
                             </div>
                             <Tag
-                                color={data.isActive ? "green" : "red"}
-                                className="rounded-full px-4 py-0.5 border-none font-black text-[10px] uppercase tracking-widest m-0 shadow-sm"
+                                color={data.isActive ? "success" : "error"}
+                                className="rounded-md px-2 py-0 border-none font-black text-[9px] uppercase tracking-widest m-0"
                             >
                                 {data.isActive ? "ACTIVE" : "INACTIVE"}
                             </Tag>
                         </div>
 
-                        <div className="p-5 bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <FaCogs className="text-slate-400" size={16} />
-                                <span className="text-sm font-bold text-slate-700 uppercase tracking-tight">Config Type</span>
+                        <div className="p-3 bg-white rounded-lg border border-slate-100 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <FaCogs className="text-slate-400" size={14} />
+                                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-tight">Config Type</span>
                             </div>
-                            <Tag color="blue" className="rounded font-bold border-none m-0 shadow-sm">
+                            <Tag color="blue" className="rounded font-bold border-none m-0 text-[10px]">
                                 {data.type || "GENERIC"}
                             </Tag>
                         </div>
                     </div>
 
                     {/* Timeline Data */}
-                    <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm grid grid-cols-2 gap-4">
-                        <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 leading-none text-center">Creation Date</p>
-                            <div className="flex items-center justify-center gap-2 text-slate-600 font-medium text-xs">
-                                <FaCalendarAlt size={10} />
+                    <div className="bg-white p-3 rounded-lg border border-slate-100 grid grid-cols-2 gap-3">
+                        <div className="text-center">
+                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 leading-none">Creation Date</p>
+                            <div className="flex items-center justify-center gap-1.5 text-slate-600 font-medium text-[11px]">
+                                <FaCalendarAlt size={9} className="text-teal-500" />
                                 {data.createdAt ? new Date(data.createdAt).toLocaleString() : "N/A"}
                             </div>
                         </div>
-                        <div className="border-l border-slate-100">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 leading-none text-center">Last Modified</p>
-                            <div className="flex items-center justify-center gap-2 text-slate-600 font-medium text-xs">
-                                <FaCalendarAlt size={10} />
+                        <div className="border-l border-slate-100 text-center">
+                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 leading-none">Last Modified</p>
+                            <div className="flex items-center justify-center gap-1.5 text-slate-600 font-medium text-[11px]">
+                                <FaCalendarAlt size={9} className="text-orange-500" />
                                 {data.updatedAt ? new Date(data.updatedAt).toLocaleString() : "N/A"}
                             </div>
                         </div>
                     </div>
 
                     {/* JSON Payload Display */}
-                    <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 shadow-xl overflow-hidden">
-                        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-800">
-                            <FaCode className="text-teal-400" size={14} />
-                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Active JSON Payload</span>
+                    <div className="bg-slate-900 rounded-lg p-4 border border-slate-800 shadow-sm overflow-hidden">
+                        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-slate-800/50">
+                            <FaCode className="text-teal-400" size={12} />
+                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Active JSON Payload</span>
                         </div>
-                        <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
-                            <pre className="text-teal-50 font-mono text-xs leading-relaxed">
+                        <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
+                            <pre className="text-teal-50 font-mono text-[11px] leading-relaxed">
                                 {JSON.stringify(data.data, null, 2)}
                             </pre>
                         </div>
                     </div>
 
                     {/* Footer Info */}
-                    <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest pt-2">
-                        <FaInfoCircle size={10} />
+                    <div className="flex items-center justify-center gap-2 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                        <FaInfoCircle size={9} />
                         Object Hash: {data._id}
-                    </div>
-
-                    {/* Action Button */}
-                    <div className="flex justify-end pt-4">
-                        <CustomButton
-                            label="Close Details"
-                            type="secondary"
-                            onClick={handleClose}
-                            className="!px-12"
-                        />
                     </div>
                 </div>
             </div>

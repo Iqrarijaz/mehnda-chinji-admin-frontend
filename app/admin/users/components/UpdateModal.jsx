@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useMemo } from "react";
 import { Modal } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { FaUserEdit } from "react-icons/fa";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "react-query";
@@ -63,13 +63,12 @@ const UpdateUserModal = React.memo(({ modal, setModal }) => {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
-                        <UserOutlined style={{ fontSize: '18px' }} />
+                <div className="flex items-center gap-2 px-0 py-1">
+                    <div className="w-8 h-8 rounded bg-blue-50 flex items-center justify-center text-blue-600">
+                        <FaUserEdit size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-slate-900 block">Update User Details</span>
-                        <span className="text-xs text-slate-500 font-normal">Modify profile information and account role</span>
+                        <span className="text-lg font-bold text-blue-700 block mt-1">Update User Details</span>
                     </div>
                 </div>
             }
@@ -89,22 +88,22 @@ const UpdateUserModal = React.memo(({ modal, setModal }) => {
                     onSubmit={handleSubmit}
                 >
                     {({ isSubmitting, values, setFieldValue, errors, touched }) => (
-                        <Form className="space-y-4">
+                        <Form className="space-y-2">
                             {updateUser.isLoading ? (
                                 <FormSkeleton fields={4} />
                             ) : (
                                 <>
-                                    <div className="modal-section bg-slate-50/50 p-4 rounded-xl border border-slate-100 space-y-3">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Account Info</p>
-                                        <FormField label="Full Name" name="name" placeholder="Enter full name" required className="!h-[36px] !text-sm" />
-                                        <FormField label="Email Address" name="email" type="email" placeholder="email@example.com" required className="!h-[36px] !text-sm" />
+                                    <div className="modal-section">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Account Info</p>
+                                        <FormField label="Full Name" name="name" placeholder="Name" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
+                                        <FormField label="Email Address" name="email" type="email" placeholder="Email" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
                                     </div>
 
                                     <div className="modal-section">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Profile Data</p>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Profile Data</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-slate-700 font-semibold text-xs">Role <span className="text-red-500">*</span></label>
+                                            <div className="flex flex-col gap-1.5 overflow-hidden">
+                                                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Role <span className="text-red-500">*</span></label>
                                                 <SelectBox
                                                     value={values.role}
                                                     handleChange={(val) => setFieldValue("role", val)}
@@ -113,13 +112,13 @@ const UpdateUserModal = React.memo(({ modal, setModal }) => {
                                                         { value: "ADMIN", label: "ADMIN" },
                                                         { value: "SUPER_ADMIN", label: "SUPER_ADMIN" }
                                                     ]}
-                                                    className="modern-select-box [&>div]:!h-[36px] [&>div]:!rounded-lg [&>div]:!text-sm"
+                                                    className="modern-select-box"
                                                 />
-                                                {errors.role && touched.role && <span className="text-red-500 text-[10px] font-medium">{errors.role}</span>}
+                                                {errors.role && touched.role && <span className="text-red-500 text-[10px] font-medium ml-1">{errors.role}</span>}
                                             </div>
 
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-slate-700 font-semibold text-xs">Gender <span className="text-red-500">*</span></label>
+                                            <div className="flex flex-col gap-1.5 overflow-hidden">
+                                                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Gender <span className="text-red-500">*</span></label>
                                                 <SelectBox
                                                     value={values.gender}
                                                     handleChange={(val) => setFieldValue("gender", val)}
@@ -128,18 +127,20 @@ const UpdateUserModal = React.memo(({ modal, setModal }) => {
                                                         { value: "FEMALE", label: "FEMALE" },
                                                         { value: "OTHER", label: "OTHER" }
                                                     ]}
-                                                    className="modern-select-box [&>div]:!h-[36px] [&>div]:!rounded-lg [&>div]:!text-sm"
+                                                    className="modern-select-box"
                                                 />
-                                                {errors.gender && touched.gender && <span className="text-red-500 text-[10px] font-medium">{errors.gender}</span>}
+                                                {errors.gender && touched.gender && <span className="text-red-500 text-[10px] font-medium ml-1">{errors.gender}</span>}
                                             </div>
                                         </div>
                                     </div>
 
-                                    <FormField label="Phone Number" name="phone" placeholder="+92 ..." className="!h-[36px] !text-sm" />
+                                    <div className="px-1 mt-2 mb-2">
+                                        <FormField label="Phone Number" name="phone" placeholder="+92 ..." className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
+                                    </div>
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

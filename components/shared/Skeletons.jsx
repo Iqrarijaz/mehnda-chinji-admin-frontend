@@ -9,7 +9,7 @@ export const SkeletonPulse = ({ className }) => (
 
 export const TableSkeleton = ({ rows = 5, columns = 5 }) => {
     return (
-        <div className="w-full border border-slate-100 rounded-xl overflow-hidden bg-white shadow-sm">
+        <div className="w-full border border-slate-100 rounded overflow-hidden bg-white shadow-sm">
             <div className="bg-slate-50/50 h-12 border-b border-slate-100 flex items-center px-4 gap-4">
                 {Array.from({ length: columns }).map((_, i) => (
                     <Skeleton.Input key={i} active size="small" className="!w-full !min-w-0" />
@@ -28,7 +28,7 @@ export const TableSkeleton = ({ rows = 5, columns = 5 }) => {
 
 export const StatCardSkeleton = () => {
     return (
-        <div className="min-w-[100px] max-w-[150px] flex-1 h-[40px] rounded-lg border border-slate-100 bg-white shadow-sm flex items-center justify-center px-3 gap-2 overflow-hidden">
+        <div className="min-w-[100px] max-w-[150px] flex-1 h-[40px] rounded border border-slate-100 bg-white shadow-sm flex items-center justify-center px-3 gap-2 overflow-hidden">
             <SkeletonPulse className="w-6 h-5" />
             <SkeletonPulse className="w-12 h-3" />
         </div>
@@ -38,7 +38,7 @@ export const StatCardSkeleton = () => {
 export const FormSkeleton = ({ fields = 4 }) => {
     return (
         <div className="space-y-6">
-            <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100 space-y-6">
+            <div className="bg-slate-50/50 p-6 rounded border border-slate-100 space-y-6">
                 {Array.from({ length: 2 }).map((_, i) => (
                     <div key={i} className="space-y-2">
                         <Skeleton.Input active size="small" className="!w-24" />

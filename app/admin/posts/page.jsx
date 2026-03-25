@@ -123,7 +123,7 @@ export default function PostsPage() {
             <div className="flex flex-col md:flex-row justify-between mb-4 gap-3 items-start md:items-center">
                 <div className="flex items-center gap-3">
                     <h1 className="inner-page-title text-2xl md:text-3xl text-black p-0 font-semibold">Posts</h1>
-                    <div className="hidden md:flex items-center bg-gray-100 rounded-lg p-1">
+                    <div className="hidden md:flex items-center bg-gray-100 rounded p-1">
                         <button
                             onClick={() => setViewMode("cards")}
                             className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm transition-colors ${viewMode === "cards" ? "bg-[#006666] text-white shadow-lg shadow-teal-900/10" : "text-gray-600 hover:text-gray-900"}`}
@@ -181,7 +181,7 @@ export default function PostsPage() {
                             title="Add Post"
                             icon={false}
                             onClick={() => setModal({ name: "Add", state: true, data: null })}
-                            className="!h-[36px] !rounded-xl !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                            className="!h-[36px] !rounded !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
                         />
                     </div>
                 </div>

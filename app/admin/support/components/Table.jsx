@@ -35,7 +35,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
     };
 
     const actionMenu = (record) => (
-        <Menu className="!rounded-xl !p-2 !min-w-[160px] shadow-xl border border-slate-100">
+        <Menu className="!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100">
             <Menu.Item
                 key="manage"
                 icon={<CommentOutlined className="text-emerald-500" />}
@@ -44,7 +44,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
                     data: record,
                     state: true
                 })}
-                className="!rounded-lg hover:!bg-emerald-50"
+                className="!rounded hover:!bg-emerald-50"
             >
                 <span className="font-medium">View & Manage</span>
             </Menu.Item>
@@ -136,7 +136,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
                 />
             </div>
 
-            <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+            <div className="modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

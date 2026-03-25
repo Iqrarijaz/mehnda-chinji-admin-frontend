@@ -205,7 +205,7 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
 
     return (
         <div className="space-y-4">
-            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

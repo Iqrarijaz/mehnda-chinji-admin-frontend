@@ -1,33 +1,38 @@
 import React from "react";
-import { Modal, Button, Select } from "antd";
+import { Modal, Select } from "antd";
 import SearchInput from "@/components/InnerPage/SearchInput";
+import { FaGlobe } from "react-icons/fa";
+import CustomButton from "@/components/shared/CustomButton";
 
 function FilterModal({ open, onCancel, filters, setFilters }) {
     return (
         <Modal
-            title={<span className="text-lg font-bold text-[#006666]">Filter Locations</span>}
+            title={<div className="flex items-center gap-2 px-0 py-1">
+                <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                    <FaGlobe size={14} />
+                </div>
+                <span className="text-lg font-bold text-blue-700 block mt-1">Filter Locations</span>
+            </div>}
             open={open}
             onCancel={onCancel}
             footer={[
-                <Button key="close" onClick={onCancel} className="!rounded-lg !h-10 !px-6 font-medium">
-                    Close
-                </Button>
+                <CustomButton key="close" onClick={onCancel} label="Close" type="secondary" />
             ]}
             width={400}
             className="modern-modal"
             centered
         >
-            <div className="flex flex-col gap-5 py-4">
-                <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Search Locations</label>
-                    <SearchInput setFilters={setFilters} className="w-full" />
+            <div className="flex flex-col gap-3 py-1 px-1">
+                <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Search Locations</label>
+                    <SearchInput setFilters={setFilters} className="w-full !h-[32px] !text-xs" />
                 </div>
 
-                <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Type</label>
+                <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Type</label>
                     <Select
-                        placeholder="Select Type"
-                        className="w-full !h-11 custom-select"
+                        placeholder="Select Level"
+                        className="w-full modern-select-box"
                         value={filters.advance}
                         onChange={(val) => setFilters(prev => ({ ...prev, advance: val, currentPage: 1 }))}
                         allowClear

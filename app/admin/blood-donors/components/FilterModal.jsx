@@ -1,29 +1,34 @@
 import React from "react";
-import { Modal, Button, Select, Input } from "antd";
+import { Modal, Select, Input } from "antd";
+import { FaHeartbeat } from "react-icons/fa";
+import CustomButton from "@/components/shared/CustomButton";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
 function FilterModal({ isOpen, onClose, filters, onChange }) {
     return (
         <Modal
-            title={<span className="text-lg font-bold text-[#006666]">Filter Blood Donors</span>}
+            title={<div className="flex items-center gap-2 px-0 py-1">
+                <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
+                    <FaHeartbeat size={14} />
+                </div>
+                <span className="text-lg font-bold text-red-700 block mt-1">Filter Donors</span>
+            </div>}
             open={isOpen}
             onCancel={onClose}
             footer={[
-                <Button key="close" onClick={onClose} className="!rounded-lg !h-10 !px-6 font-medium">
-                    Close
-                </Button>
+                <CustomButton key="close" onClick={onClose} label="Close" />
             ]}
             width={400}
             className="modern-modal"
             centered
         >
-            <div className="flex flex-col gap-5 py-4">
+            <div className="flex flex-col gap-3 py-1 px-1">
                 <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Search Donor</label>
                     <Input
                         placeholder="Search by name or phone..."
-                        className="!h-11 !rounded-xl !border-slate-200"
+                        className="!h-[32px] !rounded-lg !border-slate-200 !text-xs"
                         value={filters.search}
                         onChange={(e) => onChange({ search: e.target.value, page: 1 })}
                     />
@@ -33,7 +38,7 @@ function FilterModal({ isOpen, onClose, filters, onChange }) {
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Blood Group</label>
                     <Select
                         placeholder="Select Blood Group"
-                        className="w-full !h-11 custom-select"
+                        className="w-full modern-select-box"
                         value={filters.bloodGroup || undefined}
                         onChange={(val) => onChange({ bloodGroup: val || "", page: 1 })}
                         allowClear
@@ -48,7 +53,7 @@ function FilterModal({ isOpen, onClose, filters, onChange }) {
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">City</label>
                     <Input
                         placeholder="Filter by city..."
-                        className="!h-11 !rounded-xl !border-slate-200"
+                        className="!h-[32px] !rounded-lg !border-slate-200 !text-xs"
                         value={filters.city}
                         onChange={(e) => onChange({ city: e.target.value, page: 1 })}
                     />

@@ -71,12 +71,12 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
     }, []);
 
     const actionMenu = React.useMemo(() => (record) => (
-        <Menu className="!rounded-xl !p-2 !min-w-[140px] shadow-xl border border-slate-100">
+        <Menu className="!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100">
             <Menu.Item
                 key="edit"
                 icon={<EditOutlined className="text-blue-500" />}
                 onClick={() => setModal({ name: "Update", data: record, state: true })}
-                className="!rounded-lg hover:!bg-blue-50"
+                className="!rounded hover:!bg-blue-50"
             >
                 <span className="font-medium">Edit Details</span>
             </Menu.Item>
@@ -85,7 +85,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                 key="reset"
                 icon={<LockOutlined className="text-orange-500" />}
                 onClick={() => setModal({ name: "ResetPassword", data: record, state: true })}
-                className="!rounded-lg hover:!bg-orange-50"
+                className="!rounded hover:!bg-orange-50"
             >
                 <span className="font-medium">Reset Password</span>
             </Menu.Item>
@@ -101,7 +101,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                     content: `Are you sure you want to delete ${record.name}? This action cannot be undone.`,
                     onConfirm: () => handleDelete.mutate(record._id)
                 })}
-                className="!rounded-lg hover:!bg-red-50"
+                className="!rounded hover:!bg-red-50"
             >
                 <span className="font-medium text-red-600">Delete User</span>
             </Menu.Item>
@@ -220,7 +220,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                     <Button
                         type="text"
                         icon={<EllipsisOutlined className="text-lg rotate-90" />}
-                        className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
                     />
                 </Dropdown>
             ),
@@ -247,7 +247,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
 
     return (
         <div className="space-y-4">
-            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
                 <Table
                     columns={activeColumns}
                     dataSource={usersList.data?.data?.docs}

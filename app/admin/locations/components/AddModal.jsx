@@ -101,13 +101,12 @@ function AddLocationModal({ modal, setModal }) {
   return (
     <Modal
       title={
-        <div className="flex items-center gap-3 px-2">
-          <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-[#006666]">
-            <FaGlobe size={18} />
+        <div className="flex items-center gap-2 px-0 py-1">
+          <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+            <FaGlobe size={16} />
           </div>
           <div>
-            <span className="text-lg font-bold text-slate-900 block">Register Location</span>
-            <span className="text-xs text-slate-500 font-normal">Add a new village, tehsil, or district</span>
+            <span className="text-lg font-bold text-teal-700 block mt-1">Register Location</span>
           </div>
         </div>
       }
@@ -118,7 +117,7 @@ function AddLocationModal({ modal, setModal }) {
       footer={null}
       className="modern-modal"
     >
-      <div className="p-1 mt-4">
+      <div className="p-1">
         <Formik
           innerRef={formikRef}
           initialValues={initialValues}
@@ -126,30 +125,30 @@ function AddLocationModal({ modal, setModal }) {
           onSubmit={handleSubmit}
         >
           {({ values, setFieldValue, errors, touched, isSubmitting }) => (
-            <Form className="space-y-4">
+            <Form className="space-y-2">
               {createLocation.status === "loading" ? (
                 <FormSkeleton fields={4} />
               ) : (
                 <>
                   {/* Classification Section */}
-                  <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-100/50 space-y-4">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Geography Level</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-slate-600 font-bold text-xs">Location Type <span className="text-red-500">*</span></label>
+                  <div className="modal-section">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Geography Level</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="flex flex-col gap-1.5 flex-1">
+                        <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Location Type <span className="text-red-500">*</span></label>
                         <SelectBox
                           value={values.type}
                           handleChange={(value) => setFieldValue("type", value)}
                           placeholder="Select level"
                           options={TYPES}
-                          className="modern-select-box [&>div]:!h-[36px] [&>div]:!rounded-lg [&>div]:!text-sm"
+                          className="modern-select-box"
                         />
-                        {touched.type && errors.type && <div className="text-red-500 text-[10px] font-medium">{errors.type}</div>}
+                        {touched.type && errors.type && <div className="text-red-500 text-[10px] font-medium ml-1">{errors.type}</div>}
                       </div>
 
                       {values.type === "VILLAGE" && (
-                        <div className="flex flex-col gap-1.5">
-                          <label className="text-slate-600 font-bold text-xs">Tehsil <span className="text-red-500">*</span></label>
+                        <div className="flex flex-col gap-1.5 flex-1">
+                          <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Tehsil <span className="text-red-500">*</span></label>
                           <SelectBox
                             value={values.tehsil}
                             handleChange={(value) => setFieldValue("tehsil", value)}
@@ -159,34 +158,34 @@ function AddLocationModal({ modal, setModal }) {
                               value: t._id,
                               label: t.name?.en || t.name_en
                             }))}
-                            className="modern-select-box [&>div]:!h-[36px] [&>div]:!rounded-lg [&>div]:!text-sm"
+                            className="modern-select-box"
                             showSearch
                           />
-                          {touched.tehsil && errors.tehsil && <div className="text-red-500 text-[10px] font-medium">{errors.tehsil}</div>}
+                          {touched.tehsil && errors.tehsil && <div className="text-red-500 text-[10px] font-medium ml-1">{errors.tehsil}</div>}
                         </div>
                       )}
                     </div>
                   </div>
 
                   {/* Metadata Section */}
-                  <div className="p-4 rounded-xl border border-slate-100 space-y-4">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Localization</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="modal-section !mb-0">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Localization</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <FormField
                         label="Name (English)"
                         name="name_en"
-                        placeholder="e.g. Village Name"
+                        placeholder="Village Name"
                         required
-                        className="!h-[36px] !text-xs !rounded-lg"
-                        labelClassName="!text-xs !font-bold !text-slate-600"
+                        className="!h-[32px] !text-xs !rounded-lg"
+                        labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                       />
                       <FormField
                         label="Name (Urdu)"
                         name="name_ur"
-                        placeholder="e.g. گاؤں کا نام"
+                        placeholder="گاؤں کا نام"
                         required
-                        className="!h-[36px] !text-xs !rounded-lg font-notoUrdu"
-                        labelClassName="!text-xs !font-bold !text-slate-600"
+                        className="!h-[32px] !text-xs !rounded-lg font-notoUrdu"
+                        labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                       />
                     </div>
                   </div>
@@ -194,7 +193,7 @@ function AddLocationModal({ modal, setModal }) {
               )}
 
               {/* Modal Footer Actions */}
-              <div className="flex justify-end gap-3 pt-4 mt-2 border-t border-slate-100">
+              <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                 <CustomButton
                   label="Cancel"
                   type="secondary"

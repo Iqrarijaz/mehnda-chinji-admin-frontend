@@ -1,19 +1,21 @@
 "use client";
-const { createContext, useState, useEffect } = require("react");
+import React, { createContext, useState, useEffect } from "react";
 
 export const MenuContext = createContext();
 
 const MenuContextProvider = ({ children }) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(true); // Default to true for desktop
+  const [isInitialized, setIsInitialized] = useState(false);
   const [activeSubMenu, setActiveSubMenu] = useState(null);
   const [selectedMenu, setSelectedMenu] = useState(null);
 
-  // Persistence
+  // Persistence and Initialization
   useEffect(() => {
     const saved = localStorage.getItem("sidebarOpen");
     if (saved !== null) {
       setOpen(saved === "true");
     }
+    setIsInitialized(true);
   }, []);
 
   const toggleMenu = (val) => {
@@ -35,6 +37,7 @@ const MenuContextProvider = ({ children }) => {
     <MenuContext.Provider
       value={{
         open,
+        isInitialized,
         toggleMenu,
         activeSubMenu,
         toggleSubMenu,

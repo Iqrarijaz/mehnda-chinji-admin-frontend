@@ -64,13 +64,12 @@ function AddConfigurationModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2 pt-1">
-                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
-                        <FaCogs size={18} />
+                <div className="flex items-center gap-2 px-0 py-1">
+                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                        <FaCogs size={16} />
                     </div>
                     <div>
-                        <span className="text-xl font-bold text-slate-900 block">New System Config</span>
-                        <span className="text-xs text-slate-500 font-normal">Define a new system-wide parameter set</span>
+                        <span className="text-lg font-bold text-teal-700 block mt-1">New System Config</span>
                     </div>
                 </div>
             }
@@ -78,10 +77,10 @@ function AddConfigurationModal({ modal, setModal }) {
             onCancel={handleClose}
             footer={null}
             centered
-            width={720}
+            width={600}
             className="modern-modal"
         >
-            <div className="p-2 pt-4">
+            <div className="p-1">
                 <Formik
                     innerRef={formikRef}
                     initialValues={initialValues}
@@ -92,50 +91,49 @@ function AddConfigurationModal({ modal, setModal }) {
                     }}
                 >
                     {({ values, errors, touched, setFieldValue, isSubmitting }) => (
-                        <Form className="space-y-6">
+                        <Form className="space-y-4">
                             {createConfig.status === "loading" ? (
                                 <FormSkeleton fields={3} />
                             ) : (
                                 <>
-                                    <div className="modal-section">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Core Definition</p>
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-slate-700 font-semibold text-sm">Config Type (Namespace) <span className="text-red-500">*</span></label>
+                                    <div className="modal-section space-y-2">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Core Definition</p>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Config Type (Namespace) <span className="text-red-500">*</span></label>
                                             <div className="relative">
-                                                <FaPlus className="absolute top-1/2 -translate-y-1/2 left-4 text-slate-300 pointer-events-none" />
+                                                <FaPlus className="absolute top-1/2 -translate-y-1/2 left-3 text-slate-300 pointer-events-none size-3" />
                                                 <Input
                                                     value={values.type}
-                                                    placeholder="e.g. CITIES, PROFESSIONS"
-                                                    className="!pl-11 !h-[44px] !rounded-xl !border-2 !border-slate-100 focus:!border-teal-500"
+                                                    placeholder="CITIES, PROFESSIONS..."
+                                                    className="!pl-9 !h-[32px] !text-xs !rounded-lg !border-slate-200 focus:!border-teal-500"
                                                     onChange={(e) => setFieldValue("type", e.target.value.toUpperCase())}
                                                 />
                                             </div>
-                                            {errors.type && touched.type && <div className="text-red-500 text-xs font-medium">{errors.type}</div>}
-                                            <p className="text-[10px] text-slate-400 font-medium">Use unique uppercase identifiers to prevent collisions</p>
+                                            {errors.type && touched.type && <div className="text-red-500 text-[10px] font-medium ml-1">{errors.type}</div>}
                                         </div>
                                     </div>
 
-                                    <div className="modal-section !mb-0">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Payload Structure</p>
-                                        <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 shadow-xl overflow-hidden">
-                                            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+                                    <div className="modal-section !mb-0 space-y-2">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Payload Structure</p>
+                                        <div className="bg-slate-900 rounded-lg p-3 border border-slate-800 shadow-sm overflow-hidden">
+                                            <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-800/50">
                                                 <div className="flex items-center gap-2">
-                                                    <FaCode className="text-teal-400" size={14} />
-                                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">JSON Schema Editor</span>
+                                                    <FaCode className="text-teal-400" size={10} />
+                                                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">JSON Schema Editor</span>
                                                 </div>
                                             </div>
                                             <TextArea
-                                                rows={12}
+                                                rows={8}
                                                 value={values.dataString}
                                                 onChange={(e) => setFieldValue("dataString", e.target.value)}
                                                 placeholder='{ "key": "value" }'
-                                                className="!bg-transparent !text-teal-50 !border-none !ring-0 !outline-none font-mono text-xs custom-scrollbar"
+                                                className="!bg-transparent !text-teal-50 !border-none !ring-0 !outline-none font-mono text-[11px] custom-scrollbar"
                                                 style={{ resize: 'none' }}
                                             />
                                             {errors.dataString && touched.dataString && (
-                                                <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
-                                                    <p className="text-red-400 text-[10px] font-bold uppercase tracking-widest leading-none mb-1">Syntax Error</p>
-                                                    <p className="text-red-200 text-xs">{errors.dataString}</p>
+                                                <div className="mt-2 p-2 bg-red-500/10 border border-red-500/20 rounded-md">
+                                                    <p className="text-red-400 text-[9px] font-bold uppercase tracking-widest leading-none mb-1">Syntax Error</p>
+                                                    <p className="text-red-200 text-[11px]">{errors.dataString}</p>
                                                 </div>
                                             )}
                                         </div>
@@ -143,18 +141,16 @@ function AddConfigurationModal({ modal, setModal }) {
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
+                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"
                                     onClick={handleClose}
-                                    className="flex-1"
                                 />
                                 <CustomButton
                                     label="Activate Configuration"
                                     htmlType="submit"
                                     loading={isSubmitting || createConfig.isLoading}
-                                    className="flex-1"
                                 />
                             </div>
                         </Form>

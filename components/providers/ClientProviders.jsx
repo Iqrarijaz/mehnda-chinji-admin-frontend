@@ -20,7 +20,7 @@ export default function ClientProviders({ children }) {
       theme={{
         token: {
           colorPrimary: "#0F172A",
-          borderRadius: 5,
+          borderRadius: 4,
           colorBgContainer: "#ffffff",
           fontFamily: "Poppins, sans-serif",
           fontSize: 16,

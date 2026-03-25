@@ -103,12 +103,12 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
     };
 
     const actionMenu = (record) => (
-        <Menu className="!rounded-xl !p-2 !min-w-[150px] shadow-xl border border-slate-100">
+        <Menu className="!rounded !p-2 !min-w-[150px] shadow-xl border border-slate-100">
             <Menu.Item
                 key="view"
                 icon={<EyeOutlined className="text-[#006666]" />}
                 onClick={() => setViewModal({ state: true, data: record })}
-                className="!rounded-lg hover:!bg-teal-50"
+                className="!rounded hover:!bg-teal-50"
             >
                 <span className="font-medium">View Details</span>
             </Menu.Item>
@@ -117,7 +117,7 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
                 key="edit"
                 icon={<EditOutlined className="text-blue-500" />}
                 onClick={() => setModal({ name: "Update", data: record, state: true })}
-                className="!rounded-lg hover:!bg-blue-50"
+                className="!rounded hover:!bg-blue-50"
             >
                 <span className="font-medium">Edit Business</span>
             </Menu.Item>
@@ -128,7 +128,7 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
                     key="approve"
                     icon={<CheckOutlined className="text-green-500" />}
                     onClick={() => handleStatusChange(record, "APPROVED")}
-                    className="!rounded-lg hover:!bg-green-50"
+                    className="!rounded hover:!bg-green-50"
                 >
                     <span className="font-medium">Approve</span>
                 </Menu.Item>
@@ -140,7 +140,7 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
                     key="reject"
                     icon={<CloseOutlined className="text-orange-500" />}
                     onClick={() => handleStatusChange(record, "REJECTED")}
-                    className="!rounded-lg hover:!bg-orange-50"
+                    className="!rounded hover:!bg-orange-50"
                 >
                     <span className="font-medium text-orange-600">Reject</span>
                 </Menu.Item>
@@ -152,7 +152,7 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
                 key="delete"
                 icon={<DeleteOutlined className="text-red-500" />}
                 onClick={() => handleDelete(record)}
-                className="!rounded-lg hover:!bg-red-50"
+                className="!rounded hover:!bg-red-50"
             >
                 <span className="font-medium text-red-600">Delete Business</span>
             </Menu.Item>
@@ -243,7 +243,7 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
                     <Button
                         type="text"
                         icon={<EllipsisOutlined className="text-lg rotate-90" />}
-                        className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
                     />
                 </Dropdown>
             ),
@@ -254,7 +254,7 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
 
     return (
         <div className="space-y-4">
-            <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+            <div className="modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

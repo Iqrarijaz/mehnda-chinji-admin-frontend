@@ -81,13 +81,12 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
-                        <FaUserShield size={18} />
+                <div className="flex items-center gap-2 px-0">
+                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                        <FaUserShield size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-slate-900 block">Edit Admin User</span>
-                        <span className="text-xs text-slate-500 font-normal">Modify team member credentials and access</span>
+                        <span className="text-lg font-bold text-teal-700 block mt-1">Edit Admin User</span>
                     </div>
                 </div>
             }
@@ -107,31 +106,31 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
                     onSubmit={handleSubmit}
                 >
                     {({ values, errors, touched, setFieldValue, handleChange, handleBlur, isSubmitting }) => (
-                        <Form className="space-y-4">
+                        <Form className="space-y-2">
                             {updateAdminUser.isLoading ? (
                                 <FormSkeleton fields={5} />
                             ) : (
                                 <>
-                                    <div className="modal-section bg-slate-50/50 p-4 rounded-xl border border-slate-100 space-y-3">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Identity Details</p>
+                                    <div className="modal-section">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Identity Details</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                            <FormField label="Full Name" name="name" placeholder="John Doe" required className="!h-[36px] !text-sm" />
-                                            <FormField label="Email Address" name="email" type="email" placeholder="john@example.com" disabled required className="!h-[36px] !text-sm" />
-                                            <FormField label="Phone Number" name="phone" placeholder="+1..." className="!h-[36px] !text-sm" />
-                                            <div className="flex flex-col gap-1.5">
+                                            <FormField label="Full Name" name="name" placeholder="John Doe" required className="!h-[32px] !text-xs" />
+                                            <FormField label="Email Address" name="email" type="email" placeholder="john@example.com" disabled required className="!h-[32px] !text-xs" />
+                                            <FormField label="Phone Number" name="phone" placeholder="+1..." className="!h-[32px] !text-xs" />
+                                             <div className="flex flex-col gap-1.5">
                                                 <div className="flex justify-between items-center">
                                                     <label className="text-slate-700 font-semibold text-xs">Update Password</label>
                                                     <span className="text-[9px] text-slate-400 font-bold uppercase">Optional</span>
                                                 </div>
                                                 <div className="relative">
-                                                    <FaLock className="absolute top-1/2 -translate-y-1/2 left-3.5 text-slate-300 pointer-events-none z-10" size={12} />
+                                                    <FaLock className="absolute top-1/2 -translate-y-1/2 left-3 text-slate-300 pointer-events-none z-10" size={12} />
                                                     <Input.Password
                                                         name="password"
                                                         placeholder="••••••••"
                                                         value={values.password}
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
-                                                        className="!pl-9 !h-[36px] !rounded-lg !border-2 !border-slate-100 focus:!border-teal-500 !text-sm"
+                                                        className="!pl-9 !h-[32px] !rounded-lg !border-2 !border-slate-100 focus:!border-teal-500 !text-xs"
                                                     />
                                                 </div>
                                                 {touched.password && errors.password && <div className="text-red-500 text-[10px] font-medium">{errors.password}</div>}
@@ -140,11 +139,11 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
                                     </div>
 
                                     <div className="modal-section">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Permissions & Status</p>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Permissions & Status</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="flex flex-col gap-1.5">
                                                 <label className="text-slate-700 font-semibold text-xs">Permission Role <span className="text-red-500">*</span></label>
-                                                <Select
+                                                 <Select
                                                     value={values.accessRoleId}
                                                     onChange={(value) => {
                                                         const selectedRole = rolesData?.data?.find(r => r._id === value);
@@ -152,12 +151,12 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
                                                         setFieldValue("role", selectedRole?.name || "");
                                                     }}
                                                     placeholder="Select role"
-                                                    className="!h-[36px] !rounded-lg overflow-hidden border-2 border-slate-100 shadow-sm [&>div]:!shadow-none [&>div]:!border-none"
+                                                    className="w-full modern-select-box"
                                                     size="middle"
                                                     loading={rolesLoading}
                                                 >
                                                     {rolesData?.data?.map((role) => (
-                                                        <Option key={role._id} value={role._id}>{role.name}</Option>
+                                                        <Select.Option key={role._id} value={role._id}>{role.name}</Select.Option>
                                                     ))}
                                                 </Select>
                                                 {touched.accessRoleId && errors.accessRoleId && <div className="text-red-500 text-[10px] font-medium">{errors.accessRoleId}</div>}
@@ -165,14 +164,14 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
 
                                             <div className="flex flex-col gap-1.5">
                                                 <label className="text-slate-700 font-semibold text-xs">Account Status</label>
-                                                <Select
+                                                 <Select
                                                     value={values.status}
                                                     onChange={(value) => setFieldValue("status", value)}
-                                                    className="!h-[36px] !rounded-lg overflow-hidden border-2 border-slate-100 shadow-sm [&>div]:!shadow-none [&>div]:!border-none"
+                                                    className="w-full modern-select-box"
                                                     size="middle"
                                                 >
-                                                    <Option value="ACTIVE">Authorized / Active</Option>
-                                                    <Option value="INACTIVE">Suspended / Inactive</Option>
+                                                    <Select.Option value="ACTIVE">Authorized / Active</Select.Option>
+                                                    <Select.Option value="INACTIVE">Suspended / Inactive</Select.Option>
                                                 </Select>
                                             </div>
                                         </div>
@@ -180,7 +179,7 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

@@ -19,19 +19,19 @@ function LikesModal({ isOpen, onClose, postId }) {
             title: "User",
             key: "user",
             render: (record) => (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                     <Avatar
                         src={record.user?.profileImage}
-                        size={40}
+                        size={32}
                         className="bg-slate-100 border border-slate-200"
                     >
                         {record.user?.name?.charAt(0)}
                     </Avatar>
                     <div className="flex flex-col">
-                        <span className="font-bold text-[14px] text-slate-800 capitalize leading-tight">
+                        <span className="font-bold text-[12px] text-slate-800 capitalize leading-tight">
                             {record.user?.name || "Unknown User"}
                         </span>
-                        <span className="text-xs text-slate-400 font-medium">{record.user?.phone || "No phone"}</span>
+                        <span className="text-[10px] text-slate-400 font-medium">{record.user?.phone || "No phone"}</span>
                     </div>
                 </div>
             )
@@ -43,7 +43,7 @@ function LikesModal({ isOpen, onClose, postId }) {
             width: 180,
             align: 'right',
             render: (date) => (
-                <div className="text-[12px] text-slate-500 font-medium">
+                <div className="text-[10px] text-slate-500 font-medium">
                     {timestampToDateWithTime(date)}
                 </div>
             )
@@ -53,13 +53,12 @@ function LikesModal({ isOpen, onClose, postId }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2 pt-1">
-                    <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-red-500">
-                        <FaHeart size={18} />
+                <div className="flex items-center gap-2 px-0 py-1">
+                    <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-500">
+                        <FaHeart size={16} />
                     </div>
                     <div>
-                        <span className="text-xl font-bold text-slate-900 block">Post Likes</span>
-                        <span className="text-xs text-slate-500 font-normal">Users who appreciated this content</span>
+                        <span className="text-lg font-bold text-red-700 block mt-1">Post Likes</span>
                     </div>
                 </div>
             }
@@ -70,7 +69,7 @@ function LikesModal({ isOpen, onClose, postId }) {
                     label="Back to Posts"
                     type="secondary"
                     onClick={onClose}
-                    className="w-full !h-[48px] font-bold"
+                    className="w-full"
                 />
             }
             width={520}

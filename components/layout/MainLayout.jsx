@@ -9,15 +9,20 @@ import MainHeader from "./MainHeader";
 import { MenuContext } from "@/context/MenuContext";
 
 function MainLayout({ children }) {
-  const { open, toggleMenu } = useContext(MenuContext);
+  const { open, toggleMenu, isInitialized } = useContext(MenuContext);
   const pathname = usePathname();
-  const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState({});
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      const mobile = window.innerWidth < 1024; // Using 1024px for tablet/mobile range
+      setIsMobile(mobile);
+      // Close sidebar by default on mobile if we just switched to it
+      if (mobile && open) {
+        // We don't necessarily want to force close it if the user just resized,
+        // but typically mobile sidebars start closed.
+      }
     };
 
     checkMobile();
@@ -117,84 +122,75 @@ function MainLayout({ children }) {
     );
   };
 
+  if (!isInitialized) return null; // Avoid hydration mismatch
+
   return (
-    <div className="flex min-h-screen bg-[#F8FAFC]">
-      {/* Desktop Sidebar */}
+    <div className="flex min-h-screen bg-[#F8FAFC] relative overflow-hidden">
+      {/* Mobile Overlay */}
+      {isMobile && open && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] transition-opacity duration-300"
+          onClick={() => toggleMenu(false)}
+        />
+      )}
+
+      {/* Sidebar (Desktop & Mobile Slide-in) */}
       <aside
         className={`
           sidebar overflow-y-auto custom-scrollbar
-          transition-all duration-300 z-50
-          ${open ? "w-64 border-r border-white/10 shadow-xl" : "w-0 overflow-hidden border-none shadow-none"}
-          h-screen sticky top-0 hidden md:flex flex-col
+          transition-all duration-300 ease-in-out z-[70]
+          ${isMobile
+            ? `fixed top-0 left-0 h-screen w-[280px] shadow-2xl transform ${open ? "translate-x-0" : "-translate-x-full"}`
+            : `sticky top-0 h-screen flex flex-col ${open ? "w-64 border-r border-white/10 shadow-xl opacity-100" : "w-0 opacity-0 overflow-hidden border-none shadow-none pointer-events-none"}`
+          }
         `}
       >
         <div className="p-4 h-full flex flex-col">
           {/* Logo */}
-          <div className="flex items-center justify-center pt-2 pb-6 border-b border-white/5">
-            <img
-              src="/rehbar_logo_white.png"
-              alt="Logo"
-              className={`object-contain rounded transition-all duration-300 ${open ? "h-26 w-auto" : "h-12 w-12"
-                }`}
-            />
+          <div className="flex items-center justify-between pt-2 pb-6 border-b border-white/5">
+            <div className="flex items-center justify-center flex-1">
+              <img
+                src="/rehbar_logo_white.png"
+                alt="Logo"
+                className={`object-contain rounded transition-all duration-300 ${open || isMobile ? "h-20 w-auto" : "h-0 w-0"}`}
+              />
+            </div>
+            {isMobile && (
+              <button
+                onClick={() => toggleMenu(false)}
+                className="text-white/70 hover:text-white p-2"
+              >
+                ✕
+              </button>
+            )}
           </div>
 
           {/* Menu */}
-          <nav className="flex-1 mt-4 ">
+          <nav className="flex-1 mt-4">
             <ul className="space-y-1 px-3">
-              {MenuList.filter(hasPermission).map((item) => renderMenuItem(item, false))}
-            </ul>
-          </nav>
-        </div>
-      </aside>
-
-      {/* Mobile Sidebar Modal Popup */}
-      <Modal
-        open={open && isMobile}
-        onCancel={() => toggleMenu(false)}
-        footer={null}
-        closable={false}
-        centered
-        width={350}
-        styles={{
-          content: { padding: 0, backgroundColor: '#006666', overflow: 'hidden', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' },
-          mask: { backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0, 0, 0, 0.6)' }
-        }}
-      >
-        <div className="flex flex-col h-[75vh] max-h-[600px]">
-          <div className="p-6 flex justify-between items-center border-b border-white/10 bg-[#006666]">
-            <img src="/rehbar_logo_white.png" alt="Logo" className="h-10 w-auto rounded brightness-110" />
-            <button
-              onClick={() => toggleMenu(false)}
-              className="text-gray-400 hover:text-white text-xl font-bold p-2 hover:bg-white/5 rounded transition-colors"
-            >
-              ✕
-            </button>
-          </div>
-
-          <nav className="flex-1 overflow-y-auto p-4 bg-[#006666] custom-scrollbar">
-            <ul className="space-y-2">
-              {MenuList.filter(hasPermission).map((item) => renderMenuItem(item, true))}
+              {MenuList.filter(hasPermission).map((item) => renderMenuItem(item, isMobile))}
             </ul>
           </nav>
 
-          <div className="p-4 border-t border-white/5 bg-[#006666] text-center">
+          {/* Footer Info */}
+          <div className="p-4 border-t border-white/5 text-center mt-auto">
             <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">
               Rehbar Admin v1.0
             </p>
           </div>
         </div>
-      </Modal>
+      </aside>
 
       {/* Main Content */}
-      <main className="flex-1 bg-white flex flex-col max-h-screen w-full">
-        <MainHeader toggleSidebar={toggleMenu} sidebarOpen={open} />
-        <div className="flex-1 overflow-y-auto overflow-x-auto p-4 bg-white">
+      <main className="flex-1 bg-white flex flex-col max-h-screen w-full overflow-hidden">
+        <MainHeader />
+        <div className="flex-1 overflow-y-auto overflow-x-auto p-4 md:p-6 bg-white">
           {children}
         </div>
       </main>
     </div>
   );
 }
+
 
 export default MainLayout;

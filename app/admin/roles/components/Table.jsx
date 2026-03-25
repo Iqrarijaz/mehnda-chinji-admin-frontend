@@ -68,7 +68,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
     };
 
     const actionMenu = (record) => (
-        <Menu className="!rounded-xl !p-2 !min-w-[140px] shadow-xl border border-slate-100">
+        <Menu className="!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100">
             <Menu.Item
                 key="edit"
                 icon={<EditOutlined className="text-blue-500" />}
@@ -145,7 +145,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
 
     return (
         <div className="space-y-4">
-            <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+            <div className="modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

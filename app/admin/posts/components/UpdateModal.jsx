@@ -131,13 +131,12 @@ function UpdatePostModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
-                        <FileTextOutlined style={{ fontSize: '18px' }} />
+                <div className="flex items-center gap-2 px-0 py-1">
+                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                        <FileTextOutlined style={{ fontSize: '16px' }} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-slate-900 block">Edit Post</span>
-                        <span className="text-xs text-slate-500 font-normal">Update content or adjust metadata for this post</span>
+                        <span className="text-lg font-bold text-teal-700 block mt-1">Edit Post</span>
                     </div>
                 </div>
             }
@@ -156,10 +155,10 @@ function UpdatePostModal({ modal, setModal }) {
                     onSubmit={handleSubmit}
                 >
                     {({ values, errors, touched, setFieldValue, handleChange, handleBlur, isSubmitting }) => (
-                        <Form className="space-y-4">
+                        <Form className="space-y-2">
                             {updatePost.status === "loading" && <Loading />}
 
-                            <div className="modal-section pb-2">
+                            <div className="modal-section pb-1">
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Configuration</p>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
                                     <div className="flex flex-col gap-1.5">
@@ -167,11 +166,11 @@ function UpdatePostModal({ modal, setModal }) {
                                         <Select
                                             value={values.type}
                                             onChange={(value) => setFieldValue("type", value)}
-                                            className="!h-[36px] !rounded-lg overflow-hidden border-2 border-slate-100 [&>div]:!shadow-none [&>div]:!border-none"
+                                            className="w-full modern-select-box"
                                             size="middle"
                                         >
                                             {POST_TYPES.map(type => (
-                                                <Option key={type.value} value={type.value}>{type.label}</Option>
+                                                <Select.Option key={type.value} value={type.value}>{type.label}</Select.Option>
                                             ))}
                                         </Select>
                                     </div>
@@ -180,12 +179,12 @@ function UpdatePostModal({ modal, setModal }) {
                                         <Select
                                             value={values.status}
                                             onChange={(value) => setFieldValue("status", value)}
-                                            className="!h-[36px] !rounded-lg overflow-hidden border-2 border-slate-100 [&>div]:!shadow-none [&>div]:!border-none"
+                                            className="w-full modern-select-box"
                                             size="middle"
                                         >
-                                            <Option value="ACTIVE">Active</Option>
-                                            <Option value="ARCHIVED">Archived</Option>
-                                            <Option value="PENDING">Pending</Option>
+                                            <Select.Option value="ACTIVE">Active</Select.Option>
+                                            <Select.Option value="ARCHIVED">Archived</Select.Option>
+                                            <Select.Option value="PENDING">Pending</Select.Option>
                                         </Select>
                                     </div>
                                 </div>
@@ -200,8 +199,8 @@ function UpdatePostModal({ modal, setModal }) {
                                         value={values.content}
                                         onChange={handleChange}
                                         onBlur={handleBlur}
-                                        rows={4}
-                                        className="!rounded-xl !border-2 !border-slate-100 focus:!border-teal-500 !p-3 !text-sm"
+                                        rows={3}
+                                        className="!rounded-lg !border-2 !border-slate-100 focus:!border-teal-500 !p-2 !text-xs"
                                     />
                                     {touched.content && errors.content && (
                                         <div className="text-red-500 text-[10px] font-medium">{errors.content}</div>
@@ -210,33 +209,35 @@ function UpdatePostModal({ modal, setModal }) {
                             </div>
 
                             {(values.type === "DEATH" || values.type === "ACCIDENT") && (
-                                <div className="modal-section bg-slate-50/50 p-4 rounded-xl border border-dashed border-slate-200">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">
+                                <div className="modal-section">
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
                                         Type-Specific Data
                                     </p>
-                                    <div className="space-y-3">
+                                    <div className="space-y-2">
                                         {values.type === "DEATH" && (
                                             <>
-                                                <FormField label="Deceased Name" name="metadata.deceasedName" className="!h-[36px] !text-sm" />
+                                            <>
+                                                <FormField label="Deceased Name" name="metadata.deceasedName" className="!h-[32px] !text-xs" />
                                                 <div className="grid grid-cols-2 gap-3">
-                                                    <FormField label="Date of Death" name="metadata.dateOfDeath" type="date" className="!h-[36px] !text-sm" />
-                                                    <FormField label="Relationship" name="metadata.relationship" className="!h-[36px] !text-sm" />
+                                                    <FormField label="Date of Death" name="metadata.dateOfDeath" type="date" className="!h-[32px] !text-xs" />
+                                                    <FormField label="Relationship" name="metadata.relationship" className="!h-[32px] !text-xs" />
                                                 </div>
+                                            </>
                                             </>
                                         )}
                                         {values.type === "ACCIDENT" && (
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                <FormField label="Location" name="metadata.location" className="!h-[36px] !text-sm" />
+                                                <FormField label="Location" name="metadata.location" className="!h-[32px] !text-xs" />
                                                 <div className="flex flex-col gap-1.5">
                                                     <label className="text-slate-700 font-semibold text-xs">Severity</label>
                                                     <Select
                                                         value={values.metadata.severity}
                                                         onChange={(value) => setFieldValue("metadata.severity", value)}
-                                                        className="!h-[36px] !rounded-lg border-2 border-slate-100"
+                                                        className="w-full modern-select-box"
                                                     >
-                                                        <Option value="LOW">Low</Option>
-                                                        <Option value="MEDIUM">Medium</Option>
-                                                        <Option value="HIGH">High</Option>
+                                                        <Select.Option value="LOW">Low</Select.Option>
+                                                        <Select.Option value="MEDIUM">Medium</Select.Option>
+                                                        <Select.Option value="HIGH">High</Select.Option>
                                                     </Select>
                                                 </div>
                                             </div>
@@ -245,9 +246,9 @@ function UpdatePostModal({ modal, setModal }) {
                                 </div>
                             )}
 
-                            <div className="modal-section">
+                            <div className="modal-section !mb-1">
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Media</p>
-                                <div className="bg-slate-50 rounded-xl p-3 border-2 border-slate-100 border-dashed">
+                                <div className="bg-slate-50/50 rounded-lg p-2 border-2 border-slate-100 border-dashed">
                                     <Upload
                                         listType="picture-card"
                                         className="post-image-upload-compact scale-[0.85] origin-left"
@@ -262,16 +263,16 @@ function UpdatePostModal({ modal, setModal }) {
                                         accept="image/*"
                                     >
                                         {values.images.length < 5 && (
-                                            <div className="flex flex-col items-center justify-center gap-1">
-                                                <PlusOutlined style={{ fontSize: '18px', color: '#64748b' }} />
-                                                <div className="text-[10px] font-semibold text-slate-500">Update</div>
+                                            <div className="flex flex-col items-center justify-center gap-0.5">
+                                                <PlusOutlined style={{ fontSize: '14px', color: '#64748b' }} />
+                                                <div className="text-[9px] font-semibold text-slate-500 uppercase tracking-tight">Update</div>
                                             </div>
                                         )}
                                     </Upload>
                                 </div>
                             </div>
 
-                            <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

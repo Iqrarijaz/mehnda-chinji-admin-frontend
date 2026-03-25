@@ -13,7 +13,7 @@ function ViewModal({ viewModal, setViewModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-red-600">
+                    <div className="w-10 h-10 rounded bg-red-50 flex items-center justify-center text-red-600">
                         <FaFlag size={18} />
                     </div>
                     <div>
@@ -33,7 +33,7 @@ function ViewModal({ viewModal, setViewModal }) {
                 {data && (
                     <div className="space-y-4">
                         {/* Status Card */}
-                        <div className="flex items-center justify-between p-3 bg-slate-50/50 rounded-xl border border-slate-100/50">
+                        <div className="flex items-center justify-between p-3 bg-slate-50/50 rounded border border-slate-100/50">
                             <div className="flex items-center gap-2">
                                 <FaShieldAlt className="text-slate-400" size={14} />
                                 <span className="text-[10px] font-bold text-slate-600 uppercase tracking-tight">Resolution Status</span>
@@ -47,7 +47,7 @@ function ViewModal({ viewModal, setViewModal }) {
                         </div>
 
                         {/* Reason & Content Section */}
-                        <div className="bg-white p-4 rounded-xl border border-slate-100 space-y-3">
+                        <div className="bg-white p-4 rounded border border-slate-100 space-y-3">
                             <div>
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Primary Violation</p>
                                 <h3 className="text-base font-bold text-slate-900">{data.reason}</h3>
@@ -56,7 +56,7 @@ function ViewModal({ viewModal, setViewModal }) {
                             {data.description && (
                                 <div className="pt-2 border-t border-slate-50">
                                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Detailed Description</p>
-                                    <p className="text-slate-700 text-xs leading-relaxed whitespace-pre-wrap bg-slate-50/50 p-3 rounded-lg border border-slate-100/50 italic">
+                                    <p className="text-slate-700 text-xs leading-relaxed whitespace-pre-wrap bg-slate-50/50 p-3 rounded border border-slate-100/50 italic">
                                         "{data.description}"
                                     </p>
                                 </div>
@@ -66,7 +66,7 @@ function ViewModal({ viewModal, setViewModal }) {
                         {/* Entities Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                             {/* Reporter Card */}
-                            <div className="p-4 bg-white rounded-xl border border-slate-100">
+                            <div className="p-4 bg-white rounded border border-slate-100">
                                 <div className="flex items-center gap-2 mb-3 text-emerald-600">
                                     <FaUser size={10} />
                                     <span className="text-[9px] font-bold uppercase tracking-widest">Reporter Info</span>
@@ -81,7 +81,7 @@ function ViewModal({ viewModal, setViewModal }) {
                             </div>
 
                             {/* Target Card */}
-                            <div className="p-4 bg-white rounded-xl border border-slate-100">
+                            <div className="p-4 bg-white rounded border border-slate-100">
                                 <div className="flex items-center gap-2 mb-3 text-blue-600">
                                     <FaBullseye size={10} />
                                     <span className="text-[9px] font-bold uppercase tracking-widest">Target Content</span>
