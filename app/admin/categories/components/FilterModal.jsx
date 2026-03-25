@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Modal, Input, Button, Select } from "antd";
+import { Modal, Input } from "antd";
 import { FaSearch, FaFilter, FaUndo, FaGlobe, FaLayerGroup } from "react-icons/fa";
 import SelectBox from "@/components/SelectBox";
+import CustomButton from "@/components/shared/CustomButton";
 
-const { Option } = Select;
 
 function FilterModal({ isModalOpen, setIsModalOpen, setFilters }) {
   const [localFilters, setLocalFilters] = useState({
@@ -84,51 +84,50 @@ function FilterModal({ isModalOpen, setIsModalOpen, setFilters }) {
         {/* Type Selection */}
         <div className="flex flex-col gap-2">
           <label className="text-slate-700 font-semibold text-sm">Classification Type</label>
-          <Select
+          <SelectBox
             placeholder="All Types"
             allowClear
             value={localFilters.type}
-            onChange={(value) => setLocalFilters((prev) => ({ ...prev, type: value }))}
-            className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
-            size="large"
-          >
-            <Option value="PLACES">Places / Locations</Option>
-            <Option value="SERVICES">Utility Services</Option>
-          </Select>
+            handleChange={(value) => setLocalFilters((prev) => ({ ...prev, type: value }))}
+            options={[
+              { value: "PLACES", label: "Places / Locations" },
+              { value: "SERVICES", label: "Utility Services" },
+            ]}
+            height="44px"
+          />
         </div>
 
         {/* Status Selection */}
         <div className="flex flex-col gap-2">
           <label className="text-slate-700 font-semibold text-sm">Status</label>
-          <Select
+          <SelectBox
             placeholder="Any Status"
             allowClear
             value={localFilters.status}
-            onChange={(value) => setLocalFilters((prev) => ({ ...prev, status: value }))}
-            className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
-            size="large"
-          >
-            <Option value="ACTIVE">Active</Option>
-            <Option value="INACTIVE">Inactive / Disabled</Option>
-          </Select>
+            handleChange={(value) => setLocalFilters((prev) => ({ ...prev, status: value }))}
+            options={[
+              { value: "ACTIVE", label: "Active" },
+              { value: "INACTIVE", label: "Inactive / Disabled" },
+            ]}
+            height="44px"
+          />
         </div>
 
         {/* Action Buttons */}
         <div className="flex gap-3 mt-6 pt-6 border-t border-slate-100">
-          <Button
+          <CustomButton
+            label="Reset All"
+            type="secondary"
             onClick={handleReset}
             icon={<FaUndo size={12} />}
-            className="modal-footer-btn-secondary flex-1"
-          >
-            Reset All
-          </Button>
-          <Button
+            className="flex-1"
+          />
+          <CustomButton
+            label="Apply Filters"
             type="primary"
             onClick={handleApply}
-            className="modal-footer-btn-primary flex-1"
-          >
-            Apply Filters
-          </Button>
+            className="flex-1"
+          />
         </div>
       </div>
     </Modal>

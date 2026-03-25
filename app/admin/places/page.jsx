@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import PlacesTable from "./components/Table";
-import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import AddPlaceModal from "./components/AddModal";
 import UpdatePlaceModal from "./components/UpdateModal";
 import { GET_PLACES, GET_PLACE_STATUS_COUNTS } from "@/app/api/admin/places";
@@ -59,45 +58,53 @@ export default function PlacesPage() {
     return (
         <InnerPageCard title="Places">
 
-            {/* Status Count Cards */}
-            <div className="flex gap-3 mb-5" style={{ flexWrap: "wrap" }}>
-                {countsLoading ? (
-                    Array.from({ length: 3 }).map((_, i) => <StatCardSkeleton key={i} />)
-                ) : (
-                    statCards.map((card) => (
-                        <StatCard
-                            key={card.key}
-                            title={card.label}
-                            count={card.count}
-                            color={card.color}
-                            bg={card.bg}
-                            border={card.border}
-                            active={filters.status === card.key}
-                            onClick={() =>
-                                setFilters((prev) => ({
-                                    ...prev,
-                                    status: prev.status === card.key ? null : card.key,
-                                    currentPage: 1,
-                                }))
-                            }
-                        />
-                    ))
-                )}
-            </div>
-
-            <div className="flex justify-end mb-4 gap-4 items-center">
-                <SelectBox
-                    placeholder="Filter by Category"
-                    allowClear
-                    handleChange={handleCategoryFilter}
-                    width={180}
-                    options={PLACE_CATEGORIES.map((cat) => ({ value: cat.value, label: cat.label }))}
-                />
-                <div className="flex flex-col md:flex-row gap-4">
-                    <SearchInput setFilters={setFilters} />
+            <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-center">
+                {/* Status Count Cards (Left) */}
+                <div className="flex gap-2 items-center flex-wrap">
+                    {countsLoading ? (
+                        Array.from({ length: 3 }).map((_, i) => <StatCardSkeleton key={i} />)
+                    ) : (
+                        statCards.map((card) => (
+                            <StatCard
+                                key={card.key}
+                                title={card.label}
+                                count={card.count}
+                                color={card.color}
+                                bg={card.bg}
+                                border={card.border}
+                                active={filters.status === card.key}
+                                onClick={() =>
+                                    setFilters((prev) => ({
+                                        ...prev,
+                                        status: prev.status === card.key ? null : card.key,
+                                        currentPage: 1,
+                                    }))
+                                }
+                            />
+                        ))
+                    )}
                 </div>
-                <ItemsPerPageDropdown onChange={onChange} />
-                <AddButton title="Add Place" onClick={() => setModal({ name: "Add", data: null, state: true })} />
+
+                {/* Filter, Search and Add Button (Right) */}
+                <div className="flex gap-3 items-center">
+                    <SelectBox
+                        placeholder="Filter by Category"
+                        allowClear
+                        handleChange={handleCategoryFilter}
+                        width={150}
+                        options={PLACE_CATEGORIES.map((cat) => ({ value: cat.value, label: cat.label }))}
+                        className="custom-selectbox"
+                    />
+                    <div className="flex flex-col md:flex-row gap-2">
+                        <SearchInput setFilters={setFilters} />
+                    </div>
+                    <AddButton
+                        title="Add Place"
+                        icon={false}
+                        onClick={() => setModal({ name: "Add", data: null, state: true })}
+                        className="!h-[36px] !rounded-lg !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                    />
+                </div>
             </div>
 
             <div className="flex flex-col mb-4">

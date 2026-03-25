@@ -28,13 +28,10 @@ export const TableSkeleton = ({ rows = 5, columns = 5 }) => {
 
 export const StatCardSkeleton = () => {
     return (
-        <Card className="min-w-[200px] flex-1 rounded-xl border-slate-100 shadow-sm" bodyStyle={{ padding: '20px' }}>
-            <div className="flex justify-between items-start mb-4">
-                <Skeleton.Input active size="small" className="!w-20" />
-                <Skeleton.Avatar active shape="square" size="large" className="!rounded-lg" />
-            </div>
-            <Skeleton.Input active size="large" className="!w-16" />
-        </Card>
+        <div className="min-w-[100px] max-w-[150px] flex-1 h-[40px] rounded-lg border border-slate-100 bg-white shadow-sm flex items-center justify-center px-3 gap-2 overflow-hidden">
+            <SkeletonPulse className="w-6 h-5" />
+            <SkeletonPulse className="w-12 h-3" />
+        </div>
     );
 };
 

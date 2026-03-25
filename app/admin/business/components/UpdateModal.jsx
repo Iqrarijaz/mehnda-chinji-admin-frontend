@@ -2,7 +2,7 @@
 import React, { useRef, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Button, Modal, Select } from "antd";
+import { Modal, Select } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { FaStore, FaMapMarkerAlt, FaPhoneAlt, FaTag, FaCheckCircle } from "react-icons/fa";
@@ -11,6 +11,7 @@ import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_BUSINESS } from "@/app/api/admin/business";
+import CustomButton from "@/components/shared/CustomButton";
 
 const { Option } = Select;
 
@@ -63,24 +64,24 @@ function UpdateBusinessModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2 pt-1">
-                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
+                <div className="flex items-center gap-3 px-2">
+                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-[#006666]">
                         <FaStore size={18} />
                     </div>
                     <div>
-                        <span className="text-xl font-bold text-slate-900 block">Edit Business</span>
+                        <span className="text-lg font-bold text-slate-900 block">Edit Business</span>
                         <span className="text-xs text-slate-500 font-normal">Modify commercial profile and status</span>
                     </div>
                 </div>
             }
             centered
-            width={720}
+            width={600}
             open={modal?.name === "Update" && modal?.state}
             onCancel={handleClose}
             footer={null}
             className="modern-modal"
         >
-            <div className="p-2 pt-4">
+            <div className="p-1 mt-4">
                 <Formik
                     enableReinitialize
                     initialValues={initialValues}
@@ -88,26 +89,32 @@ function UpdateBusinessModal({ modal, setModal }) {
                     onSubmit={handleSubmit}
                 >
                     {({ values, setFieldValue, isSubmitting }) => (
-                        <Form className="space-y-6">
+                        <Form className="space-y-4">
                             {updateMutation.status === "loading" ? (
-                                <FormSkeleton fields={7} />
+                                <FormSkeleton fields={5} />
                             ) : (
                                 <>
                                     {/* Status & Identity Section */}
-                                    <div className="modal-section">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Core Information</p>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-100/50 space-y-4">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Core Information</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div className="md:col-span-1">
-                                                <FormField label="Business Name" name="name" placeholder="Business name" required />
+                                                <FormField
+                                                    label="Business Name"
+                                                    name="name"
+                                                    placeholder="Business name"
+                                                    required
+                                                    className="!h-[36px] !text-xs !rounded-lg"
+                                                    labelClassName="!text-xs !font-bold !text-slate-600"
+                                                />
                                             </div>
                                             <div className="md:col-span-1">
-                                                <div className="flex flex-col gap-2">
-                                                    <label className="text-slate-700 font-semibold text-sm">Operation Status</label>
+                                                <div className="flex flex-col gap-1.5">
+                                                    <label className="text-slate-600 font-bold text-xs uppercase tracking-tight">Operation Status</label>
                                                     <Select
                                                         value={values.status}
                                                         onChange={(value) => setFieldValue("status", value)}
-                                                        className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
-                                                        size="large"
+                                                        className="!h-[36px] !rounded-lg overflow-hidden border-slate-100"
                                                     >
                                                         <Option value="PENDING">Pending Approval</Option>
                                                         <Option value="ACTIVE">Active / Verified</Option>
@@ -120,40 +127,74 @@ function UpdateBusinessModal({ modal, setModal }) {
                                     </div>
 
                                     {/* Details Section */}
-                                    <div className="modal-section">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Categorization & Contact</p>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                            <FormField label="Category (English)" name="categoryEn" placeholder="Category" required icon={<FaTag className="opacity-30" />} />
-                                            <FormField label="Category (Urdu)" name="categoryUr" placeholder="Category" icon={<FaTag className="opacity-30" />} />
-                                            <FormField label="Primary Phone" name="phone" placeholder="Phone number" required icon={<FaPhoneAlt className="opacity-30" />} />
-                                            <FormField label="Physical Address" name="address" placeholder="Address" required icon={<FaMapMarkerAlt className="opacity-30" />} />
+                                    <div className="p-4 rounded-xl border border-slate-100 space-y-4">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Categorization & Contact</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <FormField
+                                                label="Category (English)"
+                                                name="categoryEn"
+                                                placeholder="Category"
+                                                required
+                                                className="!h-[36px] !text-xs !rounded-lg"
+                                                labelClassName="!text-xs !font-bold !text-slate-600"
+                                                icon={<FaTag className="opacity-20 text-[10px]" />}
+                                            />
+                                            <FormField
+                                                label="Category (Urdu)"
+                                                name="categoryUr"
+                                                placeholder="Category"
+                                                className="!h-[36px] !text-xs !rounded-lg font-notoUrdu"
+                                                labelClassName="!text-xs !font-bold !text-slate-600"
+                                                icon={<FaTag className="opacity-20 text-[10px]" />}
+                                            />
+                                            <FormField
+                                                label="Primary Phone"
+                                                name="phone"
+                                                placeholder="Phone number"
+                                                required
+                                                className="!h-[36px] !text-xs !rounded-lg"
+                                                labelClassName="!text-xs !font-bold !text-slate-600"
+                                                icon={<FaPhoneAlt className="opacity-20 text-[10px]" />}
+                                            />
+                                            <FormField
+                                                label="Physical Address"
+                                                name="address"
+                                                placeholder="Address"
+                                                required
+                                                className="!h-[36px] !text-xs !rounded-lg"
+                                                labelClassName="!text-xs !font-bold !text-slate-600"
+                                                icon={<FaMapMarkerAlt className="opacity-20 text-[10px]" />}
+                                            />
                                         </div>
                                     </div>
 
                                     {/* Description Section */}
-                                    <div className="modal-section !mb-0">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Description</p>
-                                        <FormField label="Business Details" name="description" placeholder="About the business..." type="textarea" />
+                                    <div className="px-1">
+                                        <FormField
+                                            label="Business Details"
+                                            name="description"
+                                            placeholder="About the business..."
+                                            type="textarea"
+                                            className="!text-xs !rounded-lg"
+                                            labelClassName="!text-xs !font-bold !text-slate-600"
+                                            autoSize={{ minRows: 2, maxRows: 4 }}
+                                        />
                                     </div>
                                 </>
                             )}
 
                             {/* Modal Footer Actions */}
-                            <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
-                                <Button
+                            <div className="flex justify-end gap-3 pt-4 mt-2 border-t border-slate-100">
+                                <CustomButton
+                                    label="Cancel"
+                                    type="secondary"
                                     onClick={handleClose}
-                                    className="modal-footer-btn-secondary"
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="primary"
+                                />
+                                <CustomButton
+                                    label="Save Changes"
                                     htmlType="submit"
                                     loading={updateMutation.isLoading || isSubmitting}
-                                    className="modal-footer-btn-primary"
-                                >
-                                    Save Changes
-                                </Button>
+                                />
                             </div>
                         </Form>
                     )}

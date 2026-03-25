@@ -1,7 +1,7 @@
 import {
     EditOutlined,
     DeleteOutlined,
-    MoreOutlined,
+    EllipsisOutlined,
     CheckOutlined,
     CloseOutlined,
     SettingOutlined
@@ -12,9 +12,10 @@ import { toast } from "react-toastify";
 import { timestampToDate } from "@/utils/date";
 import { DELETE_BUSINESS, UPDATE_BUSINESS_STATUS } from "@/app/api/admin/business";
 import ConfirmModal from "@/components/shared/ConfirmModal";
-import { Menu, Dropdown, Button, Checkbox, Tooltip } from "antd";
+import { Menu, Dropdown, Button, Table, Tooltip } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
 function BusinessTable({ modal, setModal, businessList, onChange }) {
     const queryClient = useQueryClient();
@@ -157,65 +158,39 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
         { label: "Registered Date", value: "createdAt" },
     ];
 
-    const visibilityMenu = (
-        <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
-            <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                Toggle Columns
-            </div>
-            <Checkbox.Group
-                value={visibleColumns}
-                onChange={setVisibleColumns}
-                className="flex flex-col gap-2"
-            >
-                {columnOptions.map(opt => (
-                    <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
-                        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
-                            {opt.label}
-                        </Checkbox>
-                    </Menu.Item>
-                ))}
-            </Checkbox.Group>
-        </Menu>
-    );
 
     const allColumns = [
         {
-            title: "Business Name",
-            dataIndex: "name",
+            title: "Business Details",
             key: "name",
-            width: 200,
+            width: 250,
             sorter: true,
-            render: (text) => (
-                <div className="font-bold text-slate-800 capitalize truncate">{text}</div>
+            render: (record) => (
+                <div className="flex flex-col min-w-0">
+                    <span className="font-bold text-slate-800 text-xs truncate leading-tight block">
+                        {record.name}
+                    </span>
+                    <span className="text-[11px] text-slate-400 font-medium block mt-0.5 leading-tight truncate">
+                        {record.categoryEn || "No Category"}
+                    </span>
+                </div>
             ),
         },
         {
-            title: "Category",
-            dataIndex: "categoryEn",
-            key: "categoryEn",
-            width: 140,
-            sorter: true,
-            render: (val) => (
-                <div className="capitalize truncate text-slate-500 font-medium">{val || "—"}</div>
-            ),
-        },
-        {
-            title: "Phone",
-            dataIndex: "phone",
-            key: "phone",
-            width: 130,
-            sorter: true,
-            render: (val) => <span className="text-slate-600 font-medium">{val || "—"}</span>,
-        },
-        {
-            title: "Address",
-            dataIndex: "address",
-            key: "address",
-            width: 200,
-            render: (val) => (
-                <Tooltip title={val}>
-                    <div className="capitalize truncate text-slate-500 font-medium">{val || "—"}</div>
-                </Tooltip>
+            title: "Contact & Address",
+            key: "contact",
+            width: 250,
+            render: (record) => (
+                <div className="flex flex-col min-w-0">
+                    <span className="text-slate-600 font-bold text-[11px] leading-tight block">
+                        {record.phone || "No Phone"}
+                    </span>
+                    <Tooltip title={record.address}>
+                        <span className="text-[10px] text-slate-400 font-medium truncate block mt-0.5 leading-tight">
+                            {record.address || "No Address"}
+                        </span>
+                    </Tooltip>
+                </div>
             ),
         },
         {
@@ -223,16 +198,16 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
             dataIndex: "status",
             key: "status",
             align: "center",
-            width: 120,
+            width: 100,
             sorter: true,
             render: (status) => {
                 const colorMap = {
-                    APPROVED: "bg-green-100 text-green-700 border-green-200",
-                    REJECTED: "bg-red-100 text-red-700 border-red-200",
-                    PENDING: "bg-orange-100 text-orange-700 border-orange-200",
+                    APPROVED: "bg-green-100/50 text-green-700 border-green-200",
+                    REJECTED: "bg-red-100/50 text-red-700 border-red-200",
+                    PENDING: "bg-orange-100/50 text-orange-700 border-orange-200",
                 };
                 return (
-                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold border uppercase tracking-wider ${colorMap[status] || "bg-slate-100 text-slate-700 border-slate-200"}`}>
+                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold border uppercase tracking-wider ${colorMap[status] || "bg-slate-100 text-slate-700 border-slate-200"}`}>
                         {status}
                     </span>
                 );
@@ -242,23 +217,23 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
             title: "Registered",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 130,
+            width: 110,
             sorter: true,
             render: (text) => (
-                <div className="text-slate-500 font-medium whitespace-nowrap">{timestampToDate(text)}</div>
+                <div className="text-slate-400 font-bold text-[10px] whitespace-nowrap">{timestampToDate(text)}</div>
             ),
         },
         {
             title: "",
             key: "actions",
-            width: 60,
+            width: 50,
             align: "right",
             render: (record) => (
                 <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
-                        icon={<MoreOutlined className="text-lg" />}
-                        className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
+                        icon={<EllipsisOutlined className="text-lg rotate-90" />}
+                        className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
                     />
                 </Dropdown>
             ),
@@ -270,17 +245,14 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
     return (
         <div className="space-y-4">
             <div className="flex justify-end px-1">
-                <Dropdown overlay={visibilityMenu} trigger={['click']}>
-                    <Button
-                        icon={<SettingOutlined />}
-                        className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
-                    >
-                        Columns
-                    </Button>
-                </Dropdown>
+                <ColumnVisibilityDropdown
+                    visibleColumns={visibleColumns}
+                    setVisibleColumns={setVisibleColumns}
+                    options={columnOptions}
+                />
             </div>
 
-            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+            <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

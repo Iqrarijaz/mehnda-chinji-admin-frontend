@@ -1,11 +1,11 @@
 import {
   EditOutlined,
   DeleteOutlined,
-  MoreOutlined,
+  EllipsisOutlined,
   SettingOutlined
 } from "@ant-design/icons";
 import Loading from "@/animations/homePageLoader";
-import { Switch, Menu, Dropdown, Button, Checkbox } from "antd";
+import { Switch, Menu, Dropdown, Button, Checkbox, Table } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
@@ -14,6 +14,7 @@ import { timestampToDate } from "@/utils/date";
 import { DELETE_CATEGORY, UPDATE_CATEGORY_STATUS } from "@/app/api/admin/categories";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { getTagColor } from "@/utils/tagColor";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
 function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }) {
   const queryClient = useQueryClient();
@@ -134,26 +135,6 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
     { label: "Created At", value: "createdAt" },
   ];
 
-  const visibilityMenu = (
-    <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
-      <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
-        Toggle Columns
-      </div>
-      <Checkbox.Group
-        value={visibleColumns}
-        onChange={setVisibleColumns}
-        className="flex flex-col gap-2"
-      >
-        {columnOptions.map(opt => (
-          <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
-            <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
-              {opt.label}
-            </Checkbox>
-          </Menu.Item>
-        ))}
-      </Checkbox.Group>
-    </Menu>
-  );
 
   const allColumns = [
     {
@@ -161,9 +142,9 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
       dataIndex: ["name", "en"],
       key: "name_en",
       sorter: true,
-      width: 150,
+      width: 140,
       render: (en) => (
-        <div className="capitalize font-bold text-slate-800 truncate">
+        <div className="capitalize font-bold text-slate-800 truncate text-xs">
           {en}
         </div>
       ),
@@ -172,11 +153,11 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
       title: "Name (Urdu)",
       dataIndex: ["name", "ur"],
       key: "name_ur",
-      width: 150,
+      width: 140,
       align: "left",
       sorter: true,
       render: (ur) => (
-        <div className="text-right font-notoUrdu p-2 text-slate-600 font-medium truncate">
+        <div className="text-right font-notoUrdu p-1 text-slate-600 font-medium truncate text-xs">
           {ur}
         </div>
       ),
@@ -185,12 +166,12 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
       title: "Type",
       dataIndex: "type",
       key: "type",
-      width: 100,
+      width: 90,
       align: "center",
       sorter: true,
       render: (type) => (
         <span
-          className="mr-0 text-[10px] px-3 py-1 rounded-full capitalize font-bold text-white shadow-sm"
+          className="mr-0 text-[9px] px-2.5 py-0.5 rounded-full capitalize font-bold text-white shadow-sm"
           style={{ backgroundColor: getTagColor(type) }}
         >
           {type}
@@ -202,7 +183,7 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
       dataIndex: "status",
       key: "status",
       align: "center",
-      width: 100,
+      width: 80,
       render: (status, record) => (
         <Switch
           checked={status}
@@ -216,21 +197,21 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
       title: "Created At",
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 150,
+      width: 130,
       sorter: true,
-      render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
+      render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap text-xs">{timestampToDate(text)}</div>,
     },
     {
       title: "",
       key: "actions",
-      width: 60,
+      width: 50,
       align: "right",
       render: (record) => (
         <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
           <Button
             type="text"
-            icon={<MoreOutlined className="text-lg" />}
-            className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
+            icon={<EllipsisOutlined className="text-lg rotate-90" />}
+            className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
           />
         </Dropdown>
       ),
@@ -242,14 +223,11 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
   return (
     <div className="space-y-4">
       <div className="flex justify-end px-1">
-        <Dropdown overlay={visibilityMenu} trigger={['click']}>
-          <Button
-            icon={<SettingOutlined />}
-            className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
-          >
-            Columns
-          </Button>
-        </Dropdown>
+        <ColumnVisibilityDropdown
+          visibleColumns={visibleColumns}
+          setVisibleColumns={setVisibleColumns}
+          options={columnOptions}
+        />
       </div>
 
       <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">

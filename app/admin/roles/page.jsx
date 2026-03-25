@@ -7,7 +7,6 @@ import AddRoleModal from "./components/AddModal";
 import UpdateRoleModal from "./components/UpdateModal";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import AddButton from "@/components/InnerPage/AddButton";
-import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import { GET_ROLES } from "@/app/api/admin/roles";
 import { useDebounce } from "@/hooks/useDebounce";
 import InnerPageCard from "@/components/layout/InnerPageCard";
@@ -36,13 +35,16 @@ export default function RolesPage() {
     return (
         <InnerPageCard title="Roles Management">
 
-            <div className="flex justify-end mb-4 gap-4 items-center">
-                <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex justify-end mb-3 gap-3 items-center">
+                <div className="flex flex-col md:flex-row gap-2">
                     <SearchInput setFilters={setFilters} />
                 </div>
-                <ItemsPerPageDropdown onChange={onChange} />
-                <AddButton title="Add Role" onClick={() => setModal({ name: "Add", data: null, state: true })} />
-
+                <AddButton
+                    title="Add Role"
+                    icon={false}
+                    onClick={() => setModal({ name: "Add", data: null, state: true })}
+                    className="!h-[36px] !rounded-lg !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                />
             </div>
 
             <div className="flex flex-col mb-4">

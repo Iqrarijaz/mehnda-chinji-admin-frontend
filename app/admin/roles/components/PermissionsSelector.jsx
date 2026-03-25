@@ -38,7 +38,7 @@ const PermissionsSelector = ({ selectedPermissions = [], onChange }) => {
     if (isLoading) return <Spin />;
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
             {permissionsMap && Object.entries(permissionsMap).map(([moduleKey, modulePerms]) => {
                 const moduleValues = Object.values(modulePerms);
                 const allChecked = moduleValues.every(p => selectedPermissions.includes(p));
@@ -48,24 +48,34 @@ const PermissionsSelector = ({ selectedPermissions = [], onChange }) => {
                     <Card
                         key={moduleKey}
                         size="small"
+                        className="!rounded-xl border-slate-100 overflow-hidden shadow-sm"
                         title={
-                            <Checkbox
-                                checked={allChecked}
-                                indeterminate={intermediate}
-                                onChange={(e) => handleModuleCheck(moduleKey, e.target.checked)}
-                            >
-                                {moduleKey}
-                            </Checkbox>
+                            <div className="flex items-center justify-between">
+                                <Checkbox
+                                    checked={allChecked}
+                                    indeterminate={intermediate}
+                                    onChange={(e) => handleModuleCheck(moduleKey, e.target.checked)}
+                                    className="!text-[10px] font-bold uppercase tracking-wider text-slate-600 custom-teal-checkbox"
+                                >
+                                    {moduleKey}
+                                </Checkbox>
+                                <span className="text-[9px] font-medium text-slate-400">
+                                    {moduleValues.filter(p => selectedPermissions.includes(p)).length} / {moduleValues.length}
+                                </span>
+                            </div>
                         }
+                        headStyle={{ backgroundColor: '#f8fafc', padding: '0 12px', minHeight: '32px' }}
+                        bodyStyle={{ padding: '8px 12px' }}
                     >
-                        <Row gutter={[16, 8]}>
+                        <Row gutter={[12, 6]}>
                             {Object.entries(modulePerms).map(([actionKey, permissionValue]) => (
-                                <Col span={8} key={permissionValue}>
+                                <Col span={12} md={8} key={permissionValue}>
                                     <Checkbox
                                         checked={selectedPermissions.includes(permissionValue)}
                                         onChange={(e) => handlePermissionCheck(permissionValue, e.target.checked)}
+                                        className="!text-[10px] text-slate-600 font-medium capitalize custom-teal-checkbox"
                                     >
-                                        {actionKey}
+                                        {actionKey.toLowerCase()}
                                     </Checkbox>
                                 </Col>
                             ))}

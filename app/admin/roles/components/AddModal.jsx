@@ -1,11 +1,8 @@
-"use client";
-import React, { useRef, useEffect } from "react";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { Button, Modal, Input } from "antd";
+import { Modal, Input } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { FaUserShield, FaAlignLeft, FaCheckSquare } from "react-icons/fa";
+import CustomButton from "@/components/shared/CustomButton";
 
 import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
@@ -64,24 +61,24 @@ function AddRoleModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2 pt-1">
+                <div className="flex items-center gap-3 px-2">
                     <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
                         <FaUserShield size={18} />
                     </div>
                     <div>
-                        <span className="text-xl font-bold text-slate-900 block">Create New Role</span>
+                        <span className="text-lg font-bold text-slate-900 block">Create New Role</span>
                         <span className="text-xs text-slate-500 font-normal">Define access levels and permissions</span>
                     </div>
                 </div>
             }
             centered
-            width={720}
+            width={600}
             open={modal?.name === "Add" && modal?.state}
             onCancel={handleCloseModal}
             footer={null}
             className="modern-modal"
         >
-            <div className="p-2 pt-4">
+            <div className="p-1">
                 <Formik
                     innerRef={formikRef}
                     initialValues={initialValues}
@@ -89,46 +86,47 @@ function AddRoleModal({ modal, setModal }) {
                     onSubmit={handleSubmit}
                 >
                     {({ values, errors, touched, setFieldValue, handleChange, handleBlur, isSubmitting }) => (
-                        <Form className="space-y-6">
-                            {createRole.status === "loading" ? (
+                        <Form className="space-y-4">
+                            {createRole.isLoading ? (
                                 <FormSkeleton fields={4} />
                             ) : (
                                 <>
-                                    <div className="modal-section">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Role Definition</p>
-                                        <div className="space-y-4">
+                                    <div className="modal-section bg-slate-50/50 p-4 rounded-xl border border-slate-100 space-y-3">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Role Definition</p>
+                                        <div className="space-y-3">
                                             <FormField
                                                 label="Role Title"
                                                 name="name"
                                                 placeholder="e.g. MODERATOR"
                                                 required
-                                                icon={<FaUserShield className="opacity-30" />}
+                                                className="!h-[36px] !text-sm"
+                                                icon={<FaUserShield className="opacity-20" size={12} />}
                                             />
 
-                                            <div className="flex flex-col gap-2">
-                                                <label className="text-slate-700 font-semibold text-sm">Role Description <span className="text-red-500">*</span></label>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-slate-700 font-semibold text-xs">Role Description <span className="text-red-500">*</span></label>
                                                 <div className="relative">
-                                                    <FaAlignLeft className="absolute top-4 left-4 text-slate-300 pointer-events-none" />
+                                                    <FaAlignLeft className="absolute top-2.5 left-3 text-slate-300 pointer-events-none" size={12} />
                                                     <Input.TextArea
                                                         name="description"
-                                                        placeholder="Explain what this role allows users to do..."
+                                                        placeholder="Explain what this role allows..."
                                                         value={values.description}
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
-                                                        rows={3}
-                                                        className="!pl-11 !rounded-2xl !border-2 !border-slate-100 focus:!border-teal-500 !py-3"
+                                                        rows={2}
+                                                        className="!pl-9 !rounded-lg !border-2 !border-slate-100 focus:!border-[#006666] !py-2 !text-sm"
                                                     />
                                                 </div>
                                                 {touched.description && errors.description && (
-                                                    <div className="text-red-500 text-xs font-medium">{errors.description}</div>
+                                                    <div className="text-red-500 text-[10px] font-medium">{errors.description}</div>
                                                 )}
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="modal-section !mb-0">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Access Permissions</p>
-                                        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Access Permissions</p>
+                                        <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-100">
                                             <PermissionsSelector
                                                 selectedPermissions={values.permissions}
                                                 onChange={(newPermissions) => setFieldValue("permissions", newPermissions)}
@@ -138,21 +136,17 @@ function AddRoleModal({ modal, setModal }) {
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
-                                <Button
+                             <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                                <CustomButton
+                                    label="Cancel"
+                                    type="secondary"
                                     onClick={handleCloseModal}
-                                    className="modal-footer-btn-secondary"
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="primary"
+                                />
+                                <CustomButton
+                                    label="Create Role"
                                     htmlType="submit"
                                     loading={createRole.isLoading || isSubmitting}
-                                    className="modal-footer-btn-primary"
-                                >
-                                    Create Role
-                                </Button>
+                                />
                             </div>
                         </Form>
                     )}

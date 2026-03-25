@@ -1,7 +1,7 @@
 import {
     EditOutlined,
     DeleteOutlined,
-    MoreOutlined,
+    EllipsisOutlined,
     SettingOutlined,
     SecurityScanOutlined
 } from "@ant-design/icons";
@@ -10,9 +10,10 @@ import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { DELETE_ROLE } from "@/app/api/admin/roles";
 import ConfirmModal from "@/components/shared/ConfirmModal";
-import { Pagination, Table, Tag, Tooltip, Menu, Dropdown, Button, Checkbox } from "antd";
+import { Pagination, Table, Tag, Tooltip, Menu, Dropdown, Button } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
 const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
     const queryClient = useQueryClient();
@@ -100,76 +101,46 @@ const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
         { label: "Permissions", value: "permissions" },
     ];
 
-    const visibilityMenu = (
-        <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
-            <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                Toggle Columns
-            </div>
-            <Checkbox.Group
-                value={visibleColumns}
-                onChange={setVisibleColumns}
-                className="flex flex-col gap-2"
-            >
-                {columnOptions.map(opt => (
-                    <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
-                        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
-                            {opt.label}
-                        </Checkbox>
-                    </Menu.Item>
-                ))}
-            </Checkbox.Group>
-        </Menu>
-    );
 
     const allColumns = [
         {
-            title: "Name",
-            dataIndex: "name",
+            title: "Role Info",
             key: "name",
-            width: 200,
+            width: 250,
             sorter: true,
-            render: (text) => <span className="font-bold text-slate-800 tracking-tight">{text}</span>,
-        },
-        {
-            title: "Description",
-            dataIndex: "description",
-            key: "description",
-            width: 400,
-            render: (text) => (
-                <Tooltip title={text} placement="topLeft">
-                    <div className="text-slate-500 font-medium truncate cursor-help">
-                        {text || "—"}
-                    </div>
-                </Tooltip>
+            render: (record) => (
+                <div className="flex flex-col min-w-0">
+                    <span className="font-bold text-slate-800 text-xs truncate leading-tight block">{record.name}</span>
+                    <span className="text-[10px] text-slate-400 font-medium truncate block leading-tight mt-0.5">{record.description || "No description provided"}</span>
+                </div>
             ),
         },
         {
-            title: "Permissions",
+            title: "Access Level",
             dataIndex: "permissions",
             key: "permissions",
-            width: 150,
+            width: 120,
             align: "center",
             render: (permissions) => (
-                <Tag
-                    icon={<SecurityScanOutlined />}
-                    color="blue"
-                    className="!rounded-full !px-3 font-bold !border-0 text-[10px]"
-                >
-                    {permissions?.length || 0} PERMISSIONS
-                </Tag>
+                <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100/50">
+                    <SecurityScanOutlined className="text-[10px]" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider">
+                        {permissions?.length || 0} PERMS
+                    </span>
+                </div>
             ),
         },
         {
             title: "",
             key: "actions",
-            width: 60,
+            width: 50,
             align: "right",
             render: (record) => (
                 <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
-                        icon={<MoreOutlined className="text-lg" />}
-                        className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
+                        icon={<EllipsisOutlined className="text-lg rotate-90" />}
+                        className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
                     />
                 </Dropdown>
             ),
@@ -181,14 +152,11 @@ const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
     return (
         <div className="space-y-4">
             <div className="flex justify-end px-1">
-                <Dropdown overlay={visibilityMenu} trigger={['click']}>
-                    <Button
-                        icon={<SettingOutlined />}
-                        className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
-                    >
-                        Columns
-                    </Button>
-                </Dropdown>
+                <ColumnVisibilityDropdown
+                    visibleColumns={visibleColumns}
+                    setVisibleColumns={setVisibleColumns}
+                    options={columnOptions}
+                />
             </div>
 
             <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">

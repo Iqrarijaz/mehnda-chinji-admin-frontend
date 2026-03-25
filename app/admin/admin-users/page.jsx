@@ -7,7 +7,6 @@ import AddAdminUserModal from "./components/AddModal";
 import UpdateAdminUserModal from "./components/UpdateModal";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import AddButton from "@/components/InnerPage/AddButton";
-import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import { GET_ADMIN_USERS, GET_ADMIN_USER_STATUS_COUNTS } from "@/app/api/admin/admin-users";
 import { useDebounce } from "@/hooks/useDebounce";
 import StatCard from "@/components/shared/StatCard";
@@ -51,39 +50,45 @@ export default function AdminUsersPage() {
     return (
         <InnerPageCard title="Admin Users">
 
-            {/* Status Count Cards */}
-            <div className="flex gap-3 mb-5" style={{ flexWrap: "wrap" }}>
-                {countsLoading ? (
-                    Array.from({ length: 2 }).map((_, i) => <StatCardSkeleton key={i} />)
-                ) : (
-                    statCards.map((card) => (
-                        <StatCard
-                            key={card.key}
-                            title={card.label}
-                            count={card.count}
-                            color={card.color}
-                            bg={card.bg}
-                            border={card.border}
-                            active={filters.status === card.key}
-                            onClick={() =>
-                                setFilters((prev) => ({
-                                    ...prev,
-                                    status: prev.status === card.key ? null : card.key,
-                                    page: 1,
-                                }))
-                            }
-                        />
-                    ))
-                )}
-            </div>
-
-            <div className="flex justify-end mb-4 gap-4 items-center">
-                <div className="flex flex-col md:flex-row gap-4">
-                    <SearchInput setFilters={setFilters} />
+            <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-center">
+                {/* Status Count Cards (Left) */}
+                <div className="flex gap-2 items-center flex-wrap">
+                    {countsLoading ? (
+                        Array.from({ length: 2 }).map((_, i) => <StatCardSkeleton key={i} />)
+                    ) : (
+                        statCards.map((card) => (
+                            <StatCard
+                                key={card.key}
+                                title={card.label}
+                                count={card.count}
+                                color={card.color}
+                                bg={card.bg}
+                                border={card.border}
+                                active={filters.status === card.key}
+                                onClick={() =>
+                                    setFilters((prev) => ({
+                                        ...prev,
+                                        status: prev.status === card.key ? null : card.key,
+                                        page: 1,
+                                    }))
+                                }
+                            />
+                        ))
+                    )}
                 </div>
-                <ItemsPerPageDropdown onChange={onChange} />
-                <AddButton title="Add Admin User" onClick={() => setModal({ name: "Add", data: null, state: true })} />
 
+                {/* Search and Add Button (Right) */}
+                <div className="flex gap-3 items-center">
+                    <div className="flex flex-col md:flex-row gap-2">
+                        <SearchInput setFilters={setFilters} />
+                    </div>
+                    <AddButton
+                        title="Add Admin User"
+                        icon={false}
+                        onClick={() => setModal({ name: "Add", data: null, state: true })}
+                        className="!h-[36px] !rounded-lg !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                    />
+                </div>
             </div>
 
             <div className="flex flex-col mb-4">

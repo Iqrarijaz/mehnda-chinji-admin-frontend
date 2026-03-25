@@ -2,10 +2,12 @@
 import React, { useRef, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Button, Modal, Select, Input, Upload } from "antd";
+import { Modal, Select, Input, Upload } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { PlusOutlined, EditOutlined } from "@ant-design/icons";
+import { PlusOutlined, FileTextOutlined } from "@ant-design/icons";
+import SelectBox from "@/components/SelectBox";
+import CustomButton from "@/components/shared/CustomButton";
 
 import Loading from "@/animations/homePageLoader";
 import FormField from "@/components/InnerPage/FormField";
@@ -129,24 +131,24 @@ function UpdatePostModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2 pt-1">
+                <div className="flex items-center gap-3 px-2">
                     <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
-                        <EditOutlined style={{ fontSize: '20px' }} />
+                        <FileTextOutlined style={{ fontSize: '18px' }} />
                     </div>
                     <div>
-                        <span className="text-xl font-bold text-slate-900 block">Edit Post</span>
+                        <span className="text-lg font-bold text-slate-900 block">Edit Post</span>
                         <span className="text-xs text-slate-500 font-normal">Update content or adjust metadata for this post</span>
                     </div>
                 </div>
             }
             centered
-            width={720}
+            width={600}
             open={modal?.name === "Update" && modal?.state}
             onCancel={handleCloseModal}
             footer={null}
             className="modern-modal"
         >
-            <div className="p-2 pt-4">
+            <div className="p-1">
                 <Formik
                     enableReinitialize
                     initialValues={initialValues}
@@ -154,81 +156,83 @@ function UpdatePostModal({ modal, setModal }) {
                     onSubmit={handleSubmit}
                 >
                     {({ values, errors, touched, setFieldValue, handleChange, handleBlur, isSubmitting }) => (
-                        <Form className="space-y-6">
+                        <Form className="space-y-4">
                             {updatePost.status === "loading" && <Loading />}
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                                <div className="flex flex-col gap-2">
-                                    <label className="text-slate-700 font-semibold text-sm">Post Type</label>
-                                    <Select
-                                        value={values.type}
-                                        onChange={(value) => setFieldValue("type", value)}
-                                        className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
-                                        size="large"
-                                    >
-                                        {POST_TYPES.map(type => (
-                                            <Option key={type.value} value={type.value}>
-                                                {type.label}
-                                            </Option>
-                                        ))}
-                                    </Select>
-                                </div>
-
-                                <div className="flex flex-col gap-2">
-                                    <label className="text-slate-700 font-semibold text-sm">Status</label>
-                                    <Select
-                                        value={values.status}
-                                        onChange={(value) => setFieldValue("status", value)}
-                                        className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
-                                        size="large"
-                                    >
-                                        <Option value="ACTIVE">Active</Option>
-                                        <Option value="ARCHIVED">Archived</Option>
-                                        <Option value="PENDING">Pending</Option>
-                                    </Select>
+                            <div className="modal-section pb-2">
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Configuration</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-slate-700 font-semibold text-xs">Post Type</label>
+                                        <Select
+                                            value={values.type}
+                                            onChange={(value) => setFieldValue("type", value)}
+                                            className="!h-[36px] !rounded-lg overflow-hidden border-2 border-slate-100 [&>div]:!shadow-none [&>div]:!border-none"
+                                            size="middle"
+                                        >
+                                            {POST_TYPES.map(type => (
+                                                <Option key={type.value} value={type.value}>{type.label}</Option>
+                                            ))}
+                                        </Select>
+                                    </div>
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-slate-700 font-semibold text-xs">Status</label>
+                                        <Select
+                                            value={values.status}
+                                            onChange={(value) => setFieldValue("status", value)}
+                                            className="!h-[36px] !rounded-lg overflow-hidden border-2 border-slate-100 [&>div]:!shadow-none [&>div]:!border-none"
+                                            size="middle"
+                                        >
+                                            <Option value="ACTIVE">Active</Option>
+                                            <Option value="ARCHIVED">Archived</Option>
+                                            <Option value="PENDING">Pending</Option>
+                                        </Select>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-2">
-                                <label className="text-slate-700 font-semibold text-sm">Content</label>
-                                <TextArea
-                                    name="content"
-                                    placeholder="Update post content"
-                                    value={values.content}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    rows={5}
-                                    className="!rounded-2xl !border-2 !border-slate-100 focus:!border-teal-500 !p-4 !text-[15px]"
-                                />
-                                {touched.content && errors.content && (
-                                    <div className="text-red-500 text-xs font-medium">{errors.content}</div>
-                                )}
+                            <div className="modal-section">
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Content</p>
+                                <div className="flex flex-col gap-1.5">
+                                    <TextArea
+                                        name="content"
+                                        placeholder="Update post content"
+                                        value={values.content}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        rows={4}
+                                        className="!rounded-xl !border-2 !border-slate-100 focus:!border-teal-500 !p-3 !text-sm"
+                                    />
+                                    {touched.content && errors.content && (
+                                        <div className="text-red-500 text-[10px] font-medium">{errors.content}</div>
+                                    )}
+                                </div>
                             </div>
 
                             {(values.type === "DEATH" || values.type === "ACCIDENT") && (
-                                <div className="modal-section bg-slate-50/50 p-5 rounded-2xl border border-dashed border-slate-200">
-                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">
+                                <div className="modal-section bg-slate-50/50 p-4 rounded-xl border border-dashed border-slate-200">
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">
                                         Type-Specific Data
                                     </p>
-                                    <div className="space-y-4">
+                                    <div className="space-y-3">
                                         {values.type === "DEATH" && (
                                             <>
-                                                <FormField label="Deceased Name" name="metadata.deceasedName" />
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <FormField label="Date of Death" name="metadata.dateOfDeath" type="date" />
-                                                    <FormField label="Relationship" name="metadata.relationship" />
+                                                <FormField label="Deceased Name" name="metadata.deceasedName" className="!h-[36px] !text-sm" />
+                                                <div className="grid grid-cols-2 gap-3">
+                                                    <FormField label="Date of Death" name="metadata.dateOfDeath" type="date" className="!h-[36px] !text-sm" />
+                                                    <FormField label="Relationship" name="metadata.relationship" className="!h-[36px] !text-sm" />
                                                 </div>
                                             </>
                                         )}
                                         {values.type === "ACCIDENT" && (
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <FormField label="Location" name="metadata.location" />
-                                                <div className="flex flex-col gap-2">
-                                                    <label className="text-slate-700 font-semibold text-sm">Severity</label>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                <FormField label="Location" name="metadata.location" className="!h-[36px] !text-sm" />
+                                                <div className="flex flex-col gap-1.5">
+                                                    <label className="text-slate-700 font-semibold text-xs">Severity</label>
                                                     <Select
                                                         value={values.metadata.severity}
                                                         onChange={(value) => setFieldValue("metadata.severity", value)}
-                                                        className="!h-[44px] !rounded-xl border-2 border-slate-100"
+                                                        className="!h-[36px] !rounded-lg border-2 border-slate-100"
                                                     >
                                                         <Option value="LOW">Low</Option>
                                                         <Option value="MEDIUM">Medium</Option>
@@ -241,11 +245,12 @@ function UpdatePostModal({ modal, setModal }) {
                                 </div>
                             )}
 
-                            <div className="flex flex-col gap-3">
-                                <label className="text-slate-700 font-semibold text-sm">Post Images</label>
-                                <div className="bg-slate-50 rounded-2xl p-4 border-2 border-slate-100 border-dashed">
+                            <div className="modal-section">
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Media</p>
+                                <div className="bg-slate-50 rounded-xl p-3 border-2 border-slate-100 border-dashed">
                                     <Upload
                                         listType="picture-card"
+                                        className="post-image-upload-compact scale-[0.85] origin-left"
                                         fileList={values.images.map((url, index) => ({
                                             uid: index,
                                             name: `image-${index}`,
@@ -258,30 +263,25 @@ function UpdatePostModal({ modal, setModal }) {
                                     >
                                         {values.images.length < 5 && (
                                             <div className="flex flex-col items-center justify-center gap-1">
-                                                <PlusOutlined style={{ fontSize: '20px', color: '#64748b' }} />
-                                                <div className="text-[11px] font-semibold text-slate-500">Update</div>
+                                                <PlusOutlined style={{ fontSize: '18px', color: '#64748b' }} />
+                                                <div className="text-[10px] font-semibold text-slate-500">Update</div>
                                             </div>
                                         )}
                                     </Upload>
                                 </div>
                             </div>
 
-                            <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
-                                <Button
+                            <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                                <CustomButton
+                                    label="Cancel"
+                                    type="secondary"
                                     onClick={handleCloseModal}
-                                    className="modal-footer-btn-secondary"
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="primary"
+                                />
+                                <CustomButton
+                                    label="Update Post"
                                     htmlType="submit"
-                                    loading={updatePost.isLoading}
-                                    disabled={isSubmitting}
-                                    className="modal-footer-btn-primary"
-                                >
-                                    Save Changes
-                                </Button>
+                                    loading={updatePost.isLoading || isSubmitting}
+                                />
                             </div>
                         </Form>
                     )}

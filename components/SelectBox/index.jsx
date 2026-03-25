@@ -7,9 +7,8 @@ function SelectBox({
   defaultValue = "",
   value,
   width = "100%",
-  height = "40px",
+  height = "36px",
   className = "",
-  popupClassName = "",
   placeholder = "",
   loading = false,
   showSearch = false,
@@ -25,8 +24,7 @@ function SelectBox({
 
   return (
     <Select
-      className={`w-full font-xl custom-select-no-focus ${className}`}
-      popupClassName={popupClassName}
+      className={`w-full custom-selectbox ${className}`}
       defaultValue={defaultValue || undefined}
       value={value || undefined}
       style={{

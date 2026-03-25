@@ -1,7 +1,6 @@
-"use client";
-import React from "react";
-import { Modal, Tag, Button, Divider } from "antd";
+import { Modal, Tag, Divider } from "antd";
 import { FaCogs, FaCode, FaCalendarAlt, FaShieldAlt, FaInfoCircle, FaFileCode } from "react-icons/fa";
+import CustomButton from "@/components/shared/CustomButton";
 
 function ViewConfigurationModal({ modal, setModal }) {
     const data = modal.data || {};
@@ -99,12 +98,12 @@ function ViewConfigurationModal({ modal, setModal }) {
 
                     {/* Action Button */}
                     <div className="flex justify-end pt-4">
-                        <Button
+                        <CustomButton
+                            label="Close Details"
+                            type="secondary"
                             onClick={handleClose}
-                            className="modal-footer-btn-secondary !px-12"
-                        >
-                            Close Details
-                        </Button>
+                            className="!px-12"
+                        />
                     </div>
                 </div>
             </div>

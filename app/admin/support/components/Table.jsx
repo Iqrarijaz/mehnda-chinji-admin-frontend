@@ -1,15 +1,16 @@
 import {
     EyeOutlined,
-    MoreOutlined,
+    EllipsisOutlined,
     SettingOutlined,
     MessageOutlined,
     CommentOutlined
 } from "@ant-design/icons";
 import Loading from "@/animations/homePageLoader";
 import { timestampToDate } from "@/utils/date";
-import { Pagination, Table, Tag, Tooltip, Menu, Dropdown, Button, Checkbox } from "antd";
+import { Pagination, Table, Tag, Tooltip, Menu, Dropdown, Button } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
 const getTicketStatusColor = (status) => {
     switch (status) {
@@ -58,65 +59,26 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
         { label: "Created At", value: "createdAt" },
     ];
 
-    const visibilityMenu = (
-        <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
-            <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                Toggle Columns
-            </div>
-            <Checkbox.Group
-                value={visibleColumns}
-                onChange={setVisibleColumns}
-                className="flex flex-col gap-2"
-            >
-                {columnOptions.map(opt => (
-                    <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
-                        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
-                            {opt.label}
-                        </Checkbox>
-                    </Menu.Item>
-                ))}
-            </Checkbox.Group>
-        </Menu>
-    );
 
     const allColumns = [
         {
-            title: "Ticket ID",
-            dataIndex: "ticketId",
+            title: "Ticket Details",
             key: "ticketId",
-            width: 140,
-            sorter: true,
-            render: (text) => (
-                <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-[#006666] bg-[#006666]/5 px-2 py-0.5 rounded border border-[#006666]/10 text-xs uppercase tracking-wider">
-                        #{text}
-                    </span>
-                </div>
-            ),
-        },
-        {
-            title: "User",
-            dataIndex: "userId",
-            key: "userId",
-            width: 220,
-            render: (user) => (
-                <div className="flex flex-col">
-                    <span className="font-bold text-slate-800 leading-tight capitalize">{user?.name || "Unknown User"}</span>
-                    <span className="text-[11px] text-slate-400 font-medium">{user?.phoneNumber || "No Phone"}</span>
-                </div>
-            ),
-        },
-        {
-            title: "Subject",
-            dataIndex: "subject",
-            key: "subject",
             width: 300,
-            render: (subject) => (
-                <Tooltip title={subject} placement="topLeft">
-                    <div className="text-slate-600 font-medium truncate cursor-help">
-                        {subject}
+            sorter: true,
+            render: (record) => (
+                <div className="flex flex-col min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                        <span className="font-mono font-black text-[#006666] text-[10px] tracking-widest">#{record.ticketId}</span>
+                        <span className="h-1 w-1 rounded-full bg-slate-300" />
+                        <span className="font-bold text-slate-800 text-xs truncate">{record.subject}</span>
                     </div>
-                </Tooltip>
+                    <div className="flex items-center gap-2">
+                        <span className="text-[10px] text-slate-400 font-bold uppercase truncate">{record.userId?.name || "Unknown User"}</span>
+                        <span className="text-[10px] text-slate-300">•</span>
+                        <span className="text-[10px] text-slate-400 font-medium">{record.userId?.phoneNumber || "No Phone"}</span>
+                    </div>
+                </div>
             ),
         },
         {
@@ -124,58 +86,38 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
             dataIndex: "status",
             key: "status",
             align: "center",
-            width: 140,
+            width: 110,
             sorter: true,
             render: (status) => {
-                const colors = {
-                    "open": "var(--warning)",
-                    "in-progress": "var(--info)",
-                    "closed": "var(--success)",
-                };
-                const bgColors = {
-                    "open": "rgba(245, 158, 11, 0.1)",
-                    "in-progress": "rgba(59, 130, 246, 0.1)",
-                    "closed": "rgba(34, 197, 94, 0.1)",
-                };
-                const dotColors = {
-                    "open": "#f59e0b",
-                    "in-progress": "#3b82f6",
-                    "closed": "#22c55e",
-                };
+                const colors = { open: "orange", "in-progress": "blue", closed: "green" };
+                const dotColors = { open: "#f59e0b", "in-progress": "#3b82f6", closed: "#22c55e" };
                 return (
-                    <div
-                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border"
-                        style={{
-                            backgroundColor: bgColors[status] || "rgba(148, 163, 184, 0.1)",
-                            color: dotColors[status] || "#64748b",
-                            borderColor: `${dotColors[status]}20` || "#64748b20"
-                        }}
-                    >
-                        <span className="flex h-1.5 w-1.5 rounded-full" style={{ backgroundColor: dotColors[status] || "#64748b" }} />
-                        {status.replace("-", " ")}
+                    <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-${colors[status] || 'slate'}-50 text-${colors[status] || 'slate'}-600 border border-${colors[status] || 'slate'}-100/50`}>
+                        <span className="h-1 w-1 rounded-full" style={{ backgroundColor: dotColors[status] || "#64748b" }} />
+                        <span className="text-[9px] font-bold uppercase tracking-wider">{status.replace("-", " ")}</span>
                     </div>
                 );
             },
         },
         {
-            title: "Created At",
+            title: "Created",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 160,
+            width: 130,
             sorter: true,
-            render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
+            render: (text) => <div className="text-slate-500 text-xs font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
         },
         {
             title: "",
             key: "actions",
-            width: 60,
+            width: 50,
             align: "right",
             render: (record) => (
                 <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
-                        icon={<MoreOutlined className="text-lg" />}
-                        className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
+                        icon={<EllipsisOutlined className="text-lg rotate-90" />}
+                        className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
                     />
                 </Dropdown>
             ),
@@ -187,14 +129,11 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
     return (
         <div className="space-y-4">
             <div className="flex justify-end px-1">
-                <Dropdown overlay={visibilityMenu} trigger={['click']}>
-                    <Button
-                        icon={<SettingOutlined />}
-                        className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
-                    >
-                        Columns
-                    </Button>
-                </Dropdown>
+                <ColumnVisibilityDropdown
+                    visibleColumns={visibleColumns}
+                    setVisibleColumns={setVisibleColumns}
+                    options={columnOptions}
+                />
             </div>
 
             <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">

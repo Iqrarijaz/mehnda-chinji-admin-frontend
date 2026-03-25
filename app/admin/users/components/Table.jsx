@@ -4,14 +4,13 @@ import { Table, Switch, Tag, Avatar, Menu, Dropdown, Button } from "antd";
 import {
     EditOutlined,
     DeleteOutlined,
-    MoreOutlined,
+    EllipsisOutlined,
     LockOutlined,
     SettingOutlined
 } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { HiOutlineUsers } from "react-icons/hi2";
-import { Checkbox } from "antd";
 
 import Loading from "@/animations/homePageLoader";
 import ConfirmModal from "@/components/shared/ConfirmModal";
@@ -19,6 +18,7 @@ import { TableSkeleton } from "@/components/shared/Skeletons";
 import EmptyState from "@/components/shared/EmptyState";
 import { DELETE_USER, UPDATE_USER } from "@/app/api/admin/users";
 import { timestampToDate } from "@/utils/date";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
 const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilters }) => {
     const queryClient = useQueryClient();
@@ -119,26 +119,6 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
         { label: "Created At", value: "createdAt" },
     ];
 
-    const visibilityMenu = (
-        <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
-            <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                Toggle Columns
-            </div>
-            <Checkbox.Group
-                value={visibleColumns}
-                onChange={setVisibleColumns}
-                className="flex flex-col gap-2"
-            >
-                {columnOptions.map(opt => (
-                    <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
-                        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
-                            {opt.label}
-                        </Checkbox>
-                    </Menu.Item>
-                ))}
-            </Checkbox.Group>
-        </Menu>
-    );
 
     const allColumns = React.useMemo(() => [
         {
@@ -147,17 +127,17 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             dataIndex: "name",
             sorter: true,
             render: (_, record) => (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                     <Avatar
-                        size={42}
+                        size={32}
                         src={record.image}
-                        className="bg-slate-100 text-[#006666] font-bold border-2 border-white shadow-sm"
+                        className="bg-slate-100 text-[#006666] font-bold border-2 border-white shadow-sm !text-xs"
                     >
                         {record.name?.charAt(0)}
                     </Avatar>
-                    <div className="flex flex-col">
-                        <span className="font-bold text-slate-800">{record.name}</span>
-                        <span className="text-xs text-slate-500 font-medium">{record.email}</span>
+                    <div className="flex flex-col min-w-0">
+                        <span className="font-bold text-slate-800 text-xs truncate leading-tight">{record.name}</span>
+                        <span className="text-[10px] text-slate-400 font-medium truncate">{record.email}</span>
                     </div>
                 </div>
             ),
@@ -167,9 +147,9 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             key: "role",
             dataIndex: "role",
             sorter: true,
-            width: 160,
+            width: 100,
             render: (role) => (
-                <Tag className="!rounded-full !px-3 font-bold !border-none !bg-slate-100 !text-slate-600 text-[10px]">
+                <Tag className="!rounded-full !px-2.5 !py-0.5 font-bold !border-none !bg-slate-100 !text-slate-600 text-[9px] uppercase tracking-wider">
                     {role}
                 </Tag>
             ),
@@ -179,9 +159,9 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             key: "gender",
             dataIndex: "gender",
             sorter: true,
-            width: 160,
+            width: 90,
             render: (gender) => (
-                <span className="text-[11px] text-slate-500 font-semibold px-1 capitalize">
+                <span className="text-[10px] text-slate-500 font-bold px-1 capitalize tracking-wide">
                     {gender || "—"}
                 </span>
             ),
@@ -191,13 +171,15 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             dataIndex: "phone",
             key: "phone",
             sorter: true,
-            render: (phone) => <span className="font-medium text-slate-600">{phone || "N/A"}</span>,
+            width: 120,
+            render: (phone) => <span className="font-semibold text-slate-600 text-xs whitespace-nowrap">{phone || "N/A"}</span>,
         },
         {
             title: "Status",
             dataIndex: "status",
             key: "status",
-            width: 160,
+            width: 80,
+            align: "center",
             render: (status, record) => (
                 <Switch
                     checked={status === "ACTIVE"}
@@ -216,20 +198,21 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",
+            width: 120,
             sorter: true,
-            render: (date) => <span className="text-slate-500 font-medium">{timestampToDate(date)}</span>,
+            render: (date) => <span className="text-slate-500 font-medium text-xs">{timestampToDate(date)}</span>,
         },
         {
             title: "",
             key: "actions",
             align: "right",
-            width: 60,
+            width: 50,
             render: (_, record) => (
                 <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
-                        icon={<MoreOutlined className="text-lg" />}
-                        className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
+                        icon={<EllipsisOutlined className="text-lg rotate-90" />}
+                        className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
                     />
                 </Dropdown>
             ),
@@ -257,14 +240,11 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
     return (
         <div className="space-y-4">
             <div className="flex justify-end px-1">
-                <Dropdown overlay={visibilityMenu} trigger={['click']}>
-                    <Button
-                        icon={<SettingOutlined />}
-                        className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
-                    >
-                        Columns
-                    </Button>
-                </Dropdown>
+                <ColumnVisibilityDropdown
+                    visibleColumns={visibleColumns}
+                    setVisibleColumns={setVisibleColumns}
+                    options={columnOptions}
+                />
             </div>
 
             <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">

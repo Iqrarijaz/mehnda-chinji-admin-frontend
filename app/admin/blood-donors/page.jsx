@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import BloodDonorsTable from "./components/Table";
-import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import UpdateDonorModal from "./components/UpdateModal";
 import SelectBox from "@/components/SelectBox";
 import FilterModal from "./components/FilterModal";
@@ -53,67 +52,64 @@ export default function BloodDonorsPage() {
     return (
         <InnerPageCard title="Blood Donors">
 
-            {/* Status Count Cards */}
-            <div className="flex gap-3 mb-5" style={{ flexWrap: "wrap" }}>
-                {countsLoading ? (
-                    Array.from({ length: 2 }).map((_, i) => <StatCardSkeleton key={i} />)
-                ) : (
-                    statCards.map((card) => (
-                        <StatCard
-                            key={card.key}
-                            title={card.label}
-                            count={card.count}
-                            color={card.color}
-                            bg={card.bg}
-                            border={card.border}
-                            active={filters.available === card.key}
-                            onClick={() =>
-                                setFilters((prev) => ({
-                                    ...prev,
-                                    available: prev.available === card.key ? null : card.key,
-                                    page: 1,
-                                }))
-                            }
-                        />
-                    ))
-                )}
-            </div>
+            <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-center">
+                {/* Status Count Cards (Left) */}
+                <div className="flex gap-2 items-center flex-wrap">
+                    {countsLoading ? (
+                        Array.from({ length: 2 }).map((_, i) => <StatCardSkeleton key={i} />)
+                    ) : (
+                        statCards.map((card) => (
+                            <StatCard
+                                key={card.key}
+                                title={card.label}
+                                count={card.count}
+                                color={card.color}
+                                bg={card.bg}
+                                border={card.border}
+                                active={filters.available === card.key}
+                                onClick={() =>
+                                    setFilters((prev) => ({
+                                        ...prev,
+                                        available: prev.available === card.key ? null : card.key,
+                                        page: 1,
+                                    }))
+                                }
+                            />
+                        ))
+                    )}
+                </div>
 
-            <div className="flex justify-end mb-4 gap-4 items-center">
-                {/* Desktop: blood group + search inline */}
-                <div className="hidden md:flex gap-4 items-center">
+                {/* Filter and Search (Right) */}
+                <div className="flex gap-3 items-center">
                     <SelectBox
                         placeholder="Filter by Blood Group"
                         allowClear
                         handleChange={(val) => onChange({ bloodGroup: val || "", page: 1 })}
                         value={filters.bloodGroup}
-                        width={180}
+                        width={160}
                         options={bloodGroups.map((bg) => ({ value: bg, label: bg }))}
+                        className="custom-selectbox"
                     />
-                    <SearchInput
-                        placeholder="Search donors..."
-                        onChange={(e) => onChange({ search: e.target.value, page: 1 })}
-                        value={filters.search}
-                    />
-                </div>
-                {/* Mobile: search + filter button */}
-                <div className="flex md:hidden gap-4 flex-1 items-center">
-                    <SearchInput
-                        placeholder="Search donors..."
-                        onChange={(e) => onChange({ search: e.target.value, page: 1 })}
-                        value={filters.search}
-                    />
+                    <div className="flex flex-col md:flex-row gap-2">
+                        <SearchInput setFilters={setFilters} />
+                    </div>
                     <button
                         onClick={() => setFilterModalOpen(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white rounded-lg hover:bg-[#1e293b] transition-colors relative flex-shrink-0"
+                        className="flex items-center gap-2 h-[36px] px-4 bg-white text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50 transition-all relative font-bold text-[11px] uppercase tracking-tight"
                     >
-                        <FaFilter size={14} />
+                        <FaFilter size={11} className="text-slate-400" />
+                        Filters
                         {hasActiveFilters && (
-                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white" />
+                            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white shadow-sm" />
                         )}
                     </button>
+                    <AddButton
+                        title="Add Donor"
+                        icon={false}
+                        onClick={() => setModal({ name: "Add", data: null, state: true })}
+                        className="!h-[36px] !rounded-lg !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                    />
                 </div>
-                <ItemsPerPageDropdown onChange={onChange} />
             </div>
 
             <BloodDonorsTable modal={modal} setModal={setModal} bloodDonorsList={bloodDonorsList} onChange={onChange} />

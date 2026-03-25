@@ -1,6 +1,4 @@
-"use client";
-import React from "react";
-import { Modal, List, Avatar, Button, Popconfirm, Tooltip } from "antd";
+import { Modal, List, Avatar, Popconfirm, Tooltip } from "antd";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { FaTrash, FaCommentDots } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -8,6 +6,7 @@ import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import { GET_POST_COMMENTS, DELETE_POST_COMMENT } from "@/app/api/admin/posts";
 import { timestampToDateWithTime } from "@/utils/date";
+import CustomButton from "@/components/shared/CustomButton";
 
 function CommentsModal({ isOpen, onClose, postId }) {
     const queryClient = useQueryClient();
@@ -45,7 +44,14 @@ function CommentsModal({ isOpen, onClose, postId }) {
             }
             open={isOpen}
             onCancel={onClose}
-            footer={null}
+            footer={
+                <CustomButton
+                    label="Back to Posts"
+                    type="secondary"
+                    onClick={onClose}
+                    className="w-full !h-[48px] font-bold"
+                />
+            }
             width={680}
             className="modern-modal"
             destroyOnClose

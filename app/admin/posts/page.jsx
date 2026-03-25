@@ -6,7 +6,6 @@ import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import PostsTable from "./components/Table";
 import PostCardList from "./components/PostCardList";
-import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import AddPostModal from "./components/AddModal";
 import UpdatePostModal from "./components/UpdateModal";
 import SelectBox from "@/components/SelectBox";
@@ -143,15 +142,18 @@ export default function PostsPage() {
                 </div>
             </div>
 
-            {/* Controls row */}
-            <div className="flex justify-end mb-4 gap-4 items-center">
-                <div className="hidden md:flex gap-4 items-center">
-                    <SelectBox placeholder="Filter by Type" allowClear handleChange={handleTypeFilter} value={filters?.type} width={160} options={POST_TYPES.map((t) => ({ value: t.value, label: t.label }))} />
-                    <SelectBox placeholder="Filter by Status" allowClear handleChange={handleStatusFilter} value={filters?.status} width={160} options={STATUS_OPTIONS.map((s) => ({ value: s.value, label: s.label }))} />
-                    <SearchInput setFilters={setFilters} />
+            <div className="flex justify-end mb-3 gap-3 items-center">
+                <SelectBox placeholder="Filter by Type" allowClear handleChange={handleTypeFilter} value={filters?.type} width={160} options={POST_TYPES.map((t) => ({ value: t.value, label: t.label }))} />
+                <SelectBox placeholder="Filter by Status" allowClear handleChange={handleStatusFilter} value={filters?.status} width={160} options={STATUS_OPTIONS.map((s) => ({ value: s.value, label: s.label }))} />
+                <div className="flex flex-col md:flex-row gap-2">
+                    <SearchInput setFilters={setFilters} pageKey="currentPage" />
                 </div>
-                {viewMode === "table" && <ItemsPerPageDropdown onChange={onChange} />}
-                <AddButton title="Add" icon={false} onClick={() => setModal({ name: "Add", data: null, state: true })} />
+                <AddButton
+                    title="Add Post"
+                    icon={false}
+                    onClick={() => setModal({ name: "Add", state: true, data: null })}
+                    className="!h-[36px] !rounded-lg !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                />
             </div>
 
             <div className="flex flex-col mb-4">

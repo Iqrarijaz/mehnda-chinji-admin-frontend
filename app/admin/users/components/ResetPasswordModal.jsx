@@ -1,11 +1,11 @@
-"use client";
-import React, { useRef } from "react";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { Button, Modal } from "antd";
+import { Modal } from "antd";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 import { FaLock } from "react-icons/fa";
+import React, { useRef, useEffect, useState } from "react";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import CustomButton from "@/components/shared/CustomButton";
 
 import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
@@ -52,11 +52,14 @@ function ResetPasswordModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2 pt-1">
+                <div className="flex items-center gap-3 px-2">
                     <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
-                        <FaLock size={18} />
+                        <FaLock size={16} />
                     </div>
-                    <span className="text-xl font-bold text-slate-900">Reset Password</span>
+                    <div>
+                        <span className="text-lg font-bold text-slate-900 block">Reset Password</span>
+                        <span className="text-xs text-slate-500 font-normal">Security update for user account</span>
+                    </div>
                 </div>
             }
             centered
@@ -66,7 +69,7 @@ function ResetPasswordModal({ modal, setModal }) {
             footer={null}
             className="modern-modal"
         >
-            <div className="p-2 pt-4">
+            <div className="p-1">
                 <Formik
                     innerRef={formikRef}
                     initialValues={initialValues}
@@ -74,23 +77,25 @@ function ResetPasswordModal({ modal, setModal }) {
                     onSubmit={handleSubmit}
                 >
                     {({ isSubmitting }) => (
-                        <Form className="space-y-6">
+                        <Form className="space-y-4">
                             {resetPassword.status === "loading" ? (
                                 <FormSkeleton fields={2} />
                             ) : (
                                 <>
-                                    <p className="text-slate-500 text-sm bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                        Enter a new secure password for <strong>{modal?.data?.name || "this user"}</strong>.
-                                        Make sure it's at least 6 characters long.
-                                    </p>
+                                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 mb-2">
+                                        <p className="text-slate-600 text-xs leading-relaxed">
+                                            Creating a new secure password for <span className="font-bold text-slate-900">{modal?.data?.name || "this user"}</span>.
+                                        </p>
+                                    </div>
 
-                                    <div className="space-y-5">
+                                    <div className="space-y-3">
                                         <FormField
                                             label="New Password"
                                             name="password"
                                             type="password"
                                             placeholder="••••••••"
                                             required
+                                            className="!h-[36px] !text-sm"
                                         />
                                         <FormField
                                             label="Confirm New Password"
@@ -98,26 +103,23 @@ function ResetPasswordModal({ modal, setModal }) {
                                             type="password"
                                             placeholder="••••••••"
                                             required
+                                            className="!h-[36px] !text-sm"
                                         />
                                     </div>
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
-                                <Button
+                            <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                                <CustomButton
+                                    label="Cancel"
+                                    type="secondary"
                                     onClick={handleCancel}
-                                    className="modal-footer-btn-secondary"
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="primary"
+                                />
+                                <CustomButton
+                                    label="Update Password"
                                     htmlType="submit"
-                                    loading={isSubmitting}
-                                    className="modal-footer-btn-primary"
-                                >
-                                    Update Password
-                                </Button>
+                                    loading={isSubmitting || resetPassword.isLoading}
+                                />
                             </div>
                         </Form>
                     )}

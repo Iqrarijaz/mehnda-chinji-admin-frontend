@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import UsersTable from "./components/Table";
-import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import AddUserModal from "./components/AddModal";
 import UpdateUserModal from "./components/UpdateModal";
 import ResetPasswordModal from "./components/ResetPasswordModal";
@@ -66,32 +65,39 @@ export default function UsersPage() {
     return (
         <InnerPageCard title="App Users">
 
-            {/* Status Count Cards */}
-            <div className="flex gap-3 mb-5" style={{ flexWrap: "wrap" }}>
-                {countsLoading ? (
-                    Array.from({ length: 4 }).map((_, i) => <StatCardSkeleton key={i} />)
-                ) : (
-                    statCards.map((card) => (
-                        <StatCard
-                            key={card.key}
-                            title={card.label}
-                            count={card.count}
-                            color={card.color}
-                            bg={card.bg}
-                            border={card.border}
-                            active={filters[card.field] === card.key}
-                            onClick={() => handleStatClick(card.field, card.key)}
-                        />
-                    ))
-                )}
-            </div>
-
-            <div className="flex justify-end mb-4 gap-4 items-center">
-                <div className="flex flex-col md:flex-row gap-4">
-                    <SearchInput setFilters={setFilters} />
+            <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-center">
+                {/* Status Count Cards (Left) */}
+                <div className="flex gap-2 items-center flex-wrap">
+                    {countsLoading ? (
+                        Array.from({ length: 4 }).map((_, i) => <StatCardSkeleton key={i} />)
+                    ) : (
+                        statCards.map((card) => (
+                            <StatCard
+                                key={card.key}
+                                title={card.label}
+                                count={card.count}
+                                color={card.color}
+                                bg={card.bg}
+                                border={card.border}
+                                active={filters[card.field] === card.key}
+                                onClick={() => handleStatClick(card.field, card.key)}
+                            />
+                        ))
+                    )}
                 </div>
-                <ItemsPerPageDropdown onChange={onChange} />
-                <AddButton title="New User" onClick={() => setModal({ name: "Add", data: null, state: true })} />
+
+                {/* Search and Add Button (Right) */}
+                <div className="flex gap-3 items-center">
+                    <div className="flex flex-col md:flex-row gap-2">
+                        <SearchInput setFilters={setFilters} />
+                    </div>
+                    <AddButton
+                        title="Add User"
+                        icon={false}
+                        onClick={() => setModal({ name: "Add", data: null, state: true })}
+                        className="!h-[36px] !rounded-lg !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                    />
+                </div>
             </div>
 
 

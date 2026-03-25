@@ -2,7 +2,7 @@ import {
     EditOutlined,
     DeleteOutlined,
     EyeOutlined,
-    MoreOutlined,
+    EllipsisOutlined,
     SettingOutlined,
     LikeOutlined,
     MessageOutlined
@@ -18,6 +18,7 @@ import ConfirmModal from "@/components/shared/ConfirmModal";
 import { Modal, Pagination, Table, Tag, Switch, Menu, Dropdown, Button, Checkbox, Tooltip } from "antd";
 import { useCallback, useState } from "react";
 import { TableSkeleton } from "@/components/shared/Skeletons";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
 function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikesModal, setCommentsModal }) {
     const queryClient = useQueryClient();
@@ -150,38 +151,18 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
         { label: "Created At", value: "createdAt" },
     ];
 
-    const visibilityMenu = (
-        <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
-            <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                Toggle Columns
-            </div>
-            <Checkbox.Group
-                value={visibleColumns}
-                onChange={setVisibleColumns}
-                className="flex flex-col gap-2"
-            >
-                {columnOptions.map(opt => (
-                    <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
-                        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
-                            {opt.label}
-                        </Checkbox>
-                    </Menu.Item>
-                ))}
-            </Checkbox.Group>
-        </Menu>
-    );
 
     const allColumns = [
         {
             title: "Type",
             dataIndex: "type",
             key: "type",
-            width: 120,
+            width: 100,
             align: "center",
             sorter: true,
             render: (type) => (
                 <span
-                    className="px-3 py-1 rounded-full capitalize font-bold text-white shadow-sm text-[10px]"
+                    className="px-2.5 py-0.5 rounded-full capitalize font-bold text-white shadow-sm text-[9px]"
                     style={{ backgroundColor: getTagColor(type) }}
                 >
                     {type || "GENERAL"}
@@ -192,11 +173,11 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             title: "Content",
             dataIndex: "content",
             key: "content",
-            width: 300,
+            width: 250,
             render: (content) => (
                 <Tooltip title={content} placement="topLeft">
-                    <div className="text-slate-700 font-medium truncate cursor-help">
-                        {content?.substring(0, 100)}{content?.length > 100 ? '...' : ''}
+                    <div className="text-slate-700 font-medium truncate cursor-help text-xs">
+                        {content?.substring(0, 80)}{content?.length > 80 ? '...' : ''}
                     </div>
                 </Tooltip>
             ),
@@ -205,15 +186,15 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             title: "Likes",
             dataIndex: "likesCount",
             key: "likesCount",
-            width: 100,
+            width: 80,
             align: "center",
             sorter: true,
             render: (count, record) => (
                 <Button
                     type="text"
-                    icon={<LikeOutlined className="text-blue-500" />}
+                    icon={<LikeOutlined className="text-blue-500 !text-xs" />}
                     onClick={() => setLikesModal({ open: true, postId: record._id })}
-                    className="!rounded-lg hover:!bg-blue-50 !h-8 font-bold text-slate-600"
+                    className="!rounded-lg hover:!bg-blue-50 !h-7 font-bold text-slate-600 !text-xs !flex items-center gap-1"
                 >
                     {count || 0}
                 </Button>
@@ -223,15 +204,15 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             title: "Comments",
             dataIndex: "commentsCount",
             key: "commentsCount",
-            width: 120,
+            width: 90,
             align: "center",
             sorter: true,
             render: (count, record) => (
                 <Button
                     type="text"
-                    icon={<MessageOutlined className="text-emerald-500" />}
+                    icon={<MessageOutlined className="text-emerald-500 !text-xs" />}
                     onClick={() => setCommentsModal({ open: true, postId: record._id })}
-                    className="!rounded-lg hover:!bg-emerald-50 !h-8 font-bold text-slate-600"
+                    className="!rounded-lg hover:!bg-emerald-50 !h-7 font-bold text-slate-600 !text-xs !flex items-center gap-1"
                 >
                     {count || 0}
                 </Button>
@@ -242,7 +223,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             dataIndex: "status",
             key: "status",
             align: "center",
-            width: 100,
+            width: 80,
             sorter: true,
             render: (status, record) => (
                 <Switch
@@ -257,43 +238,40 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 180,
+            width: 140,
             sorter: true,
-            render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap">{timestampToDateWithTime(text)}</div>,
+            render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap text-xs">{timestampToDateWithTime(text)}</div>,
         },
-        {
-            title: "",
-            key: "actions",
-            width: 60,
-            align: "right",
-            render: (record) => (
-                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
-                    <Button
-                        type="text"
-                        icon={<MoreOutlined className="text-lg" />}
-                        className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
-                    />
-                </Dropdown>
-            ),
-        }
-    ];
+    {
+      title: "",
+      key: "actions",
+      width: 50,
+      align: "right",
+      render: (record) => (
+        <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+          <Button
+            type="text"
+            icon={<EllipsisOutlined className="text-lg rotate-90" />}
+            className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+          />
+        </Dropdown>
+      ),
+    }
+  ];
 
-    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+  const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
 
-    return (
-        <div className="space-y-4">
-            <div className="flex justify-end px-1">
-                <Dropdown overlay={visibilityMenu} trigger={['click']}>
-                    <Button
-                        icon={<SettingOutlined />}
-                        className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
-                    >
-                        Columns
-                    </Button>
-                </Dropdown>
-            </div>
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-end px-1">
+        <ColumnVisibilityDropdown
+          visibleColumns={visibleColumns}
+          setVisibleColumns={setVisibleColumns}
+          options={columnOptions}
+        />
+      </div>
 
-            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+      <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

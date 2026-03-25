@@ -22,12 +22,12 @@ const StatCard = ({
             onClick={onClick}
             style={{
                 position: "relative",
-                maxWidth: 170,
+                maxWidth: 200,
                 flex: 1,
                 background: cardBg,
                 border: `1.5px solid ${cardBorder}`,
                 borderRadius: 14,
-                padding: "16px 18px 14px",
+                padding: "4px 20px",
                 cursor: "pointer",
                 textAlign: "left",
                 overflow: "hidden",
@@ -43,8 +43,8 @@ const StatCard = ({
                     position: "absolute",
                     top: -20,
                     right: -20,
-                    width: 50,
-                    height: 50,
+                    width: 10,
+                    height: 10,
                     borderRadius: "50%",
                     background: accentBar,
                     opacity: 0.25,
@@ -58,14 +58,13 @@ const StatCard = ({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    marginBottom: 8,
                 }}
             >
                 {/* Left: Count + Title */}
                 <div style={{ display: "flex", alignItems: "baseline" }}>
                     <span
                         style={{
-                            fontSize: 32,
+                            fontSize: 26,
                             fontWeight: 800,
                             color: active ? "#ffffff" : color,
                             lineHeight: 1,
@@ -96,8 +95,8 @@ const StatCard = ({
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            width: 34,
-                            height: 34,
+                            width: 20,
+                            height: 20,
                             borderRadius: 9,
                             background: active
                                 ? "rgba(255,255,255,0.2)"

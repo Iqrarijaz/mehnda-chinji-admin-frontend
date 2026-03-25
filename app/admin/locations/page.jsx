@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import PageTable from "./components/Table";
-import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import AddLocationModal from "./components/AddModal";
 import UpdateLocationModal from "./components/UpdateModal";
 import { LIST_LOCATIONS } from "@/app/api/admin/locations";
@@ -36,13 +35,16 @@ export default function LocationsPage() {
   return (
     <InnerPageCard title="Locations">
 
-      <div className="flex justify-end mb-4 gap-4 items-center">
-        <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex justify-end mb-3 gap-3 items-center">
+        <div className="flex flex-col md:flex-row gap-2">
           <SearchInput setFilters={setFilters} />
         </div>
-        <ItemsPerPageDropdown onChange={onChange} />
-        <AddButton title="Add" onClick={() => setModal({ name: "Add", data: null, state: true })} />
-
+        <AddButton
+          title="Add New Location"
+          icon={false}
+          onClick={() => setModal({ name: "Add", data: null, state: true })}
+          className="!h-[36px] !rounded-lg !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+        />
       </div>
 
       <div className="flex flex-col mb-4">

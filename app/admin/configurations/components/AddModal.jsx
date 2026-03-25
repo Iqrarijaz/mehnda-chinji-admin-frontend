@@ -1,11 +1,10 @@
-"use client";
-import React, { useRef } from "react";
-import { Modal, Button, Input, Select } from "antd";
+import { Modal, Input } from "antd";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { FaCogs, FaCode, FaPlus, FaChevronRight } from "react-icons/fa";
+import CustomButton from "@/components/shared/CustomButton";
 
 import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
@@ -145,20 +144,18 @@ function AddConfigurationModal({ modal, setModal }) {
                             )}
 
                             <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
-                                <Button
+                                <CustomButton
+                                    label="Cancel"
+                                    type="secondary"
                                     onClick={handleClose}
-                                    className="modal-footer-btn-secondary flex-1"
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="primary"
+                                    className="flex-1"
+                                />
+                                <CustomButton
+                                    label="Activate Configuration"
                                     htmlType="submit"
                                     loading={isSubmitting || createConfig.isLoading}
-                                    className="modal-footer-btn-primary flex-1"
-                                >
-                                    Activate Configuration
-                                </Button>
+                                    className="flex-1"
+                                />
                             </div>
                         </Form>
                     )}

@@ -2,7 +2,7 @@
 import React, { useRef } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Button, Modal, Select, Input } from "antd";
+import { Modal, Select, Input } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import md5 from "md5";
@@ -13,6 +13,7 @@ import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_ADMIN_USER } from "@/app/api/admin/admin-users";
 import { GET_ACTIVE_ROLES } from "@/app/api/admin/roles";
+import CustomButton from "@/components/shared/CustomButton";
 
 const { Option } = Select;
 
@@ -25,7 +26,7 @@ const validationSchema = Yup.object().shape({
     password: Yup.string().min(6, "Password must be at least 6 characters"),
 });
 
-function UpdateAdminUserModal({ modal, setModal }) {
+const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
 
@@ -80,24 +81,24 @@ function UpdateAdminUserModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2 pt-1">
+                <div className="flex items-center gap-3 px-2">
                     <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
-                        <FaUserEdit size={18} />
+                        <FaUserShield size={18} />
                     </div>
                     <div>
-                        <span className="text-xl font-bold text-slate-900 block">Edit Admin User</span>
+                        <span className="text-lg font-bold text-slate-900 block">Edit Admin User</span>
                         <span className="text-xs text-slate-500 font-normal">Modify team member credentials and access</span>
                     </div>
                 </div>
             }
             centered
-            width={640}
+            width={600}
             open={modal?.name === "Edit" && modal?.state}
             onCancel={handleCloseModal}
             footer={null}
             className="modern-modal"
         >
-            <div className="p-2 pt-4">
+            <div className="p-1">
                 <Formik
                     enableReinitialize
                     innerRef={formikRef}
@@ -106,44 +107,43 @@ function UpdateAdminUserModal({ modal, setModal }) {
                     onSubmit={handleSubmit}
                 >
                     {({ values, errors, touched, setFieldValue, handleChange, handleBlur, isSubmitting }) => (
-                        <Form className="space-y-6">
-                            {updateAdminUser.status === "loading" ? (
+                        <Form className="space-y-4">
+                            {updateAdminUser.isLoading ? (
                                 <FormSkeleton fields={5} />
                             ) : (
                                 <>
-                                    <div className="modal-section">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Personal Identity</p>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                            <FormField label="Full Name" name="name" placeholder="John Doe" required icon={<FaChevronRight className="opacity-20 translate-y-0.5" />} />
-                                            <FormField label="Email Address" name="email" type="email" placeholder="john@example.com" disabled required icon={<FaEnvelope className="opacity-20" />} />
-                                            <FormField label="Phone Number" name="phone" placeholder="+1..." icon={<FaPhone className="opacity-20" />} />
-
-                                            <div className="flex flex-col gap-2">
+                                    <div className="modal-section bg-slate-50/50 p-4 rounded-xl border border-slate-100 space-y-3">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Identity Details</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            <FormField label="Full Name" name="name" placeholder="John Doe" required className="!h-[36px] !text-sm" />
+                                            <FormField label="Email Address" name="email" type="email" placeholder="john@example.com" disabled required className="!h-[36px] !text-sm" />
+                                            <FormField label="Phone Number" name="phone" placeholder="+1..." className="!h-[36px] !text-sm" />
+                                            <div className="flex flex-col gap-1.5">
                                                 <div className="flex justify-between items-center">
-                                                    <label className="text-slate-700 font-semibold text-sm">Update Password</label>
-                                                    <span className="text-[10px] text-slate-400 font-bold uppercase">Optional</span>
+                                                    <label className="text-slate-700 font-semibold text-xs">Update Password</label>
+                                                    <span className="text-[9px] text-slate-400 font-bold uppercase">Optional</span>
                                                 </div>
                                                 <div className="relative">
-                                                    <FaLock className="absolute top-1/2 -translate-y-1/2 left-4 text-slate-300 pointer-events-none" />
+                                                    <FaLock className="absolute top-1/2 -translate-y-1/2 left-3.5 text-slate-300 pointer-events-none z-10" size={12} />
                                                     <Input.Password
                                                         name="password"
-                                                        placeholder="Leave empty to keep current"
+                                                        placeholder="••••••••"
                                                         value={values.password}
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
-                                                        className="!pl-11 !h-[44px] !rounded-xl !border-2 !border-slate-100 focus:!border-teal-500"
+                                                        className="!pl-9 !h-[36px] !rounded-lg !border-2 !border-slate-100 focus:!border-teal-500 !text-sm"
                                                     />
                                                 </div>
-                                                {touched.password && errors.password && <div className="text-red-500 text-xs font-medium">{errors.password}</div>}
+                                                {touched.password && errors.password && <div className="text-red-500 text-[10px] font-medium">{errors.password}</div>}
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="modal-section !mb-0">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Access Control & Status</p>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                            <div className="flex flex-col gap-2">
-                                                <label className="text-slate-700 font-semibold text-sm">Permission Role <span className="text-red-500">*</span></label>
+                                    <div className="modal-section">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Permissions & Status</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-slate-700 font-semibold text-xs">Permission Role <span className="text-red-500">*</span></label>
                                                 <Select
                                                     value={values.accessRoleId}
                                                     onChange={(value) => {
@@ -151,25 +151,25 @@ function UpdateAdminUserModal({ modal, setModal }) {
                                                         setFieldValue("accessRoleId", value);
                                                         setFieldValue("role", selectedRole?.name || "");
                                                     }}
-                                                    placeholder="Select assigned role"
-                                                    className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100 shadow-sm"
-                                                    size="large"
+                                                    placeholder="Select role"
+                                                    className="!h-[36px] !rounded-lg overflow-hidden border-2 border-slate-100 shadow-sm [&>div]:!shadow-none [&>div]:!border-none"
+                                                    size="middle"
                                                     loading={rolesLoading}
                                                 >
                                                     {rolesData?.data?.map((role) => (
                                                         <Option key={role._id} value={role._id}>{role.name}</Option>
                                                     ))}
                                                 </Select>
-                                                {touched.accessRoleId && errors.accessRoleId && <div className="text-red-500 text-xs font-medium">{errors.accessRoleId}</div>}
+                                                {touched.accessRoleId && errors.accessRoleId && <div className="text-red-500 text-[10px] font-medium">{errors.accessRoleId}</div>}
                                             </div>
 
-                                            <div className="flex flex-col gap-2">
-                                                <label className="text-slate-700 font-semibold text-sm">Account Status</label>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-slate-700 font-semibold text-xs">Account Status</label>
                                                 <Select
                                                     value={values.status}
                                                     onChange={(value) => setFieldValue("status", value)}
-                                                    className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100 shadow-sm"
-                                                    size="large"
+                                                    className="!h-[36px] !rounded-lg overflow-hidden border-2 border-slate-100 shadow-sm [&>div]:!shadow-none [&>div]:!border-none"
+                                                    size="middle"
                                                 >
                                                     <Option value="ACTIVE">Authorized / Active</Option>
                                                     <Option value="INACTIVE">Suspended / Inactive</Option>
@@ -180,21 +180,17 @@ function UpdateAdminUserModal({ modal, setModal }) {
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
-                                <Button
+                            <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                                <CustomButton
+                                    label="Cancel"
+                                    type="secondary"
                                     onClick={handleCloseModal}
-                                    className="modal-footer-btn-secondary flex-1"
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="primary"
+                                />
+                                <CustomButton
+                                    label="Update Account"
                                     htmlType="submit"
                                     loading={updateAdminUser.isLoading || isSubmitting}
-                                    className="modal-footer-btn-primary flex-1"
-                                >
-                                    Save Changes
-                                </Button>
+                                />
                             </div>
                         </Form>
                     )}
@@ -202,6 +198,6 @@ function UpdateAdminUserModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
 
 export default UpdateAdminUserModal;

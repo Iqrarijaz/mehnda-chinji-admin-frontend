@@ -1,8 +1,4 @@
-"use client";
-import React, { useRef, useEffect } from "react";
-import { Formik, Form, FieldArray } from "formik";
-import * as Yup from "yup";
-import { Button, Modal, Input, Select } from "antd";
+import { Modal, Select, Input } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { FaPlus, FaTrash, FaMapMarkerAlt, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaCheckCircle } from "react-icons/fa";
@@ -13,6 +9,7 @@ import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_PLACE } from "@/app/api/admin/places";
 import { PLACE_CATEGORIES } from "@/config/config";
 import SelectBox from "@/components/SelectBox";
+import CustomButton from "@/components/shared/CustomButton";
 
 const { Option } = Select;
 
@@ -77,24 +74,24 @@ function UpdatePlaceModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2 pt-1">
+                <div className="flex items-center gap-3 px-2">
                     <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
                         <FaMapMarkerAlt size={18} />
                     </div>
                     <div>
-                        <span className="text-xl font-bold text-slate-900 block">Edit Place</span>
+                        <span className="text-lg font-bold text-slate-900 block">Edit Place</span>
                         <span className="text-xs text-slate-500 font-normal">Update location details and operational status</span>
                     </div>
                 </div>
             }
             centered
-            width={780}
+            width={600}
             open={modal?.name === "Update" && modal?.state}
             onCancel={handleCloseModal}
             footer={null}
             className="modern-modal"
         >
-            <div className="p-2 pt-4">
+            <div className="p-1">
                 <Formik
                     enableReinitialize
                     innerRef={formikRef}
@@ -103,36 +100,36 @@ function UpdatePlaceModal({ modal, setModal }) {
                     onSubmit={handleSubmit}
                 >
                     {({ isSubmitting, values, setFieldValue, errors, touched }) => (
-                        <Form className="space-y-6">
+                        <Form className="space-y-4">
                             {updatePlace.status === "loading" ? (
-                                <FormSkeleton fields={8} />
+                                <FormSkeleton fields={6} />
                             ) : (
                                 <>
                                     <div className="modal-section">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Core Identification</p>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Core Identification</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="md:col-span-1">
-                                                <FormField label="Place Name" name="name" placeholder="Name" required />
+                                                <FormField label="Place Name" name="name" placeholder="Name" required className="!h-[36px] !text-sm" />
                                             </div>
                                             <div className="md:col-span-1">
-                                                <div className="flex flex-col gap-2">
-                                                    <label className="text-slate-700 font-semibold text-sm">Status <span className="text-red-500">*</span></label>
-                                                    <Select
+                                                <div className="flex flex-col gap-1.5">
+                                                    <label className="text-slate-700 font-semibold text-xs">Status <span className="text-red-500">*</span></label>
+                                                    <SelectBox
                                                         value={values.status}
-                                                        onChange={(value) => setFieldValue("status", value)}
-                                                        className="!h-[44px] !rounded-xl overflow-hidden border-2 border-slate-100"
-                                                        size="large"
-                                                    >
-                                                        <Option value="PENDING">Pending Approval</Option>
-                                                        <Option value="ACTIVE">Active / Verified</Option>
-                                                        <Option value="REJECTED">Rejected</Option>
-                                                        <Option value="INACTIVE">Inactive</Option>
-                                                    </Select>
+                                                        handleChange={(value) => setFieldValue("status", value)}
+                                                        options={[
+                                                            { value: "PENDING", label: "Pending Approval" },
+                                                            { value: "ACTIVE", label: "Active / Verified" },
+                                                            { value: "REJECTED", label: "Rejected" },
+                                                            { value: "INACTIVE", label: "Inactive" }
+                                                        ]}
+                                                        className="modern-select-box [&>div]:!h-[36px] [&>div]:!rounded-lg [&>div]:!text-sm"
+                                                    />
                                                 </div>
                                             </div>
                                             <div className="md:col-span-2">
-                                                <div className="flex flex-col gap-2">
-                                                    <label className="text-slate-700 font-semibold text-sm">Category <span className="text-red-500">*</span></label>
+                                                <div className="flex flex-col gap-1.5">
+                                                    <label className="text-slate-700 font-semibold text-xs">Category <span className="text-red-500">*</span></label>
                                                     <SelectBox
                                                         options={PLACE_CATEGORIES.map((cat) => ({
                                                             value: cat.value,
@@ -142,56 +139,56 @@ function UpdatePlaceModal({ modal, setModal }) {
                                                         value={values.categoryId}
                                                         placeholder="Select category"
                                                         width="100%"
-                                                        className="modern-select-box"
+                                                        className="modern-select-box [&>div]:!h-[36px] [&>div]:!rounded-lg [&>div]:!text-sm"
                                                     />
                                                 </div>
                                             </div>
                                             <div className="md:col-span-2">
-                                                <FormField label="Description" name="description" placeholder="Short description..." type="textarea" />
+                                                <FormField label="Description" name="description" placeholder="Short description..." type="textarea" className="!h-20 !text-sm" />
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="modal-section">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Location Details</p>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Location Details</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="md:col-span-2">
-                                                <FormField label="Full Address" name="address" required icon={<FaChevronRight className="opacity-20" />} />
+                                                <FormField label="Full Address" name="address" required icon={<FaChevronRight className="opacity-20 translate-y-0.5" />} className="!h-[36px] !text-sm" />
                                             </div>
                                             <div className="md:col-span-2">
-                                                <FormField label="Google Maps Link" name="googleAddress" icon={<FaMapMarkerAlt className="opacity-30" />} />
+                                                <FormField label="Google Maps Link" name="googleAddress" icon={<FaMapMarkerAlt className="opacity-30" />} className="!h-[36px] !text-sm" />
                                             </div>
-                                            <FormField label="Latitude" name="lat" type="number" required />
-                                            <FormField label="Longitude" name="lng" type="number" required />
+                                            <FormField label="Latitude" name="lat" type="number" required className="!h-[36px] !text-sm" />
+                                            <FormField label="Longitude" name="lng" type="number" required className="!h-[36px] !text-sm" />
                                         </div>
                                     </div>
 
                                     <div className="modal-section">
-                                        <div className="flex items-center justify-between mb-4">
-                                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Manage Contacts</p>
+                                        <div className="flex items-center justify-between mb-2">
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Manage Contacts</p>
                                         </div>
                                         <FieldArray name="contact">
                                             {({ push, remove }) => (
-                                                <div className="space-y-3">
+                                                <div className="space-y-2">
                                                     {values.contact.map((_, index) => (
-                                                        <div key={index} className="flex gap-3 items-start animate-in fade-in slide-in-from-top-2 duration-300">
-                                                            <div className="flex-1 bg-slate-50 p-2 rounded-xl flex gap-3 border border-slate-100">
+                                                        <div key={index} className="flex gap-2 items-start">
+                                                            <div className="flex-1 bg-slate-50 p-1.5 rounded-lg flex gap-2 border border-slate-100">
                                                                 <div className="flex-1">
                                                                     <Input
                                                                         value={values.contact[index].name}
                                                                         onChange={(e) => setFieldValue(`contact.${index}.name`, e.target.value)}
                                                                         placeholder="Label"
-                                                                        className="!border-none !bg-transparent !shadow-none !h-[40px] font-semibold"
+                                                                        className="!border-none !bg-transparent !shadow-none !h-[32px] !text-sm font-semibold"
                                                                     />
                                                                 </div>
-                                                                <div className="w-[1px] h-6 bg-slate-200 self-center" />
+                                                                <div className="w-[1px] h-5 bg-slate-200 self-center" />
                                                                 <div className="flex-[1.5] flex items-center">
-                                                                    <FaPhoneAlt size={12} className="text-slate-300 mx-2" />
+                                                                    <FaPhoneAlt size={10} className="text-slate-300 mx-1.5" />
                                                                     <Input
                                                                         value={values.contact[index].number}
                                                                         onChange={(e) => setFieldValue(`contact.${index}.number`, e.target.value)}
                                                                         placeholder="Number"
-                                                                        className="!border-none !bg-transparent !shadow-none !h-[40px]"
+                                                                        className="!border-none !bg-transparent !shadow-none !h-[32px] !text-sm"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -200,8 +197,8 @@ function UpdatePlaceModal({ modal, setModal }) {
                                                                     type="text"
                                                                     danger
                                                                     onClick={() => remove(index)}
-                                                                    icon={<FaTrash size={14} />}
-                                                                    className="!h-[56px] !w-[56px] !rounded-xl bg-red-50/50 hover:bg-red-50 flex items-center justify-center p-0"
+                                                                    icon={<FaTrash size={12} />}
+                                                                    className="!h-[46px] !w-[46px] !rounded-lg bg-red-50/50 hover:bg-red-50 flex items-center justify-center p-0"
                                                                 />
                                                             )}
                                                         </div>
@@ -209,8 +206,8 @@ function UpdatePlaceModal({ modal, setModal }) {
                                                     <Button
                                                         type="dashed"
                                                         onClick={() => push({ name: "", number: "" })}
-                                                        icon={<FaPlus size={12} />}
-                                                        className="w-full !h-[50px] !rounded-xl !border-2 !border-dashed !border-slate-200 !text-slate-400 hover:!text-teal-600 hover:!border-teal-200 font-bold"
+                                                        icon={<FaPlus size={10} />}
+                                                        className="w-full !h-[36px] !rounded-lg !border-2 !border-dashed !border-slate-200 !text-slate-400 hover:!text-teal-600 hover:!border-teal-200 font-bold transition-all text-sm"
                                                     >
                                                         Add Another Contact
                                                     </Button>
@@ -220,30 +217,26 @@ function UpdatePlaceModal({ modal, setModal }) {
                                     </div>
 
                                     <div className="modal-section !mb-0">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Other Information</p>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                            <FormField label="Operational Timings" name="timing" icon={<FaClock className="opacity-30" />} />
-                                            <FormField label="Offered Services" name="services" icon={<FaTools className="opacity-30" />} />
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Other Information</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            <FormField label="Timings" name="timing" icon={<FaClock className="opacity-30" size={10} />} className="!h-[36px] !text-sm" />
+                                            <FormField label="Services" name="services" icon={<FaTools className="opacity-30" size={10} />} className="!h-[36px] !text-sm" />
                                         </div>
                                     </div>
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
-                                <Button
+                             <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                                <CustomButton
+                                    label="Cancel"
+                                    type="secondary"
                                     onClick={handleCloseModal}
-                                    className="modal-footer-btn-secondary"
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="primary"
+                                />
+                                <CustomButton
+                                    label="Update Place"
                                     htmlType="submit"
                                     loading={updatePlace.isLoading || isSubmitting}
-                                    className="modal-footer-btn-primary"
-                                >
-                                    Update Place
-                                </Button>
+                                />
                             </div>
                         </Form>
                     )}

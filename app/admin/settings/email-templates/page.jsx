@@ -26,11 +26,8 @@ export default function EmailTemplatePage() {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row justify-between mb-6">
-        <h1 className="inner-page-title text-3xl text-black p-0 mb-4 md:mb-0">
-          Email Templates
-        </h1>
-        <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex justify-end mb-3 gap-3 items-center">
+        <div className="flex flex-col md:flex-row gap-2">
           <SearchInput setFilters={setFilters} />
         </div>
       </div>

@@ -1,7 +1,7 @@
 import {
   EditOutlined,
   DeleteOutlined,
-  MoreOutlined,
+  EllipsisOutlined,
   SettingOutlined
 } from "@ant-design/icons";
 import Loading from "@/animations/homePageLoader";
@@ -9,9 +9,10 @@ import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { timestampToDate } from "@/utils/date";
 import { DELETE_LOCATION, UPDATE_LOCATION_STATUS } from "@/app/api/admin/locations";
-import { Modal, Pagination, Table, Tag, Switch, Menu, Dropdown, Button, Checkbox } from "antd";
+import { Modal, Pagination, Table, Tag, Switch, Menu, Dropdown, Button } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
 function PageTable({ modal, setModal, locationsList, onChange, setFilters }) {
   const queryClient = useQueryClient();
@@ -115,50 +116,21 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters }) {
     { label: "Status", value: "status" },
   ];
 
-  const visibilityMenu = (
-    <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
-      <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
-        Toggle Columns
-      </div>
-      <Checkbox.Group
-        value={visibleColumns}
-        onChange={setVisibleColumns}
-        className="flex flex-col gap-2"
-      >
-        {columnOptions.map(opt => (
-          <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
-            <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
-              {opt.label}
-            </Checkbox>
-          </Menu.Item>
-        ))}
-      </Checkbox.Group>
-    </Menu>
-  );
 
   const allColumns = [
     {
-      title: "Name (English)",
-      dataIndex: ["name", "en"],
+      title: "Location Name",
       key: "name_en",
       sorter: true,
-      width: 150,
-      render: (en) => (
-        <div className="capitalize font-bold text-slate-800 truncate">
-          {en}
-        </div>
-      ),
-    },
-    {
-      title: "Name (Urdu)",
-      dataIndex: ["name", "ur"],
-      key: "name_ur",
-      width: 150,
-      align: "left",
-      sorter: true,
-      render: (ur) => (
-        <div className="text-right font-notoUrdu p-2 text-slate-600 font-medium truncate mx-4">
-          {ur}
+      width: 250,
+      render: (record) => (
+        <div className="flex flex-col min-w-0">
+          <span className="font-bold text-slate-800 text-xs truncate leading-tight block">
+            {record.name?.en}
+          </span>
+          <span className="text-[11px] text-slate-400 font-medium font-notoUrdu block mt-0.5 leading-tight">
+            {record.name?.ur}
+          </span>
         </div>
       ),
     },
@@ -167,6 +139,7 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters }) {
       dataIndex: "type",
       key: "type",
       width: 120,
+      align: "center",
       sorter: true,
       render: (type) => {
         const typeMap = {
@@ -174,16 +147,11 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters }) {
           TEHSIL: { color: "cyan", label: "TEHSIL" },
           VILLAGE: { color: "green", label: "VILLAGE" },
         };
-
-        const tag = typeMap[type] || {
-          color: "default",
-          label: type || "UNKNOWN",
-        };
-
+        const tag = typeMap[type] || { color: "default", label: type || "UNKNOWN" };
         return (
           <Tag
             color={tag.color}
-            className="capitalize rounded-full font-bold px-3 py-0.5 border-none shadow-sm text-[11px]"
+            className="capitalize rounded-full font-bold px-2 py-0 border-none shadow-sm text-[9px] uppercase"
           >
             {tag.label}
           </Tag>
@@ -208,14 +176,14 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters }) {
     {
       title: "",
       key: "actions",
-      width: 60,
+      width: 50,
       align: "right",
       render: (record) => (
         <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
           <Button
             type="text"
-            icon={<MoreOutlined className="text-lg" />}
-            className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
+            icon={<EllipsisOutlined className="text-lg rotate-90" />}
+            className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
           />
         </Dropdown>
       ),
@@ -227,17 +195,14 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters }) {
   return (
     <div className="space-y-4">
       <div className="flex justify-end px-1">
-        <Dropdown overlay={visibilityMenu} trigger={['click']}>
-          <Button
-            icon={<SettingOutlined />}
-            className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
-          >
-            Columns
-          </Button>
-        </Dropdown>
+        <ColumnVisibilityDropdown
+          visibleColumns={visibleColumns}
+          setVisibleColumns={setVisibleColumns}
+          options={columnOptions}
+        />
       </div>
 
-      <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+      <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
         <Table
           rowKey="_id"
           className="custom-ant-table"

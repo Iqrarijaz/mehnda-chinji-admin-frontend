@@ -2,15 +2,17 @@
 import React, { useRef, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Button, Modal, Select } from "antd";
+import { Modal } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
+import { UserOutlined } from "@ant-design/icons";
 
 import Loading from "@/animations/homePageLoader";
 import FormField from "@/components/InnerPage/FormField";
 import { CREATE_USER } from "@/app/api/admin/users";
-
-const { Option } = Select;
+import SelectBox from "@/components/SelectBox";
+import CustomButton from "@/components/shared/CustomButton";
+import { FormSkeleton } from "@/components/shared/Skeletons";
 
 // Validation schema
 const validationSchema = Yup.object().shape({
@@ -30,8 +32,6 @@ const initialValues = {
     phone: "",
     gender: "MALE",
 };
-
-import { FormSkeleton } from "@/components/shared/Skeletons";
 
 const AddUserModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
@@ -68,7 +68,17 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
 
     return (
         <Modal
-            title={<span className="text-xl font-bold text-slate-900 px-2 pt-2">Add New User</span>}
+            title={
+                <div className="flex items-center gap-3 px-2">
+                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
+                        <UserOutlined style={{ fontSize: '18px' }} />
+                    </div>
+                    <div>
+                        <span className="text-lg font-bold text-slate-900 block">Add New User</span>
+                        <span className="text-xs text-slate-500 font-normal">Create a new application user account</span>
+                    </div>
+                </div>
+            }
             centered
             width={600}
             open={modal?.name === "Add" && modal?.state}
@@ -76,7 +86,7 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
             footer={null}
             className="modern-modal"
         >
-            <div className="p-2 pt-4">
+            <div className="p-1">
                 <Formik
                     innerRef={formikRef}
                     initialValues={initialValues}
@@ -84,68 +94,68 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
                     onSubmit={handleSubmit}
                 >
                     {({ isSubmitting, values, setFieldValue, errors, touched }) => (
-                        <Form className="space-y-5 relative">
+                        <Form className="space-y-4">
                             {createUser.isLoading ? (
                                 <FormSkeleton fields={5} />
                             ) : (
                                 <>
-                                    <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100 space-y-4">
-                                        <FormField label="Full Name" name="name" placeholder="Enter full name" required />
-                                        <FormField label="Email Address" name="email" type="email" placeholder="email@example.com" required />
-                                        <FormField label="Password" name="password" type="password" placeholder="••••••••" required />
+                                    <div className="modal-section bg-slate-50/50 p-4 rounded-xl border border-slate-100 space-y-3">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Account Info</p>
+                                        <FormField label="Full Name" name="name" placeholder="Enter full name" required className="!h-[36px] !text-sm" />
+                                        <FormField label="Email Address" name="email" type="email" placeholder="email@example.com" required className="!h-[36px] !text-sm" />
+                                        <FormField label="Password" name="password" type="password" placeholder="••••••••" required className="!h-[36px] !text-sm" />
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-slate-700 font-semibold text-sm">Role <span className="text-red-500">*</span></label>
-                                            <Select
-                                                value={values.role}
-                                                onChange={(val) => setFieldValue("role", val)}
-                                                className="!h-[42px] !rounded-xl overflow-hidden border-2 border-slate-100"
-                                                size="large"
-                                            >
-                                                <Option value="USER">USER</Option>
-                                                <Option value="ADMIN">ADMIN</Option>
-                                                <Option value="SUPER_ADMIN">SUPER_ADMIN</Option>
-                                            </Select>
-                                            {errors.role && touched.role && <span className="text-red-500 text-xs font-medium">{errors.role}</span>}
-                                        </div>
+                                    <div className="modal-section">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Profile Data</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-slate-700 font-semibold text-xs">Role <span className="text-red-500">*</span></label>
+                                                <SelectBox
+                                                    value={values.role}
+                                                    handleChange={(val) => setFieldValue("role", val)}
+                                                    options={[
+                                                        { value: "USER", label: "USER" },
+                                                        { value: "ADMIN", label: "ADMIN" },
+                                                        { value: "SUPER_ADMIN", label: "SUPER_ADMIN" }
+                                                    ]}
+                                                    className="modern-select-box [&>div]:!h-[36px] [&>div]:!rounded-lg [&>div]:!text-sm"
+                                                />
+                                                {errors.role && touched.role && <span className="text-red-500 text-[10px] font-medium">{errors.role}</span>}
+                                            </div>
 
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-slate-700 font-semibold text-sm">Gender <span className="text-red-500">*</span></label>
-                                            <Select
-                                                value={values.gender}
-                                                onChange={(val) => setFieldValue("gender", val)}
-                                                className="!h-[42px] !rounded-xl overflow-hidden border-2 border-slate-100"
-                                                size="large"
-                                            >
-                                                <Option value="MALE">MALE</Option>
-                                                <Option value="FEMALE">FEMALE</Option>
-                                                <Option value="OTHER">OTHER</Option>
-                                            </Select>
-                                            {errors.gender && touched.gender && <span className="text-red-500 text-xs font-medium">{errors.gender}</span>}
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-slate-700 font-semibold text-xs">Gender <span className="text-red-500">*</span></label>
+                                                <SelectBox
+                                                    value={values.gender}
+                                                    handleChange={(val) => setFieldValue("gender", val)}
+                                                    options={[
+                                                        { value: "MALE", label: "MALE" },
+                                                        { value: "FEMALE", label: "FEMALE" },
+                                                        { value: "OTHER", label: "OTHER" }
+                                                    ]}
+                                                    className="modern-select-box [&>div]:!h-[36px] [&>div]:!rounded-lg [&>div]:!text-sm"
+                                                />
+                                                {errors.gender && touched.gender && <span className="text-red-500 text-[10px] font-medium">{errors.gender}</span>}
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <FormField label="Phone Number" name="phone" placeholder="+92 ..." />
+                                    <FormField label="Phone Number" name="phone" placeholder="+92 ..." className="!h-[36px] !text-sm" />
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-slate-100">
-                                <Button
+                            <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                                <CustomButton
+                                    label="Cancel"
+                                    type="secondary"
                                     onClick={handleCloseModal}
-                                    className="!h-[44px] !px-8 !rounded-xl !border-slate-200 !text-slate-600 font-semibold hover:!border-slate-400"
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="primary"
+                                />
+                                <CustomButton
+                                    label="Add User"
                                     htmlType="submit"
-                                    loading={isSubmitting}
-                                    className="!h-[44px] !px-8 !rounded-xl !bg-[#006666] !border-none font-bold shadow-lg shadow-teal-900/10 hover:!bg-[#004d4d] transition-all"
-                                >
-                                    Add User
-                                </Button>
+                                    loading={isSubmitting || createUser.isLoading}
+                                />
                             </div>
                         </Form>
                     )}

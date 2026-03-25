@@ -4,6 +4,7 @@ import { Modal, Tag, Divider } from "antd";
 import { FaUser, FaCalendarAlt, FaInfoCircle, FaHeart, FaCommentAlt } from "react-icons/fa";
 import { timestampToDate } from "@/utils/date";
 import { getTagColor } from "@/utils/tagColor";
+import CustomButton from "@/components/shared/CustomButton";
 
 function ViewModal({ viewModal, setViewModal }) {
     const { open, data } = viewModal;
@@ -63,48 +64,55 @@ function ViewModal({ viewModal, setViewModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2 pt-1">
+                <div className="flex items-center gap-3 px-2">
                     <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
                         <FaInfoCircle size={18} />
                     </div>
                     <div>
-                        <span className="text-xl font-bold text-slate-900 block">Post Details</span>
+                        <span className="text-lg font-bold text-slate-900 block">Post Details</span>
                         <span className="text-xs text-slate-500 font-normal">Expanded view of the post and its metadata</span>
                     </div>
                 </div>
             }
             open={open}
             onCancel={handleClose}
-            footer={null}
-            width={720}
+            footer={
+                <CustomButton
+                    label="Back to Feed"
+                    type="secondary"
+                    onClick={handleClose}
+                    className="w-full !h-[48px] font-bold"
+                />
+            }
+            width={600}
             className="modern-modal"
         >
-            <div className="p-2">
+            <div className="p-1">
                 {data && (
-                    <div className="space-y-8">
+                    <div className="space-y-6">
                         {/* Header Info */}
-                        <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <div className="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-100">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center overflow-hidden">
+                                <div className="w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center overflow-hidden">
                                     {data.createdBy?.profileImage ? (
                                         <img src={data.createdBy.profileImage} alt="User" className="w-full h-full object-cover" />
                                     ) : (
-                                        <FaUser className="text-slate-300" />
+                                        <FaUser size={14} className="text-slate-300" />
                                     )}
                                 </div>
                                 <div>
-                                    <p className="font-bold text-slate-900 text-sm leading-none mb-1">{data.createdBy?.name || "Unknown User"}</p>
-                                    <div className="flex items-center gap-2 text-slate-400 text-[11px]">
-                                        <FaCalendarAlt size={10} />
+                                    <p className="font-bold text-slate-900 text-xs leading-none mb-1">{data.createdBy?.name || "Unknown User"}</p>
+                                    <div className="flex items-center gap-2 text-slate-400 text-[10px]">
+                                        <FaCalendarAlt size={9} />
                                         {timestampToDate(data.createdAt)}
                                     </div>
                                 </div>
                             </div>
                             <div className="flex gap-2">
-                                <Tag color={getTagColor(data.type)} className="rounded-full px-4 border-none font-semibold text-[10px] uppercase tracking-wider">
+                                <Tag color={getTagColor(data.type)} className="rounded-full px-3 border-none font-semibold text-[9px] uppercase tracking-wider !mr-0">
                                     {data.type}
                                 </Tag>
-                                <Tag color={data.status === "ACTIVE" ? "green" : "red"} className="rounded-full px-4 border-none font-semibold text-[10px] uppercase tracking-wider">
+                                <Tag color={data.status === "ACTIVE" ? "green" : "red"} className="rounded-full px-3 border-none font-semibold text-[9px] uppercase tracking-wider !mr-0">
                                     {data.status}
                                 </Tag>
                             </div>
@@ -112,18 +120,18 @@ function ViewModal({ viewModal, setViewModal }) {
 
                         {/* Content */}
                         <div className="px-1">
-                            <p className="text-slate-700 text-[16px] leading-relaxed whitespace-pre-wrap">
+                            <p className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap">
                                 {data.content}
                             </p>
                         </div>
 
                         {/* Images */}
                         {data.images && data.images.length > 0 && (
-                            <div className="space-y-3">
-                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-1">Attached Media</span>
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                            <div className="space-y-2">
+                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Attached Media</span>
+                                <div className="grid grid-cols-3 gap-2">
                                     {data.images.map((img, index) => (
-                                        <div key={index} className="aspect-square rounded-2xl overflow-hidden border-2 border-slate-100 shadow-sm group relative">
+                                        <div key={index} className="aspect-square rounded-xl overflow-hidden border-2 border-slate-100 shadow-sm group relative">
                                             <img
                                                 src={img}
                                                 alt={`Post image ${index + 1}`}
@@ -136,30 +144,30 @@ function ViewModal({ viewModal, setViewModal }) {
                         )}
 
                         {/* Metadata Section */}
-                        <div className="modal-section !mb-0">
-                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Type-Specific Details</p>
+                        <div className="modal-section">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Type-Specific Details</p>
                             {renderMetadata()}
                         </div>
 
                         {/* Statistics Grid */}
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="p-4 bg-teal-50/50 rounded-2xl border border-teal-100/50 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-teal-600 shadow-sm">
-                                        <FaHeart size={16} />
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-teal-50/50 rounded-xl border border-teal-100/50 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-teal-600 shadow-sm">
+                                        <FaHeart size={14} />
                                     </div>
-                                    <span className="text-sm font-semibold text-slate-600">Total Likes</span>
+                                    <span className="text-xs font-semibold text-slate-600">Likes</span>
                                 </div>
-                                <span className="text-2xl font-black text-teal-700">{data.likesCount || 0}</span>
+                                <span className="text-xl font-black text-teal-700">{data.likesCount || 0}</span>
                             </div>
-                            <div className="p-4 bg-blue-50/50 rounded-2xl border border-blue-100/50 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-blue-600 shadow-sm">
-                                        <FaCommentAlt size={16} />
+                            <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100/50 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-blue-600 shadow-sm">
+                                        <FaCommentAlt size={14} />
                                     </div>
-                                    <span className="text-sm font-semibold text-slate-600">Comments</span>
+                                    <span className="text-xs font-semibold text-slate-600">Comments</span>
                                 </div>
-                                <span className="text-2xl font-black text-blue-700">{data.commentsCount || 0}</span>
+                                <span className="text-xl font-black text-blue-700">{data.commentsCount || 0}</span>
                             </div>
                         </div>
                     </div>

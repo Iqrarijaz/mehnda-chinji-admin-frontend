@@ -1,20 +1,11 @@
 import React from "react";
 import { FaProductHunt, FaUser, FaUserShield, FaMapMarkerAlt, FaBuilding } from "react-icons/fa";
-import { BiSolidAddToQueue } from "react-icons/bi";
 import { RiAdminFill } from "react-icons/ri";
-import { LuBaggageClaim } from "react-icons/lu";
-import { FaPager } from "react-icons/fa";
 import { FaQuestionCircle } from "react-icons/fa";
 import { FaBloggerB } from "react-icons/fa6";
-import { FaPersonCircleQuestion } from "react-icons/fa6";
-import { FaBuildingColumns } from "react-icons/fa6";
-import { MdDashboardCustomize, MdOutlineDeveloperMode } from "react-icons/md";
-import { MdMarkEmailRead } from "react-icons/md";
-import { GrSystem } from "react-icons/gr";
-import { MdPolicy } from "react-icons/md";
-import { RiListSettingsFill } from "react-icons/ri";
+import { MdDashboardCustomize } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
-import { MdReport, MdEmail } from "react-icons/md";
+import { MdReport } from "react-icons/md";
 import { FaDroplet } from "react-icons/fa6";
 
 const MenuList = [
@@ -48,7 +39,6 @@ const MenuList = [
     link: "/admin/places",
     permission: "places.read"
   },
-
   {
     name: "Users",
     icon: <FaUser size={20} />,
@@ -75,9 +65,20 @@ const MenuList = [
   },
   {
     name: "Configurations",
-    link: "/admin/configurations",
     icon: <IoSettings size={20} />,
-    permission: "configurations.read"
+    permission: "configurations.read",
+    subItems: [
+      {
+        name: "System Config",
+        link: "/admin/configurations",
+        permission: "configurations.read",
+      },
+      {
+        name: "App Images",
+        link: "/admin/configurations/app-images",
+        permission: "configurations.read",
+      },
+    ],
   },
   {
     name: "Support",
@@ -86,38 +87,18 @@ const MenuList = [
     permission: "support.read"
   },
   {
+    name: "Contact Us",
+    link: "/admin/contact-us",
+    icon: <FaUser size={20} />,
+    permission: "contact_us.read"
+  },
+  {
     name: "Reports",
     link: "/admin/reports",
     icon: <MdReport size={20} />,
     permission: "reports.read"
   },
-  // {
-  //   name: "CMS",
-  //   icon: <RiListSettingsFill size={20} />,
-  //   link: "/admin/cms",
-  //   permission: "cms.read"
-  // },
-  // {
-  //   name: "Developer",
-  //   link: "/admin/developer",
-  //   icon: <MdOutlineDeveloperMode size={20} />,
-  //   permission: "developer.read"
-  // },
-  // {
-  //   name: "Settings",
-  //   icon: <IoSettings size={20} />,
-  //   permission: "settings.read",
-  //   subItems: [
-  //     {
-  //       name: "Email Template",
-  //       link: "/admin/settings/email-templates",
-  //       icon: <MdEmail size={18} />,
-  //       permission: "settings.email_templates.read"
-  //     }
-  //   ]
-  // },
-
-]
+];
 
 
 export default MenuList;

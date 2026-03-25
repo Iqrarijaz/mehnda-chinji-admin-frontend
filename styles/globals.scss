@@ -194,7 +194,7 @@ body {
   display: flex !important;
   justify-items: center !important;
   align-items: center !important;
-  padding: 12px 16px !important;
+  padding: 8px 12px !important;
   color: #9ca3af !important; // Gray-400 for dark bg
   border: none !important;
   border-radius: 12px !important;
@@ -204,13 +204,14 @@ body {
   overflow: hidden;
   background: transparent;
   border-left: 3px solid transparent !important;
+  white-space: nowrap !important;
 }
 
 // Hover state - subtle white gradient highlight
 .side_menu_item:hover {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
   color: #ffffff !important;
-  border-left: 3px solid #090e1a !important;
+  border-left: 3px solid #ffffff !important;
   transform: translateX(4px);
 }
 
@@ -299,7 +300,7 @@ body {
   border-radius: 12px !important;
   margin-left: 6px !important;
   padding: 8px 16px !important;
-  height: 40px !important;
+  height: 36px !important;
   font-size: 14px !important;
   font-weight: 600 !important;
   transition: all 0.2s ease-in-out !important;
@@ -334,48 +335,56 @@ body {
 }
 
 .search-input {
-  height: 40px !important;
+  height: 36px !important;
 }
 
 .custom-search-input {
-  height: 40px !important;
-  padding: 6px !important;
+  height: 36px !important;
+  padding: 8px 12px !important;
+  border: 2px solid #006666 !important; // Primary Teal
+  border-radius: 12px !important;
+  background-color: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: all 0.2s;
+
+  .ant-input {
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    background: transparent !important;
+  }
+
+  &:hover,
+  &.ant-input-affix-wrapper-focused,
+  &:focus-within {
+    border-color: #006666 !important;
+    box-shadow: none !important;
+  }
 }
 
-.custom-search-input .ant-input {
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
+.custom-selectbox {
+  &.ant-select {
+    height: 36px !important;
+  }
 
-.custom-search-input {
-  height: 40px !important;
-}
+  .ant-select-selector {
+    border: 2px solid #006666 !important; // Primary Teal
+    border-radius: 12px !important;
+    height: 36px !important;
+    display: flex;
+    align-items: center;
+    background-color: #ffffff !important;
+    box-shadow: none !important;
+    transition: all 0.2s;
+  }
 
-.custom-search-input .ant-input {
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-.custom-search-input.ant-input-affix-wrapper-focused {
-  box-shadow: none !important;
-  border-color: #006666 !important;
-  /* Optional: keeps your lightBlue border on focus */
-}
-
-.custom-search-input:hover .ant-input {
-  border: none !important;
-}
-
-.custom-search-input.ant-input-affix-wrapper-focused {
-  box-shadow: none !important;
-  border-color: #006666 !important;
-  /* Optional: keeps your lightBlue border on focus */
-}
-
-.custom-search-input:hover .ant-input {
-  border: none !important;
+  &:hover .ant-select-selector,
+  &.ant-select-focused .ant-select-selector {
+    border-color: #006666 !important;
+    box-shadow: none !important;
+  }
 }
 
 .custom-select-no-focus .ant-select-selector {
@@ -389,7 +398,7 @@ body {
 }
 
 .custom-select-no-focus:hover .ant-select-selector {
-  border: none !important;
+  border: 2px solid #006666 !important;
 }
 
 .filter-button:hover {
@@ -461,13 +470,13 @@ body {
 // ================antd css ==============//
 
 .ant-select {
-  height: 40px !important;
+  height: 36px !important;
   border-radius: 12px !important;
 
   .ant-select-selector {
     border: 2px solid #006666 !important;
     border-radius: 12px !important;
-    height: 40px !important;
+    height: 36px !important;
     display: flex;
     align-items: center;
     background-color: #ffffff !important;
@@ -534,7 +543,7 @@ body {
 
 // Global button overrides for modals
 .modal-footer-btn {
-  height: 40px !important;
+  height: 36px !important;
   border-radius: 12px !important;
   font-weight: 600 !important;
   padding: 0 20px !important;
@@ -594,7 +603,6 @@ body {
   &:focus,
   &:hover {
     box-shadow: none !important;
-    border-color: #006666 !important;
   }
 }
 

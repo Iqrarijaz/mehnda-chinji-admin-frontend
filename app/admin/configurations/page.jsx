@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import ConfigurationsTable from "./components/Table";
-import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import AddConfigurationModal from "./components/AddModal";
 import UpdateConfigurationModal from "./components/UpdateModal";
 import ViewConfigurationModal from "./components/ViewModal";
@@ -35,18 +34,16 @@ export default function ConfigurationsPage() {
 
     return (
         <>
-            <div className="flex flex-col md:flex-row justify-between mb-4">
-                <h1 className="inner-page-title text-2xl md:text-3xl text-black p-0 mb-4 md:mb-0 font-semibold">
-                    Configurations
-                </h1>
-                <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex justify-end mb-3 gap-3 items-center">
+                <div className="flex flex-col md:flex-row gap-2">
                     <SearchInput setFilters={setFilters} />
                 </div>
-            </div>
-
-            <div className="flex justify-end mb-4 gap-4">
-                <ItemsPerPageDropdown onChange={onChange} />
-                <AddButton title="Add Configuration" onClick={() => setModal({ name: "Add", data: null, state: true })} />
+                <AddButton
+                    title="Add Configuration"
+                    icon={false}
+                    onClick={() => setModal({ name: "Add", data: null, state: true })}
+                    className="!h-[36px] !rounded-lg !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                />
             </div>
 
             <div className="flex flex-col mb-4">

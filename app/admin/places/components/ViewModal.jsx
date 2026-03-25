@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
-import { Modal, Tag, Divider, Row, Col } from "antd";
-import { FaMapMarkerAlt, FaPhoneAlt, FaClock, FaTools, FaInfoCircle, FaExternalLinkAlt, FaTag } from "react-icons/fa";
+import { Modal, Tag } from "antd";
+import { FaMapMarkerAlt, FaAddressCard, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaEye, FaInfoCircle } from "react-icons/fa";
+import CustomButton from "@/components/shared/CustomButton";
 
 function ViewModal({ viewModal, setViewModal }) {
     const { open, data } = viewModal;
@@ -18,39 +19,46 @@ function ViewModal({ viewModal, setViewModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2 pt-1">
+                <div className="flex items-center gap-3 px-2">
                     <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
                         <FaInfoCircle size={18} />
                     </div>
                     <div>
-                        <span className="text-xl font-bold text-slate-900 block">Place Information</span>
+                        <span className="text-lg font-bold text-slate-900 block">Place Information</span>
                         <span className="text-xs text-slate-500 font-normal">Detailed overview of this location</span>
                     </div>
                 </div>
             }
             open={open}
             onCancel={handleClose}
-            footer={null}
-            width={720}
+            footer={
+                <CustomButton
+                    label="Close Details"
+                    type="secondary"
+                    onClick={handleClose}
+                    className="w-full !h-[48px] font-bold"
+                />
+            }
+            width={620}
             className="modern-modal"
         >
-            <div className="p-2">
+            <div className="">
                 {data && (
-                    <div className="space-y-8">
+                    <div className="space-y-6">
                         {/* Header Section */}
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
                             <div className="space-y-1">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <Tag color="cyan" className="rounded-full px-3 border-none font-bold text-[10px] uppercase tracking-wider">
+                                <div className="flex items-center gap-2 mb-0.5">
+                                    <Tag color="cyan" className="rounded-full px-2.5 border-none font-bold text-[9px] uppercase tracking-wider">
                                         {data.categoryId?.name || "General"}
                                     </Tag>
-                                    <Tag color={data.status === "ACTIVE" ? "green" : "orange"} className="rounded-full px-3 border-none font-bold text-[10px] uppercase tracking-wider">
+                                    <Tag color={data.status === "ACTIVE" ? "green" : "orange"} className="rounded-full px-2.5 border-none font-bold text-[9px] uppercase tracking-wider">
                                         {data.status || "PENDING"}
                                     </Tag>
                                 </div>
-                                <h2 className="text-2xl font-black text-slate-900 leading-tight">{data.name}</h2>
-                                <p className="text-slate-500 text-sm flex items-center gap-2">
-                                    <FaMapMarkerAlt className="text-teal-500 opacity-70" size={12} />
+                                <h2 className="text-xl font-black text-slate-900 leading-tight">{data.name}</h2>
+                                <p className="text-slate-500 text-xs flex items-center gap-2">
+                                    <FaMapMarkerAlt className="text-teal-500 opacity-70" size={10} />
                                     {data.address}
                                 </p>
                             </div>
@@ -59,9 +67,9 @@ function ViewModal({ viewModal, setViewModal }) {
                                     href={data.googleAddress}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 font-bold text-xs hover:bg-slate-100 transition-colors shadow-sm w-fit"
+                                    className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 font-bold text-[10px] hover:bg-slate-100 transition-colors shadow-sm w-fit"
                                 >
-                                    <FaExternalLinkAlt size={10} />
+                                    <FaExternalLinkAlt size={8} />
                                     Google Maps
                                 </a>
                             )}
@@ -70,28 +78,28 @@ function ViewModal({ viewModal, setViewModal }) {
                         {/* Description */}
                         {data.description && (
                             <div className="px-1">
-                                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">About this location</p>
-                                <p className="text-slate-700 text-[15px] leading-relaxed italic border-l-4 border-teal-100 pl-4 py-1">
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">About this location</p>
+                                <p className="text-slate-700 text-sm leading-relaxed italic border-l-4 border-teal-100 pl-4 py-0.5">
                                     "{data.description}"
                                 </p>
                             </div>
                         )}
 
                         {/* Key Info Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div className="p-3 bg-white rounded-xl border border-slate-100 shadow-sm flex flex-col gap-2">
                                 <div className="flex items-center gap-2 text-teal-600">
-                                    <FaClock size={14} />
-                                    <span className="text-[11px] font-bold uppercase tracking-wider">Timings</span>
+                                    <FaClock size={12} />
+                                    <span className="text-[10px] font-bold uppercase tracking-wider">Timings</span>
                                 </div>
-                                <p className="text-slate-800 font-semibold">{data.timing || "Not specified"}</p>
+                                <p className="text-slate-800 font-semibold text-sm">{data.timing || "Not specified"}</p>
                             </div>
-                            <div className="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-3">
+                            <div className="p-3 bg-white rounded-xl border border-slate-100 shadow-sm flex flex-col gap-2">
                                 <div className="flex items-center gap-2 text-blue-600">
-                                    <FaTools size={14} />
-                                    <span className="text-[11px] font-bold uppercase tracking-wider">Services</span>
+                                    <FaTools size={12} />
+                                    <span className="text-[10px] font-bold uppercase tracking-wider">Services</span>
                                 </div>
-                                <p className="text-slate-800 font-semibold">{data.services || "General services"}</p>
+                                <p className="text-slate-800 font-semibold text-sm">{data.services || "General services"}</p>
                             </div>
                         </div>
 

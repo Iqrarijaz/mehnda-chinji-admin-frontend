@@ -30,21 +30,14 @@ export default function SystemLogsPage() {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row justify-between mb-6">
-        <h1 className="inner-page-title text-3xl text-black p-0 mb-4 md:mb-0">
-          System Logs
-        </h1>
-        <div className="flex flex-col md:flex-row gap-4">
-          <SearchInput setFilters={setFilters} />
-        </div>
-      </div>
-
-      <div className="flex lg:justify-end mb-6 gap-10 justify-between">
+      <div className="flex justify-end mb-3 gap-3 items-center">
         <div className="min-w-[160px]">
           <Select
-            className="focus:outline-none"
+            placeholder="Select Portal"
+            allowClear
             defaultValue={"ADMIN"}
-            style={{ width: "100%", height: "40px !important" }}
+            style={{ width: "160px", height: "36px" }}
+            className="custom-selectbox"
             onChange={(value) => {
               setFilters((old) => ({
                 ...old,
@@ -55,11 +48,14 @@ export default function SystemLogsPage() {
               { value: "ADMIN", label: "Admin" },
               { value: "USER", label: "User" },
               { value: "WEBSITE", label: "Website" },
-              { value: null, label: "All" },
             ]}
           />
         </div>
+        <div className="flex flex-col md:flex-row gap-2">
+          <SearchInput setFilters={setFilters} searchKey="keyWord" pageKey="currentPage" />
+        </div>
       </div>
+
 
       <SystemLogsTable systemLogsList={systemLogsList} onChange={onChange} />
     </>

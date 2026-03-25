@@ -1,5 +1,3 @@
-"use client";
-import React from "react";
 import { Modal, Table, Avatar } from "antd";
 import { useQuery } from "react-query";
 import { FaHeart } from "react-icons/fa";
@@ -7,6 +5,7 @@ import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import { GET_POST_LIKES } from "@/app/api/admin/posts";
 import { timestampToDateWithTime } from "@/utils/date";
+import CustomButton from "@/components/shared/CustomButton";
 
 function LikesModal({ isOpen, onClose, postId }) {
     const { data, isLoading, error } = useQuery({
@@ -66,7 +65,14 @@ function LikesModal({ isOpen, onClose, postId }) {
             }
             open={isOpen}
             onCancel={onClose}
-            footer={null}
+            footer={
+                <CustomButton
+                    label="Back to Posts"
+                    type="secondary"
+                    onClick={onClose}
+                    className="w-full !h-[48px] font-bold"
+                />
+            }
             width={520}
             className="modern-modal"
             destroyOnClose

@@ -2,10 +2,9 @@ import {
     EditOutlined,
     DeleteOutlined,
     EyeOutlined,
-    MoreOutlined,
-    SettingOutlined,
     CheckCircleOutlined,
-    CloseCircleOutlined
+    CloseCircleOutlined,
+    EllipsisOutlined
 } from "@ant-design/icons";
 import Loading from "@/animations/homePageLoader";
 import { useMutation, useQueryClient } from "react-query";
@@ -18,6 +17,7 @@ import ConfirmModal from "@/components/shared/ConfirmModal";
 import { Modal, Pagination, Table, Tag, Tooltip, Switch, Menu, Dropdown, Button, Checkbox, Popover } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
 function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
     const queryClient = useQueryClient();
@@ -213,27 +213,6 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
         { label: "Created At", value: "createdAt" },
     ];
 
-    const visibilityMenu = (
-        <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
-            <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                Toggle Columns
-            </div>
-            <Checkbox.Group
-                value={visibleColumns}
-                onChange={setVisibleColumns}
-                className="flex flex-col gap-2"
-            >
-                {columnOptions.map(opt => (
-                    <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
-                        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
-                            {opt.label}
-                        </Checkbox>
-                    </Menu.Item>
-                ))}
-            </Checkbox.Group>
-        </Menu>
-    );
-
     const allColumns = [
         {
             title: "Name",
@@ -358,21 +337,21 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 150,
+            width: 140,
             sorter: true,
-            render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
+            render: (text) => <div className="text-slate-500 font-medium text-xs whitespace-nowrap">{timestampToDate(text)}</div>,
         },
         {
             title: "",
             key: "actions",
-            width: 60,
+            width: 70,
             align: "right",
             render: (record) => (
                 <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
-                        icon={<MoreOutlined className="text-lg" />}
-                        className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
+                        icon={<EllipsisOutlined className="text-base text-slate-400" />}
+                        className="!rounded-lg hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8"
                     />
                 </Dropdown>
             ),
@@ -382,16 +361,13 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
     const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-3">
             <div className="flex justify-end px-1">
-                <Dropdown overlay={visibilityMenu} trigger={['click']}>
-                    <Button
-                        icon={<SettingOutlined />}
-                        className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
-                    >
-                        Columns
-                    </Button>
-                </Dropdown>
+                <ColumnVisibilityDropdown
+                    options={columnOptions}
+                    visibleColumns={visibleColumns}
+                    setVisibleColumns={setVisibleColumns}
+                />
             </div>
 
             <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">

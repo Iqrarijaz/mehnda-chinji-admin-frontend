@@ -1,6 +1,7 @@
-import React from "react";
-import { Modal, Button } from "antd";
+import { Modal } from "antd";
 import { FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
+import CustomButton from "./CustomButton";
+import React from "react";
 
 /**
  * Modern SaaS Confirmation Modal
@@ -52,20 +53,20 @@ const ConfirmModal = React.memo(({
 
                 {/* Actions Footer */}
                 <div className="flex items-center gap-3 w-full">
-                    <Button
-                        disabled={loading}
+                    <CustomButton
+                        label={cancelText}
+                        type="secondary"
                         onClick={onClose}
-                        className="modal-footer-btn-secondary flex-1"
-                    >
-                        {cancelText}
-                    </Button>
-                    <Button
-                        loading={loading}
+                        disabled={loading}
+                        className="flex-1"
+                    />
+                    <CustomButton
+                        label={loading ? "Processing..." : confirmText}
+                        type={isDanger ? "danger" : "primary"}
                         onClick={onConfirm}
-                        className={`flex-1 ${isDanger ? 'modal-footer-btn-danger' : 'modal-footer-btn-primary'}`}
-                    >
-                        {loading ? "Processing..." : confirmText}
-                    </Button>
+                        loading={loading}
+                        className="flex-1"
+                    />
                 </div>
             </div>
         </Modal>

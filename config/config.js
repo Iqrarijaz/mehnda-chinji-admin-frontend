@@ -23,5 +23,6 @@ module.exports = {
         { label: "Health", value: "HEALTH" },
         { label: "Govt Offices", value: "GOVT" },
         { label: "Travel", value: "TRAVEL" },
-    ]
+    ],
+    BLOOD_GROUPS: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
 };

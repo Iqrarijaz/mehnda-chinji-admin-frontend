@@ -4,7 +4,6 @@ import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import SupportTable from "./components/Table";
-import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import ManageTicketModal from "./components/ManageModal";
 import { GET_SUPPORT_TICKETS, GET_SUPPORT_STATUS_COUNTS } from "@/app/api/admin/support";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -48,38 +47,39 @@ export default function SupportPage() {
     return (
         <InnerPageCard title="Support Tickets">
 
-            {/* Status Count Cards */}
-            <div className="flex gap-3 mb-5" style={{ flexWrap: "wrap" }}>
-                {countsLoading ? (
-                    Array.from({ length: 3 }).map((_, i) => <StatCardSkeleton key={i} />)
-                ) : (
-                    statCards.map((card) => (
-                        <StatCard
-                            key={card.key}
-                            title={card.label}
-                            count={card.count}
-                            color={card.color}
-                            bg={card.bg}
-                            border={card.border}
-                            active={filters.status === card.key}
-                            onClick={() =>
-                                setFilters((prev) => ({
-                                    ...prev,
-                                    status: prev.status === card.key ? null : card.key,
-                                    page: 1,
-                                }))
-                            }
-                        />
-                    ))
-                )}
-            </div>
-
-            <div className="flex justify-end mb-4 gap-4 items-center">
-                <div className="flex flex-col md:flex-row gap-4">
-                    <SearchInput setFilters={setFilters} placeholder="Search by Ticket ID..." />
+            <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-center">
+                {/* Status Count Cards (Left) */}
+                <div className="flex gap-2 items-center flex-wrap">
+                    {countsLoading ? (
+                        Array.from({ length: 3 }).map((_, i) => <StatCardSkeleton key={i} />)
+                    ) : (
+                        statCards.map((card) => (
+                            <StatCard
+                                key={card.key}
+                                title={card.label}
+                                count={card.count}
+                                color={card.color}
+                                bg={card.bg}
+                                border={card.border}
+                                active={filters.status === card.key}
+                                onClick={() =>
+                                    setFilters((prev) => ({
+                                        ...prev,
+                                        status: prev.status === card.key ? null : card.key,
+                                        page: 1,
+                                    }))
+                                }
+                            />
+                        ))
+                    )}
                 </div>
-                <ItemsPerPageDropdown onChange={onChange} />
 
+                {/* Search (Right) */}
+                <div className="flex gap-3 items-center">
+                    <div className="flex flex-col md:flex-row gap-2">
+                        <SearchInput setFilters={setFilters} />
+                    </div>
+                </div>
             </div>
 
             <div className="overflow-hidden">

@@ -4,7 +4,6 @@ import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import ReportsTable from "./components/Table";
-import ItemsPerPageDropdown from "@/components/InnerPage/ItemsPerPageDropdown";
 import { GET_REPORTS, GET_REPORT_STATUS_COUNTS } from "@/app/api/admin/reports";
 import SelectBox from "@/components/SelectBox";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -59,44 +58,47 @@ export default function ReportsPage() {
     return (
         <InnerPageCard title="Reports">
 
-            {/* Status Count Cards */}
-            <div className="flex gap-3 mb-5" style={{ flexWrap: "wrap" }}>
-                {countsLoading ? (
-                    Array.from({ length: 3 }).map((_, i) => <StatCardSkeleton key={i} />)
-                ) : (
-                    statCards.map((card) => (
-                        <StatCard
-                            key={card.key}
-                            title={card.label}
-                            count={card.count}
-                            color={card.color}
-                            bg={card.bg}
-                            border={card.border}
-                            active={filters.status === card.key}
-                            onClick={() =>
-                                setFilters((prev) => ({
-                                    ...prev,
-                                    status: prev.status === card.key ? null : card.key,
-                                    currentPage: 1,
-                                }))
-                            }
-                        />
-                    ))
-                )}
-            </div>
-
-            <div className="flex justify-end mb-4 gap-4 items-center">
-                <SelectBox
-                    placeholder="Filter by Target Type"
-                    allowClear
-                    handleChange={handleTargetTypeFilter}
-                    width={180}
-                    options={TARGET_TYPES}
-                />
-                <div className="flex flex-col md:flex-row gap-4">
-                    <SearchInput setFilters={setFilters} />
+            <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-center">
+                {/* Status Count Cards (Left) */}
+                <div className="flex gap-2 items-center flex-wrap">
+                    {countsLoading ? (
+                        Array.from({ length: 3 }).map((_, i) => <StatCardSkeleton key={i} />)
+                    ) : (
+                        statCards.map((card) => (
+                            <StatCard
+                                key={card.key}
+                                title={card.label}
+                                count={card.count}
+                                color={card.color}
+                                bg={card.bg}
+                                border={card.border}
+                                active={filters.status === card.key}
+                                onClick={() =>
+                                    setFilters((prev) => ({
+                                        ...prev,
+                                        status: prev.status === card.key ? null : card.key,
+                                        currentPage: 1,
+                                    }))
+                                }
+                            />
+                        ))
+                    )}
                 </div>
-                <ItemsPerPageDropdown onChange={onChange} />
+
+                {/* Filter and Search (Right) */}
+                <div className="flex gap-3 items-center">
+                    <SelectBox
+                        placeholder="Target Type"
+                        allowClear
+                        handleChange={handleTargetTypeFilter}
+                        width={150}
+                        options={TARGET_TYPES}
+                        className="custom-selectbox"
+                    />
+                    <div className="flex flex-col md:flex-row gap-2">
+                        <SearchInput setFilters={setFilters} />
+                    </div>
+                </div>
             </div>
 
             <div className="flex flex-col mb-4">

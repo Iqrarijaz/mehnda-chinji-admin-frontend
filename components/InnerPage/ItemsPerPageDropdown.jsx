@@ -6,12 +6,11 @@ const itemsPerPageOptions = [10, 20, 30, 40, 50, 100];
 function ItemsPerPageDropdown({ onChange }) {
 
   return (
-    <div className="flex justify-end items-center gap-4">
-      {/* <span className="text-sm text-white">Items per page:</span> */}
+    <div className="flex justify-end items-center gap-4 h-[36px]">
       <Select
         defaultValue={20}
-        style={{ width: 100 }}
-        className="custom-select-no-focus"
+        style={{ width: 80, height: 36 }}
+        className="custom-selectbox"
         onChange={(e) => {
           onChange({ itemsPerPage: Number(e) });
         }}
