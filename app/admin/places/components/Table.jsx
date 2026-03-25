@@ -232,7 +232,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
             title: "Category",
             dataIndex: "category",
             key: "category",
-            width: 120,
+            width: 170,
             align: "center",
             sorter: true,
             render: (category) => (
@@ -261,7 +261,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
             title: "Contact",
             dataIndex: "contact",
             key: "contact",
-            width: 150,
+            width: 170,
             render: (contact) => {
                 if (!contact || contact.length === 0) return <span className="text-slate-400">—</span>;
 
@@ -303,7 +303,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
             dataIndex: "status",
             key: "status",
             align: "center",
-            width: 120,
+            width: 170,
             sorter: true,
             render: (status) => {
                 const colors = {
@@ -323,7 +323,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
             dataIndex: "isActive",
             key: "isActive",
             align: "center",
-            width: 100,
+            width: 170,
             render: (isActive, record) => (
                 <Switch
                     checked={isActive}
@@ -337,7 +337,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 140,
+            width: 170,
             sorter: true,
             render: (text) => <div className="text-slate-500 font-medium text-xs whitespace-nowrap">{timestampToDate(text)}</div>,
         },
@@ -374,7 +374,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters }) {
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 1200, y: 600 }}
+                    scroll={{ x: 1500, y: 600 }}
                     sticky={true}
                     loading={{
                         spinning: placesList?.status === "loading",

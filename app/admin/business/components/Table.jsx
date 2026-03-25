@@ -198,7 +198,7 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
             dataIndex: "status",
             key: "status",
             align: "center",
-            width: 100,
+            width: 170,
             sorter: true,
             render: (status) => {
                 const colorMap = {
@@ -217,7 +217,7 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
             title: "Registered",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 110,
+            width: 170,
             sorter: true,
             render: (text) => (
                 <div className="text-slate-400 font-bold text-[10px] whitespace-nowrap">{timestampToDate(text)}</div>
@@ -256,7 +256,7 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 1100, y: 600 }}
+                    scroll={{ x: 1200, y: 600 }}
                     sticky={true}
                     loading={{
                         spinning: businessList?.status === "loading",

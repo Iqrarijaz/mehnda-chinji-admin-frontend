@@ -144,7 +144,7 @@ function ReportsTable({ reportsList, onChange, setFilters }) {
             title: "Type",
             dataIndex: "targetType",
             key: "targetType",
-            width: 90,
+            width: 170,
             align: "center",
             sorter: true,
             render: (type) => (
@@ -169,7 +169,7 @@ function ReportsTable({ reportsList, onChange, setFilters }) {
             dataIndex: "status",
             key: "status",
             align: "center",
-            width: 100,
+            width: 170,
             sorter: true,
             render: (status) => {
                 const colorMap = {
@@ -188,7 +188,7 @@ function ReportsTable({ reportsList, onChange, setFilters }) {
             title: "Received",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 130,
+            width: 170,
             sorter: true,
             render: (text) => <div className="text-slate-500 text-xs font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
         },
@@ -225,7 +225,7 @@ function ReportsTable({ reportsList, onChange, setFilters }) {
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 1200, y: 600 }}
+                    scroll={{ x: 1300, y: 600 }}
                     sticky={true}
                     loading={{
                         spinning: reportsList?.status === "loading",

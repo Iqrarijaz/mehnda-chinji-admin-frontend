@@ -86,7 +86,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
             dataIndex: "status",
             key: "status",
             align: "center",
-            width: 110,
+            width: 170,
             sorter: true,
             render: (status) => {
                 const colors = { open: "orange", "in-progress": "blue", closed: "green" };
@@ -103,7 +103,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
             title: "Created",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 130,
+            width: 170,
             sorter: true,
             render: (text) => <div className="text-slate-500 text-xs font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
         },
@@ -140,7 +140,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 1000, y: 600 }}
+                    scroll={{ x: 1100, y: 600 }}
                     sticky={true}
                     loading={{
                         spinning: ticketsList?.isLoading,

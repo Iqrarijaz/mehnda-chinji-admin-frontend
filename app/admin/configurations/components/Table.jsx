@@ -153,7 +153,7 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
             title: "Type",
             dataIndex: "type",
             key: "type",
-            width: 200,
+            width: 170,
             sorter: true,
             render: (type) => <span className="font-bold text-slate-800">{type}</span>,
         },
@@ -161,6 +161,7 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
             title: "Data (JSON)",
             dataIndex: "data",
             key: "data",
+            width: 250,
             render: (data) => (
                 <Tooltip title={<pre className="text-xs">{JSON.stringify(data, null, 2)}</pre>}>
                     <div className="max-w-[400px] overflow-hidden whitespace-nowrap text-ellipsis italic font-mono text-slate-500 font-medium">
@@ -173,7 +174,7 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
             title: "Status",
             dataIndex: "isActive",
             key: "isActive",
-            width: 120,
+            width: 170,
             align: "center",
             sorter: true,
             render: (isActive, record) => (
@@ -229,7 +230,7 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 900, y: 600 }}
+                    scroll={{ x: 1000, y: 600 }}
                     sticky={true}
                     loading={{
                         spinning: configurationsList.isLoading,

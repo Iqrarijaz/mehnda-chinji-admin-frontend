@@ -119,7 +119,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
             title: "Access Level",
             dataIndex: "permissions",
             key: "permissions",
-            width: 120,
+            width: 170,
             align: "center",
             render: (permissions) => (
                 <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100/50">
@@ -163,7 +163,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 1000, y: 600 }}
+                    scroll={{ x: 1100, y: 600 }}
                     sticky={true}
                     loading={{
                         spinning: rolesList.isLoading,

@@ -142,7 +142,7 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
       dataIndex: ["name", "en"],
       key: "name_en",
       sorter: true,
-      width: 140,
+      width: 170,
       render: (en) => (
         <div className="capitalize font-bold text-slate-800 truncate text-xs">
           {en}
@@ -153,7 +153,7 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
       title: "Name (Urdu)",
       dataIndex: ["name", "ur"],
       key: "name_ur",
-      width: 140,
+      width: 170,
       align: "left",
       sorter: true,
       render: (ur) => (
@@ -166,7 +166,7 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
       title: "Type",
       dataIndex: "type",
       key: "type",
-      width: 90,
+      width: 170,
       align: "center",
       sorter: true,
       render: (type) => (
@@ -183,7 +183,7 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
       dataIndex: "status",
       key: "status",
       align: "center",
-      width: 80,
+      width: 170,
       render: (status, record) => (
         <Switch
           checked={status}
@@ -197,7 +197,7 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
       title: "Created At",
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 130,
+      width: 170,
       sorter: true,
       render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap text-xs">{timestampToDate(text)}</div>,
     },
@@ -234,7 +234,7 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
         <Table
           rowKey="_id"
           className="custom-ant-table"
-          scroll={{ x: 1000, y: 600 }}
+          scroll={{ x: 1200, y: 600 }}
           sticky={true}
           loading={{
             spinning: categoriesList?.status === "loading",

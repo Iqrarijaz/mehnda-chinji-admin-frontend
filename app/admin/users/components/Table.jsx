@@ -30,7 +30,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
     });
 
     // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = React.useState(["user", "role", "gender", "status", "actions"]);
+    const [visibleColumns, setVisibleColumns] = React.useState(["name", "email", "role", "gender", "status", "actions"]);
 
     const handleSorting = React.useCallback((pagination, filters, sorter) => {
         onChange({
@@ -111,7 +111,8 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
     ), [setModal, handleDelete]);
 
     const columnOptions = [
-        { label: "User Info", value: "user" },
+        { label: "Name", value: "name" },
+        { label: "Email", value: "email" },
         { label: "Role", value: "role" },
         { label: "Gender", value: "gender" },
         { label: "Contact", value: "phone" },
@@ -122,24 +123,32 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
 
     const allColumns = React.useMemo(() => [
         {
-            title: "User Information",
-            key: "user",
+            title: "Name",
+            key: "name",
             dataIndex: "name",
             sorter: true,
-            render: (_, record) => (
+            width: 170,
+            render: (name, record) => (
                 <div className="flex items-center gap-2.5">
                     <Avatar
                         size={32}
                         src={record.image}
                         className="bg-slate-100 text-[#006666] font-bold border-2 border-white shadow-sm !text-xs"
                     >
-                        {record.name?.charAt(0)}
+                        {name?.charAt(0)}
                     </Avatar>
-                    <div className="flex flex-col min-w-0">
-                        <span className="font-bold text-slate-800 text-xs truncate leading-tight">{record.name}</span>
-                        <span className="text-[10px] text-slate-400 font-medium truncate">{record.email}</span>
-                    </div>
+                    <span className="font-bold text-slate-800 text-xs truncate leading-tight">{name}</span>
                 </div>
+            ),
+        },
+        {
+            title: "Email",
+            key: "email",
+            dataIndex: "email",
+            sorter: true,
+            width: 200,
+            render: (email) => (
+                <span className="text-[10px] text-slate-400 font-medium truncate">{email}</span>
             ),
         },
         {
@@ -147,7 +156,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             key: "role",
             dataIndex: "role",
             sorter: true,
-            width: 100,
+            width: 170,
             render: (role) => (
                 <Tag className="!rounded-full !px-2.5 !py-0.5 font-bold !border-none !bg-slate-100 !text-slate-600 text-[9px] uppercase tracking-wider">
                     {role}
@@ -159,7 +168,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             key: "gender",
             dataIndex: "gender",
             sorter: true,
-            width: 90,
+            width: 170,
             render: (gender) => (
                 <span className="text-[10px] text-slate-500 font-bold px-1 capitalize tracking-wide">
                     {gender || "—"}
@@ -171,14 +180,14 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             dataIndex: "phone",
             key: "phone",
             sorter: true,
-            width: 120,
+            width: 170,
             render: (phone) => <span className="font-semibold text-slate-600 text-xs whitespace-nowrap">{phone || "N/A"}</span>,
         },
         {
             title: "Status",
             dataIndex: "status",
             key: "status",
-            width: 80,
+            width: 170,
             align: "center",
             render: (status, record) => (
                 <Switch
@@ -198,7 +207,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 120,
+            width: 170,
             sorter: true,
             render: (date) => <span className="text-slate-500 font-medium text-xs">{timestampToDate(date)}</span>,
         },
@@ -206,7 +215,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             title: "",
             key: "actions",
             align: "right",
-            width: 50,
+            width: 70,
             render: (_, record) => (
                 <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
@@ -264,7 +273,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                     }}
                     onChange={handleSorting}
                     rowKey="_id"
-                    scroll={{ x: 800, y: 600 }}
+                    scroll={{ x: 1300, y: 600 }}
                     sticky={true}
                     className="custom-ant-table"
                 />

@@ -136,7 +136,7 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange }) => {
         {
             title: "Admin Information",
             key: "name",
-            width: 180,
+            width: 200,
             sorter: true,
             render: (record) => (
                 <div className="flex flex-col min-w-0">
@@ -149,7 +149,7 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange }) => {
             title: "Contact",
             dataIndex: "phone",
             key: "phone",
-            width: 120,
+            width: 170,
             sorter: true,
             render: (text) => <span className="text-slate-600 font-semibold text-xs whitespace-nowrap">{text || "—"}</span>,
         },
@@ -157,7 +157,7 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange }) => {
             title: "Role Type",
             dataIndex: "role",
             key: "role",
-            width: 110,
+            width: 170,
             align: "center",
             sorter: true,
             render: (role) => (
@@ -174,7 +174,7 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange }) => {
             dataIndex: "status",
             key: "status",
             align: "center",
-            width: 80,
+            width: 170,
             render: (status, record) => (
                 <Switch
                     checked={status === "ACTIVE"}
@@ -217,7 +217,7 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange }) => {
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 900, y: 600 }}
+                    scroll={{ x: 1000, y: 600 }}
                     sticky={true}
                     loading={{
                         spinning: isLoading,

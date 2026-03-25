@@ -198,7 +198,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      width: 100,
+      width: 170,
       align: "center",
       sorter: true,
       render: (status, record) => (
@@ -214,7 +214,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       title: "Created At",
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 160,
+      width: 170,
       sorter: true,
       render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
     },
@@ -254,7 +254,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
         <Table
           rowKey="_id"
           className="custom-ant-table"
-          scroll={{ x: 1000, y: 600 }}
+          scroll={{ x: 1200, y: 600 }}
           sticky={true}
           loading={{
             spinning: emailTemplatesList?.isLoading || manageStatusMutation?.isLoading || deleteMutation?.isLoading,

@@ -134,7 +134,7 @@ function MainLayout({ children }) {
             <img
               src="/rehbar_logo_white.png"
               alt="Logo"
-              className={`object-contain rounded transition-all duration-300 ${open ? "h-32 w-auto" : "h-12 w-12"
+              className={`object-contain rounded transition-all duration-300 ${open ? "h-26 w-auto" : "h-12 w-12"
                 }`}
             />
           </div>

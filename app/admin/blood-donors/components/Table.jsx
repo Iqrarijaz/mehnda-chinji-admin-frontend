@@ -119,7 +119,7 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange }) {
         {
             title: "Donor Information",
             key: "name",
-            width: 160,
+            width: 170,
             sorter: true,
             render: (record) => (
                 <div className="flex flex-col min-w-0">
@@ -132,7 +132,7 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange }) {
             title: "Group",
             dataIndex: "bloodGroup",
             key: "bloodGroup",
-            width: 70,
+            width: 170,
             align: "center",
             sorter: true,
             render: (type) => (
@@ -148,7 +148,7 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange }) {
             title: "Contact",
             dataIndex: "phone",
             key: "phone",
-            width: 120,
+            width: 170,
             sorter: true,
             render: (text) => <span className="text-slate-600 font-semibold text-xs whitespace-nowrap">{text}</span>,
         },
@@ -157,7 +157,7 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange }) {
             dataIndex: "available",
             key: "available",
             align: "center",
-            width: 80,
+            width: 170,
             render: (available, record) => (
                 <Switch
                     checked={available}
@@ -200,7 +200,7 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange }) {
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 800, y: 600 }}
+                    scroll={{ x: 1000, y: 600 }}
                     sticky={true}
                     loading={{
                         spinning: bloodDonorsList?.isLoading,

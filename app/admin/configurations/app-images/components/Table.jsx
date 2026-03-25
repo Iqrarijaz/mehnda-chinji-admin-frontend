@@ -109,6 +109,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
             title: "Name",
             dataIndex: "name",
             key: "name",
+            width: 170,
             sorter: true,
             render: (name) => (
                 <Tooltip title={name} placement="topLeft">
@@ -122,7 +123,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
             title: "Key",
             dataIndex: "key",
             key: "key",
-            width: 180,
+            width: 170,
             sorter: true,
             render: (key) => (
                 <span className="font-mono text-[10px] bg-slate-50 text-teal-700 px-2.5 py-1 rounded-lg font-bold tracking-wider border border-slate-100">
@@ -146,7 +147,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 150,
+            width: 170,
             sorter: true,
             render: (text) => <div className="text-slate-500 font-medium text-xs whitespace-nowrap">{timestampToDate(text)}</div>,
         },
@@ -183,7 +184,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 1000, y: 600 }}
+                    scroll={{ x: 1100, y: 600 }}
                     sticky={true}
                     loading={{
                         spinning: appImagesList.isLoading,

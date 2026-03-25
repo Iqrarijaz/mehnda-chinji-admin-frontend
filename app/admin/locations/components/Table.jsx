@@ -138,7 +138,7 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters }) {
       title: "Type",
       dataIndex: "type",
       key: "type",
-      width: 120,
+      width: 170,
       align: "center",
       sorter: true,
       render: (type) => {
@@ -163,7 +163,7 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters }) {
       dataIndex: "status",
       key: "status",
       align: "center",
-      width: 100,
+      width: 170,
       render: (status, record) => (
         <Switch
           checked={status}
@@ -206,7 +206,7 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters }) {
         <Table
           rowKey="_id"
           className="custom-ant-table"
-          scroll={{ x: 1000, y: 600 }}
+          scroll={{ x: 1100, y: 600 }}
           sticky={true}
           loading={{
             spinning: locationsList?.status === "loading",

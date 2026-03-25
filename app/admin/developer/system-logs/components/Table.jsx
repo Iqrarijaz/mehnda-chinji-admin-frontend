@@ -82,7 +82,7 @@ function SystemLogsTable({ systemLogsList, onChange }) {
       title: "Module Name",
       dataIndex: "moduleName",
       key: "moduleName",
-      width: 150,
+      width: 170,
       sorter: true,
       render: (record) => (
         <div className="capitalize font-bold text-slate-800 truncate">{record}</div>
@@ -113,7 +113,7 @@ function SystemLogsTable({ systemLogsList, onChange }) {
       dataIndex: "reqBody",
       key: "reqBody",
       align: "center",
-      width: 150,
+      width: 170,
       render: (record) => (
         <>
           {record ? (
@@ -135,7 +135,7 @@ function SystemLogsTable({ systemLogsList, onChange }) {
       title: "Error Response",
       dataIndex: "error",
       key: "error",
-      width: 150,
+      width: 170,
       align: "center",
       render: (record) => (
         <>
@@ -203,7 +203,7 @@ function SystemLogsTable({ systemLogsList, onChange }) {
         <Table
           rowKey="_id"
           className="custom-ant-table"
-          scroll={{ x: 1000, y: 600 }}
+          scroll={{ x: 1300, y: 600 }}
           sticky={true}
           loading={{
             spinning: systemLogsList?.status === "loading",

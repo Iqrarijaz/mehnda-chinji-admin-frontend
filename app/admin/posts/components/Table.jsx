@@ -157,7 +157,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             title: "Type",
             dataIndex: "type",
             key: "type",
-            width: 100,
+            width: 170,
             align: "center",
             sorter: true,
             render: (type) => (
@@ -186,7 +186,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             title: "Likes",
             dataIndex: "likesCount",
             key: "likesCount",
-            width: 80,
+            width: 170,
             align: "center",
             sorter: true,
             render: (count, record) => (
@@ -204,7 +204,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             title: "Comments",
             dataIndex: "commentsCount",
             key: "commentsCount",
-            width: 90,
+            width: 170,
             align: "center",
             sorter: true,
             render: (count, record) => (
@@ -223,7 +223,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             dataIndex: "status",
             key: "status",
             align: "center",
-            width: 80,
+            width: 170,
             sorter: true,
             render: (status, record) => (
                 <Switch
@@ -238,7 +238,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 140,
+            width: 170,
             sorter: true,
             render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap text-xs">{timestampToDateWithTime(text)}</div>,
         },
@@ -275,7 +275,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 1200, y: 600 }}
+                    scroll={{ x: 1400, y: 600 }}
                     sticky={true}
                     loading={{
                         spinning: postsList?.status === "loading",
