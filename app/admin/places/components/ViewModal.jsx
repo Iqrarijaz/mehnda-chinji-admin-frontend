@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Modal, Tag } from "antd";
-import { FaMapMarkerAlt, FaAddressCard, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaEye, FaInfoCircle } from "react-icons/fa";
+import { FaMapMarkerAlt, FaAddressCard, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaEye, FaInfoCircle, FaExternalLinkAlt } from "react-icons/fa";
 import CustomButton from "@/components/shared/CustomButton";
 
 function ViewModal({ viewModal, setViewModal }) {
