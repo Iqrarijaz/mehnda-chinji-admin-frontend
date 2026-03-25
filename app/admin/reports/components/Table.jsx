@@ -18,7 +18,7 @@ import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
-function ReportsTable({ reportsList, onChange, setFilters }) {
+function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
     const queryClient = useQueryClient();
     const [viewModal, setViewModal] = useState({ open: false, data: null });
     const [confirmModal, setConfirmModal] = useState({
@@ -31,8 +31,7 @@ function ReportsTable({ reportsList, onChange, setFilters }) {
         cancelText: "Cancel"
     });
 
-    // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["reporter", "targetType", "reason", "description", "status", "createdAt", "actions"]);
+
 
     const closeConfirmModal = () => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
@@ -112,14 +111,7 @@ function ReportsTable({ reportsList, onChange, setFilters }) {
         </Menu>
     );
 
-    const columnOptions = [
-        { label: "Reporter", value: "reporter" },
-        { label: "Target Type", value: "targetType" },
-        { label: "Reason", value: "reason" },
-        { label: "Description", value: "description" },
-        { label: "Status", value: "status" },
-        { label: "Created At", value: "createdAt" },
-    ];
+
 
 
     const allColumns = [
@@ -213,14 +205,6 @@ function ReportsTable({ reportsList, onChange, setFilters }) {
 
     return (
         <div className="space-y-4">
-            <div className="flex justify-end px-1">
-                <ColumnVisibilityDropdown
-                    visibleColumns={visibleColumns}
-                    setVisibleColumns={setVisibleColumns}
-                    options={columnOptions}
-                />
-            </div>
-
             <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
                 <Table
                     rowKey="_id"

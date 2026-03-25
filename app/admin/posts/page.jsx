@@ -16,6 +16,8 @@ import { GET_POSTS } from "@/app/api/admin/posts";
 import { FaFilter, FaThLarge, FaTable } from "react-icons/fa";
 import { useDebounce } from "@/hooks/useDebounce";
 import InnerPageCard from "@/components/layout/InnerPageCard";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
+import { FiFilter } from "react-icons/fi";
 
 const POST_TYPES = [
     { value: "GENERAL", label: "General" },
@@ -45,6 +47,18 @@ export default function PostsPage() {
         sortingKey: "_id",
         onChangeSearch: false,
     });
+
+    // Column Visibility State
+    const [visibleColumns, setVisibleColumns] = useState(["type", "content", "likesCount", "commentsCount", "status", "createdAt", "actions"]);
+
+    const columnOptions = [
+        { label: "Type", value: "type" },
+        { label: "Content", value: "content" },
+        { label: "Likes", value: "likesCount" },
+        { label: "Comments", value: "commentsCount" },
+        { label: "Status", value: "status" },
+        { label: "Created At", value: "createdAt" },
+    ];
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
     const onChange = useCallback((data) => setFilters((old) => ({ ...old, ...data })), []);
@@ -105,7 +119,8 @@ export default function PostsPage() {
         <InnerPageCard>
 
             {/* Title row — view mode toggle lives here */}
-            <div className="flex items-center justify-between mb-4">
+            {/* Header row with Title and Mobile Controls */}
+            <div className="flex flex-col md:flex-row justify-between mb-4 gap-3 items-start md:items-center">
                 <div className="flex items-center gap-3">
                     <h1 className="inner-page-title text-2xl md:text-3xl text-black p-0 font-semibold">Posts</h1>
                     <div className="hidden md:flex items-center bg-gray-100 rounded-lg p-1">
@@ -124,37 +139,55 @@ export default function PostsPage() {
                     </div>
                 </div>
 
-                {/* Mobile: filter + view toggle */}
-                <div className="flex md:hidden gap-2">
-                    <button
-                        onClick={() => setFilterModalOpen(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-[#006666] text-white rounded-lg hover:bg-[#004d4d] transition-colors relative shadow-lg shadow-teal-900/10"
-                    >
-                        <FaFilter size={14} />
-                        {hasActiveFilters && <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white" />}
-                    </button>
-                    <button
-                        onClick={() => setViewMode(viewMode === "cards" ? "table" : "cards")}
-                        className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-                    >
-                        {viewMode === "cards" ? <FaTable size={14} /> : <FaThLarge size={14} />}
-                    </button>
+                {/* Action Bar (Right) */}
+                <div className="flex gap-2 items-center w-full md:w-auto justify-end">
+                    {/* Desktop Filters (Hidden on Mobile) */}
+                    <div className="hidden md:flex items-center gap-3">
+                        <SelectBox placeholder="Filter by Type" allowClear handleChange={handleTypeFilter} value={filters?.type} width={160} options={POST_TYPES.map((t) => ({ value: t.value, label: t.label }))} />
+                        <SelectBox placeholder="Filter by Status" allowClear handleChange={handleStatusFilter} value={filters?.status} width={160} options={STATUS_OPTIONS.map((s) => ({ value: s.value, label: s.label }))} />
+                        <SearchInput setFilters={setFilters} pageKey="currentPage" />
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        {/* Column Visibility (Desktop/Mobile unified) */}
+                        <ColumnVisibilityDropdown
+                            options={columnOptions}
+                            visibleColumns={visibleColumns}
+                            setVisibleColumns={setVisibleColumns}
+                        />
+
+                        {/* View Mode Toggle (Mobile Only) */}
+                        <button
+                            onClick={() => setViewMode(viewMode === "cards" ? "table" : "cards")}
+                            className="mobile-filter-btn md:hidden"
+                            title="Switch View"
+                        >
+                            {viewMode === "cards" ? <FaTable size={16} /> : <FaThLarge size={16} />}
+                        </button>
+
+                        {/* Mobile Filter Toggle */}
+                        <button
+                            onClick={() => setFilterModalOpen(true)}
+                            className="mobile-filter-btn md:hidden"
+                            title="Filters"
+                        >
+                            <FiFilter size={18} />
+                            {hasActiveFilters && (
+                                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-white" />
+                            )}
+                        </button>
+
+                        <AddButton
+                            title="Add Post"
+                            icon={false}
+                            onClick={() => setModal({ name: "Add", state: true, data: null })}
+                            className="!h-[36px] !rounded-xl !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                        />
+                    </div>
                 </div>
             </div>
 
-            <div className="flex justify-end mb-3 gap-3 items-center">
-                <SelectBox placeholder="Filter by Type" allowClear handleChange={handleTypeFilter} value={filters?.type} width={160} options={POST_TYPES.map((t) => ({ value: t.value, label: t.label }))} />
-                <SelectBox placeholder="Filter by Status" allowClear handleChange={handleStatusFilter} value={filters?.status} width={160} options={STATUS_OPTIONS.map((s) => ({ value: s.value, label: s.label }))} />
-                <div className="flex flex-col md:flex-row gap-2">
-                    <SearchInput setFilters={setFilters} pageKey="currentPage" />
-                </div>
-                <AddButton
-                    title="Add Post"
-                    icon={false}
-                    onClick={() => setModal({ name: "Add", state: true, data: null })}
-                    className="!h-[36px] !rounded-lg !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
-                />
-            </div>
+
 
             <div className="flex flex-col mb-4">
                 {viewMode === "cards" ? (
@@ -177,6 +210,7 @@ export default function PostsPage() {
                         setFilters={setFilters}
                         setLikesModal={setLikesModal}
                         setCommentsModal={setCommentsModal}
+                        visibleColumns={visibleColumns}
                     />
                 )}
             </div>

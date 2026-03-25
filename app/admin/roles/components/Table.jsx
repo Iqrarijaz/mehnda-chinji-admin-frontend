@@ -13,9 +13,8 @@ import ConfirmModal from "@/components/shared/ConfirmModal";
 import { Pagination, Table, Tag, Tooltip, Menu, Dropdown, Button } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
-import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
-const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
+const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) => {
     const queryClient = useQueryClient();
 
     const [confirmModal, setConfirmModal] = useState({
@@ -28,8 +27,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
         cancelText: "Cancel"
     });
 
-    // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["name", "description", "permissions", "actions"]);
+
 
     const closeConfirmModal = () => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
@@ -95,11 +93,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
         </Menu>
     );
 
-    const columnOptions = [
-        { label: "Name", value: "name" },
-        { label: "Description", value: "description" },
-        { label: "Permissions", value: "permissions" },
-    ];
+
 
 
     const allColumns = [
@@ -151,14 +145,6 @@ const RolesTable = ({ setModal, rolesList, filters, onChange }) => {
 
     return (
         <div className="space-y-4">
-            <div className="flex justify-end px-1">
-                <ColumnVisibilityDropdown
-                    visibleColumns={visibleColumns}
-                    setVisibleColumns={setVisibleColumns}
-                    options={columnOptions}
-                />
-            </div>
-
             <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
                 <Table
                     rowKey="_id"

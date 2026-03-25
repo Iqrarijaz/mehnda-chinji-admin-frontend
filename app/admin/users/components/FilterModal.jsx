@@ -3,9 +3,13 @@ import { Modal, Button, Select } from "antd";
 import SearchInput from "@/components/InnerPage/SearchInput";
 
 function FilterModal({ open, onCancel, filters, setFilters }) {
+    const handleGenderChange = (value) => {
+        setFilters((prev) => ({ ...prev, gender: value, page: 1 }));
+    };
+
     return (
         <Modal
-            title={<span className="text-lg font-bold text-[#006666]">Filter Locations</span>}
+            title={<span className="text-lg font-bold text-[#006666]">Filter App Users</span>}
             open={open}
             onCancel={onCancel}
             footer={[
@@ -19,22 +23,21 @@ function FilterModal({ open, onCancel, filters, setFilters }) {
         >
             <div className="flex flex-col gap-5 py-4">
                 <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Search Locations</label>
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Search Users</label>
                     <SearchInput setFilters={setFilters} className="w-full" />
                 </div>
 
                 <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Type</label>
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Gender</label>
                     <Select
-                        placeholder="Select Type"
+                        placeholder="Select Gender"
                         className="w-full !h-11 custom-select"
-                        value={filters.advance}
-                        onChange={(val) => setFilters(prev => ({ ...prev, advance: val, currentPage: 1 }))}
+                        value={filters.gender}
+                        onChange={handleGenderChange}
                         allowClear
                     >
-                        <Select.Option value="DISTRICT">District</Select.Option>
-                        <Select.Option value="TEHSIL">Tehsil</Select.Option>
-                        <Select.Option value="VILLAGE">Village</Select.Option>
+                        <Select.Option value="MALE">Male</Select.Option>
+                        <Select.Option value="FEMALE">Female</Select.Option>
                     </Select>
                 </div>
             </div>

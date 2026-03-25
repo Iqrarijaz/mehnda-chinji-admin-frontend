@@ -13,7 +13,7 @@ function SearchInput({ setFilters, className = "", pageKey = "page", searchKey =
           }));
         }}
         placeholder="Search..."
-        className="custom-search-input !font-sans !text-slate-600"
+        className="custom-search-input !font-sans !text-xs !text-slate-600"
         prefix={<FiSearch size={16} className="text-[#006666] mr-2" />}
         onChange={(event) => {
           const value = event?.target?.value;

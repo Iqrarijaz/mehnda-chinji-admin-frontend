@@ -18,9 +18,8 @@ import { TableSkeleton } from "@/components/shared/Skeletons";
 import EmptyState from "@/components/shared/EmptyState";
 import { DELETE_USER, UPDATE_USER } from "@/app/api/admin/users";
 import { timestampToDate } from "@/utils/date";
-import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
-const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilters }) => {
+const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilters, visibleColumns }) => {
     const queryClient = useQueryClient();
     const [confirmModal, setConfirmModal] = React.useState({
         state: false,
@@ -29,8 +28,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
         content: ""
     });
 
-    // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = React.useState(["name", "email", "role", "gender", "status", "actions"]);
+
 
     const handleSorting = React.useCallback((pagination, filters, sorter) => {
         onChange({
@@ -110,15 +108,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
         </Menu>
     ), [setModal, handleDelete]);
 
-    const columnOptions = [
-        { label: "Name", value: "name" },
-        { label: "Email", value: "email" },
-        { label: "Role", value: "role" },
-        { label: "Gender", value: "gender" },
-        { label: "Contact", value: "phone" },
-        { label: "Status", value: "status" },
-        { label: "Created At", value: "createdAt" },
-    ];
+
 
 
     const allColumns = React.useMemo(() => [
@@ -257,14 +247,6 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
 
     return (
         <div className="space-y-4">
-            <div className="flex justify-end px-1">
-                <ColumnVisibilityDropdown
-                    visibleColumns={visibleColumns}
-                    setVisibleColumns={setVisibleColumns}
-                    options={columnOptions}
-                />
-            </div>
-
             <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
                 <Table
                     columns={activeColumns}

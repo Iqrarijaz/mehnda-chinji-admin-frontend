@@ -18,9 +18,8 @@ import ConfirmModal from "@/components/shared/ConfirmModal";
 import { Modal, Pagination, Table, Tag, Switch, Menu, Dropdown, Button, Checkbox, Tooltip } from "antd";
 import { useCallback, useState } from "react";
 import { TableSkeleton } from "@/components/shared/Skeletons";
-import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
-function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikesModal, setCommentsModal }) {
+function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikesModal, setCommentsModal, visibleColumns }) {
     const queryClient = useQueryClient();
     const [viewModal, setViewModal] = useState({ open: false, data: null });
     const [confirmModal, setConfirmModal] = useState({
@@ -33,8 +32,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
         cancelText: "Cancel"
     });
 
-    // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["type", "content", "likesCount", "commentsCount", "status", "createdAt", "actions"]);
+
 
     const closeConfirmModal = () => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
@@ -142,14 +140,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
         </Menu>
     );
 
-    const columnOptions = [
-        { label: "Type", value: "type" },
-        { label: "Content", value: "content" },
-        { label: "Likes", value: "likesCount" },
-        { label: "Comments", value: "commentsCount" },
-        { label: "Status", value: "status" },
-        { label: "Created At", value: "createdAt" },
-    ];
+
 
 
     const allColumns = [
@@ -263,14 +254,6 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end px-1">
-        <ColumnVisibilityDropdown
-          visibleColumns={visibleColumns}
-          setVisibleColumns={setVisibleColumns}
-          options={columnOptions}
-        />
-      </div>
-
       <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
                 <Table
                     rowKey="_id"

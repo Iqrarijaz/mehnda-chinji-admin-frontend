@@ -12,14 +12,12 @@ import { DELETE_LOCATION, UPDATE_LOCATION_STATUS } from "@/app/api/admin/locatio
 import { Modal, Pagination, Table, Tag, Switch, Menu, Dropdown, Button } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
-import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
-function PageTable({ modal, setModal, locationsList, onChange, setFilters }) {
+function PageTable({ modal, setModal, locationsList, onChange, setFilters, visibleColumns }) {
   const queryClient = useQueryClient();
   const [deleteModalData, setDeleteModalData] = useState(null);
 
-  // Column Visibility State
-  const [visibleColumns, setVisibleColumns] = useState(["name_en", "name_ur", "type", "status", "actions"]);
+
 
   // Status mutation
   const manageStatusMutation = useMutation({
@@ -109,12 +107,7 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters }) {
     </Menu>
   );
 
-  const columnOptions = [
-    { label: "Name (EN)", value: "name_en" },
-    { label: "Name (UR)", value: "name_ur" },
-    { label: "Type", value: "type" },
-    { label: "Status", value: "status" },
-  ];
+
 
 
   const allColumns = [
@@ -194,14 +187,6 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end px-1">
-        <ColumnVisibilityDropdown
-          visibleColumns={visibleColumns}
-          setVisibleColumns={setVisibleColumns}
-          options={columnOptions}
-        />
-      </div>
-
       <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
         <Table
           rowKey="_id"

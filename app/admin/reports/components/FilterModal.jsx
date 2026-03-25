@@ -2,10 +2,16 @@ import React from "react";
 import { Modal, Button, Select } from "antd";
 import SearchInput from "@/components/InnerPage/SearchInput";
 
+const TARGET_TYPES = [
+    { label: "Business", value: "BUSINESS" },
+    { label: "Donor", value: "DONOR" },
+    { label: "Place", value: "PLACE" },
+];
+
 function FilterModal({ open, onCancel, filters, setFilters }) {
     return (
         <Modal
-            title={<span className="text-lg font-bold text-[#006666]">Filter Locations</span>}
+            title={<span className="text-lg font-bold text-[#006666]">Filter Reports</span>}
             open={open}
             onCancel={onCancel}
             footer={[
@@ -19,22 +25,22 @@ function FilterModal({ open, onCancel, filters, setFilters }) {
         >
             <div className="flex flex-col gap-5 py-4">
                 <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Search Locations</label>
-                    <SearchInput setFilters={setFilters} className="w-full" />
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Search Reports</label>
+                    <SearchInput setFilters={setFilters} pageKey="currentPage" className="w-full" />
                 </div>
 
                 <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Type</label>
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Target Type</label>
                     <Select
-                        placeholder="Select Type"
+                        placeholder="Select Target Type"
                         className="w-full !h-11 custom-select"
-                        value={filters.advance}
-                        onChange={(val) => setFilters(prev => ({ ...prev, advance: val, currentPage: 1 }))}
+                        value={filters.targetType}
+                        onChange={(val) => setFilters(prev => ({ ...prev, targetType: val || null, currentPage: 1 }))}
                         allowClear
                     >
-                        <Select.Option value="DISTRICT">District</Select.Option>
-                        <Select.Option value="TEHSIL">Tehsil</Select.Option>
-                        <Select.Option value="VILLAGE">Village</Select.Option>
+                        {TARGET_TYPES.map(t => (
+                            <Select.Option key={t.value} value={t.value}>{t.label}</Select.Option>
+                        ))}
                     </Select>
                 </div>
             </div>

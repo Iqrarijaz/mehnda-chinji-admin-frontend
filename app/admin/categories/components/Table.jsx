@@ -14,9 +14,8 @@ import { timestampToDate } from "@/utils/date";
 import { DELETE_CATEGORY, UPDATE_CATEGORY_STATUS } from "@/app/api/admin/categories";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { getTagColor } from "@/utils/tagColor";
-import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
-function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }) {
+function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters, visibleColumns }) {
   const queryClient = useQueryClient();
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
@@ -28,8 +27,7 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
     cancelText: "Cancel"
   });
 
-  // Column Visibility State
-  const [visibleColumns, setVisibleColumns] = useState(["name_en", "name_ur", "type", "status", "createdAt", "actions"]);
+
 
   const closeConfirmModal = () => {
     setConfirmModal((prev) => ({ ...prev, isOpen: false }));
@@ -127,13 +125,7 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
     </Menu>
   );
 
-  const columnOptions = [
-    { label: "Name (EN)", value: "name_en" },
-    { label: "Name (UR)", value: "name_ur" },
-    { label: "Type", value: "type" },
-    { label: "Status", value: "status" },
-    { label: "Created At", value: "createdAt" },
-  ];
+
 
 
   const allColumns = [
@@ -222,14 +214,6 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters }
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end px-1">
-        <ColumnVisibilityDropdown
-          visibleColumns={visibleColumns}
-          setVisibleColumns={setVisibleColumns}
-          options={columnOptions}
-        />
-      </div>
-
       <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
         <Table
           rowKey="_id"

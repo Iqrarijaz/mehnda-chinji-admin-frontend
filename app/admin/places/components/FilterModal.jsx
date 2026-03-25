@@ -1,7 +1,8 @@
 import React from "react";
-import { Modal, Button } from "antd";
+import { Modal } from "antd";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import SelectBox from "@/components/SelectBox";
+import CustomButton from "@/components/shared/CustomButton";
 import { PLACE_CATEGORIES } from "@/config/config";
 
 function FilterModal({ open, onCancel, filters, setFilters, handleCategoryFilter }) {
@@ -11,9 +12,11 @@ function FilterModal({ open, onCancel, filters, setFilters, handleCategoryFilter
             open={open}
             onCancel={onCancel}
             footer={[
-                <Button key="close" onClick={onCancel} className="!rounded-lg !h-10 !px-6 font-medium">
-                    Close
-                </Button>
+                <CustomButton
+                    key="close"
+                    onClick={onCancel}
+                    label="Close"
+                />
             ]}
             width={400}
             className="modern-modal"

@@ -12,6 +12,8 @@ import { useDebounce } from "@/hooks/useDebounce";
 import StatCard from "@/components/shared/StatCard";
 import InnerPageCard from "@/components/layout/InnerPageCard";
 import { StatCardSkeleton } from "@/components/shared/Skeletons";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
+import { FiFilter } from "react-icons/fi";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -26,6 +28,15 @@ export default function BloodDonorsPage() {
         city: "",
         available: null,
     });
+    const [visibleColumns, setVisibleColumns] = useState(["name", "bloodGroup", "phone", "city", "available", "actions"]);
+
+    const columnOptions = [
+        { label: "Name", value: "name" },
+        { label: "Blood Group", value: "bloodGroup" },
+        { label: "Phone", value: "phone" },
+        { label: "City", value: "city" },
+        { label: "Availability", value: "available" },
+    ];
 
     const debouncedSearch = useDebounce(filters.search, 500);
     const bloodDonorsList = useQuery({
@@ -42,8 +53,8 @@ export default function BloodDonorsPage() {
     const counts = countsData?.data || { available: 0, unavailable: 0 };
 
     const statCards = [
-        { label: "Available", key: "true", count: counts.available, color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
-        { label: "Unavailable", key: "false", count: counts.unavailable, color: "#dc2626", bg: "#fef2f2", border: "#fecaca" },
+        { label: "Available", short: "Avail", key: "true", count: counts.available, color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
+        { label: "Unavailable", short: "Unav", key: "false", count: counts.unavailable, color: "#dc2626", bg: "#fef2f2", border: "#fecaca" },
     ];
 
     const onChange = (newFilters) => setFilters((prev) => ({ ...prev, ...newFilters }));
@@ -52,7 +63,7 @@ export default function BloodDonorsPage() {
     return (
         <InnerPageCard title="Blood Donors">
 
-            <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-center">
+            <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-start md:items-center">
                 {/* Status Count Cards (Left) */}
                 <div className="flex gap-2 items-center flex-wrap">
                     {countsLoading ? (
@@ -62,6 +73,7 @@ export default function BloodDonorsPage() {
                             <StatCard
                                 key={card.key}
                                 title={card.label}
+                                shortTitle={card.short}
                                 count={card.count}
                                 color={card.color}
                                 bg={card.bg}
@@ -79,40 +91,58 @@ export default function BloodDonorsPage() {
                     )}
                 </div>
 
-                {/* Filter and Search (Right) */}
-                <div className="flex gap-3 items-center">
-                    <SelectBox
-                        placeholder="Filter by Blood Group"
-                        allowClear
-                        handleChange={(val) => onChange({ bloodGroup: val || "", page: 1 })}
-                        value={filters.bloodGroup}
-                        width={160}
-                        options={bloodGroups.map((bg) => ({ value: bg, label: bg }))}
-                        className="custom-selectbox"
-                    />
-                    <div className="flex flex-col md:flex-row gap-2">
+                {/* Action Bar (Right) */}
+                <div className="flex gap-2 items-center w-full md:w-auto justify-end">
+                    {/* Desktop Filters (Hidden on Mobile) */}
+                    <div className="hidden md:flex items-center gap-3">
+                        <SelectBox
+                            placeholder="Filter by Blood Group"
+                            allowClear
+                            handleChange={(val) => onChange({ bloodGroup: val || "", page: 1 })}
+                            value={filters.bloodGroup}
+                            width={160}
+                            options={bloodGroups.map((bg) => ({ value: bg, label: bg }))}
+                            className="custom-selectbox"
+                        />
                         <SearchInput setFilters={setFilters} />
                     </div>
-                    <button
-                        onClick={() => setFilterModalOpen(true)}
-                        className="flex items-center gap-2 h-[36px] px-4 bg-white text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50 transition-all relative font-bold text-[11px] uppercase tracking-tight"
-                    >
-                        <FaFilter size={11} className="text-slate-400" />
-                        Filters
-                        {hasActiveFilters && (
-                            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white shadow-sm" />
-                        )}
-                    </button>
-                    <AddButton
-                        title="Add Donor"
-                        icon={false}
-                        onClick={() => setModal({ name: "Add", data: null, state: true })}
-                        className="!h-[36px] !rounded-lg !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
-                    />
+
+                    <div className="flex items-center gap-2">
+                        <ColumnVisibilityDropdown
+                            options={columnOptions}
+                            visibleColumns={visibleColumns}
+                            setVisibleColumns={setVisibleColumns}
+                        />
+
+                        {/* Mobile Filter Toggle */}
+                        <button
+                            onClick={() => setFilterModalOpen(true)}
+                            className="mobile-filter-btn md:hidden"
+                            title="Filters"
+                        >
+                            <FiFilter size={18} />
+                            {hasActiveFilters && (
+                                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-white" />
+                            )}
+                        </button>
+
+                        <AddButton
+                            title="Add Donor"
+                            icon={false}
+                            onClick={() => setModal({ name: "Add", data: null, state: true })}
+                            className="!h-[36px] !rounded-xl !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                        />
+                    </div>
                 </div>
             </div>
 
-            <BloodDonorsTable modal={modal} setModal={setModal} bloodDonorsList={bloodDonorsList} onChange={onChange} />
+            <BloodDonorsTable 
+                modal={modal} 
+                setModal={setModal} 
+                bloodDonorsList={bloodDonorsList} 
+                onChange={onChange}
+                visibleColumns={visibleColumns} 
+            />
 
             <FilterModal
                 isOpen={filterModalOpen}

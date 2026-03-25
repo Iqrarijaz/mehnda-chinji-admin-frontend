@@ -17,9 +17,8 @@ import ViewModal from "./ViewModal";
 import { Menu, Dropdown, Button, Table, Tooltip } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
-import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
-function BusinessTable({ modal, setModal, businessList, onChange }) {
+function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns }) {
     const queryClient = useQueryClient();
 
     const [confirmModal, setConfirmModal] = useState({
@@ -32,8 +31,7 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
         cancelText: "Cancel",
     });
 
-    // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["name", "categoryEn", "status", "createdAt", "actions"]);
+
     const [viewModal, setViewModal] = useState({ state: false, data: null });
 
     const closeConfirmModal = () =>
@@ -161,14 +159,7 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
         </Menu>
     );
 
-    const columnOptions = [
-        { label: "Business Name", value: "name" },
-        { label: "Category", value: "categoryEn" },
-        { label: "Phone", value: "phone" },
-        { label: "Address", value: "address" },
-        { label: "Status", value: "status" },
-        { label: "Registered Date", value: "createdAt" },
-    ];
+
 
 
     const allColumns = [
@@ -263,14 +254,6 @@ function BusinessTable({ modal, setModal, businessList, onChange }) {
 
     return (
         <div className="space-y-4">
-            <div className="flex justify-end px-1">
-                <ColumnVisibilityDropdown
-                    visibleColumns={visibleColumns}
-                    setVisibleColumns={setVisibleColumns}
-                    options={columnOptions}
-                />
-            </div>
-
             <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
                 <Table
                     rowKey="_id"

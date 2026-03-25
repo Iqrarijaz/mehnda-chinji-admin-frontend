@@ -77,13 +77,12 @@ function UpdatePlaceModal({ modal, setModal }) {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
+                <div className="flex items-center gap-2 px-0">
+                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
                         <FaMapMarkerAlt size={18} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-slate-900 block">Edit Place</span>
-                        <span className="text-xs text-slate-500 font-normal">Update location details and operational status</span>
+                        <span className="text-lg font-bold text-teal-700 block mt-1">Edit Place</span>
                     </div>
                 </div>
             }
@@ -103,7 +102,7 @@ function UpdatePlaceModal({ modal, setModal }) {
                     onSubmit={handleSubmit}
                 >
                     {({ isSubmitting, values, setFieldValue, errors, touched }) => (
-                        <Form className="space-y-4">
+                        <Form className="space-y-2">
                             {updatePlace.status === "loading" ? (
                                 <FormSkeleton fields={6} />
                             ) : (
@@ -112,7 +111,7 @@ function UpdatePlaceModal({ modal, setModal }) {
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Core Identification</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="md:col-span-1">
-                                                <FormField label="Place Name" name="name" placeholder="Name" required className="!h-[36px] !text-sm" />
+                                                <FormField label="Place Name" name="name" placeholder="Name" required className="!h-[32px] !text-xs" />
                                             </div>
                                             <div className="md:col-span-1">
                                                 <div className="flex flex-col gap-1.5">
@@ -126,7 +125,7 @@ function UpdatePlaceModal({ modal, setModal }) {
                                                             { value: "REJECTED", label: "Rejected" },
                                                             { value: "INACTIVE", label: "Inactive" }
                                                         ]}
-                                                        className="modern-select-box [&>div]:!h-[36px] [&>div]:!rounded-lg [&>div]:!text-sm"
+                                                        className="modern-select-box"
                                                     />
                                                 </div>
                                             </div>
@@ -142,12 +141,12 @@ function UpdatePlaceModal({ modal, setModal }) {
                                                         value={values.categoryId}
                                                         placeholder="Select category"
                                                         width="100%"
-                                                        className="modern-select-box [&>div]:!h-[36px] [&>div]:!rounded-lg [&>div]:!text-sm"
+                                                        className="modern-select-box"
                                                     />
                                                 </div>
                                             </div>
                                             <div className="md:col-span-2">
-                                                <FormField label="Description" name="description" placeholder="Short description..." type="textarea" className="!h-20 !text-sm" />
+                                                <FormField label="Description" name="description" placeholder="Short description..." type="textarea" className="!h-20 !text-xs" />
                                             </div>
                                         </div>
                                     </div>
@@ -156,13 +155,13 @@ function UpdatePlaceModal({ modal, setModal }) {
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Location Details</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="md:col-span-2">
-                                                <FormField label="Full Address" name="address" required icon={<FaChevronRight className="opacity-20 translate-y-0.5" />} className="!h-[36px] !text-sm" />
+                                                <FormField label="Full Address" name="address" required icon={<FaChevronRight className="opacity-20 translate-y-0.5" />} className="!h-[32px] !text-xs" />
                                             </div>
                                             <div className="md:col-span-2">
-                                                <FormField label="Google Maps Link" name="googleAddress" icon={<FaMapMarkerAlt className="opacity-30" />} className="!h-[36px] !text-sm" />
+                                                <FormField label="Google Maps Link" name="googleAddress" icon={<FaMapMarkerAlt className="opacity-30" />} className="!h-[32px] !text-xs" />
                                             </div>
-                                            <FormField label="Latitude" name="lat" type="number" required className="!h-[36px] !text-sm" />
-                                            <FormField label="Longitude" name="lng" type="number" required className="!h-[36px] !text-sm" />
+                                            <FormField label="Latitude" name="lat" type="number" required className="!h-[32px] !text-xs" />
+                                            <FormField label="Longitude" name="lng" type="number" required className="!h-[32px] !text-xs" />
                                         </div>
                                     </div>
 
@@ -181,7 +180,7 @@ function UpdatePlaceModal({ modal, setModal }) {
                                                                         value={values.contact[index].name}
                                                                         onChange={(e) => setFieldValue(`contact.${index}.name`, e.target.value)}
                                                                         placeholder="Label"
-                                                                        className="!border-none !bg-transparent !shadow-none !h-[32px] !text-sm font-semibold"
+                                                                         className="!border-none !bg-transparent !shadow-none !h-[32px] !text-xs font-semibold"
                                                                     />
                                                                 </div>
                                                                 <div className="w-[1px] h-5 bg-slate-200 self-center" />
@@ -191,29 +190,28 @@ function UpdatePlaceModal({ modal, setModal }) {
                                                                         value={values.contact[index].number}
                                                                         onChange={(e) => setFieldValue(`contact.${index}.number`, e.target.value)}
                                                                         placeholder="Number"
-                                                                        className="!border-none !bg-transparent !shadow-none !h-[32px] !text-sm"
+                                                                         className="!border-none !bg-transparent !shadow-none !h-[32px] !text-xs"
                                                                     />
                                                                 </div>
                                                             </div>
                                                             {values.contact.length > 1 && (
-                                                                <Button
+                                                                <CustomButton
                                                                     type="text"
                                                                     danger
                                                                     onClick={() => remove(index)}
                                                                     icon={<FaTrash size={12} />}
-                                                                    className="!h-[46px] !w-[46px] !rounded-lg bg-red-50/50 hover:bg-red-50 flex items-center justify-center p-0"
+                                                                    className="!h-[32px] !w-[32px] !rounded-lg bg-red-50/50 hover:bg-red-50 flex items-center justify-center p-0"
                                                                 />
                                                             )}
                                                         </div>
                                                     ))}
-                                                    <Button
+                                                    <CustomButton
                                                         type="dashed"
                                                         onClick={() => push({ name: "", number: "" })}
                                                         icon={<FaPlus size={10} />}
-                                                        className="w-full !h-[36px] !rounded-lg !border-2 !border-dashed !border-slate-200 !text-slate-400 hover:!text-teal-600 hover:!border-teal-200 font-bold transition-all text-sm"
-                                                    >
-                                                        Add Another Contact
-                                                    </Button>
+                                                        className="w-full !h-[32px] !rounded-lg !border-2 !border-dashed !border-slate-200 !text-slate-400 hover:!text-teal-600 hover:!border-teal-200 font-medium transition-all text-xs"
+                                                        label="Add Another Contact"
+                                                    />
                                                 </div>
                                             )}
                                         </FieldArray>
@@ -222,14 +220,14 @@ function UpdatePlaceModal({ modal, setModal }) {
                                     <div className="modal-section !mb-0">
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Other Information</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                            <FormField label="Timings" name="timing" icon={<FaClock className="opacity-30" size={10} />} className="!h-[36px] !text-sm" />
-                                            <FormField label="Services" name="services" icon={<FaTools className="opacity-30" size={10} />} className="!h-[36px] !text-sm" />
+                                            <FormField label="Timings" name="timing" icon={<FaClock className="opacity-30" size={10} />} className="!h-[32px] !text-xs" />
+                                            <FormField label="Services" name="services" icon={<FaTools className="opacity-30" size={10} />} className="!h-[32px] !text-xs" />
                                         </div>
                                     </div>
                                 </>
                             )}
 
-                             <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

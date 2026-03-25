@@ -45,7 +45,7 @@ const CustomButton = ({
       loading={loading}
       disabled={disabled}
       className={cn(
-        "!h-[36px] !rounded-lg text-sm transition-all flex items-center justify-center gap-2 font-semibold",
+        "!h-[32px] !px-4 !rounded-lg text-xs transition-all flex items-center justify-center gap-2 font-medium",
         getVariantClasses(),
         className
       )}

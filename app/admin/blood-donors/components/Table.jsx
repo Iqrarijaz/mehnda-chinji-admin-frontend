@@ -13,9 +13,8 @@ import { getTagColor } from "@/utils/tagColor";
 import { Menu, Dropdown, Button, Switch, Table, Tag } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
-import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
-function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange }) {
+function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange, visibleColumns }) {
     const queryClient = useQueryClient();
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false,
@@ -27,8 +26,7 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange }) {
         cancelText: "Cancel"
     });
 
-    // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["name", "bloodGroup", "phone", "city", "available", "actions"]);
+
 
     const closeConfirmModal = () => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
@@ -106,13 +104,7 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange }) {
         </Menu>
     );
 
-    const columnOptions = [
-        { label: "Name", value: "name" },
-        { label: "Blood Group", value: "bloodGroup" },
-        { label: "Phone", value: "phone" },
-        { label: "City", value: "city" },
-        { label: "Availability", value: "available" },
-    ];
+
 
 
     const allColumns = [
@@ -188,14 +180,6 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange }) {
 
     return (
         <div className="space-y-4">
-            <div className="flex justify-end px-1">
-                <ColumnVisibilityDropdown
-                    visibleColumns={visibleColumns}
-                    setVisibleColumns={setVisibleColumns}
-                    options={columnOptions}
-                />
-            </div>
-
             <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
                 <Table
                     rowKey="_id"
