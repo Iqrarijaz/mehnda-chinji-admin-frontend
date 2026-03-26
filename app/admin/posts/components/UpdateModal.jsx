@@ -216,13 +216,13 @@ function UpdatePostModal({ modal, setModal }) {
                                     <div className="space-y-2">
                                         {values.type === "DEATH" && (
                                             <>
-                                            <>
-                                                <FormField label="Deceased Name" name="metadata.deceasedName" className="!h-[32px] !text-xs" />
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                    <FormField label="Date of Death" name="metadata.dateOfDeath" type="date" className="!h-[32px] !text-xs" />
-                                                    <FormField label="Relationship" name="metadata.relationship" className="!h-[32px] !text-xs" />
-                                                </div>
-                                            </>
+                                                <>
+                                                    <FormField label="Deceased Name" name="metadata.deceasedName" className="!h-[32px] !text-xs" />
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                        <FormField label="Date of Death" name="metadata.dateOfDeath" type="date" className="!h-[32px] !text-xs" />
+                                                        <FormField label="Relationship" name="metadata.relationship" className="!h-[32px] !text-xs" />
+                                                    </div>
+                                                </>
                                             </>
                                         )}
                                         {values.type === "ACCIDENT" && (
@@ -272,7 +272,7 @@ function UpdatePostModal({ modal, setModal }) {
                                 </div>
                             </div>
 
-                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

@@ -48,7 +48,8 @@ function UpdateDonorModal({ modal, setModal }) {
         phone: modal?.data?.phone || "",
         city: modal?.data?.city || "",
         village: modal?.data?.village || "",
-        available: modal?.data?.available ?? true
+        available: modal?.data?.available ?? true,
+        isDeleted: modal?.data?.isDeleted ?? false
     };
 
     const handleSubmit = (values) => {
@@ -127,9 +128,9 @@ function UpdateDonorModal({ modal, setModal }) {
                                             <FormField label="Primary City" name="city" placeholder="e.g. Lahore" required className="!h-[32px] !text-xs" icon={<FaMapMarkerAlt className="opacity-20" size={10} />} />
                                             <FormField label="Village / Local Area" name="village" placeholder="e.g. Model Town" className="!h-[32px] !text-xs" icon={<FaChevronRight className="opacity-20" size={10} />} />
 
-                                            <div className="md:col-span-2 p-2.5 bg-slate-50/50 rounded-lg border border-slate-100 flex items-center justify-between">
+                                            <div className="md:col-span-2 p-2.5 bg-slate-50/50 rounded border border-slate-100 flex items-center justify-between">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-7 h-7 rounded-md bg-teal-50 flex items-center justify-center text-teal-600">
+                                                    <div className="w-7 h-7 rounded bg-teal-50 flex items-center justify-center text-teal-600">
                                                         <FaHeartbeat size={12} />
                                                     </div>
                                                     <div>

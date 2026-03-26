@@ -73,43 +73,43 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
         }));
     };
 
-    const actionMenu = (record) => (
-        <Menu className="!rounded-xl !p-2 !min-w-[160px] shadow-xl border border-slate-100">
-            <Menu.Item
-                key="view"
-                icon={<EyeOutlined className="text-emerald-500" />}
-                onClick={() => setViewModal({ open: true, data: record })}
-                className="!rounded-lg hover:!bg-emerald-50"
-            >
-                <span className="font-medium">View Details</span>
-            </Menu.Item>
-            <Menu.Divider className="!my-1" />
-            <Menu.Item
-                key="reviewed"
-                icon={<SolutionOutlined className="text-[#006666]" />}
-                onClick={() => handleUpdateStatus(record, 'REVIEWED')}
-                className="!rounded-lg hover:!bg-blue-50"
-            >
-                <span className="font-medium">Mark Reviewed</span>
-            </Menu.Item>
-            <Menu.Item
-                key="resolved"
-                icon={<CheckCircleOutlined className="text-green-600" />}
-                onClick={() => handleUpdateStatus(record, 'RESOLVED')}
-                className="!rounded-lg hover:!bg-green-50"
-            >
-                <span className="font-medium">Mark Resolved</span>
-            </Menu.Item>
-            <Menu.Item
-                key="pending"
-                icon={<ClockCircleOutlined className="text-orange-500" />}
-                onClick={() => handleUpdateStatus(record, 'PENDING')}
-                className="!rounded-lg hover:!bg-orange-50"
-            >
-                <span className="font-medium">Mark Pending</span>
-            </Menu.Item>
-        </Menu>
-    );
+    const actionMenu = (record) => ({
+        items: [
+            {
+                key: "view",
+                label: <span className="font-medium">View Details</span>,
+                icon: <EyeOutlined className="text-emerald-500" />,
+                onClick: () => setViewModal({ open: true, data: record }),
+                className: "!rounded hover:!bg-emerald-50",
+            },
+            {
+                type: "divider",
+                className: "!my-1",
+            },
+            {
+                key: "reviewed",
+                label: <span className="font-medium">Mark Reviewed</span>,
+                icon: <SolutionOutlined className="text-[#006666]" />,
+                onClick: () => handleUpdateStatus(record, 'REVIEWED'),
+                className: "!rounded hover:!bg-blue-50",
+            },
+            {
+                key: "resolved",
+                label: <span className="font-medium">Mark Resolved</span>,
+                icon: <CheckCircleOutlined className="text-green-600" />,
+                onClick: () => handleUpdateStatus(record, 'RESOLVED'),
+                className: "!rounded hover:!bg-green-50",
+            },
+            {
+                key: "pending",
+                label: <span className="font-medium">Mark Pending</span>,
+                icon: <ClockCircleOutlined className="text-orange-500" />,
+                onClick: () => handleUpdateStatus(record, 'PENDING'),
+                className: "!rounded hover:!bg-orange-50",
+            },
+        ],
+        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100",
+    });
 
 
 
@@ -190,11 +190,11 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
             width: 50,
             align: "right",
             render: (record) => (
-                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+                <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
                         icon={<EllipsisOutlined className="text-lg rotate-90" />}
-                        className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
                     />
                 </Dropdown>
             ),

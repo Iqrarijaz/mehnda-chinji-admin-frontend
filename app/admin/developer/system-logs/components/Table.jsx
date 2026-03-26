@@ -33,18 +33,18 @@ function SystemLogsTable({ systemLogsList, onChange }) {
   }
 
   // Action menu configuration
-  const actionMenu = (record) => (
-    <Menu className="!rounded-xl !p-2 !min-w-[140px] shadow-xl border border-slate-100">
-      <Menu.Item
-        key="delete"
-        icon={<DeleteOutlined className="text-red-500" />}
-        onClick={() => setIsModalOpen({ name: "Delete", state: true, record })}
-        className="!rounded-lg hover:!bg-red-50"
-      >
-        <span className="font-medium text-red-600">Delete Log</span>
-      </Menu.Item>
-    </Menu>
-  );
+  const actionMenu = (record) => ({
+    items: [
+      {
+        key: "delete",
+        label: <span className="font-medium text-red-600">Delete Log</span>,
+        icon: <DeleteOutlined className="text-red-500" />,
+        onClick: () => setIsModalOpen({ name: "Delete", state: true, record }),
+        className: "!rounded hover:!bg-red-50",
+      },
+    ],
+    className: "!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100",
+  });
 
   const columnOptions = [
     { label: "Module Name", value: "moduleName" },
@@ -55,8 +55,8 @@ function SystemLogsTable({ systemLogsList, onChange }) {
     { label: "Created At", value: "createdAt" },
   ];
 
-  const visibilityMenu = (
-    <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
+  const visibilityDropdown = (
+    <div className="bg-white !rounded !p-3 shadow-xl border border-slate-100 min-w-[180px]">
       <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
         Toggle Columns
       </div>
@@ -66,14 +66,14 @@ function SystemLogsTable({ systemLogsList, onChange }) {
         className="flex flex-col gap-2"
       >
         {columnOptions.map(opt => (
-          <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
+          <div key={opt.value} className="hover:bg-slate-50 rounded py-1 px-2 transition-colors">
             <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
               {opt.label}
             </Checkbox>
-          </Menu.Item>
+          </div>
         ))}
       </Checkbox.Group>
-    </Menu>
+    </div>
   );
 
   // Table columns configuration
@@ -172,11 +172,11 @@ function SystemLogsTable({ systemLogsList, onChange }) {
       width: 60,
       align: "right",
       render: (record) => (
-        <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+        <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
           <Button
             type="text"
             icon={<MoreOutlined className="text-lg" />}
-            className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
+            className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
           />
         </Dropdown>
       ),
@@ -189,17 +189,17 @@ function SystemLogsTable({ systemLogsList, onChange }) {
   return (
     <div className="space-y-4">
       <div className="flex justify-end px-1">
-        <Dropdown overlay={visibilityMenu} trigger={['click']}>
+        <Dropdown dropdownRender={() => visibilityDropdown} trigger={['click']}>
           <Button
             icon={<SettingOutlined />}
-            className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
+            className="!rounded !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
           >
             Columns
           </Button>
         </Dropdown>
       </div>
 
-      <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+      <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
         <Table
           rowKey="_id"
           className="custom-ant-table"

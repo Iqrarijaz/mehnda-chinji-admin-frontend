@@ -11,6 +11,9 @@ import AddAppImagesModal from "./components/AddModal";
 import EditAppImagesModal from "./components/EditModal";
 import ViewAppImagesModal from "./components/ViewModal";
 import InnerPageCard from "@/components/layout/InnerPageCard";
+import StatCard from "@/components/shared/StatCard";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
+import { AppstoreOutlined } from "@ant-design/icons";
 
 export default function AppImagesPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -22,6 +25,16 @@ export default function AppImagesPage() {
         sortingKey: "_id",
         onChangeSearch: false,
     });
+
+    // Column Visibility State
+    const [visibleColumns, setVisibleColumns] = useState(["name", "key", "images", "createdAt", "actions"]);
+
+    const columnOptions = [
+        { label: "Name", value: "name" },
+        { label: "Key", value: "key" },
+        { label: "Images Count", value: "images" },
+        { label: "Created At", value: "createdAt" },
+    ];
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
     const appImagesList = useQuery({
@@ -38,16 +51,42 @@ export default function AppImagesPage() {
         <InnerPageCard title="App Images">
 
 
-            <div className="flex justify-end mb-3 gap-3 items-center">
-                <div className="flex flex-col md:flex-row gap-2">
-                    <SearchInput setFilters={setFilters} />
+            <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-start md:items-center">
+                {/* Status Count Cards (Left) */}
+                <div className="flex gap-2 items-center flex-wrap">
+                    <StatCard
+                        title="Total Image Sets"
+                        shortTitle="Sets"
+                        count={totalSets}
+                        color="#006666"
+                        bg="#f0fdfa"
+                        border="#ccfbf1"
+                        icon={<AppstoreOutlined />}
+                    />
                 </div>
-                <AddButton
-                    title="Add Image Set"
-                    icon={false}
-                    onClick={() => setModal({ name: "Add", data: null, state: true })}
-                    className="!h-[36px] !rounded-lg !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
-                />
+
+                {/* Filter, Search and Add Button (Right) */}
+                <div className="flex gap-2 items-center w-full md:w-auto justify-end">
+                    {/* Desktop Filters (Hidden on Mobile) */}
+                    <div className="hidden md:flex items-center gap-3 mr-1">
+                        <SearchInput setFilters={setFilters} />
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <ColumnVisibilityDropdown
+                            options={columnOptions}
+                            visibleColumns={visibleColumns}
+                            setVisibleColumns={setVisibleColumns}
+                        />
+
+                        <AddButton
+                            title="Add Image Set"
+                            icon={false}
+                            onClick={() => setModal({ name: "Add", data: null, state: true })}
+                            className="!h-[36px] !rounded !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                        />
+                    </div>
+                </div>
             </div>
 
             <div className="flex flex-col mb-4">
@@ -58,6 +97,7 @@ export default function AppImagesPage() {
                     filters={filters}
                     onChange={onChange}
                     setFilters={setFilters}
+                    visibleColumns={visibleColumns}
                 />
             </div>
 

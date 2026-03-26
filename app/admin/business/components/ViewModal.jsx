@@ -24,7 +24,7 @@ function ViewModal({ open, onCancel, data }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-teal-600">
                         <FaInfoCircle size={16} />
                     </div>
                     <div>
@@ -42,8 +42,8 @@ function ViewModal({ open, onCancel, data }) {
         >
             <div className="flex flex-col gap-4">
                 {/* Header Section */}
-                <div className="flex items-center gap-3 p-2 bg-slate-50/50 rounded-lg border border-slate-100">
-                    <div className="w-9 h-9 rounded-lg bg-teal-600 flex items-center justify-center text-white flex-shrink-0">
+                <div className="flex items-center gap-3 p-2 bg-slate-50/50 rounded border border-slate-100">
+                    <div className="w-9 h-9 rounded bg-teal-600 flex items-center justify-center text-white flex-shrink-0">
                         <FaStore size={16} />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -86,7 +86,7 @@ function ViewModal({ open, onCancel, data }) {
                 </Descriptions>
 
                 {/* Additional Info */}
-                <div className="p-2.5 bg-teal-50/50 rounded-lg border border-teal-100/30">
+                <div className="p-2.5 bg-teal-50/50 rounded border border-teal-100/30">
                     <h3 className="text-[9px] font-black text-teal-700 uppercase tracking-widest mb-2">Technical Registry</h3>
                     <div className="grid grid-cols-2 gap-3 text-[10px]">
                         <div>

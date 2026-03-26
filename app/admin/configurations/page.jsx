@@ -11,6 +11,9 @@ import ViewConfigurationModal from "./components/ViewModal";
 import { CONFIGURATIONS } from "@/app/api/admin/configurations";
 import { useDebounce } from "@/hooks/useDebounce";
 
+import InnerPageCard from "@/components/layout/InnerPageCard";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
+
 export default function ConfigurationsPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
     const [filters, setFilters] = useState({
@@ -23,6 +26,15 @@ export default function ConfigurationsPage() {
         onChangeSearch: false,
     });
 
+    // Column Visibility State
+    const [visibleColumns, setVisibleColumns] = useState(["type", "data", "isActive", "actions"]);
+
+    const columnOptions = [
+        { label: "Type", value: "type" },
+        { label: "Data (JSON)", value: "data" },
+        { label: "Status", value: "isActive" },
+    ];
+
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
     const configurationsList = useQuery({
         queryKey: ["configurationsList", JSON.stringify(debFilter)],
@@ -33,26 +45,46 @@ export default function ConfigurationsPage() {
     const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
 
     return (
-        <>
-            <div className="flex justify-end mb-3 gap-3 items-center">
-                <div className="flex flex-col md:flex-row gap-2">
-                    <SearchInput setFilters={setFilters} />
+        <InnerPageCard title="Configurations">
+            <div className="flex flex-col md:flex-row justify-end mb-3 gap-3 items-center">
+                {/* Action Bar (Right) */}
+                <div className="flex gap-2 items-center w-full md:w-auto justify-end">
+                    {/* Desktop Search (Hidden on Mobile) */}
+                    <div className="hidden md:block">
+                        <SearchInput setFilters={setFilters} />
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <ColumnVisibilityDropdown
+                            options={columnOptions}
+                            visibleColumns={visibleColumns}
+                            setVisibleColumns={setVisibleColumns}
+                        />
+
+                        <AddButton
+                            title="Add Config"
+                            icon={false}
+                            onClick={() => setModal({ name: "Add", data: null, state: true })}
+                            className="!h-[36px] !rounded !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                        />
+                    </div>
                 </div>
-                <AddButton
-                    title="Add Configuration"
-                    icon={false}
-                    onClick={() => setModal({ name: "Add", data: null, state: true })}
-                    className="!h-[36px] !rounded-lg !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
-                />
             </div>
 
             <div className="flex flex-col mb-4">
-                <ConfigurationsTable modal={modal} setModal={setModal} configurationsList={configurationsList} filters={filters} onChange={onChange} />
+                <ConfigurationsTable 
+                    modal={modal} 
+                    setModal={setModal} 
+                    configurationsList={configurationsList} 
+                    filters={filters} 
+                    onChange={onChange}
+                    visibleColumns={visibleColumns}
+                />
             </div>
 
             <AddConfigurationModal modal={modal} setModal={setModal} />
             <UpdateConfigurationModal modal={modal} setModal={setModal} />
             <ViewConfigurationModal modal={modal} setModal={setModal} />
-        </>
+        </InnerPageCard>
     );
 }

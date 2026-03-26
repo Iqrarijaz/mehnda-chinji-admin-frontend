@@ -32,10 +32,10 @@ export default function PlacesPage() {
         status: null,
     });
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-    
+
     // Column Visibility State
     const [visibleColumns, setVisibleColumns] = useState(["name", "category", "address", "contact", "status", "isActive", "createdAt", "actions"]);
-    
+
     const columnOptions = [
         { label: "Name", value: "name" },
         { label: "Category", value: "category" },
@@ -126,7 +126,7 @@ export default function PlacesPage() {
                         />
 
                         {/* Mobile Filter Toggle */}
-                        <button 
+                        <button
                             onClick={() => setIsFilterModalOpen(true)}
                             className="mobile-filter-btn md:hidden"
                             title="Filters"
@@ -145,11 +145,11 @@ export default function PlacesPage() {
             </div>
 
             <div className="flex flex-col mb-4">
-                <PlacesTable 
-                    modal={modal} 
-                    setModal={setModal} 
-                    placesList={placesList} 
-                    onChange={onChange} 
+                <PlacesTable
+                    modal={modal}
+                    setModal={setModal}
+                    placesList={placesList}
+                    onChange={onChange}
                     setFilters={setFilters}
                     visibleColumns={visibleColumns}
                 />
@@ -158,7 +158,7 @@ export default function PlacesPage() {
             <AddPlaceModal modal={modal} setModal={setModal} />
             <UpdatePlaceModal modal={modal} setModal={setModal} />
 
-            <FilterModal 
+            <FilterModal
                 open={isFilterModalOpen}
                 onCancel={() => setIsFilterModalOpen(false)}
                 filters={filters}

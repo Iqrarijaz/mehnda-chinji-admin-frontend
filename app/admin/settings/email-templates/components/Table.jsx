@@ -101,29 +101,31 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
     });
   };
 
-  const actionMenu = (record) => (
-    <Menu className="!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100">
-      <Menu.Item
-        key="edit"
-        icon={<EditOutlined className="text-[#006666]" />}
-        onClick={() => {
+  const actionMenu = (record) => ({
+    items: [
+      {
+        key: "edit",
+        label: <span className="font-medium">Edit Template</span>,
+        icon: <EditOutlined className="text-[#006666]" />,
+        onClick: () => {
           router.push(`${PATH_ROUTER?.EDIT_EMAIL_TEMPLATE}/${record._id}`);
-        }}
-        className="!rounded-lg hover:!bg-blue-50"
-      >
-        <span className="font-medium">Edit Template</span>
-      </Menu.Item>
-      <Menu.Divider className="!my-1" />
-      <Menu.Item
-        key="delete"
-        icon={<DeleteOutlined className="text-red-500" />}
-        onClick={() => handleDelete(record)}
-        className="!rounded-lg hover:!bg-red-50"
-      >
-        <span className="font-medium text-red-600">Delete Template</span>
-      </Menu.Item>
-    </Menu>
-  );
+        },
+        className: "!rounded hover:!bg-blue-50",
+      },
+      {
+        type: "divider",
+        className: "!my-1",
+      },
+      {
+        key: "delete",
+        label: <span className="font-medium text-red-600">Delete Template</span>,
+        icon: <DeleteOutlined className="text-red-500" />,
+        onClick: () => handleDelete(record),
+        className: "!rounded hover:!bg-red-50",
+      },
+    ],
+    className: "!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100",
+  });
 
   const columnOptions = [
     { label: "Template Name", value: "templateName" },
@@ -133,8 +135,23 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
     { label: "Created At", value: "createdAt" },
   ];
 
-  const visibilityMenu = (
-    <Menu className="!rounded !p-3 shadow-xl border border-slate-100 min-w-[180px]">
+  const visibilityMenu = {
+    items: columnOptions.map(opt => ({
+      key: opt.value,
+      label: (
+        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full" onClick={(e) => e.stopPropagation()}>
+          {opt.label}
+        </Checkbox>
+      ),
+      className: "!bg-transparent !cursor-default hover:!bg-slate-50 !rounded !py-1",
+    })),
+    // Wrap with Checkbox.Group logic using _menuWrapper if needed, but Antd 5 items are cleaner.
+    // However, since it's a Checkbox.Group, we might need to use dropdownRender.
+    // Let's try to keep the Checkbox.Group as a label item or use dropdownRender.
+  };
+
+  const visibilityDropdown = (
+    <div className="bg-white !rounded !p-3 shadow-xl border border-slate-100 min-w-[180px]">
       <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
         Toggle Columns
       </div>
@@ -144,14 +161,14 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
         className="flex flex-col gap-2"
       >
         {columnOptions.map(opt => (
-          <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
+          <div key={opt.value} className="hover:bg-slate-50 rounded py-1 px-2 transition-colors">
             <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
               {opt.label}
             </Checkbox>
-          </Menu.Item>
+          </div>
         ))}
       </Checkbox.Group>
-    </Menu>
+    </div>
   );
 
   const allColumns = [
@@ -224,7 +241,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       width: 60,
       align: "right",
       render: (record) => (
-        <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+        <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
           <Button
             type="text"
             icon={<MoreOutlined className="text-lg" />}
@@ -240,10 +257,10 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
   return (
     <div className="space-y-4">
       <div className="flex justify-end px-1">
-        <Dropdown overlay={visibilityMenu} trigger={['click']}>
+        <Dropdown dropdownRender={() => visibilityDropdown} trigger={['click']}>
           <Button
             icon={<SettingOutlined />}
-            className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
+            className="!rounded !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
           >
             Columns
           </Button>

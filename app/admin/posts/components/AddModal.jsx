@@ -42,7 +42,8 @@ const initialValues = {
         relationship: "",
         location: "",
         severity: "MEDIUM",
-    }
+    },
+    isDeleted: false,
 };
 
 function AddPostModal({ modal, setModal }) {
@@ -212,7 +213,7 @@ function AddPostModal({ modal, setModal }) {
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         rows={3}
-                                        className="!rounded-lg !border-2 !border-slate-100 focus:!border-teal-500 !p-2 !text-xs"
+                                        className="!rounded !border-2 !border-slate-100 focus:!border-teal-500 !p-2 !text-xs"
                                     />
                                     {touched.content && errors.content && (
                                         <div className="text-red-500 text-[10px] font-medium">{errors.content}</div>
@@ -260,7 +261,7 @@ function AddPostModal({ modal, setModal }) {
 
                             <div className="modal-section !mb-1">
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Media</p>
-                                <div className="bg-slate-50/50 rounded-lg p-2 border-2 border-slate-100 border-dashed">
+                                <div className="bg-slate-50/50 rounded p-2 border-2 border-slate-100 border-dashed">
                                     <Upload
                                         listType="picture-card"
                                         className="post-image-upload-compact scale-[0.85] origin-left"

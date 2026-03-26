@@ -13,17 +13,17 @@ import { useState } from "react";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
 const getTicketStatusColor = (status) => {
-    switch (status) {
-        case "open": return "orange";
-        case "in-progress": return "blue";
-        case "closed": return "green";
+    const s = status?.toUpperCase();
+    switch (s) {
+        case "OPEN": return "orange";
+        case "IN_PROGRESS": return "blue";
+        case "CLOSED": return "green";
         default: return "default";
     }
 };
 
-function SupportTable({ modal, setModal, ticketsList, onChange }) {
-    // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["ticketId", "userId", "subject", "status", "createdAt", "actions"]);
+function SupportTable({ modal, setModal, ticketsList, onChange, visibleColumns }) {
+
 
     const handleSorting = (pagination, filters, sorter) => {
         onChange({
@@ -34,51 +34,69 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
         });
     };
 
-    const actionMenu = (record) => (
-        <Menu className="!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100">
-            <Menu.Item
-                key="manage"
-                icon={<CommentOutlined className="text-emerald-500" />}
-                onClick={() => setModal({
+    const actionMenu = (record) => ({
+        items: [
+            {
+                key: "manage",
+                label: <span className="font-medium">View & Manage</span>,
+                icon: <CommentOutlined className="text-emerald-500" />,
+                onClick: () => setModal({
                     name: "Manage",
                     data: record,
                     state: true
-                })}
-                className="!rounded hover:!bg-emerald-50"
-            >
-                <span className="font-medium">View & Manage</span>
-            </Menu.Item>
-        </Menu>
-    );
+                }),
+                className: "!rounded hover:!bg-emerald-50",
+            },
+        ],
+        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100",
+    });
 
-    const columnOptions = [
-        { label: "Ticket ID", value: "ticketId" },
-        { label: "User", value: "userId" },
-        { label: "Subject", value: "subject" },
-        { label: "Status", value: "status" },
-        { label: "Created At", value: "createdAt" },
-    ];
+
 
 
     const allColumns = [
         {
-            title: "Ticket Details",
+            title: "Ticket ID",
+            dataIndex: "ticketId",
             key: "ticketId",
-            width: 300,
+            width: 120,
             sorter: true,
+            render: (text) => (
+                <span className="font-mono font-black text-[#006666] text-[10px] tracking-widest uppercase">#{text}</span>
+            ),
+        },
+        {
+            title: "Subject",
+            dataIndex: "subject",
+            key: "subject",
+            width: 200,
+            sorter: true,
+            render: (text) => (
+                <span className="font-bold text-slate-800 text-xs truncate block max-w-[150px]">{text}</span>
+            ),
+        },
+        {
+            title: "User",
+            key: "userId",
+            width: 180,
             render: (record) => (
                 <div className="flex flex-col min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                        <span className="font-mono font-black text-[#006666] text-[10px] tracking-widest">#{record.ticketId}</span>
-                        <span className="h-1 w-1 rounded-full bg-slate-300" />
-                        <span className="font-bold text-slate-800 text-xs truncate">{record.subject}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-slate-400 font-bold uppercase truncate">{record.userId?.name || "Unknown User"}</span>
-                        <span className="text-[10px] text-slate-300">•</span>
-                        <span className="text-[10px] text-slate-400 font-medium">{record.userId?.phoneNumber || "No Phone"}</span>
-                    </div>
+                    <span className="text-[10px] text-slate-800 font-bold uppercase truncate">{record.userId?.name || "Unknown User"}</span>
+                    <span className="text-[10px] text-slate-400 font-medium">{record.userId?.phoneNumber || "No Phone"}</span>
                 </div>
+            ),
+        },
+        {
+            title: "Description",
+            dataIndex: "description",
+            key: "description",
+            width: 250,
+            render: (text) => (
+                <Tooltip title={text}>
+                    <div className="text-slate-500 text-[11px] leading-relaxed truncate max-w-[200px]">
+                        {text || "No description provided"}
+                    </div>
+                </Tooltip>
             ),
         },
         {
@@ -86,15 +104,18 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
             dataIndex: "status",
             key: "status",
             align: "center",
-            width: 170,
+            width: 130,
             sorter: true,
-            render: (status) => {
-                const colors = { open: "orange", "in-progress": "blue", closed: "green" };
-                const dotColors = { open: "#f59e0b", "in-progress": "#3b82f6", closed: "#22c55e" };
+            render: (status = "") => {
+                const s = status.toUpperCase();
+                const colors = { OPEN: "orange", IN_PROGRESS: "blue", CLOSED: "green" };
+                const dotColors = { OPEN: "#f59e0b", IN_PROGRESS: "#3b82f6", CLOSED: "#22c55e" };
+                const labels = { OPEN: "OPEN", IN_PROGRESS: "IN PROGRESS", CLOSED: "CLOSED" };
+                const color = colors[s] || "slate";
                 return (
-                    <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-${colors[status] || 'slate'}-50 text-${colors[status] || 'slate'}-600 border border-${colors[status] || 'slate'}-100/50`}>
-                        <span className="h-1 w-1 rounded-full" style={{ backgroundColor: dotColors[status] || "#64748b" }} />
-                        <span className="text-[9px] font-bold uppercase tracking-wider">{status.replace("-", " ")}</span>
+                    <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-${color}-50 text-${color}-600 border border-${color}-100/50`}>
+                        <span className="h-1 w-1 rounded-full" style={{ backgroundColor: dotColors[s] || "#64748b" }} />
+                        <span className="text-[9px] font-bold uppercase tracking-wider">{labels[s] || s}</span>
                     </div>
                 );
             },
@@ -113,7 +134,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
             width: 50,
             align: "right",
             render: (record) => (
-                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+                <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
                         icon={<EllipsisOutlined className="text-lg rotate-90" />}
@@ -128,14 +149,6 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
 
     return (
         <div className="space-y-4">
-            <div className="flex justify-end px-1">
-                <ColumnVisibilityDropdown
-                    visibleColumns={visibleColumns}
-                    setVisibleColumns={setVisibleColumns}
-                    options={columnOptions}
-                />
-            </div>
-
             <div className="modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
                 <Table
                     rowKey="_id"

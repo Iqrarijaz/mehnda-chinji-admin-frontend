@@ -14,7 +14,7 @@ import ConfirmModal from "@/components/shared/ConfirmModal";
 import Loading from "@/animations/homePageLoader";
 import { DELETE_CONFIGURATION, UPDATE_CONFIGURATION } from "@/app/api/admin/configurations";
 
-function ConfigurationsTable({ modal, setModal, configurationsList, filters, onChange }) {
+function ConfigurationsTable({ modal, setModal, configurationsList, filters, onChange, visibleColumns }) {
     const queryClient = useQueryClient();
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false,
@@ -25,9 +25,6 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
         confirmText: "Confirm",
         cancelText: "Cancel"
     });
-
-    // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["type", "data", "isActive", "actions"]);
 
     const closeConfirmModal = () => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
@@ -83,70 +80,44 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
         });
     };
 
-    const actionMenu = (record) => (
-        <Menu className="!rounded-xl !p-2 !min-w-[150px] shadow-xl border border-slate-100">
-            <Menu.Item
-                key="view"
-                icon={<EyeOutlined className="text-emerald-500" />}
-                onClick={() => setModal({
+    const actionMenu = (record) => ({
+        items: [
+            {
+                key: "view",
+                label: <span className="font-medium">View Config</span>,
+                icon: <EyeOutlined className="text-emerald-500" />,
+                onClick: () => setModal({
                     name: "View",
                     data: record,
                     state: true
-                })}
-                className="!rounded-lg hover:!bg-emerald-50"
-            >
-                <span className="font-medium">View Config</span>
-            </Menu.Item>
-            <Menu.Item
-                key="edit"
-                icon={<EditOutlined className="text-[#006666]" />}
-                onClick={() => setModal({
+                }),
+                className: "!rounded hover:!bg-emerald-50",
+            },
+            {
+                key: "edit",
+                label: <span className="font-medium">Edit Config</span>,
+                icon: <EditOutlined className="text-[#006666]" />,
+                onClick: () => setModal({
                     name: "Update",
                     data: record,
                     state: true
-                })}
-                className="!rounded-lg hover:!bg-blue-50"
-            >
-                <span className="font-medium">Edit Config</span>
-            </Menu.Item>
-            <Menu.Divider className="!my-1" />
-            <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined className="text-red-500" />}
-                onClick={() => handleDelete(record)}
-                className="!rounded-lg hover:!bg-red-50"
-            >
-                <span className="font-medium text-red-600">Delete Config</span>
-            </Menu.Item>
-        </Menu>
-    );
-
-    const columnOptions = [
-        { label: "Type", value: "type" },
-        { label: "Data (JSON)", value: "data" },
-        { label: "Status", value: "isActive" },
-    ];
-
-    const visibilityMenu = (
-        <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
-            <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                Toggle Columns
-            </div>
-            <Checkbox.Group
-                value={visibleColumns}
-                onChange={setVisibleColumns}
-                className="flex flex-col gap-2"
-            >
-                {columnOptions.map(opt => (
-                    <Menu.Item key={opt.value} className="!bg-transparent !cursor-default hover:!bg-slate-50 !rounded-lg !py-1">
-                        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
-                            {opt.label}
-                        </Checkbox>
-                    </Menu.Item>
-                ))}
-            </Checkbox.Group>
-        </Menu>
-    );
+                }),
+                className: "!rounded hover:!bg-blue-50",
+            },
+            {
+                type: "divider",
+                className: "!my-1",
+            },
+            {
+                key: "delete",
+                label: <span className="font-medium text-red-600">Delete Config</span>,
+                icon: <DeleteOutlined className="text-red-500" />,
+                onClick: () => handleDelete(record),
+                className: "!rounded hover:!bg-red-50",
+            },
+        ],
+        className: "!rounded !p-2 !min-w-[150px] shadow-xl border border-slate-100",
+    });
 
     const allColumns = [
         {
@@ -193,11 +164,11 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
             width: 60,
             align: "right",
             render: (record) => (
-                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+                <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
                         icon={<MoreOutlined className="text-lg" />}
-                        className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
+                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
                     />
                 </Dropdown>
             ),
@@ -215,18 +186,7 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
 
     return (
         <div className="space-y-4">
-            <div className="flex justify-end px-1">
-                <Dropdown overlay={visibilityMenu} trigger={['click']}>
-                    <Button
-                        icon={<SettingOutlined />}
-                        className="!rounded-xl !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
-                    >
-                        Columns
-                    </Button>
-                </Dropdown>
-            </div>
-
-            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

@@ -47,3 +47,14 @@ export async function GET_REPORT_STATUS_COUNTS() {
         throw error;
     }
 }
+
+// Get pending reports for notifications
+export async function GET_REPORTS_NOTIFICATIONS_PENDING() {
+    try {
+        const response = await Axios.get("/api/admin/reports/notifications/pending");
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching pending reports:", error);
+        throw error;
+    }
+}

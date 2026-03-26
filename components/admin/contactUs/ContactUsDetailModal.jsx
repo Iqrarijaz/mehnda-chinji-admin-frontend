@@ -43,11 +43,11 @@ function ContactUsDetailModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded bg-blue-50 flex items-center justify-center text-blue-600">
+                    <div className="w-10 h-10 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
                         <InfoCircleOutlined className="text-xl" />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-slate-900 block">Contact Request Details</span>
+                        <span className="text-lg font-bold text-[#006666] block">Contact Request Details</span>
                         <div className="flex items-center gap-1.5 mt-0.5">
                             <span className="font-mono font-black text-[#006666] text-[10px] tracking-wider bg-[#006666]/5 px-2 py-0.5 rounded border border-[#006666]/10">#{contact?.requestId}</span>
                             <span className="text-[11px] text-slate-400 font-normal italic">reviewing user message</span>

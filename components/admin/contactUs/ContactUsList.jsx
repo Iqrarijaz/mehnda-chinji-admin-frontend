@@ -8,8 +8,6 @@ import {
 import { timestampToDate } from "@/utils/date";
 import { Table, Dropdown, Menu, Button, Tag } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
-import { useState } from "react";
-import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
 const getStatusColor = (status) => {
     switch (status) {
@@ -29,8 +27,7 @@ const getStatusDotColor = (status) => {
     }
 };
 
-function ContactUsList({ modal, setModal, contactList, onChange, onDelete, onUpdateStatus }) {
-    const [visibleColumns, setVisibleColumns] = useState(["name", "email", "source", "status", "createdAt", "actions"]);
+function ContactUsList({ modal, setModal, contactList, onChange, onDelete, onUpdateStatus, visibleColumns }) {
 
     const handleSorting = (pagination, filters, sorter) => {
         onChange({
@@ -42,48 +39,44 @@ function ContactUsList({ modal, setModal, contactList, onChange, onDelete, onUpd
         });
     };
 
-    const actionMenu = (record) => (
-        <Menu className="!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100">
-            <Menu.Item
-                key="view"
-                icon={<EyeOutlined className="text-blue-500" />}
-                onClick={() => setModal({
+    const actionMenu = (record) => ({
+        items: [
+            {
+                key: "view",
+                label: <span className="font-medium">View Details</span>,
+                icon: <EyeOutlined className="text-blue-500" />,
+                onClick: () => setModal({
                     name: "ViewDetails",
                     data: record,
                     state: true
-                })}
-                className="!rounded hover:!bg-blue-50"
-            >
-                <span className="font-medium">View Details</span>
-            </Menu.Item>
-            <Menu.Item
-                key="resolve"
-                icon={<CheckCircleOutlined className="text-green-500" />}
-                onClick={() => onUpdateStatus(record._id, "RESOLVED")}
-                className="!rounded-lg hover:!bg-green-50"
-                disabled={record.status === "RESOLVED"}
-            >
-                <span className="font-medium">Mark as Resolved</span>
-            </Menu.Item>
-            <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined className="text-rose-500" />}
-                onClick={() => onDelete(record._id)}
-                className="!rounded-lg hover:!bg-rose-50"
-                danger
-            >
-                <span className="font-medium">Delete Request</span>
-            </Menu.Item>
-        </Menu>
-    );
+                }),
+                className: "!rounded hover:!bg-blue-50",
+            },
+            {
+                key: "resolve",
+                label: <span className="font-medium">Mark as Resolved</span>,
+                icon: <CheckCircleOutlined className="text-green-500" />,
+                onClick: () => onUpdateStatus(record._id, "RESOLVED"),
+                className: "!rounded hover:!bg-green-50",
+                disabled: record.status === "RESOLVED",
+            },
+            {
+                type: "divider",
+                className: "!my-1",
+            },
+            {
+                key: "delete",
+                label: <span className="font-medium">Delete Request</span>,
+                icon: <DeleteOutlined className="text-rose-500" />,
+                onClick: () => onDelete(record._id),
+                className: "!rounded hover:!bg-rose-50",
+                danger: true,
+            },
+        ],
+        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100",
+    });
 
-    const columnOptions = [
-        { label: "Name", value: "name" },
-        { label: "Email", value: "email" },
-        { label: "Source", value: "source" },
-        { label: "Status", value: "status" },
-        { label: "Created At", value: "createdAt" },
-    ];
+
 
     const allColumns = [
         {
@@ -141,7 +134,7 @@ function ContactUsList({ modal, setModal, contactList, onChange, onDelete, onUpd
             width: 50,
             align: "right",
             render: (record) => (
-                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+                <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
                         icon={<EllipsisOutlined className="text-lg rotate-90" />}
@@ -156,14 +149,6 @@ function ContactUsList({ modal, setModal, contactList, onChange, onDelete, onUpd
 
     return (
         <div className="space-y-4">
-            <div className="flex justify-end px-1">
-                <ColumnVisibilityDropdown
-                    visibleColumns={visibleColumns}
-                    setVisibleColumns={setVisibleColumns}
-                    options={columnOptions}
-                />
-            </div>
-
             <div className="modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
                 <Table
                     rowKey="_id"

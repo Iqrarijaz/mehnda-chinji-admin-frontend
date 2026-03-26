@@ -106,39 +106,40 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
         }));
     };
 
-    const actionMenu = (record) => (
-        <Menu className="!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100">
-            <Menu.Item
-                key="view"
-                icon={<EyeOutlined className="text-emerald-500" />}
-                onClick={() => setViewModal({ open: true, data: record })}
-                className="!rounded-lg hover:!bg-emerald-50"
-            >
-                <span className="font-medium">View Post</span>
-            </Menu.Item>
-            <Menu.Item
-                key="edit"
-                icon={<EditOutlined className="text-[#006666]" />}
-                onClick={() => setModal({
+    const actionMenu = (record) => ({
+        items: [
+            {
+                key: "view",
+                label: <span className="font-medium">View Post</span>,
+                icon: <EyeOutlined className="text-emerald-500" />,
+                onClick: () => setViewModal({ open: true, data: record }),
+                className: "!rounded hover:!bg-emerald-50",
+            },
+            {
+                key: "edit",
+                label: <span className="font-medium">Edit Post</span>,
+                icon: <EditOutlined className="text-[#006666]" />,
+                onClick: () => setModal({
                     name: "Update",
                     data: record,
                     state: true
-                })}
-                className="!rounded-lg hover:!bg-blue-50"
-            >
-                <span className="font-medium">Edit Post</span>
-            </Menu.Item>
-            <Menu.Divider className="!my-1" />
-            <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined className="text-red-500" />}
-                onClick={() => handleDelete(record)}
-                className="!rounded hover:!bg-red-50"
-            >
-                <span className="font-medium text-red-600">Delete Post</span>
-            </Menu.Item>
-        </Menu>
-    );
+                }),
+                className: "!rounded hover:!bg-blue-50",
+            },
+            {
+                type: "divider",
+                className: "!my-1",
+            },
+            {
+                key: "delete",
+                label: <span className="font-medium text-red-600">Delete Post</span>,
+                icon: <DeleteOutlined className="text-red-500" />,
+                onClick: () => handleDelete(record),
+                className: "!rounded hover:!bg-red-50",
+            },
+        ],
+        className: "!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100",
+    });
 
 
 
@@ -185,7 +186,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
                     type="text"
                     icon={<LikeOutlined className="text-[#006666] !text-xs" />}
                     onClick={() => setLikesModal({ open: true, postId: record._id })}
-                    className="!rounded-lg hover:!bg-blue-50 !h-7 font-bold text-slate-600 !text-xs !flex items-center gap-1"
+                    className="!rounded hover:!bg-blue-50 !h-7 font-bold text-slate-600 !text-xs !flex items-center gap-1"
                 >
                     {count || 0}
                 </Button>
@@ -203,7 +204,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
                     type="text"
                     icon={<MessageOutlined className="text-emerald-500 !text-xs" />}
                     onClick={() => setCommentsModal({ open: true, postId: record._id })}
-                    className="!rounded-lg hover:!bg-emerald-50 !h-7 font-bold text-slate-600 !text-xs !flex items-center gap-1"
+                    className="!rounded hover:!bg-emerald-50 !h-7 font-bold text-slate-600 !text-xs !flex items-center gap-1"
                 >
                     {count || 0}
                 </Button>
@@ -239,11 +240,11 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
       width: 50,
       align: "right",
       render: (record) => (
-        <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+        <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
           <Button
             type="text"
             icon={<EllipsisOutlined className="text-lg rotate-90" />}
-            className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+            className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
           />
         </Dropdown>
       ),

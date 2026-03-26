@@ -62,7 +62,7 @@ function CommentsModal({ isOpen, onClose, postId }) {
                             <FormSkeleton fields={5} />
                         </div>
                     ) : error ? (
-                        <div className="py-20 text-center text-red-500 bg-red-50 rounded-2xl border border-red-100 p-8">
+                        <div className="py-20 text-center text-red-500 bg-red-50 rounded border border-red-100 p-8">
                             <FaCommentDots size={40} className="mx-auto mb-4 opacity-20" />
                             <p className="font-bold">Failed to load comments</p>
                             <span className="text-xs opacity-70">There was an issue fetching the comment list.</span>
@@ -82,7 +82,7 @@ function CommentsModal({ isOpen, onClose, postId }) {
                             }}
                             renderItem={(item) => (
                                 <List.Item
-                                    className="group hover:bg-slate-50/50 p-2.5 rounded-lg transition-all duration-200 border-none mb-1"
+                                    className="group hover:bg-slate-50/50 p-2.5 rounded transition-all duration-200 border-none mb-1"
                                     actions={[
                                         <Popconfirm
                                             key="delete"
@@ -91,15 +91,15 @@ function CommentsModal({ isOpen, onClose, postId }) {
                                             onConfirm={() => deleteMutation.mutate(item._id)}
                                             okText="Delete"
                                             cancelText="Keep"
-                                            okButtonProps={{ danger: true, loading: deleteMutation.isLoading, className: "!rounded-lg" }}
-                                            cancelButtonProps={{ className: "!rounded-lg" }}
+                                            okButtonProps={{ danger: true, loading: deleteMutation.isLoading, className: "!rounded" }}
+                                            cancelButtonProps={{ className: "!rounded" }}
                                         >
                                             <Tooltip title="Delete Comment">
                                                 <Button
                                                     type="text"
                                                     danger
                                                     icon={<FaTrash size={12} />}
-                                                    className="opacity-0 group-hover:opacity-100 transition-opacity bg-white hover:bg-red-50 border border-slate-100 shadow-sm !rounded-md !w-8 !h-8 flex items-center justify-center p-0"
+                                                    className="opacity-0 group-hover:opacity-100 transition-opacity bg-white hover:bg-red-50 border border-slate-100 shadow-sm !rounded !w-8 !h-8 flex items-center justify-center p-0"
                                                 />
                                             </Tooltip>
                                         </Popconfirm>
@@ -126,7 +126,7 @@ function CommentsModal({ isOpen, onClose, postId }) {
                                             </div>
                                         }
                                         description={
-                                            <div className="mt-1 text-slate-600 text-xs leading-relaxed whitespace-pre-wrap bg-white/50 p-2 rounded-lg border border-slate-100/50 italic">
+                                            <div className="mt-1 text-slate-600 text-xs leading-relaxed whitespace-pre-wrap bg-white/50 p-2 rounded border border-slate-100/50 italic">
                                                 "{item.text}"
                                             </div>
                                         }

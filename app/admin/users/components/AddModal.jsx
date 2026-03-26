@@ -110,16 +110,16 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="flex flex-col gap-1.5 overflow-hidden">
                                                 <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Role <span className="text-red-500">*</span></label>
-                                                    <SelectBox
-                                                        value={values.role}
-                                                        handleChange={(val) => setFieldValue("role", val)}
-                                                        options={[
-                                                            { value: "USER", label: "USER" },
-                                                            { value: "ADMIN", label: "ADMIN" },
-                                                            { value: "SUPER_ADMIN", label: "SUPER_ADMIN" }
-                                                        ]}
-                                                        className="modern-select-box"
-                                                    />
+                                                <SelectBox
+                                                    value={values.role}
+                                                    handleChange={(val) => setFieldValue("role", val)}
+                                                    options={[
+                                                        { value: "USER", label: "USER" },
+                                                        { value: "ADMIN", label: "ADMIN" },
+                                                        { value: "SUPER_ADMIN", label: "SUPER_ADMIN" }
+                                                    ]}
+                                                    className="modern-select-box"
+                                                />
                                                 {errors.role && touched.role && <span className="text-red-500 text-[10px] font-medium ml-1">{errors.role}</span>}
                                             </div>
 
@@ -146,7 +146,7 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
                                 </>
                             )}
 
-                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

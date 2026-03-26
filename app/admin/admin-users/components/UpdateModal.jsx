@@ -130,7 +130,7 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
                                                         value={values.password}
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
-                                                        className="!pl-9 !h-[32px] !rounded-lg !border-2 !border-slate-100 focus:!border-teal-500 !text-xs"
+                                                        className="!pl-9 !h-[32px] !rounded !border-2 !border-slate-100 focus:!border-teal-500 !text-xs"
                                                     />
                                                 </div>
                                                 {touched.password && errors.password && <div className="text-red-500 text-[10px] font-medium">{errors.password}</div>}

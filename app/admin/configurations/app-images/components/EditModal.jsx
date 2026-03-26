@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { FaImages, FaPlus, FaTimes } from "react-icons/fa";
 import { UPDATE_APP_IMAGES } from "@/app/api/admin/app-images";
+import { Formik } from "formik";
 import SelectBox from "@/components/SelectBox";
 import CustomButton from "@/components/shared/CustomButton";
 
@@ -102,7 +103,8 @@ function EditAppImagesModal({ modal, setModal }) {
             footer={null}
             centered
             width={600}
-            >
+            className="modern-modal"
+        >
             <div className="p-1">
                 <div className="space-y-4">
                     <div className="modal-section space-y-3">
@@ -115,7 +117,7 @@ function EditAppImagesModal({ modal, setModal }) {
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     placeholder="e.g. Home Banner"
-                                    className="!h-[32px] !text-xs !rounded-lg !border-slate-200 focus:!border-teal-500"
+                                    className="!h-[32px] !text-xs !rounded !border-slate-200 focus:!border-[#006666]"
                                 />
                                 {errors.name && <span className="text-red-500 text-[10px] font-medium ml-1">{errors.name}</span>}
                             </div>
@@ -127,7 +129,7 @@ function EditAppImagesModal({ modal, setModal }) {
                                     value={key}
                                     onChange={(e) => setKey(e.target.value.toUpperCase())}
                                     placeholder="ID_KEY"
-                                    className="!h-[32px] !text-xs !rounded-lg !border-slate-200 focus:!border-teal-500 font-mono"
+                                    className="!h-[32px] !text-xs !rounded !border-slate-200 focus:!border-[#006666] font-mono"
                                 />
                                 {errors.key && <span className="text-red-500 text-[10px] font-medium ml-1">{errors.key}</span>}
                             </div>
@@ -142,7 +144,7 @@ function EditAppImagesModal({ modal, setModal }) {
                                 <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight pl-1">Current Images</label>
                                 <div className="grid grid-cols-5 gap-2">
                                     {existingImages.map((url, idx) => (
-                                        <div key={idx} className="relative group rounded-md overflow-hidden border border-slate-100 aspect-video bg-slate-50">
+                                        <div key={idx} className="relative group rounded overflow-hidden border border-slate-100 aspect-video bg-slate-50">
                                             <img src={url} alt="" className="w-full h-full object-cover" />
                                             <button
                                                 type="button"
@@ -164,10 +166,10 @@ function EditAppImagesModal({ modal, setModal }) {
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={handleDrop}
                                 onClick={() => fileInputRef.current?.click()}
-                                className="border border-dashed border-slate-200 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:border-teal-400 hover:bg-teal-50/20 transition-all text-center group"
+                                className="border border-dashed border-slate-200 rounded p-4 flex flex-col items-center justify-center cursor-pointer hover:border-[#006666] hover:bg-teal-50/20 transition-all text-center group"
                             >
-                                <FaImages size={16} className="text-slate-300 group-hover:text-teal-400 mb-1" />
-                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Drop or <span className="text-teal-600">browse</span> images</p>
+                                <FaImages size={16} className="text-slate-300 group-hover:text-[#006666] mb-1" />
+                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Drop or <span className="text-[#006666]">browse</span> images</p>
                                 <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handleFileChange} className="hidden" />
                             </div>
                             {errors.images && <span className="text-red-500 text-[10px] font-medium ml-1">{errors.images}</span>}
@@ -176,7 +178,7 @@ function EditAppImagesModal({ modal, setModal }) {
                             {newFiles.length > 0 && (
                                 <div className="grid grid-cols-5 gap-2 mt-2">
                                     {newFiles.map((item, idx) => (
-                                        <div key={idx} className="relative group rounded-md overflow-hidden border border-emerald-100 aspect-video bg-slate-50">
+                                        <div key={idx} className="relative group rounded overflow-hidden border border-emerald-100 aspect-video bg-slate-50">
                                             <img src={item.preview} alt="" className="w-full h-full object-cover" />
                                             <button
                                                 type="button"
@@ -190,7 +192,7 @@ function EditAppImagesModal({ modal, setModal }) {
                                     ))}
                                     <div
                                         onClick={() => fileInputRef.current?.click()}
-                                        className="aspect-video border border-dashed border-slate-200 rounded-md flex items-center justify-center cursor-pointer hover:border-teal-400 hover:bg-teal-50/20 transition-all text-slate-300 hover:text-teal-500"
+                                        className="aspect-video border border-dashed border-slate-200 rounded flex items-center justify-center cursor-pointer hover:border-[#006666] hover:bg-teal-50/20 transition-all text-slate-300 hover:text-[#006666]"
                                     >
                                         <FaPlus size={10} />
                                     </div>

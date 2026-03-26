@@ -70,43 +70,41 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
         setConfirmModal({ state: false, onConfirm: null, title: "", content: "" });
     }, []);
 
-    const actionMenu = React.useMemo(() => (record) => (
-        <Menu className="!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100">
-            <Menu.Item
-                key="edit"
-                icon={<EditOutlined className="text-[#006666]" />}
-                onClick={() => setModal({ name: "Update", data: record, state: true })}
-                className="!rounded hover:!bg-blue-50"
-            >
-                <span className="font-medium">Edit Details</span>
-            </Menu.Item>
-
-            <Menu.Item
-                key="reset"
-                icon={<LockOutlined className="text-orange-500" />}
-                onClick={() => setModal({ name: "ResetPassword", data: record, state: true })}
-                className="!rounded hover:!bg-orange-50"
-            >
-                <span className="font-medium">Reset Password</span>
-            </Menu.Item>
-
-            <Menu.Divider className="!my-1" />
-
-            <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined className="text-red-500" />}
-                onClick={() => setConfirmModal({
+    const actionMenu = React.useMemo(() => (record) => ({
+        items: [
+            {
+                key: "edit",
+                label: <span className="font-medium">Edit Details</span>,
+                icon: <EditOutlined className="text-[#006666]" />,
+                onClick: () => setModal({ name: "Update", data: record, state: true }),
+                className: "!rounded hover:!bg-blue-50",
+            },
+            {
+                key: "reset",
+                label: <span className="font-medium">Reset Password</span>,
+                icon: <LockOutlined className="text-orange-500" />,
+                onClick: () => setModal({ name: "ResetPassword", data: record, state: true }),
+                className: "!rounded hover:!bg-orange-50",
+            },
+            {
+                type: "divider",
+                className: "!my-1",
+            },
+            {
+                key: "delete",
+                label: <span className="font-medium text-red-600">Delete User</span>,
+                icon: <DeleteOutlined className="text-red-500" />,
+                onClick: () => setConfirmModal({
                     state: true,
                     title: "Delete User",
                     content: `Are you sure you want to delete ${record.name}? This action cannot be undone.`,
                     onConfirm: () => handleDelete.mutate(record._id)
-                })}
-                className="!rounded hover:!bg-red-50"
-            >
-                <span className="font-medium text-red-600">Delete User</span>
-            </Menu.Item>
-        </Menu>
-    ), [setModal, handleDelete]);
+                }),
+                className: "!rounded hover:!bg-red-50",
+            },
+        ],
+        className: "!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100",
+    }), [setModal, handleDelete]);
 
 
 
@@ -216,7 +214,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             align: "right",
             width: 70,
             render: (_, record) => (
-                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+                <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
                         icon={<EllipsisOutlined className="text-lg rotate-90" />}

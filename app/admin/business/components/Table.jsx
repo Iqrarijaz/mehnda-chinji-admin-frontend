@@ -102,62 +102,59 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
         });
     };
 
-    const actionMenu = (record) => (
-        <Menu className="!rounded !p-2 !min-w-[150px] shadow-xl border border-slate-100">
-            <Menu.Item
-                key="view"
-                icon={<EyeOutlined className="text-[#006666]" />}
-                onClick={() => setViewModal({ state: true, data: record })}
-                className="!rounded hover:!bg-teal-50"
-            >
-                <span className="font-medium">View Details</span>
-            </Menu.Item>
+    const actionMenu = (record) => {
+        const items = [
+            {
+                key: "view",
+                label: <span className="font-medium">View Details</span>,
+                icon: <EyeOutlined className="text-[#006666]" />,
+                onClick: () => setViewModal({ state: true, data: record }),
+                className: "!rounded hover:!bg-teal-50",
+            },
+            {
+                key: "edit",
+                label: <span className="font-medium">Edit Business</span>,
+                icon: <EditOutlined className="text-[#006666]" />,
+                onClick: () => setModal({ name: "Update", data: record, state: true }),
+                className: "!rounded hover:!bg-blue-50",
+            },
+        ];
 
-            <Menu.Item
-                key="edit"
-                icon={<EditOutlined className="text-[#006666]" />}
-                onClick={() => setModal({ name: "Update", data: record, state: true })}
-                className="!rounded hover:!bg-blue-50"
-            >
-                <span className="font-medium">Edit Business</span>
-            </Menu.Item>
+        if (record.status === "PENDING" || record.status === "REJECTED") {
+            items.push({
+                key: "approve",
+                label: <span className="font-medium">Approve</span>,
+                icon: <CheckOutlined className="text-green-500" />,
+                onClick: () => handleStatusChange(record, "APPROVED"),
+                className: "!rounded hover:!bg-green-50",
+            });
+        }
 
-            {/* Approve: show when PENDING or REJECTED */}
-            {(record.status === "PENDING" || record.status === "REJECTED") && (
-                <Menu.Item
-                    key="approve"
-                    icon={<CheckOutlined className="text-green-500" />}
-                    onClick={() => handleStatusChange(record, "APPROVED")}
-                    className="!rounded hover:!bg-green-50"
-                >
-                    <span className="font-medium">Approve</span>
-                </Menu.Item>
-            )}
+        if (record.status === "PENDING" || record.status === "APPROVED") {
+            items.push({
+                key: "reject",
+                label: <span className="font-medium text-orange-600">Reject</span>,
+                icon: <CloseOutlined className="text-orange-500" />,
+                onClick: () => handleStatusChange(record, "REJECTED"),
+                className: "!rounded hover:!bg-orange-50",
+            });
+        }
 
-            {/* Reject: show when PENDING or APPROVED */}
-            {(record.status === "PENDING" || record.status === "APPROVED") && (
-                <Menu.Item
-                    key="reject"
-                    icon={<CloseOutlined className="text-orange-500" />}
-                    onClick={() => handleStatusChange(record, "REJECTED")}
-                    className="!rounded hover:!bg-orange-50"
-                >
-                    <span className="font-medium text-orange-600">Reject</span>
-                </Menu.Item>
-            )}
+        items.push({ type: "divider", className: "!my-1" });
 
-            <Menu.Divider className="!my-1" />
+        items.push({
+            key: "delete",
+            label: <span className="font-medium text-red-600">Delete Business</span>,
+            icon: <DeleteOutlined className="text-red-500" />,
+            onClick: () => handleDelete(record),
+            className: "!rounded hover:!bg-red-50",
+        });
 
-            <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined className="text-red-500" />}
-                onClick={() => handleDelete(record)}
-                className="!rounded hover:!bg-red-50"
-            >
-                <span className="font-medium text-red-600">Delete Business</span>
-            </Menu.Item>
-        </Menu>
-    );
+        return {
+            items,
+            className: "!rounded !p-2 !min-w-[150px] shadow-xl border border-slate-100",
+        };
+    };
 
 
 
@@ -239,7 +236,7 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
             width: 50,
             align: "right",
             render: (record) => (
-                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+                <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
                         icon={<EllipsisOutlined className="text-lg rotate-90" />}

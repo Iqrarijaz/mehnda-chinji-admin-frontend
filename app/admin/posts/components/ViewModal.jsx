@@ -49,7 +49,7 @@ function ViewModal({ viewModal, setViewModal }) {
                     <div className="space-y-1">
                         <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Severity</span>
                         <div>
-                            <Tag color={metadata.severity === "HIGH" ? "red" : metadata.severity === "MEDIUM" ? "orange" : "green"} className="rounded-md px-3">
+                            <Tag color={metadata.severity === "HIGH" ? "red" : metadata.severity === "MEDIUM" ? "orange" : "green"} className="rounded px-3">
                                 {metadata.severity}
                             </Tag>
                         </div>
@@ -108,10 +108,10 @@ function ViewModal({ viewModal, setViewModal }) {
                                 </div>
                             </div>
                             <div className="flex gap-1.5">
-                                <Tag color={getTagColor(data.type)} className="rounded-md px-2 border-none font-bold text-[8px] uppercase tracking-wider !mr-0">
+                                <Tag color={getTagColor(data.type)} className="rounded px-2 border-none font-bold text-[8px] uppercase tracking-wider !mr-0">
                                     {data.type}
                                 </Tag>
-                                <Tag color={data.status === "ACTIVE" ? "success" : "error"} className="rounded-md px-2 border-none font-bold text-[8px] uppercase tracking-wider !mr-0">
+                                <Tag color={data.status === "ACTIVE" ? "success" : "error"} className="rounded px-2 border-none font-bold text-[8px] uppercase tracking-wider !mr-0">
                                     {data.status}
                                 </Tag>
                             </div>
@@ -130,7 +130,7 @@ function ViewModal({ viewModal, setViewModal }) {
                                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Attached Media</span>
                                 <div className="grid grid-cols-4 gap-2">
                                     {data.images.map((img, index) => (
-                                        <div key={index} className="aspect-square rounded-lg overflow-hidden border border-slate-100 shadow-sm group relative">
+                                        <div key={index} className="aspect-square rounded overflow-hidden border border-slate-100 shadow-sm group relative">
                                             <img
                                                 src={img}
                                                 alt={`Post image ${index + 1}`}
@@ -150,18 +150,18 @@ function ViewModal({ viewModal, setViewModal }) {
 
                         {/* Statistics Grid */}
                         <div className="grid grid-cols-2 gap-2">
-                            <div className="p-2.5 bg-teal-50/50 rounded-lg border border-teal-100/30 flex items-center justify-between">
+                            <div className="p-2.5 bg-teal-50/50 rounded border border-teal-100/30 flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-7 h-7 rounded-md bg-white flex items-center justify-center text-teal-600 shadow-sm">
+                                    <div className="w-7 h-7 rounded bg-white flex items-center justify-center text-teal-600 shadow-sm">
                                         <FaHeart size={12} />
                                     </div>
                                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-tight">Likes</span>
                                 </div>
                                 <span className="text-lg font-black text-teal-700 tracking-tight">{data.likesCount || 0}</span>
                             </div>
-                            <div className="p-2.5 bg-blue-50/50 rounded-lg border border-blue-100/30 flex items-center justify-between">
+                            <div className="p-2.5 bg-blue-50/50 rounded border border-blue-100/30 flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-7 h-7 rounded-md bg-white flex items-center justify-center text-[#006666] shadow-sm">
+                                    <div className="w-7 h-7 rounded bg-white flex items-center justify-center text-[#006666] shadow-sm">
                                         <FaCommentAlt size={12} />
                                     </div>
                                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-tight">Comments</span>

@@ -174,7 +174,7 @@ function UpdatePlaceModal({ modal, setModal }) {
                                                 <div className="space-y-2">
                                                     {values.contact.map((_, index) => (
                                                         <div key={index} className="flex gap-2 items-start">
-                                                            <div className="flex-1 bg-slate-50 p-1 rounded-md flex gap-2 border border-slate-100">
+                                                            <div className="flex-1 bg-slate-50 p-1 rounded flex gap-2 border border-slate-100">
                                                                 <div className="flex-1">
                                                                     <Input
                                                                         value={values.contact[index].name}
@@ -199,7 +199,7 @@ function UpdatePlaceModal({ modal, setModal }) {
                                                                     danger
                                                                     onClick={() => remove(index)}
                                                                     icon={<FaTrash size={10} />}
-                                                                    className="!h-[30px] !w-[30px] !rounded-md flex items-center justify-center p-0"
+                                                                    className="!h-[30px] !w-[30px] !rounded flex items-center justify-center p-0"
                                                                 />
                                                             )}
                                                         </div>
@@ -208,7 +208,7 @@ function UpdatePlaceModal({ modal, setModal }) {
                                                         type="secondary"
                                                         onClick={() => push({ name: "", number: "" })}
                                                         icon={<FaPlus size={10} />}
-                                                        className="w-full !h-[30px] !rounded-md font-bold text-[10px] uppercase tracking-tight"
+                                                        className="w-full !h-[30px] !rounded font-bold text-[10px] uppercase tracking-tight"
                                                         label="Add More Contact"
                                                     />
                                                 </div>

@@ -107,7 +107,7 @@ const AddEditRoleModal = ({ modal, setModal }) => {
 
                         <div className="space-y-1">
                             <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Access Permissions</label>
-                            <div className="bg-slate-50/50 p-2 rounded-lg border border-slate-100 mt-1">
+                            <div className="bg-slate-50/50 p-2 rounded border border-slate-100 mt-1">
                                 <PermissionsSelector
                                     selectedPermissions={values.permissions}
                                     onChange={(newPermissions) => setFieldValue("permissions", newPermissions)}

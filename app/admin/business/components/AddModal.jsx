@@ -107,7 +107,7 @@ function AddBusinessModal({ modal, setModal }) {
                                                     name="name"
                                                     placeholder="Name"
                                                     required
-                                                    className="!h-[32px] !text-xs !rounded-lg"
+                                                    className="!h-[32px] !text-xs !rounded"
                                                     labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                                 />
                                             </div>
@@ -117,7 +117,7 @@ function AddBusinessModal({ modal, setModal }) {
                                                     name="userId"
                                                     placeholder="User ID"
                                                     required
-                                                    className="!h-[32px] !text-xs !rounded-lg"
+                                                    className="!h-[32px] !text-xs !rounded"
                                                     labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                                 />
                                             </div>
@@ -133,14 +133,14 @@ function AddBusinessModal({ modal, setModal }) {
                                                 name="categoryEn"
                                                 placeholder="Retail"
                                                 required
-                                                className="!h-[32px] !text-xs !rounded-lg"
+                                                className="!h-[32px] !text-xs !rounded"
                                                 labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
                                             <FormField
                                                 label="Category (UR)"
                                                 name="categoryUr"
                                                 placeholder="ریٹیل"
-                                                className="!h-[32px] !text-xs !rounded-lg font-notoUrdu text-right"
+                                                className="!h-[32px] !text-xs !rounded font-notoUrdu text-right"
                                                 labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
                                             <FormField
@@ -148,7 +148,7 @@ function AddBusinessModal({ modal, setModal }) {
                                                 name="phone"
                                                 placeholder="+92..."
                                                 required
-                                                className="!h-[32px] !text-xs !rounded-lg"
+                                                className="!h-[32px] !text-xs !rounded"
                                                 labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
                                             <FormField
@@ -156,7 +156,7 @@ function AddBusinessModal({ modal, setModal }) {
                                                 name="address"
                                                 placeholder="Full Address"
                                                 required
-                                                className="!h-[32px] !text-xs !rounded-lg"
+                                                className="!h-[32px] !text-xs !rounded"
                                                 labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
                                         </div>
@@ -169,7 +169,7 @@ function AddBusinessModal({ modal, setModal }) {
                                             name="description"
                                             placeholder="Brief description..."
                                             type="textarea"
-                                            className="!text-xs !rounded-lg !h-16"
+                                            className="!text-xs !rounded !h-16"
                                             labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                         />
                                     </div>

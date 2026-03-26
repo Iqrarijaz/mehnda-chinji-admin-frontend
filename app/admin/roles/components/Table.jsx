@@ -67,31 +67,33 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
         });
     };
 
-    const actionMenu = (record) => (
-        <Menu className="!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100">
-            <Menu.Item
-                key="edit"
-                icon={<EditOutlined className="text-[#006666]" />}
-                onClick={() => setModal({
+    const actionMenu = (record) => ({
+        items: [
+            {
+                key: "edit",
+                label: <span className="font-medium">Edit Role</span>,
+                icon: <EditOutlined className="text-[#006666]" />,
+                onClick: () => setModal({
                     name: "Edit",
                     data: record,
                     state: true,
-                })}
-                className="!rounded hover:!bg-blue-50"
-            >
-                <span className="font-medium">Edit Role</span>
-            </Menu.Item>
-            <Menu.Divider className="!my-1" />
-            <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined className="text-red-500" />}
-                onClick={() => handleDelete(record)}
-                className="!rounded hover:!bg-red-50"
-            >
-                <span className="font-medium text-red-600">Delete Role</span>
-            </Menu.Item>
-        </Menu>
-    );
+                }),
+                className: "!rounded hover:!bg-blue-50",
+            },
+            {
+                type: "divider",
+                className: "!my-1",
+            },
+            {
+                key: "delete",
+                label: <span className="font-medium text-red-600">Delete Role</span>,
+                icon: <DeleteOutlined className="text-red-500" />,
+                onClick: () => handleDelete(record),
+                className: "!rounded hover:!bg-red-50",
+            },
+        ],
+        className: "!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100",
+    });
 
 
 
@@ -130,7 +132,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
             width: 50,
             align: "right",
             render: (record) => (
-                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+                <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
                         icon={<EllipsisOutlined className="text-lg rotate-90" />}

@@ -48,10 +48,10 @@ function ViewModal({ viewModal, setViewModal }) {
                         {/* Header Box */}
                         <div className="bg-slate-50 p-3 rounded border border-slate-100 relative">
                             <div className="flex items-center gap-1.5 mb-1.5 flex-wrap">
-                                <Tag color="cyan" className="rounded-md px-1.5 py-0 border-none font-bold text-[8px] uppercase tracking-tighter m-0">
+                                <Tag color="cyan" className="rounded px-1.5 py-0 border-none font-bold text-[8px] uppercase tracking-tighter m-0">
                                     {data.categoryId?.name || "General"}
                                 </Tag>
-                                <Tag color={data.status === "ACTIVE" ? "green" : "orange"} className="rounded-md px-1.5 py-0 border-none font-bold text-[8px] uppercase tracking-tighter m-0">
+                                <Tag color={data.status === "ACTIVE" ? "green" : "orange"} className="rounded px-1.5 py-0 border-none font-bold text-[8px] uppercase tracking-tighter m-0">
                                     {data.status || "PENDING"}
                                 </Tag>
                             </div>

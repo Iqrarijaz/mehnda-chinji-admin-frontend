@@ -44,3 +44,12 @@ export const GET_CONTACT_STATUS_COUNTS = async () => {
         throw error;
     }
 };
+
+export const GET_CONTACT_NOTIFICATIONS_PENDING = async () => {
+    try {
+        const response = await Axios.get("/api/admin/contact-us/notifications/pending");
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};

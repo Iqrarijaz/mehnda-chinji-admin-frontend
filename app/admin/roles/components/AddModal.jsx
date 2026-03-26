@@ -101,7 +101,7 @@ function AddRoleModal({ modal, setModal }) {
                                                 name="name"
                                                 placeholder="MODERATOR"
                                                 required
-                                                className="!h-[32px] !text-xs !rounded-lg"
+                                                className="!h-[32px] !text-xs !rounded"
                                                 labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
 
@@ -114,7 +114,7 @@ function AddRoleModal({ modal, setModal }) {
                                                         value={values.description}
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
-                                                        className="!rounded-lg !border-slate-100 focus:!border-[#006666] !py-1 !text-xs !h-16"
+                                                        className="!rounded !border-slate-100 focus:!border-[#006666] !py-1 !text-xs !h-16"
                                                     />
                                                 </div>
                                                 {touched.description && errors.description && (
@@ -126,7 +126,7 @@ function AddRoleModal({ modal, setModal }) {
 
                                     <div className="modal-section !mb-0">
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Access Permissions</p>
-                                        <div className="bg-slate-50/50 p-2 rounded-lg border border-slate-100 mt-1">
+                                        <div className="bg-slate-50/50 p-2 rounded border border-slate-100 mt-1">
                                             <PermissionsSelector
                                                 selectedPermissions={values.permissions}
                                                 onChange={(newPermissions) => setFieldValue("permissions", newPermissions)}
@@ -136,7 +136,7 @@ function AddRoleModal({ modal, setModal }) {
                                 </>
                             )}
 
-                              <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

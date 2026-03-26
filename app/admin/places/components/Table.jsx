@@ -150,56 +150,58 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
         }));
     };
 
-    const actionMenu = (record) => (
-        <Menu className="!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100">
-            <Menu.Item
-                key="view"
-                icon={<EyeOutlined className="text-emerald-500" />}
-                onClick={() => setViewModal({ open: true, data: record })}
-                className="!rounded-lg hover:!bg-emerald-50"
-            >
-                <span className="font-medium">View Details</span>
-            </Menu.Item>
-            <Menu.Item
-                key="edit"
-                icon={<EditOutlined className="text-[#006666]" />}
-                onClick={() => setModal({
+    const actionMenu = (record) => ({
+        items: [
+            {
+                key: "view",
+                label: <span className="font-medium">View Details</span>,
+                icon: <EyeOutlined className="text-emerald-500" />,
+                onClick: () => setViewModal({ open: true, data: record }),
+                className: "!rounded hover:!bg-emerald-50",
+            },
+            {
+                key: "edit",
+                label: <span className="font-medium">Edit Place</span>,
+                icon: <EditOutlined className="text-[#006666]" />,
+                onClick: () => setModal({
                     name: "Update",
                     data: record,
                     state: true
-                })}
-                className="!rounded-lg hover:!bg-blue-50"
-            >
-                <span className="font-medium">Edit Place</span>
-            </Menu.Item>
-            <Menu.Divider className="!my-1" />
-            <Menu.Item
-                key="approve"
-                icon={<CheckCircleOutlined className="text-green-600" />}
-                onClick={() => handleApprove(record)}
-                className="!rounded-lg hover:!bg-green-50"
-            >
-                <span className="font-medium text-green-600">Approve</span>
-            </Menu.Item>
-            <Menu.Item
-                key="reject"
-                icon={<CloseCircleOutlined className="text-orange-600" />}
-                onClick={() => handleReject(record)}
-                className="!rounded-lg hover:!bg-orange-50"
-            >
-                <span className="font-medium text-orange-600">Reject</span>
-            </Menu.Item>
-            <Menu.Divider className="!my-1" />
-            <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined className="text-red-500" />}
-                onClick={() => handleDelete(record)}
-                className="!rounded hover:!bg-red-50"
-            >
-                <span className="font-medium text-red-600">Delete Place</span>
-            </Menu.Item>
-        </Menu>
-    );
+                }),
+                className: "!rounded hover:!bg-blue-50",
+            },
+            {
+                type: "divider",
+                className: "!my-1",
+            },
+            {
+                key: "approve",
+                label: <span className="font-medium text-green-600">Approve</span>,
+                icon: <CheckCircleOutlined className="text-green-600" />,
+                onClick: () => handleApprove(record),
+                className: "!rounded hover:!bg-green-50",
+            },
+            {
+                key: "reject",
+                label: <span className="font-medium text-orange-600">Reject</span>,
+                icon: <CloseCircleOutlined className="text-orange-600" />,
+                onClick: () => handleReject(record),
+                className: "!rounded hover:!bg-orange-50",
+            },
+            {
+                type: "divider",
+                className: "!my-1",
+            },
+            {
+                key: "delete",
+                label: <span className="font-medium text-red-600">Delete Place</span>,
+                icon: <DeleteOutlined className="text-red-500" />,
+                onClick: () => handleDelete(record),
+                className: "!rounded hover:!bg-red-50",
+            },
+        ],
+        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100",
+    });
 
 
 
@@ -337,7 +339,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
             width: 70,
             align: "right",
             render: (record) => (
-                <Dropdown overlay={actionMenu(record)} trigger={["click"]} placement="bottomRight">
+                <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
                         icon={<EllipsisOutlined className="text-base text-slate-400" />}

@@ -30,37 +30,38 @@ function ViewConfigurationModal({ modal, setModal }) {
             }
             centered
             width={720}
-            >
+            className="modern-modal"
+        >
             <div className="p-1">
                 <div className="space-y-4">
                     {/* Status & Metadata Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div className="p-3 bg-slate-50/50 rounded-lg border border-slate-100 flex items-center justify-between">
+                        <div className="p-3 bg-slate-50/50 rounded border border-slate-100 flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <FaShieldAlt className="text-slate-400" size={14} />
                                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-tight">System Status</span>
                             </div>
                             <Tag
                                 color={data.isActive ? "success" : "error"}
-                                className="rounded-md px-2 py-0 border-none font-black text-[9px] uppercase tracking-widest m-0"
+                                className="rounded px-2 py-0 border-none font-black text-[9px] uppercase tracking-widest m-0"
                             >
                                 {data.isActive ? "ACTIVE" : "INACTIVE"}
                             </Tag>
                         </div>
 
-                        <div className="p-3 bg-white rounded-lg border border-slate-100 flex items-center justify-between">
+                        <div className="p-3 bg-white rounded border border-slate-100 flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <FaCogs className="text-slate-400" size={14} />
                                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-tight">Config Type</span>
                             </div>
-                            <Tag color="blue" className="rounded font-bold border-none m-0 text-[10px]">
+                            <Tag className="rounded border-none m-0 text-[10px] bg-teal-50 text-[#006666] font-bold">
                                 {data.type || "GENERIC"}
                             </Tag>
                         </div>
                     </div>
 
                     {/* Timeline Data */}
-                    <div className="bg-white p-3 rounded-lg border border-slate-100 grid grid-cols-2 gap-3">
+                    <div className="bg-white p-3 rounded border border-slate-100 grid grid-cols-2 gap-3">
                         <div className="text-center">
                             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 leading-none">Creation Date</p>
                             <div className="flex items-center justify-center gap-1.5 text-slate-600 font-medium text-[11px]">
@@ -78,7 +79,7 @@ function ViewConfigurationModal({ modal, setModal }) {
                     </div>
 
                     {/* JSON Payload Display */}
-                    <div className="bg-slate-900 rounded-lg p-4 border border-slate-800 shadow-sm overflow-hidden">
+                    <div className="bg-slate-900 rounded p-4 border border-slate-800 shadow-sm overflow-hidden">
                         <div className="flex items-center gap-2 mb-3 pb-2 border-b border-slate-800/50">
                             <FaCode className="text-teal-400" size={12} />
                             <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Active JSON Payload</span>

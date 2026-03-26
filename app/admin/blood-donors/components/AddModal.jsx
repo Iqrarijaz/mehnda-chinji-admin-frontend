@@ -109,7 +109,7 @@ function AddDonorModal({ modal, setModal }) {
 
                                             <div className="flex flex-col gap-1.5">
                                                 <label className="text-slate-700 font-semibold text-xs">Blood Group <span className="text-red-500">*</span></label>
-                                                 <Select
+                                                <Select
                                                     value={values.bloodGroup}
                                                     onChange={(val) => setFieldValue("bloodGroup", val)}
                                                     size="middle"
@@ -127,7 +127,7 @@ function AddDonorModal({ modal, setModal }) {
                                                 </Select>
                                                 {errors.bloodGroup && touched.bloodGroup && <div className="text-red-500 text-[10px] font-medium">{errors.bloodGroup}</div>}
                                             </div>
- 
+
                                             <FormField label="Mobile Number" name="phone" placeholder="Contact number" required className="!h-[32px] !text-xs" icon={<FaPhone className="opacity-20" size={10} />} />
                                         </div>
                                     </div>
@@ -138,9 +138,9 @@ function AddDonorModal({ modal, setModal }) {
                                             <FormField label="Primary City" name="city" placeholder="e.g. Lahore" required className="!h-[32px] !text-xs" icon={<FaMapMarkerAlt className="opacity-20" size={10} />} />
                                             <FormField label="Village / Local Area" name="village" placeholder="e.g. Model Town" className="!h-[32px] !text-xs" icon={<FaChevronRight className="opacity-20" size={10} />} />
 
-                                            <div className="md:col-span-2 p-2.5 bg-slate-50/50 rounded-lg border border-slate-100 flex items-center justify-between">
+                                            <div className="md:col-span-2 p-2.5 bg-slate-50/50 rounded border border-slate-100 flex items-center justify-between">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-7 h-7 rounded-md bg-teal-50 flex items-center justify-center text-teal-600">
+                                                    <div className="w-7 h-7 rounded bg-teal-50 flex items-center justify-center text-teal-600">
                                                         <FaHeartbeat size={12} />
                                                     </div>
                                                     <div>
@@ -160,7 +160,7 @@ function AddDonorModal({ modal, setModal }) {
                                 </>
                             )}
 
-                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

@@ -9,6 +9,7 @@ import CustomButton from "@/components/shared/CustomButton";
 import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import { UPDATE_CONFIGURATION } from "@/app/api/admin/configurations";
+import { Formik, Form } from "formik";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -65,11 +66,11 @@ function UpdateConfigurationModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
                         <FaEdit size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-teal-700 block mt-1">Update Configuration</span>
+                        <span className="text-lg font-bold text-[#006666] block mt-1">Update Configuration</span>
                     </div>
                 </div>
             }
@@ -102,11 +103,11 @@ function UpdateConfigurationModal({ modal, setModal }) {
                                         <div className="flex flex-col gap-1.5">
                                             <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Config Type (Namespace) <span className="text-red-500">*</span></label>
                                             <div className="relative">
-                                                <FaChevronRight className="absolute top-1/2 -translate-y-1/2 left-3 text-slate-300 pointer-events-none size-3" />
+
                                                 <Input
                                                     value={values.type}
                                                     placeholder="Namespace"
-                                                    className="!pl-9 !h-[32px] !text-xs !rounded-lg !border-slate-200 focus:!border-teal-500"
+                                                    className="!pl-3 !h-[32px] !text-xs !rounded !border-slate-200 focus:!border-[#006666]"
                                                     onChange={(e) => setFieldValue("type", e.target.value.toUpperCase())}
                                                 />
                                             </div>
@@ -116,7 +117,7 @@ function UpdateConfigurationModal({ modal, setModal }) {
 
                                     <div className="modal-section !mb-0 space-y-2">
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Payload Structure</p>
-                                        <div className="bg-slate-900 rounded-lg p-3 border border-slate-800 shadow-sm overflow-hidden">
+                                        <div className="bg-slate-900 rounded p-3 border border-slate-800 shadow-sm overflow-hidden">
                                             <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-800/50">
                                                 <div className="flex items-center gap-2">
                                                     <FaCode className="text-teal-400" size={10} />
@@ -132,7 +133,7 @@ function UpdateConfigurationModal({ modal, setModal }) {
                                                 style={{ resize: 'none' }}
                                             />
                                             {errors.dataString && touched.dataString && (
-                                                <div className="mt-2 p-2 bg-red-500/10 border border-red-500/20 rounded-md">
+                                                <div className="mt-2 p-2 bg-red-500/10 border border-red-500/20 rounded">
                                                     <p className="text-red-400 text-[9px] font-bold uppercase tracking-widest leading-none mb-1">Syntax Error</p>
                                                     <p className="text-red-200 text-[11px]">{errors.dataString}</p>
                                                 </div>

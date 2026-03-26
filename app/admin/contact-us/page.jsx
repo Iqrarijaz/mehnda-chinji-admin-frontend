@@ -12,6 +12,7 @@ import InnerPageCard from "@/components/layout/InnerPageCard";
 import { StatCardSkeleton } from "@/components/shared/Skeletons";
 import { FiFilter } from "react-icons/fi";
 import FilterModal from "./components/FilterModal";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
 export default function ContactUsPage() {
     const queryClient = useQueryClient();
@@ -24,6 +25,17 @@ export default function ContactUsPage() {
         onChangeSearch: false,
     });
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+    // Column Visibility State
+    const [visibleColumns, setVisibleColumns] = useState(["name", "email", "source", "status", "createdAt", "actions"]);
+    
+    const columnOptions = [
+        { label: "Name", value: "name" },
+        { label: "Email", value: "email" },
+        { label: "Source", value: "source" },
+        { label: "Status", value: "status" },
+        { label: "Created At", value: "createdAt" },
+    ];
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
     const contactList = useQuery({
@@ -119,15 +131,21 @@ export default function ContactUsPage() {
                 {/* Action Bar (Right) */}
                 <div className="flex gap-2 items-center w-full md:w-auto justify-end">
                     {/* Desktop Search (Hidden on Mobile) */}
-                    <div className="hidden md:block">
+                    <div className="hidden md:flex items-center gap-3 mr-1">
                         <SearchInput setFilters={setFilters} />
                     </div>
 
-                    <div className="flex md:hidden">
+                    <div className="flex items-center gap-2">
+                        <ColumnVisibilityDropdown
+                            options={columnOptions}
+                            visibleColumns={visibleColumns}
+                            setVisibleColumns={setVisibleColumns}
+                        />
+
                         {/* Mobile Filter Toggle */}
                         <button
                             onClick={() => setIsFilterModalOpen(true)}
-                            className="mobile-filter-btn"
+                            className="mobile-filter-btn md:hidden"
                             title="Filters"
                         >
                             <FiFilter size={18} />
@@ -144,6 +162,7 @@ export default function ContactUsPage() {
                     onChange={onChange}
                     onDelete={onDelete}
                     onUpdateStatus={onUpdateStatus}
+                    visibleColumns={visibleColumns}
                 />
             </div>
 

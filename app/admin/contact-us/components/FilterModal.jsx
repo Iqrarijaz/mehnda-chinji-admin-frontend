@@ -9,7 +9,7 @@ function FilterModal({ open, onCancel, filters, setFilters }) {
             open={open}
             onCancel={onCancel}
             footer={[
-                <Button key="close" onClick={onCancel} className="!rounded-lg !h-10 !px-6 font-medium">
+                <Button key="close" onClick={onCancel} className="!rounded !h-[32px] !text-xs !px-4 font-medium">
                     Close
                 </Button>
             ]}

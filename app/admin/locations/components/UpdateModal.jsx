@@ -176,7 +176,7 @@ function UpdateLocationModal({ modal, setModal }) {
                         name="name_en"
                         placeholder="Village name"
                         required
-                        className="!h-[32px] !text-xs !rounded-lg"
+                        className="!h-[32px] !text-xs !rounded"
                         labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                       />
                       <FormField
@@ -184,7 +184,7 @@ function UpdateLocationModal({ modal, setModal }) {
                         name="name_ur"
                         placeholder="گاؤں کا نام"
                         required
-                        className="!h-[32px] !text-xs !rounded-lg font-notoUrdu"
+                        className="!h-[32px] !text-xs !rounded font-notoUrdu"
                         labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                       />
                     </div>

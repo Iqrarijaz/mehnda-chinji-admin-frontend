@@ -9,6 +9,7 @@ import CustomButton from "@/components/shared/CustomButton";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import { GET_SUPPORT_TICKET_BY_ID, REPLY_TO_TICKET, UPDATE_TICKET_STATUS } from "@/app/api/admin/support";
 import { timestampToDate } from "@/utils/date";
+import { useEffect, useRef, useState } from "react";
 
 const { TextArea } = Input;
 
@@ -151,9 +152,9 @@ function ManageTicketModal({ modal, setModal }) {
                             handleChange={(val) => statusMutation.mutate(val)}
                             className="w-32 modern-select-box [&>div]:!h-[32px] [&>div]:!text-xs"
                             options={[
-                                { value: "open", label: "Open" },
-                                { value: "in-progress", label: "In Progress" },
-                                { value: "closed", label: "Closed" },
+                                { value: "OPEN", label: "Open" },
+                                { value: "IN_PROGRESS", label: "In Progress" },
+                                { value: "CLOSED", label: "Closed" },
                             ]}
                         />
                     </div>
@@ -216,7 +217,7 @@ function ManageTicketModal({ modal, setModal }) {
                 </div>
 
                 {/* Input Area */}
-                {ticket?.status !== "closed" && (
+                {ticket?.status !== "CLOSED" && (
                     <div className="bg-white rounded p-3 shadow-sm border border-slate-100">
                         <label className="text-slate-400 font-bold text-[9px] uppercase tracking-widest mb-1.5 block">Compose Response</label>
                         <TextArea

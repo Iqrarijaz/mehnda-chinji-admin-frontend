@@ -14,12 +14,26 @@ body {
 
 // Main app header
 
+.custom-badge {
+  .ant-scroll-number {
+    background: #ff4d4f !important;
+    box-shadow: 0 0 0 1px #fff !important;
+    &.ant-badge-multiple-words {
+      padding: 0 6px !important;
+    }
+  }
+}
+
 .main-app-header {
-  height: 70px !important;
-  background-color: #006666 !important; // Teal Primary
+  height: 56px !important;
+  background-color: #006666 !important; // Primary Teal
+  color: white !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 // Menu icons
@@ -90,28 +104,142 @@ body {
 
 // Table Pagination Premium Styling
 .ant-pagination {
-  margin: 16px 0 !important;
+  margin: 12px 0 !important;
+  font-size: 12px !important;
+
+  .ant-pagination-item,
+  .ant-pagination-prev,
+  .ant-pagination-next,
+  .ant-pagination-jump-prev,
+  .ant-pagination-jump-next {
+    min-width: 28px !important;
+    height: 28px !important;
+    line-height: 26px !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    margin-inline-end: 4px !important;
+  }
+
+  .ant-pagination-item {
+    border: 1px solid #e2e8f0 !important;
+    background: white !important;
+    transition: all 0.2s !important;
+
+    a {
+      color: #475569 !important;
+    }
+
+    &:hover,
+    &-active {
+      background: #006666 !important;
+      border-color: #006666 !important;
+
+      a {
+        color: white !important;
+      }
+    }
+    
+    &-active:hover {
+      background: #004d4d !important;
+      border-color: #004d4d !important;
+    }
+  }
+
+  .ant-pagination-prev,
+  .ant-pagination-next {
+    border: 1px solid #e2e8f0 !important;
+    background: white !important;
+    transition: all 0.2s !important;
+
+    &:hover:not(.ant-pagination-disabled) {
+      background: #006666 !important;
+      border-color: #006666 !important;
+      
+      .ant-pagination-item-link {
+        color: white !important;
+      }
+    }
+  }
+
+  .ant-pagination-options {
+    margin-inline-start: 12px !important;
+
+    .ant-pagination-options-size-changer {
+      margin-inline-end: 0 !important;
+
+      .ant-select-selector {
+        height: 28px !important;
+        padding: 0 8px !important;
+        font-size: 11px !important;
+        border-radius: 4px !important;
+        display: flex !important;
+        align-items: center !important;
+        background: #006666 !important;
+        border: 1px solid #006666 !important;
+        color: white !important;
+
+        .ant-select-selection-item {
+          font-size: 11px !important;
+          font-weight: 600 !important;
+          color: white !important;
+        }
+
+        .ant-select-arrow {
+          color: white !important;
+        }
+      }
+
+      &:hover .ant-select-selector {
+        background: #004d4d !important;
+        border-color: #004d4d !important;
+      }
+    }
+  }
 }
 
-.ant-pagination-item-active {
-  border-color: #006666 !important;
+// Global Select Dropdown Item Selection
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
   background-color: #006666 !important;
+  color: white !important;
+  font-weight: 500 !important;
 
-  a {
+  .ant-select-item-option-content {
+    color: white !important;
+  }
+
+  &:hover {
+    background-color: #006666 !important;
     color: white !important;
   }
 }
 
-.ant-pagination-item {
-  border-radius: 4px !important;
-  border: 1px solid #e2e8f0 !important;
-}
+// Global SelectBox Refinement
+.custom-selectbox {
+  .ant-select-selector {
+    border-radius: 4px !important;
+    border: 1px solid #e2e8f0 !important;
+    font-size: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 10px !important;
+    background: white !important;
+    box-shadow: none !important;
 
-.ant-pagination-item:hover {
-  border-color: #006666 !important;
+    .ant-select-selection-item,
+    .ant-select-selection-placeholder {
+      font-size: 12px !important;
+      color: #475569 !important;
+      font-weight: 400 !important;
+    }
+  }
 
-  a {
-    color: #006666 !important;
+  &:hover .ant-select-selector {
+    border-color: #006666 !important;
+  }
+
+  &.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    border-color: #006666 !important;
+    box-shadow: 0 0 0 2px rgba(0, 102, 102, 0.1) !important;
   }
 }
 
