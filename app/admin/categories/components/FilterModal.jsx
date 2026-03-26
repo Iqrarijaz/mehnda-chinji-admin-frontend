@@ -26,13 +26,13 @@ function FilterModal({ open, onCancel, filters, setFilters }) {
             className="modern-modal"
             centered
         >
-            <div className="flex flex-col gap-4 py-2">
-                <div className="space-y-1.5">
+            <div className="flex flex-col gap-2">
+                <div className="space-y-0.5 px-0.5">
                     <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Search Categories</label>
-                    <SearchInput setFilters={setFilters} pageKey="currentPage" className="w-full !h-[32px] !text-xs" />
+                    <SearchInput setFilters={setFilters} pageKey="currentPage" className="w-full !h-[32px] !text-xs !rounded" />
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-0.5 px-0.5">
                     <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Type</label>
                     <Select
                         placeholder="Select Type"

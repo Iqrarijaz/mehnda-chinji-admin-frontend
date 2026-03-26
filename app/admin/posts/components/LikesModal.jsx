@@ -54,7 +54,7 @@ function LikesModal({ isOpen, onClose, postId }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-500">
+                    <div className="w-8 h-8 rounded bg-red-50 flex items-center justify-center text-red-500">
                         <FaHeart size={16} />
                     </div>
                     <div>

@@ -23,19 +23,19 @@ function FilterModal({ isOpen, onClose, filters, onChange }) {
             className="modern-modal"
             centered
         >
-            <div className="flex flex-col gap-3 py-1 px-1">
-                <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Search Donor</label>
+            <div className="flex flex-col gap-2">
+                <div className="space-y-0.5 px-0.5">
+                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Search Donor</label>
                     <Input
                         placeholder="Search by name or phone..."
-                        className="!h-[32px] !rounded-lg !border-slate-200 !text-xs"
+                        className="!h-[32px] !rounded !border-slate-200 !text-xs"
                         value={filters.search}
                         onChange={(e) => onChange({ search: e.target.value, page: 1 })}
                     />
                 </div>
 
-                <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Blood Group</label>
+                <div className="space-y-0.5 px-0.5">
+                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Blood Group</label>
                     <Select
                         placeholder="Select Blood Group"
                         className="w-full modern-select-box"
@@ -49,11 +49,11 @@ function FilterModal({ isOpen, onClose, filters, onChange }) {
                     </Select>
                 </div>
 
-                <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">City</label>
+                <div className="space-y-0.5 px-0.5">
+                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">City</label>
                     <Input
                         placeholder="Filter by city..."
-                        className="!h-[32px] !rounded-lg !border-slate-200 !text-xs"
+                        className="!h-[32px] !rounded !border-slate-200 !text-xs"
                         value={filters.city}
                         onChange={(e) => onChange({ city: e.target.value, page: 1 })}
                     />

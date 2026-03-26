@@ -53,7 +53,7 @@ function ResetPasswordModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
+                    <div className="w-8 h-8 rounded bg-red-50 flex items-center justify-center text-red-600">
                         <FaLock size={14} />
                     </div>
                     <div>
@@ -94,7 +94,7 @@ function ResetPasswordModal({ modal, setModal }) {
                                             type="password"
                                             placeholder="••••••••"
                                             required
-                                            className="!h-[32px] !text-xs !rounded-lg"
+                                            className="!h-[32px] !text-xs !rounded"
                                             labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                         />
                                         <FormField
@@ -103,7 +103,7 @@ function ResetPasswordModal({ modal, setModal }) {
                                             type="password"
                                             placeholder="••••••••"
                                             required
-                                            className="!h-[32px] !text-xs !rounded-lg"
+                                            className="!h-[32px] !text-xs !rounded"
                                             labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                         />
                                     </div>

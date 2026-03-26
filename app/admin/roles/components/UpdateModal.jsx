@@ -54,7 +54,7 @@ function UpdateRoleModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-teal-600">
                         <FaEdit size={16} />
                     </div>
                     <div>
@@ -104,7 +104,7 @@ function UpdateRoleModal({ modal, setModal }) {
                                                         value={values.description}
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
-                                                        className="!rounded-lg !border-slate-100 focus:!border-[#006666] !py-1 !text-xs !h-16"
+                                                        className="!pl-9 !rounded !border-2 !border-slate-100 focus:!border-[#006666] !py-1 !text-xs !h-16"
                                                     />
                                                 </div>
                                                 {touched.description && errors.description && (

@@ -102,7 +102,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
   };
 
   const actionMenu = (record) => (
-    <Menu className="!rounded-xl !p-2 !min-w-[140px] shadow-xl border border-slate-100">
+    <Menu className="!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100">
       <Menu.Item
         key="edit"
         icon={<EditOutlined className="text-blue-500" />}
@@ -134,7 +134,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
   ];
 
   const visibilityMenu = (
-    <Menu className="!rounded-xl !p-3 shadow-xl border border-slate-100 min-w-[180px]">
+    <Menu className="!rounded !p-3 shadow-xl border border-slate-100 min-w-[180px]">
       <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
         Toggle Columns
       </div>
@@ -228,7 +228,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
           <Button
             type="text"
             icon={<MoreOutlined className="text-lg" />}
-            className="!rounded-xl hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
+            className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
           />
         </Dropdown>
       ),
@@ -250,7 +250,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
         </Dropdown>
       </div>
 
-      <div className="modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+      <div className="modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
         <Table
           rowKey="_id"
           className="custom-ant-table"

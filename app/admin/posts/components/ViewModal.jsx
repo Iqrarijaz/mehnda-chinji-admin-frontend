@@ -58,14 +58,14 @@ function ViewModal({ viewModal, setViewModal }) {
             );
         }
 
-        return <pre className="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg">{JSON.stringify(metadata, null, 2)}</pre>;
+        return <pre className="text-xs text-slate-600 bg-slate-50 p-2 rounded">{JSON.stringify(metadata, null, 2)}</pre>;
     };
 
     return (
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-teal-600">
                         <FaInfoCircle size={16} />
                     </div>
                     <div>
@@ -90,7 +90,7 @@ function ViewModal({ viewModal, setViewModal }) {
                 {data && (
                     <div className="space-y-4">
                         {/* Header Info */}
-                        <div className="flex items-center justify-between bg-slate-50/50 p-2.5 rounded-lg border border-slate-100">
+                        <div className="flex items-center justify-between bg-slate-50/50 p-2.5 rounded border border-slate-100">
                             <div className="flex items-center gap-2.5">
                                 <div className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center overflow-hidden">
                                     {data.createdBy?.profileImage ? (

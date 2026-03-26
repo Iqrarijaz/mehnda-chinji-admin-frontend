@@ -132,7 +132,7 @@ function UpdatePostModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-teal-600">
                         <FileTextOutlined style={{ fontSize: '16px' }} />
                     </div>
                     <div>
@@ -200,7 +200,7 @@ function UpdatePostModal({ modal, setModal }) {
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         rows={3}
-                                        className="!rounded-lg !border-2 !border-slate-100 focus:!border-teal-500 !p-2 !text-xs"
+                                        className="!rounded !border-2 !border-slate-100 focus:!border-teal-500 !p-2 !text-xs"
                                     />
                                     {touched.content && errors.content && (
                                         <div className="text-red-500 text-[10px] font-medium">{errors.content}</div>
@@ -248,7 +248,7 @@ function UpdatePostModal({ modal, setModal }) {
 
                             <div className="modal-section !mb-1">
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Media</p>
-                                <div className="bg-slate-50/50 rounded-lg p-2 border-2 border-slate-100 border-dashed">
+                                <div className="bg-slate-50/50 rounded p-2 border-2 border-slate-100 border-dashed">
                                     <Upload
                                         listType="picture-card"
                                         className="post-image-upload-compact scale-[0.85] origin-left"

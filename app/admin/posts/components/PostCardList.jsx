@@ -138,10 +138,10 @@ function PostCardList({
                         <SkeletonPulse className="h-10 w-10 rounded-full mb-4" />
                         <SkeletonPulse className="h-4 w-3/4 mb-2" />
                         <SkeletonPulse className="h-4 w-1/2 mb-6" />
-                        <SkeletonPulse className="h-32 w-full rounded-2xl mb-4" />
-                        <div className="flex justify-between mt-auto">
-                            <SkeletonPulse className="h-8 w-20 rounded-lg" />
-                            <SkeletonPulse className="h-8 w-20 rounded-lg" />
+                        <SkeletonPulse className="h-32 w-full rounded mb-4" />
+                        <div className="flex gap-2">
+                            <SkeletonPulse className="h-8 w-20 rounded" />
+                            <SkeletonPulse className="h-8 w-20 rounded" />
                         </div>
                     </div>
                 ))}

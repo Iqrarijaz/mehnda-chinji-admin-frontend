@@ -216,7 +216,7 @@ function PostCard({
                                 icon={<DeleteOutlined />}
                                 onClick={() => onDelete(post)}
                                 danger
-                                className="!rounded-xl !border-red-100 hover:!border-red-500 !flex items-center justify-center !h-9 !w-9 bg-white shadow-sm"
+                                className="!rounded !border-red-100 hover:!border-red-500 !flex items-center justify-center !h-9 !w-9 bg-white shadow-sm"
                             />
                         </Tooltip>
                     </div>

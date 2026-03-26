@@ -1,3 +1,6 @@
+import React from "react";
+import { Modal } from "antd";
+import SearchInput from "@/components/InnerPage/SearchInput";
 import { FaFilter } from "react-icons/fa";
 import CustomButton from "@/components/shared/CustomButton";
 
@@ -23,10 +26,10 @@ function FilterModal({ open, onCancel, filters, setFilters }) {
             className="modern-modal"
             centered
         >
-            <div className="flex flex-col gap-4 py-1">
-                <div className="space-y-1">
+            <div className="flex flex-col gap-2">
+                <div className="space-y-0.5 px-0.5">
                     <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Search Business</label>
-                    <SearchInput setFilters={setFilters} placeholder="Search..." className="w-full !h-[32px] !text-xs !rounded-lg" />
+                    <SearchInput setFilters={setFilters} placeholder="Search..." className="w-full !h-[32px] !text-xs !rounded" />
                 </div>
             </div>
         </Modal>

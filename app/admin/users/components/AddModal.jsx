@@ -70,7 +70,7 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-teal-600">
                         <FaUserPlus size={16} />
                     </div>
                     <div>
@@ -100,9 +100,9 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
                                 <>
                                     <div className="modal-section">
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Account Info</p>
-                                        <FormField label="Full Name" name="name" placeholder="Name" required className="!h-[32px] !text-xs !rounded-lg" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
-                                        <FormField label="Email Address" name="email" type="email" placeholder="Email" required className="!h-[32px] !text-xs !rounded-lg" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
-                                        <FormField label="Password" name="password" type="password" placeholder="••••••••" required className="!h-[32px] !text-xs !rounded-lg" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
+                                        <FormField label="Full Name" name="name" placeholder="Name" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
+                                        <FormField label="Email Address" name="email" type="email" placeholder="Email" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
+                                        <FormField label="Password" name="password" type="password" placeholder="••••••••" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
                                     </div>
 
                                     <div className="modal-section">
@@ -141,7 +141,7 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
                                     </div>
 
                                     <div className="px-1 mt-2 mb-2">
-                                        <FormField label="Phone Number" name="phone" placeholder="+92 ..." className="!h-[32px] !text-xs !rounded-lg" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
+                                        <FormField label="Phone Number" name="phone" placeholder="+92 ..." className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
                                     </div>
                                 </>
                             )}

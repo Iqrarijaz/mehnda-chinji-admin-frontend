@@ -35,31 +35,28 @@ function FilterModal({ open, onCancel, filters, setFilters }) {
             onReset={handleReset}
             activeFiltersCount={activeCount}
         >
-            <div className="modal-section">
-                <label className="section-label">Search</label>
-                <SearchInput 
-                    setFilters={setFilters} 
-                    className="w-full !h-11 !rounded !border-slate-200 focus:!border-teal-500 shadow-sm" 
-                    placeholder="Search by name or email..."
-                />
-            </div>
+            <div className="flex flex-col gap-2">
+                <div className="space-y-0.5 px-0.5">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Search</label>
+                    <SearchInput 
+                        setFilters={setFilters} 
+                        className="w-full !h-[32px] !text-xs !rounded" 
+                        placeholder="Search by name or email..."
+                    />
+                </div>
 
-            <div className="modal-section">
-                <label className="section-label">User Details</label>
-                <div className="space-y-4">
-                    <div className="flex flex-col gap-1.5">
-                        <label className="text-[13px] font-medium text-slate-600 ml-1">Gender</label>
-                        <Select
-                            placeholder="All Genders"
-                            className="w-full modern-select-box !h-11 shadow-sm"
-                            value={filters.gender}
-                            onChange={handleGenderChange}
-                            allowClear
-                        >
-                            <Select.Option value="MALE">Male</Select.Option>
-                            <Select.Option value="FEMALE">Female</Select.Option>
-                        </Select>
-                    </div>
+                <div className="space-y-0.5 px-0.5">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Gender</label>
+                    <Select
+                        placeholder="All Genders"
+                        className="w-full modern-select-box"
+                        value={filters.gender}
+                        onChange={handleGenderChange}
+                        allowClear
+                    >
+                        <Select.Option value="MALE">Male</Select.Option>
+                        <Select.Option value="FEMALE">Female</Select.Option>
+                    </Select>
                 </div>
             </div>
         </ResponsiveFilterModal>

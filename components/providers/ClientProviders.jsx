@@ -33,7 +33,7 @@ export default function ClientProviders({ children }) {
         <ToastContainer
           position="top-right"
           autoClose={3500}
-          hideProgressBar={false}
+          hideProgressBar={true}
           newestOnTop
           closeOnClick
           pauseOnHover

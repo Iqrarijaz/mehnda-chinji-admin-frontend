@@ -117,7 +117,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange }) {
                     <Button
                         type="text"
                         icon={<EllipsisOutlined className="text-lg rotate-90" />}
-                        className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
                     />
                 </Dropdown>
             ),

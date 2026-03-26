@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Avatar, Divider, Tag, Input, message, Tooltip } from "antd";
+import { Modal, Button, Avatar, Divider, Tag, Input, Tooltip } from "antd";
+import { toast } from "react-toastify";
 import {
     UserOutlined,
     LogoutOutlined,
@@ -45,7 +46,7 @@ const ProfileModal = ({ open, onCancel }) => {
         setIsLoggingOut(true);
         try {
             await LOGOUT();
-            message.success("Logged out successfully");
+            toast.success("Logged out successfully");
         } catch (error) {
             console.error("Server logout failed:", error);
         } finally {
@@ -58,7 +59,7 @@ const ProfileModal = ({ open, onCancel }) => {
 
     const handleSave = () => {
         if (!editForm.name.trim()) {
-            message.warning("Name cannot be empty");
+            toast.warning("Name cannot be empty");
             return;
         }
         try {
@@ -74,9 +75,9 @@ const ProfileModal = ({ open, onCancel }) => {
             localStorage.setItem("userData", JSON.stringify(updatedUser));
             setUser(updatedUser);
             setIsEditing(false);
-            message.success("Profile updated successfully");
+            toast.success("Profile updated successfully");
         } catch (error) {
-            message.error("Failed to update profile locally");
+            toast.error("Failed to update profile locally");
         }
     };
 

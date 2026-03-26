@@ -44,7 +44,7 @@ const AddEditRoleModal = ({ modal, setModal }) => {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-teal-600">
                         {isEdit ? <FaEdit size={16} /> : <FaShieldAlt size={16} />}
                     </div>
                     <span className="text-lg font-bold text-blue-700 block mt-1">{isEdit ? "Edit" : "Add"} Role</span>
@@ -87,7 +87,7 @@ const AddEditRoleModal = ({ modal, setModal }) => {
                                 value={values.name}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className="!h-[32px] !text-xs !rounded-lg"
+                                className="!h-[32px] !text-xs !rounded"
                             />
                             {errors.name && touched.name && <div className="text-red-500 text-[10px] font-medium ml-1">{errors.name}</div>}
                         </div>
@@ -100,7 +100,7 @@ const AddEditRoleModal = ({ modal, setModal }) => {
                                 value={values.description}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className="!rounded-lg !text-xs !py-1 !h-16"
+                                className="!rounded !text-xs !py-1.5 !h-16"
                             />
                             {errors.description && touched.description && <div className="text-red-500 text-[10px] font-medium ml-1">{errors.description}</div>}
                         </div>

@@ -107,7 +107,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
     };
 
     const actionMenu = (record) => (
-        <Menu className="!rounded-xl !p-2 !min-w-[140px] shadow-xl border border-slate-100">
+        <Menu className="!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100">
             <Menu.Item
                 key="view"
                 icon={<EyeOutlined className="text-emerald-500" />}
@@ -133,7 +133,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
                 key="delete"
                 icon={<DeleteOutlined className="text-red-500" />}
                 onClick={() => handleDelete(record)}
-                className="!rounded-lg hover:!bg-red-50"
+                className="!rounded hover:!bg-red-50"
             >
                 <span className="font-medium text-red-600">Delete Post</span>
             </Menu.Item>
@@ -254,7 +254,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
 
   return (
     <div className="space-y-4">
-      <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded-xl overflow-hidden bg-white">
+      <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

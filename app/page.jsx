@@ -1,6 +1,6 @@
 "use client";
 import { Formik } from "formik";
-import { Input, Button, Form as AntForm } from "antd";
+import { Input } from "antd";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
@@ -78,7 +78,7 @@ function Page() {
                 className="w-full h-full object-contain"
               />
             </div>
-            <h1 className="text-2xl font-semibold text-gray-800">
+            <h1 className="text-2xl font-bold text-[#006666]">
               Rehbar Admin
             </h1>
           </div>
@@ -86,7 +86,7 @@ function Page() {
           {/* Login Card */}
           <div className="bg-white rounded border border-gray-100 p-6 sm:p-8 shadow-sm">
             <div className="mb-6 text-center">
-              <h2 className="text-xl font-medium text-gray-800">
+              <h2 className="text-xl font-bold text-[#006666]">
                 Welcome Back
               </h2>
               <p className="text-gray-500 text-sm mt-1">
@@ -107,61 +107,63 @@ function Page() {
                 handleBlur,
                 handleSubmit,
                 isSubmitting,
-              }) => (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <AntForm.Item
-                      validateStatus={errors.email && touched.email ? "error" : ""}
-                      help={errors.email && touched.email ? errors.email : ""}
-                      className="mb-0"
-                    >
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Email
-                      </label>
-                      <Input
-                        size="large"
-                        prefix={<UserOutlined className="text-gray-400 mr-2" />}
-                        placeholder="admin@example.com"
-                        name="email"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.email}
-                      />
-                    </AntForm.Item>
+              }) => {
+                const isLoading = isSubmitting || loginMutation.isLoading;
+                
+                return (
+                <form onSubmit={handleSubmit} className="space-y-3">
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-bold text-[#006666] uppercase tracking-tight ml-1">
+                      Email
+                    </label>
+                    <Input
+                      prefix={<UserOutlined className="text-gray-400 mr-1 text-[10px]" />}
+                      placeholder="admin@example.com"
+                      name="email"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.email}
+                      className="!h-[32px] !text-xs !rounded !border-slate-200 focus:!border-[#006666] hover:!border-[#006666] !shadow-none"
+                    />
+                    {errors.email && touched.email && (
+                      <div className="text-red-500 text-[10px] font-medium ml-1">{errors.email}</div>
+                    )}
                   </div>
 
-                  <div>
-                    <AntForm.Item
-                      validateStatus={errors.password && touched.password ? "error" : ""}
-                      help={errors.password && touched.password ? errors.password : ""}
-                      className="mb-0"
-                    >
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Password
-                      </label>
-                      <Input.Password
-                        size="large"
-                        prefix={<LockOutlined className="text-gray-400 mr-2" />}
-                        placeholder="••••••••"
-                        name="password"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.password}
-                      />
-                    </AntForm.Item>
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-bold text-[#006666] uppercase tracking-tight ml-1">
+                      Password
+                    </label>
+                    <Input.Password
+                      prefix={<LockOutlined className="text-gray-400 mr-1 text-[10px]" />}
+                      placeholder="••••••••"
+                      name="password"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.password}
+                      className="!h-[32px] !text-xs !rounded !border-slate-200 focus:!border-[#006666] hover:!border-[#006666] !shadow-none"
+                    />
+                    {errors.password && touched.password && (
+                      <div className="text-red-500 text-[10px] font-medium ml-1">{errors.password}</div>
+                    )}
                   </div>
 
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    loading={isSubmitting || loginMutation.status === "loading"}
-                    className="w-full mt-4 bg-teal-600 hover:bg-teal-700"
-                    size="large"
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full mt-5 !h-[32px] bg-[#006666] text-white !text-xs font-bold uppercase tracking-widest !rounded hover:bg-[#006666] focus:outline-none focus:ring-0 transition-none flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    Sign in
-                  </Button>
+                    {isLoading ? (
+                      <>
+                        <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Signing In...</span>
+                      </>
+                    ) : (
+                      "Sign In"
+                    )}
+                  </button>
                 </form>
-              )}
+              )}}
             </Formik>
           </div>
         </div>

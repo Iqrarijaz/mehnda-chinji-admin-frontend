@@ -77,7 +77,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
                     data: record,
                     state: true,
                 })}
-                className="!rounded-lg hover:!bg-blue-50"
+                className="!rounded hover:!bg-blue-50"
             >
                 <span className="font-medium">Edit Role</span>
             </Menu.Item>
@@ -86,7 +86,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
                 key="delete"
                 icon={<DeleteOutlined className="text-red-500" />}
                 onClick={() => handleDelete(record)}
-                className="!rounded-lg hover:!bg-red-50"
+                className="!rounded hover:!bg-red-50"
             >
                 <span className="font-medium text-red-600">Delete Role</span>
             </Menu.Item>
@@ -134,7 +134,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
                     <Button
                         type="text"
                         icon={<EllipsisOutlined className="text-lg rotate-90" />}
-                        className="!rounded-lg hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
                     />
                 </Dropdown>
             ),

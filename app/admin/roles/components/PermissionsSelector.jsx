@@ -48,7 +48,7 @@ const PermissionsSelector = ({ selectedPermissions = [], onChange }) => {
                     <Card
                         key={moduleKey}
                         size="small"
-                        className="!rounded-xl border-slate-100 overflow-hidden shadow-sm"
+                        className="!rounded border-slate-100 overflow-hidden shadow-sm"
                         title={
                             <div className="flex items-center justify-between">
                                 <Checkbox
