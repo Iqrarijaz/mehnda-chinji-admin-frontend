@@ -44,10 +44,10 @@ const AddEditRoleModal = ({ modal, setModal }) => {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-teal-600">
+                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
                         {isEdit ? <FaEdit size={16} /> : <FaShieldAlt size={16} />}
                     </div>
-                    <span className="text-lg font-bold text-blue-700 block mt-1">{isEdit ? "Edit" : "Add"} Role</span>
+                    <span className="text-lg font-bold text-[#006666] block mt-1">{isEdit ? "Edit" : "Add"} Role</span>
                 </div>
             }
             open={modal.state}

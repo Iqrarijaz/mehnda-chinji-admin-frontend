@@ -75,7 +75,7 @@ function ViewModal({ open, onCancel, data }) {
                     </Descriptions.Item>
                     <Descriptions.Item label="Address">
                         <span className="flex items-start gap-2">
-                            <FaMapMarkerAlt size={10} className="text-blue-500 mt-0.5" /> {data.address || "N/A"}
+                            <FaMapMarkerAlt size={10} className="text-[#006666] mt-0.5" /> {data.address || "N/A"}
                         </span>
                     </Descriptions.Item>
                     <Descriptions.Item label="Registered">

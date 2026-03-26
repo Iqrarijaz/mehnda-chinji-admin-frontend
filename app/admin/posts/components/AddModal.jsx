@@ -144,11 +144,11 @@ function AddPostModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
                         <FileTextOutlined style={{ fontSize: '16px' }} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-teal-700 block mt-1">Create New Post</span>
+                        <span className="text-lg font-bold text-[#006666] block mt-1">Create New Post</span>
                     </div>
                 </div>
             }
@@ -230,7 +230,7 @@ function AddPostModal({ modal, setModal }) {
                                             <>
                                             <>
                                                 <FormField label="Deceased Name" name="metadata.deceasedName" placeholder="Name" className="!h-[32px] !text-xs" />
-                                                <div className="grid grid-cols-2 gap-3">
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                                     <FormField label="Date of Death" name="metadata.dateOfDeath" type="date" className="!h-[32px] !text-xs" />
                                                     <FormField label="Relationship" name="metadata.relationship" placeholder="e.g. Brother" className="!h-[32px] !text-xs" />
                                                 </div>

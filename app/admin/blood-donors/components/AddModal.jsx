@@ -73,11 +73,11 @@ function AddDonorModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
+                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
                         <FaHeartbeat size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-red-700 block mt-1">Register Blood Donor</span>
+                        <span className="text-lg font-bold text-[#006666] block mt-1">Register Blood Donor</span>
                     </div>
                 </div>
             }

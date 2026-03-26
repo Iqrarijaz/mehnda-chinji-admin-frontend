@@ -86,7 +86,7 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
             <Menu.Divider className="!my-1" />
             <Menu.Item
                 key="reviewed"
-                icon={<SolutionOutlined className="text-blue-500" />}
+                icon={<SolutionOutlined className="text-[#006666]" />}
                 onClick={() => handleUpdateStatus(record, 'REVIEWED')}
                 className="!rounded-lg hover:!bg-blue-50"
             >

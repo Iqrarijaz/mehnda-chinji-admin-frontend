@@ -103,7 +103,7 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
         <Menu className="!rounded-xl !p-2 !min-w-[140px] shadow-xl border border-slate-100">
             <Menu.Item
                 key="edit"
-                icon={<EditOutlined className="text-blue-500" />}
+                icon={<EditOutlined className="text-[#006666]" />}
                 onClick={() => setModal({ name: "Edit", data: record, state: true })}
                 className="!rounded-lg hover:!bg-blue-50"
             >

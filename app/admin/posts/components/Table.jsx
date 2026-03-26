@@ -118,7 +118,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             </Menu.Item>
             <Menu.Item
                 key="edit"
-                icon={<EditOutlined className="text-blue-500" />}
+                icon={<EditOutlined className="text-[#006666]" />}
                 onClick={() => setModal({
                     name: "Update",
                     data: record,
@@ -183,7 +183,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             render: (count, record) => (
                 <Button
                     type="text"
-                    icon={<LikeOutlined className="text-blue-500 !text-xs" />}
+                    icon={<LikeOutlined className="text-[#006666] !text-xs" />}
                     onClick={() => setLikesModal({ open: true, postId: record._id })}
                     className="!rounded-lg hover:!bg-blue-50 !h-7 font-bold text-slate-600 !text-xs !flex items-center gap-1"
                 >

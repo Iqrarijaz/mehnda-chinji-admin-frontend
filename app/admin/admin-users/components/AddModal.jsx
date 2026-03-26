@@ -85,11 +85,11 @@ const AddAdminUserModal = React.memo(({ modal, setModal }) => {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0">
-                    <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
                         <FaUserShield size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-teal-700 block mt-1">Create Admin User</span>
+                        <span className="text-lg font-bold text-[#006666] block mt-1">Create Admin User</span>
                     </div>
                 </div>
             }

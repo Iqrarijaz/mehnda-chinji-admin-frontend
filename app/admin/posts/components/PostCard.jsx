@@ -183,9 +183,9 @@ function PostCard({
                             }}
                         >
                             <div className="w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center group-hover/stat:bg-blue-100 transition-colors">
-                                <MessageFilled className="text-blue-500 text-[11px]" />
+                                <MessageFilled className="text-[#006666] text-[11px]" />
                             </div>
-                            <span className="text-xs font-bold text-slate-600 group-hover/stat:text-blue-600">
+                            <span className="text-xs font-bold text-slate-600 group-hover/stat:text-[#006666]">
                                 {post?.commentsCount || 0}
                             </span>
                         </div>

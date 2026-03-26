@@ -93,7 +93,7 @@ function ViewModal({ viewModal, setViewModal }) {
                                 </div>
                             </div>
                             <div className="p-2 bg-white rounded border border-slate-100 flex items-center gap-2">
-                                <FaTools className="text-blue-500 opacity-60" size={12} />
+                                <FaTools className="text-[#006666] opacity-60" size={12} />
                                 <div className="flex flex-col">
                                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-0.5">Services</span>
                                     <span className="text-slate-700 font-bold text-[11px] leading-tight truncate">{data.services || "General"}</span>

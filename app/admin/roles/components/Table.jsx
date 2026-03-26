@@ -71,7 +71,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
         <Menu className="!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100">
             <Menu.Item
                 key="edit"
-                icon={<EditOutlined className="text-blue-500" />}
+                icon={<EditOutlined className="text-[#006666]" />}
                 onClick={() => setModal({
                     name: "Edit",
                     data: record,
@@ -116,7 +116,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
             width: 170,
             align: "center",
             render: (permissions) => (
-                <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100/50">
+                <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-teal-50 text-[#006666] border border-teal-100/50">
                     <SecurityScanOutlined className="text-[10px]" />
                     <span className="text-[10px] font-bold uppercase tracking-wider">
                         {permissions?.length || 0} PERMS

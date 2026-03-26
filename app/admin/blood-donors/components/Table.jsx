@@ -82,7 +82,7 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange, visibleC
         <Menu className="!rounded-xl !p-2 !min-w-[140px] shadow-xl border border-slate-100">
             <Menu.Item
                 key="edit"
-                icon={<EditOutlined className="text-blue-500" />}
+                icon={<EditOutlined className="text-[#006666]" />}
                 onClick={() => setModal({
                     name: "Update",
                     data: record,

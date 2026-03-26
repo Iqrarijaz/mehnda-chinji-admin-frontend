@@ -99,7 +99,7 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
             </Menu.Item>
             <Menu.Item
                 key="edit"
-                icon={<EditOutlined className="text-blue-500" />}
+                icon={<EditOutlined className="text-[#006666]" />}
                 onClick={() => setModal({
                     name: "Update",
                     data: record,

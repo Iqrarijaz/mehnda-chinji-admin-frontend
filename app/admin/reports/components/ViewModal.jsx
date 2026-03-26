@@ -82,7 +82,7 @@ function ViewModal({ viewModal, setViewModal }) {
 
                             {/* Target Card */}
                             <div className="p-4 bg-white rounded border border-slate-100">
-                                <div className="flex items-center gap-2 mb-3 text-blue-600">
+                                <div className="flex items-center gap-2 mb-3 text-[#006666]">
                                     <FaBullseye size={10} />
                                     <span className="text-[9px] font-bold uppercase tracking-widest">Target Content</span>
                                 </div>

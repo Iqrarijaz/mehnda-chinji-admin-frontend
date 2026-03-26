@@ -33,11 +33,11 @@ function CommentsModal({ isOpen, onClose, postId }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
                         <FaCommentDots size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-blue-700 block mt-1">Post Comments</span>
+                        <span className="text-lg font-bold text-[#006666] block mt-1">Post Comments</span>
                     </div>
                 </div>
             }

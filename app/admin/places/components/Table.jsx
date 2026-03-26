@@ -162,7 +162,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
             </Menu.Item>
             <Menu.Item
                 key="edit"
-                icon={<EditOutlined className="text-blue-500" />}
+                icon={<EditOutlined className="text-[#006666]" />}
                 onClick={() => setModal({
                     name: "Update",
                     data: record,

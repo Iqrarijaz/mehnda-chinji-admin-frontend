@@ -161,12 +161,12 @@ function ViewModal({ viewModal, setViewModal }) {
                             </div>
                             <div className="p-2.5 bg-blue-50/50 rounded-lg border border-blue-100/30 flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-7 h-7 rounded-md bg-white flex items-center justify-center text-blue-600 shadow-sm">
+                                    <div className="w-7 h-7 rounded-md bg-white flex items-center justify-center text-[#006666] shadow-sm">
                                         <FaCommentAlt size={12} />
                                     </div>
                                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-tight">Comments</span>
                                 </div>
-                                <span className="text-lg font-black text-blue-700 tracking-tight">{data.commentsCount || 0}</span>
+                                <span className="text-lg font-black text-[#006666] tracking-tight">{data.commentsCount || 0}</span>
                             </div>
                         </div>
                     </div>

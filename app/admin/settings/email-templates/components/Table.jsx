@@ -105,7 +105,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
     <Menu className="!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100">
       <Menu.Item
         key="edit"
-        icon={<EditOutlined className="text-blue-500" />}
+        icon={<EditOutlined className="text-[#006666]" />}
         onClick={() => {
           router.push(`${PATH_ROUTER?.EDIT_EMAIL_TEMPLATE}/${record._id}`);
         }}

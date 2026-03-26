@@ -79,7 +79,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
             </Menu.Item>
             <Menu.Item
                 key="edit"
-                icon={<EditOutlined className="text-blue-500" />}
+                icon={<EditOutlined className="text-[#006666]" />}
                 onClick={() => setModal({ name: "Edit", data: record, state: true })}
                 className="!rounded-lg hover:!bg-blue-50"
             >

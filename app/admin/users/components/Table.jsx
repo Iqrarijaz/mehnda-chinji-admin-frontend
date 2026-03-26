@@ -74,7 +74,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
         <Menu className="!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100">
             <Menu.Item
                 key="edit"
-                icon={<EditOutlined className="text-blue-500" />}
+                icon={<EditOutlined className="text-[#006666]" />}
                 onClick={() => setModal({ name: "Update", data: record, state: true })}
                 className="!rounded hover:!bg-blue-50"
             >
@@ -149,7 +149,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             width: 170,
             render: (role) => {
                 const roleColors = {
-                    ADMIN: "bg-blue-100/50 text-blue-700 border-blue-200",
+                    ADMIN: "bg-teal-100/50 text-[#006666] border-teal-200",
                     SUPER_ADMIN: "bg-purple-100/50 text-purple-700 border-purple-200",
                     USER: "bg-slate-100 text-slate-700 border-slate-200",
                     BLOOD_DONOR: "bg-red-100/50 text-red-700 border-red-200",
