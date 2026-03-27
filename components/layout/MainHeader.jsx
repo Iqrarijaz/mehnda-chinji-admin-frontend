@@ -110,7 +110,7 @@ function MainHeader() {
           onClick={() => setIsProfileOpen(true)}
           className="flex items-center gap-2 p-1 px-1 rounded-full hover:bg-white/10 transition-all border border-white/20 group shadow-sm active:scale-95"
         >
-          <FaUserCircle size={32} className="text-white transition-colors" />
+          <FaUserCircle size={26} className="text-white transition-colors" />
         </button>
       </div>
 

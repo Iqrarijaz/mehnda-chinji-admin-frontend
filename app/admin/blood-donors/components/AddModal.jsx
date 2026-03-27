@@ -33,7 +33,8 @@ const initialValues = {
     city: "",
     village: "",
     userId: "",
-    available: true
+    available: true,
+    isDeleted: false
 };
 
 function AddDonorModal({ modal, setModal }) {

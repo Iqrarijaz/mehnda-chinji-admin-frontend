@@ -38,6 +38,7 @@ function AddConfigurationModal({ modal, setModal }) {
                 type: values.type,
                 data: JSON.parse(values.dataString),
                 isActive: values.isActive,
+                isDeleted: values.isDeleted,
             };
             return CREATE_CONFIGURATION(payload);
         },
@@ -60,6 +61,7 @@ function AddConfigurationModal({ modal, setModal }) {
         type: "CITIES",
         dataString: JSON.stringify({ name: "", code: "" }, null, 2),
         isActive: true,
+        isDeleted: false,
     };
 
     return (

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
+import AddButton from "@/components/InnerPage/AddButton";
 import ReportsTable from "./components/Table";
 import { GET_REPORTS, GET_REPORT_STATUS_COUNTS } from "@/app/api/admin/reports";
 import SelectBox from "@/components/SelectBox";
@@ -123,7 +124,12 @@ export default function ReportsPage() {
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
                         />
-
+                        <AddButton
+                            title="Create Report"
+                            icon={false}
+                            onClick={() => setModal({ name: "Add", data: null, state: true })}
+                            className="!h-[32px] !rounded !px-4 !text-[10px] font-medium shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                        />
                         {/* Mobile Filter Toggle */}
                         <button
                             onClick={() => setIsFilterModalOpen(true)}

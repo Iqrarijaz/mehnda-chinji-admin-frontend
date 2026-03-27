@@ -61,6 +61,7 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
         accessRoleId: modal?.data?.accessRoleId?._id || modal?.data?.accessRoleId || "",
         password: "",
         status: modal?.data?.status || "ACTIVE",
+        isDeleted: modal?.data?.isDeleted ?? false,
     };
 
     const handleSubmit = (values) => {

@@ -7,7 +7,7 @@ function SelectBox({
   defaultValue = "",
   value,
   width = "100%",
-  height = "36px",
+  height = "32px",
   className = "",
   placeholder = "",
   loading = false,

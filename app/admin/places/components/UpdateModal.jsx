@@ -72,6 +72,7 @@ function UpdatePlaceModal({ modal, setModal }) {
         categoryId: modal?.data?.categoryId?._id || modal?.data?.categoryId || "",
         status: modal?.data?.status || "PENDING",
         contact: modal?.data?.contact?.length > 0 ? modal.data.contact : [{ name: "", number: "" }],
+        isDeleted: modal?.data?.isDeleted ?? false,
     };
 
     return (

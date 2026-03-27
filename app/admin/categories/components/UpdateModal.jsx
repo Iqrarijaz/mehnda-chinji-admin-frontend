@@ -44,6 +44,7 @@ function UpdateCategoryModal({ modal, setModal }) {
     name_en: modal?.data?.name?.en || "",
     name_ur: modal?.data?.name?.ur || "",
     type: modal?.data?.type || "PLACES",
+    isDeleted: modal?.data?.isDeleted ?? false,
   };
 
   const handleSubmit = (values) => {

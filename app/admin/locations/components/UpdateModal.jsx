@@ -47,6 +47,7 @@ function UpdateLocationModal({ modal, setModal }) {
     name_ur: modal?.data?.name?.ur || "",
     type: modal?.data?.type || "",
     tehsil: modal?.data?.tehsil?._id || modal?.data?.tehsil || "",
+    isDeleted: modal?.data?.isDeleted ?? false,
   }), [modal?.data]);
 
   const updateLocation = useMutation({

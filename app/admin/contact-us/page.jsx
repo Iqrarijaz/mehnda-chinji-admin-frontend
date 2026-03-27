@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
+import AddButton from "@/components/InnerPage/AddButton";
 import ContactUsList from "@/components/admin/contactUs/ContactUsList";
 import ContactUsDetailModal from "@/components/admin/contactUs/ContactUsDetailModal";
 import { GET_CONTACT_REQUESTS, GET_CONTACT_STATUS_COUNTS, UPDATE_CONTACT_REQUEST_STATUS, DELETE_CONTACT_REQUEST } from "@/app/api/admin/contact-us";
@@ -140,6 +141,12 @@ export default function ContactUsPage() {
                             options={columnOptions}
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
+                        />
+                        <AddButton
+                            title="Add Contact"
+                            icon={false}
+                            onClick={() => setModal({ name: "Add", data: null, state: true })}
+                            className="!h-[32px] !rounded !px-4 !text-[10px] font-medium shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
                         />
 
                         {/* Mobile Filter Toggle */}

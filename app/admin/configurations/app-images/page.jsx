@@ -80,10 +80,10 @@ export default function AppImagesPage() {
                         />
 
                         <AddButton
-                            title="Add Image Set"
+                            title="Add Image"
                             icon={false}
                             onClick={() => setModal({ name: "Add", data: null, state: true })}
-                            className="!h-[36px] !rounded !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                            className="!h-[32px] !rounded !px-4 !text-[10px] font-medium shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
                         />
                     </div>
                 </div>

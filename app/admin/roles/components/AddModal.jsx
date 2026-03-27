@@ -24,6 +24,7 @@ const initialValues = {
     name: "",
     description: "",
     permissions: [],
+    isDeleted: false,
 };
 
 function AddRoleModal({ modal, setModal }) {

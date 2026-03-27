@@ -59,6 +59,7 @@ function UpdateBusinessModal({ modal, setModal }) {
         phone: modal?.data?.phone || "",
         address: modal?.data?.address || "",
         status: modal?.data?.status || "PENDING",
+        isDeleted: modal?.data?.isDeleted ?? false,
     };
 
     return (
@@ -178,7 +179,7 @@ function UpdateBusinessModal({ modal, setModal }) {
                             )}
 
                             {/* Modal Footer Actions */}
-                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

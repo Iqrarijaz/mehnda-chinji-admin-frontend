@@ -52,10 +52,10 @@ export default function LocationsPage() {
       <div className="flex flex-col md:flex-row justify-between mb-4 gap-3 items-start md:items-center">
         <h1 className="md:hidden text-2xl font-bold text-slate-800">Locations</h1>
 
-        <div className="flex gap-2 items-center w-full md:w-auto justify-end">
-          {/* Desktop Search (Hidden on Mobile) */}
+        <div className="flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:w-auto justify-end">
+          {/* Desktop Search (Visible on Tablet/Desktop) */}
           <div className="hidden md:block">
-            <SearchInput setFilters={setFilters} />
+            <SearchInput setFilters={setFilters} className="!max-w-[180px]" />
           </div>
 
           <div className="flex items-center gap-2">
@@ -73,12 +73,14 @@ export default function LocationsPage() {
             >
               <FiFilter size={18} />
             </button>
+          </div>
 
+          <div className="flex items-center gap-2">
             <AddButton
               title="Add New Location"
               icon={false}
               onClick={() => setModal({ name: "Add", data: null, state: true })}
-              className="!h-[36px] !rounded !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+              className="!h-[32px] !rounded !px-4 !text-[10px] font-medium shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
             />
           </div>
         </div>

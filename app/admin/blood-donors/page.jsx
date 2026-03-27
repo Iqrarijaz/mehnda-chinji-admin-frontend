@@ -14,6 +14,7 @@ import InnerPageCard from "@/components/layout/InnerPageCard";
 import { StatCardSkeleton } from "@/components/shared/Skeletons";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { FiFilter } from "react-icons/fi";
+import AddButton from "@/components/InnerPage/AddButton";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -92,9 +93,9 @@ export default function BloodDonorsPage() {
                 </div>
 
                 {/* Action Bar (Right) */}
-                <div className="flex gap-2 items-center w-full md:w-auto justify-end">
-                    {/* Desktop Filters (Hidden on Mobile) */}
-                    <div className="hidden md:flex items-center gap-3">
+                <div className="flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:w-auto justify-end">
+                    {/* Desktop Filters (Visible on Tablet/Desktop) */}
+                    <div className="hidden md:flex items-center gap-2">
                         <SelectBox
                             placeholder="Filter by Blood Group"
                             allowClear
@@ -104,7 +105,7 @@ export default function BloodDonorsPage() {
                             options={bloodGroups.map((bg) => ({ value: bg, label: bg }))}
                             className="custom-selectbox"
                         />
-                        <SearchInput setFilters={setFilters} />
+                        <SearchInput setFilters={setFilters} className="!max-w-[180px]" />
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -115,33 +116,37 @@ export default function BloodDonorsPage() {
                         />
 
                         {/* Mobile Filter Toggle */}
-                        <button
-                            onClick={() => setFilterModalOpen(true)}
-                            className="mobile-filter-btn md:hidden"
-                            title="Filters"
-                        >
-                            <FiFilter size={18} />
-                            {hasActiveFilters && (
-                                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-white" />
-                            )}
-                        </button>
+                        <div className="relative">
+                            <button
+                                onClick={() => setFilterModalOpen(true)}
+                                className="mobile-filter-btn md:hidden"
+                                title="Filters"
+                            >
+                                <FiFilter size={18} />
+                                {hasActiveFilters && (
+                                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-white" />
+                                )}
+                            </button>
+                        </div>
+                    </div>
 
+                    <div className="flex items-center gap-2">
                         <AddButton
-                            title="Add Donor"
+                            title="Add Blood Donor"
                             icon={false}
                             onClick={() => setModal({ name: "Add", data: null, state: true })}
-                            className="!h-[36px] !rounded !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                            className="!h-[32px] !rounded !px-4 !text-[10px] font-medium shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
                         />
                     </div>
                 </div>
             </div>
 
-            <BloodDonorsTable 
-                modal={modal} 
-                setModal={setModal} 
-                bloodDonorsList={bloodDonorsList} 
+            <BloodDonorsTable
+                modal={modal}
+                setModal={setModal}
+                bloodDonorsList={bloodDonorsList}
                 onChange={onChange}
-                visibleColumns={visibleColumns} 
+                visibleColumns={visibleColumns}
             />
 
             <FilterModal

@@ -39,6 +39,7 @@ function UpdateConfigurationModal({ modal, setModal }) {
                 type: values.type,
                 data: JSON.parse(values.dataString),
                 isActive: values.isActive,
+                isDeleted: values.isDeleted,
             };
             return UPDATE_CONFIGURATION(payload);
         },
@@ -60,6 +61,7 @@ function UpdateConfigurationModal({ modal, setModal }) {
         type: modal.data?.type || "",
         dataString: modal.data?.data ? JSON.stringify(modal.data.data, null, 2) : "",
         isActive: modal.data?.isActive ?? true,
+        isDeleted: modal.data?.isDeleted ?? false,
     };
 
     return (

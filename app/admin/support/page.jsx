@@ -89,10 +89,10 @@ export default function SupportPage() {
                 </div>
 
                 {/* Filter, Search and Action (Right) */}
-                <div className="flex gap-2 items-center w-full md:w-auto justify-end">
-                    {/* Desktop Filters (Hidden on Mobile) */}
-                    <div className="hidden md:flex items-center gap-3 mr-1">
-                        <SearchInput setFilters={setFilters} />
+                <div className="flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:w-auto justify-end">
+                    {/* Desktop Search (Visible on Tablet/Desktop) */}
+                    <div className="hidden md:block">
+                        <SearchInput setFilters={setFilters} className="!max-w-[200px]" />
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -101,8 +101,6 @@ export default function SupportPage() {
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
                         />
-
-                        {/* Mobile Filter Toggle if needed, or other buttons */}
                     </div>
                 </div>
             </div>

@@ -43,6 +43,7 @@ const initialValues = {
     categoryId: "",
     contact: [{ name: "", number: "" }],
     images: [],
+    isDeleted: false,
 };
 
 function AddPlaceModal({ modal, setModal }) {

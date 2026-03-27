@@ -16,7 +16,7 @@ function JsonViewerModal({ isModalOpen, setIsModalOpen }) {
     });
   };
 
-  const isOpen = (name === "Error Details" || name === "Request Body") && state;
+  const isOpen = (name === "Error Details" || name === "Request Body" || name === "Response Data") && state;
 
   return (
     <Modal

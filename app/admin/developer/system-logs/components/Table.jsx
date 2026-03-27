@@ -21,7 +21,7 @@ function SystemLogsTable({ systemLogsList, onChange }) {
   });
 
   // Column Visibility State
-  const [visibleColumns, setVisibleColumns] = useState(["moduleName", "methodName", "createdBy", "reqBody", "error", "createdAt", "actions"]);
+  const [visibleColumns, setVisibleColumns] = useState(["moduleName", "methodName", "createdBy", "reqBody", "data", "error", "createdAt", "actions"]);
 
   // Function to handle sorting logic
   function handleSorting(pagination, filters, sorter) {
@@ -51,6 +51,7 @@ function SystemLogsTable({ systemLogsList, onChange }) {
     { label: "Method Name", value: "methodName" },
     { label: "Requested By", value: "createdBy" },
     { label: "Request Data", value: "reqBody" },
+    { label: "Response Data", value: "data" },
     { label: "Error Details", value: "error" },
     { label: "Created At", value: "createdAt" },
   ];
@@ -121,6 +122,29 @@ function SystemLogsTable({ systemLogsList, onChange }) {
               type="link"
               icon={<EyeOutlined />}
               onClick={() => setIsModalOpen({ name: "Request Body", state: true, record })}
+              className="!text-[#006666] !p-0 hover:!text-secondary flex items-center gap-1 mx-auto"
+            >
+              View Data
+            </Button>
+          ) : (
+            <span className="text-slate-300">----</span>
+          )}
+        </>
+      ),
+    },
+    {
+      title: "Response Data",
+      dataIndex: "data",
+      key: "data",
+      align: "center",
+      width: 170,
+      render: (record) => (
+        <>
+          {record ? (
+            <Button
+              type="link"
+              icon={<EyeOutlined />}
+              onClick={() => setIsModalOpen({ name: "Response Data", state: true, record })}
               className="!text-[#006666] !p-0 hover:!text-secondary flex items-center gap-1 mx-auto"
             >
               View Data

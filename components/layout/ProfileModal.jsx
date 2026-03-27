@@ -16,6 +16,7 @@ import {
 import { FaShieldAlt, FaSignOutAlt, FaUserCircle, FaCheckCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { LOGOUT } from "@/app/api/login";
+import { UPDATE_ADMIN_USER } from "@/app/api/admin/admin-users";
 
 const ProfileModal = ({ open, onCancel }) => {
     const router = useRouter();
@@ -57,27 +58,48 @@ const ProfileModal = ({ open, onCancel }) => {
         }
     };
 
-    const handleSave = () => {
+    const [loading, setLoading] = useState(false);
+
+    const handleSave = async () => {
         if (!editForm.name.trim()) {
             toast.warning("Name cannot be empty");
             return;
         }
+        
+        setLoading(true);
         try {
             const userData = JSON.parse(localStorage.getItem("userData"));
-            const updatedUser = {
-                ...userData,
-                adminData: {
-                    ...userData.adminData,
-                    name: editForm.name.trim(),
-                    phone: editForm.phone.trim(),
-                }
-            };
-            localStorage.setItem("userData", JSON.stringify(updatedUser));
-            setUser(updatedUser);
-            setIsEditing(false);
-            toast.success("Profile updated successfully");
+            const adminId = user?.adminData?._id || user?._id;
+
+            if (!adminId) {
+                toast.error("User ID not found. Please log in again.");
+                return;
+            }
+
+            const res = await UPDATE_ADMIN_USER({
+                _id: adminId,
+                name: editForm.name.trim(),
+                phone: editForm.phone.trim(),
+            });
+
+            if (res) {
+                const updatedUser = {
+                    ...userData,
+                    adminData: {
+                        ...userData.adminData,
+                        name: editForm.name.trim(),
+                        phone: editForm.phone.trim(),
+                    }
+                };
+                localStorage.setItem("userData", JSON.stringify(updatedUser));
+                setUser(updatedUser);
+                setIsEditing(false);
+                toast.success(res?.message || "Profile updated successfully");
+            }
         } catch (error) {
-            toast.error("Failed to update profile locally");
+            toast.error(error?.response?.data?.message || "Failed to update profile on server");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -194,6 +216,7 @@ const ProfileModal = ({ open, onCancel }) => {
                             <Button
                                 type="primary"
                                 onClick={handleSave}
+                                loading={loading}
                                 className="modal-footer-btn-primary flex-1 !shadow-teal-900/10"
                                 icon={<CheckOutlined />}
                             >

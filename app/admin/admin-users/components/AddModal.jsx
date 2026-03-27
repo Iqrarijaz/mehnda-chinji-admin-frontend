@@ -33,6 +33,7 @@ const initialValues = {
     accessRoleId: "",
     password: "",
     status: "ACTIVE",
+    isDeleted: false,
 };
 
 const AddAdminUserModal = React.memo(({ modal, setModal }) => {

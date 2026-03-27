@@ -24,6 +24,7 @@ const initialValues = {
     name_en: "",
     name_ur: "",
     type: "PLACES",
+    isDeleted: false,
 };
 
 function AddCategoryModal({ modal, setModal }) {
@@ -122,7 +123,7 @@ function AddCategoryModal({ modal, setModal }) {
                                 </>
                             )}
 
-                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

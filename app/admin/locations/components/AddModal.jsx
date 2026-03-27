@@ -40,6 +40,7 @@ const initialValues = {
   name_ur: "",
   type: "",
   tehsil: "",
+  isDeleted: false,
 };
 
 function AddLocationModal({ modal, setModal }) {

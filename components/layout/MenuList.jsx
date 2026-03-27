@@ -6,7 +6,7 @@ import { FaBloggerB } from "react-icons/fa6";
 import { MdDashboardCustomize } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
 import { MdReport } from "react-icons/md";
-import { FaDroplet } from "react-icons/fa6";
+import { FaDroplet, FaTerminal } from "react-icons/fa6";
 
 const MenuList = [
   {
@@ -97,6 +97,12 @@ const MenuList = [
     link: "/admin/reports",
     icon: <MdReport size={20} />,
     permission: "reports.read"
+  },
+  {
+    name: "System Logs",
+    link: "/admin/system-logs",
+    icon: <FaTerminal size={20} />,
+    permission: "logs.read"
   },
 ];
 

@@ -103,26 +103,30 @@ export default function PlacesPage() {
                     )}
                 </div>
 
-                {/* Filter, Search and Add Button (Right) */}
-                <div className="flex gap-2 items-center w-full md:w-auto justify-end">
-                    {/* Desktop Filters (Hidden on Mobile) */}
-                    <div className="hidden md:flex items-center gap-3 mr-1">
+                {/* Filter, Search, Columns and Add Button (Right) */}
+                <div className="flex flex-wrap md:flex-nowrap gap-3 items-center w-full md:w-auto justify-end">
+                    {/* Desktop Filters (Visible on Tablet/Desktop) */}
+                    <div className="hidden md:flex items-center gap-3">
                         <SelectBox
                             placeholder="Filter by Category"
                             allowClear
                             handleChange={handleCategoryFilter}
-                            width={150}
+                            width={160}
                             options={PLACE_CATEGORIES.map((cat) => ({ value: cat.value, label: cat.label }))}
-                            className="custom-selectbox"
+                            className="custom-selectbox !h-[32px]"
                         />
-                        <SearchInput setFilters={setFilters} />
+                        <SearchInput 
+                            setFilters={setFilters} 
+                            className="!max-w-[180px] !h-[32px]" 
+                        />
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                         <ColumnVisibilityDropdown
                             options={columnOptions}
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
+                            className="!h-[32px] !border-2 !border-[#006666] !text-[#006666] !text-[10px] font-medium"
                         />
 
                         {/* Mobile Filter Toggle */}
@@ -138,7 +142,7 @@ export default function PlacesPage() {
                             title="Add Place"
                             icon={false}
                             onClick={() => setModal({ name: "Add", data: null, state: true })}
-                            className="!h-[36px] !rounded !px-4 !text-[12px] shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                            className="!h-[32px] !border-2 !border-[#006666] !bg-white !text-[#006666] hover:!bg-[#006666] hover:!text-white !rounded !text-[10px] font-medium shadow-sm transition-all !px-3"
                         />
                     </div>
                 </div>

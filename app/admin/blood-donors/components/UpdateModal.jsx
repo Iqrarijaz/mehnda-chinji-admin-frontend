@@ -150,7 +150,7 @@ function UpdateDonorModal({ modal, setModal }) {
                                 </>
                             )}
 
-                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                   label="Cancel"
                                   type="secondary"

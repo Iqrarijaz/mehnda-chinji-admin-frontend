@@ -58,45 +58,15 @@ const StatCard = ({
                 }}
             />
 
-            {/* Top Row */}
+            {/* Main Content */}
             <div
                 style={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "space-between",
+                    gap: "8px",
                 }}
             >
-                {/* Left: Count + Title */}
-                <div style={{ display: "flex", alignItems: "baseline", flexWrap: "wrap" }}>
-                    <span
-                        className="stat-count text-[#006666]"
-                        style={{
-                            fontSize: 18,
-                            fontWeight: 700,
-                            color: active ? "#ffffff" : color,
-                            lineHeight: 1,
-                            marginRight: 6,
-                        }}
-                    >
-                        {count ?? 0}
-                    </span>
-
-                    <span
-                        className="stat-title"
-                        style={{
-                            fontSize: 10,
-                            fontWeight: 700,
-                            color: textColor,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                        }}
-                    >
-                        <span className="stat-title-full">{title}</span>
-                        {shortTitle && <span className="stat-title-short hidden uppercase">{shortTitle}</span>}
-                    </span>
-                </div>
-
-                {/* Right: Icon */}
+                {/* Left: Icon */}
                 {icon && (
                     <span
                         style={{
@@ -110,13 +80,43 @@ const StatCard = ({
                                 ? "rgba(255,255,255,0.2)"
                                 : `${color}18`,
                             color: active ? "#fff" : color,
-                            fontSize: 16,
+                            fontSize: 14,
                             flexShrink: 0,
                         }}
                     >
                         {icon}
                     </span>
                 )}
+
+                {/* Right: Title + Count */}
+                <div style={{ display: "flex", alignItems: "baseline", gap: "6px" }}>
+                    <span
+                        className="stat-title"
+                        style={{
+                            fontSize: 10,
+                            fontWeight: 700,
+                            color: textColor,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.05em",
+                            opacity: 0.8,
+                        }}
+                    >
+                        <span className="stat-title-full">{title}</span>
+                        {shortTitle && <span className="stat-title-short hidden uppercase">{shortTitle}</span>}
+                    </span>
+
+                    <span
+                        className="stat-count"
+                        style={{
+                            fontSize: 16,
+                            fontWeight: 800,
+                            color: active ? "#ffffff" : color,
+                            lineHeight: 1,
+                        }}
+                    >
+                        {count ?? 0}
+                    </span>
+                </div>
             </div>
 
             {/* Bottom Accent Line */}

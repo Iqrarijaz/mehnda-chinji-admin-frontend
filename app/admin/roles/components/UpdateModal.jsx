@@ -40,6 +40,7 @@ function UpdateRoleModal({ modal, setModal }) {
         name: modal?.data?.name || "",
         description: modal?.data?.description || "",
         permissions: modal?.data?.permissions || [],
+        isDeleted: modal?.data?.isDeleted ?? false,
     };
 
     const handleSubmit = (values) => {

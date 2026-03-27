@@ -29,6 +29,7 @@ const initialValues = {
     description: "",
     phone: "",
     address: "",
+    isDeleted: false,
 };
 
 function AddBusinessModal({ modal, setModal }) {
@@ -177,7 +178,7 @@ function AddBusinessModal({ modal, setModal }) {
                             )}
 
                             {/* Modal Footer Actions */}
-                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"
