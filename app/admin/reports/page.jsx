@@ -32,6 +32,7 @@ export default function ReportsPage() {
         onChangeSearch: false,
         status: null,
     });
+    const [modal, setModal] = useState({ name: null, data: null, state: false });
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
     // Column Visibility State
@@ -143,15 +144,25 @@ export default function ReportsPage() {
             </div>
 
             <div className="flex flex-col mb-4">
-                <ReportsTable reportsList={reportsList} onChange={onChange} setFilters={setFilters} visibleColumns={visibleColumns} />
+                <ReportsTable 
+                    reportsList={reportsList} 
+                    onChange={onChange} 
+                    visibleColumns={visibleColumns} 
+                    setFilters={setFilters}
+                    setModal={setModal}
+                />
             </div>
 
             <FilterModal
-                open={isFilterModalOpen}
-                onCancel={() => setIsFilterModalOpen(false)}
+                isOpen={isFilterModalOpen}
+                onClose={() => setIsFilterModalOpen(false)}
                 filters={filters}
                 setFilters={setFilters}
             />
         </InnerPageCard>
     );
 }
+
+const styles = {
+    // any extra styles if needed
+};

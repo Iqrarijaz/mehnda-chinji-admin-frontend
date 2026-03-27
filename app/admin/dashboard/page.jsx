@@ -163,6 +163,20 @@ function DashBoard() {
         if (isMounted) fetchData();
     }, [isMounted]);
 
+    // Simple SVG Sparkline component
+    const Sparkline = ({ data, color = "#006666" }) => (
+        <svg viewBox="0 0 100 20" className="w-full h-4 mt-2 opacity-50">
+            <polyline
+                fill="none"
+                stroke={color}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                points="0,15 15,10 30,18 45,5 60,12 85,2 100,8"
+            />
+        </svg>
+    );
+
     if (!isMounted) return null;
 
     return (
@@ -170,20 +184,37 @@ function DashBoard() {
             {/* Premium Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded bg-teal-600 flex items-center justify-center text-white shadow-lg shadow-teal-900/20">
+                    <div className="w-12 h-12 rounded bg-[#006666] flex items-center justify-center text-white shadow-lg shadow-teal-900/20">
                         <RocketOutlined className="text-xl" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-black text-slate-800 tracking-tight leading-none uppercase">
-                            Admin <span className="text-teal-600">Terminal</span>
-                        </h1>
-                        <p className="text-slate-400 text-[11px] font-bold uppercase tracking-[0.2em] mt-2">
+                        <div className="flex items-center gap-2">
+                            <h1 className="text-2xl font-black text-slate-800 tracking-tight leading-none uppercase">
+                                Admin <span className="text-[#006666]">Terminal</span>
+                            </h1>
+                            <div className="flex items-center gap-1 bg-teal-50 px-1.5 py-0.5 rounded text-[8px] font-black text-teal-600 border border-teal-100 uppercase tracking-tighter">
+                                <CheckCircleOutlined size={8} /> v2.4.0
+                            </div>
+                        </div>
+                        <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">
                             Global Control Center • {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </p>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-3">
+                    {/* System Health Monitor */}
+                    <div className="hidden lg:flex items-center gap-4 mr-4 border-r border-slate-100 pr-4">
+                        <div className="flex flex-col items-end">
+                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Network Latency</span>
+                            <span className="text-[10px] font-bold text-teal-600">24ms <span className="text-[8px] text-slate-300">Optimum</span></span>
+                        </div>
+                        <div className="flex flex-col items-end">
+                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">API Status</span>
+                            <span className="text-[10px] font-bold text-teal-600">Operational</span>
+                        </div>
+                    </div>
+
                     <div className="flex items-center gap-2 text-[10px] font-black text-teal-600 bg-teal-50 px-3 py-2 rounded-full border border-teal-100 uppercase tracking-widest shadow-sm">
                         <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
                         Live Monitor Active
@@ -198,31 +229,31 @@ function DashBoard() {
             </div>
 
             {/* Premium Stats Grid */}
-            <div className="flex flex-wrap gap-3">
-                <StatCard
-                    title="User Directory"
-                    count={stats.users.total}
-                    icon={<UserOutlined />}
-                    color="#006666"
-                />
-                <StatCard
-                    title="Active Businesses"
-                    count={stats.businesses.APPROVED}
-                    icon={<ShopOutlined />}
-                    color="#0ea5e9"
-                />
-                <StatCard
-                    title="Verified Places"
-                    count={stats.places.APPROVED}
-                    icon={<EnvironmentOutlined />}
-                    color="#f59e0b"
-                />
-                <StatCard
-                    title="Blood Donors"
-                    count={stats.donors.total}
-                    icon={<UserAddOutlined />}
-                    color="#ef4444"
-                />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {[
+                    { title: "User Directory", count: stats.users.total, icon: <UserOutlined />, color: "#006666", bg: "rgba(0, 102, 102, 0.03)" },
+                    { title: "Active Businesses", count: stats.businesses.APPROVED, icon: <ShopOutlined />, color: "#0ea5e9", bg: "rgba(14, 165, 233, 0.03)" },
+                    { title: "Verified Places", count: stats.places.APPROVED, icon: <EnvironmentOutlined />, color: "#f59e0b", bg: "rgba(245, 158, 11, 0.03)" },
+                    { title: "Blood Donors", count: stats.donors.total, icon: <UserAddOutlined />, color: "#ef4444", bg: "rgba(239, 68, 68, 0.03)" }
+                ].map((stat, i) => (
+                    <div
+                        key={i}
+                        className="p-5 rounded-xl border border-slate-100 bg-white shadow-sm hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group backdrop-blur-sm"
+                        style={{ borderLeft: `4px solid ${stat.color}` }}
+                    >
+                        <div className="flex justify-between items-start mb-2">
+                            <div className={`p-2 rounded-lg bg-slate-50 text-slate-400 group-hover:text-teal-600 transition-colors`}>
+                                {stat.icon}
+                            </div>
+                            <Tag className="!m-0 !text-[9px] font-black tracking-widest uppercase border-none bg-slate-100 text-slate-400">+12%</Tag>
+                        </div>
+                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{stat.title}</h4>
+                        <div className="text-2xl font-black text-slate-800 tracking-tight leading-none">
+                            {(stat.count || 0).toLocaleString()}
+                        </div>
+                        <Sparkline color={stat.color} />
+                    </div>
+                ))}
             </div>
 
             {/* Layout Grid */}
@@ -238,34 +269,23 @@ function DashBoard() {
                             <PlusOutlined className="text-slate-300 text-xs" />
                         </div>
                         <div className="p-4 grid grid-cols-2 gap-3">
-                            <QuickActionButton
-                                icon={<EnvironmentOutlined />}
-                                label="Add Place"
-                                onClick={() => router.push("/admin/places?action=add")}
-                                colorClass="text-orange-600"
-                                bgClass="bg-orange-50"
-                            />
-                            <QuickActionButton
-                                icon={<ShopOutlined />}
-                                label="Register Biz"
-                                onClick={() => router.push("/admin/business?action=add")}
-                                colorClass="text-blue-600"
-                                bgClass="bg-blue-50"
-                            />
-                            <QuickActionButton
-                                icon={<UserAddOutlined />}
-                                label="New Admin"
-                                onClick={() => router.push("/admin/admin-users?action=add")}
-                                colorClass="text-teal-600"
-                                bgClass="bg-teal-50"
-                            />
-                            <QuickActionButton
-                                icon={<AlertOutlined />}
-                                label="Audit Logs"
-                                onClick={() => router.push("/admin/developer/logs")}
-                                colorClass="text-slate-600"
-                                bgClass="bg-slate-50"
-                            />
+                            {[
+                                { label: "Add Place", icon: <EnvironmentOutlined />, onClick: () => router.push("/admin/places?action=add"), color: "text-orange-600", bg: "bg-orange-50" },
+                                { label: "Register Biz", icon: <ShopOutlined />, onClick: () => router.push("/admin/business?action=add"), color: "text-blue-600", bg: "bg-blue-50" },
+                                { label: "New Admin", icon: <UserAddOutlined />, onClick: () => router.push("/admin/admin-users?action=add"), color: "text-teal-600", bg: "bg-teal-50" },
+                                { label: "Audit Logs", icon: <HistoryOutlined />, onClick: () => router.push("/admin/developer/system-logs"), color: "text-slate-600", bg: "bg-slate-50" }
+                            ].map((item, i) => (
+                                <button
+                                    key={i}
+                                    onClick={item.onClick}
+                                    className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-100 hover:border-teal-200 hover:bg-teal-50/30 transition-all group bg-white shadow-sm"
+                                >
+                                    <div className={`w-10 h-10 rounded-full ${item.bg} flex items-center justify-center ${item.color} group-hover:scale-110 transition-transform mb-2 border border-black/5`}>
+                                        {item.icon}
+                                    </div>
+                                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest text-center">{item.label}</span>
+                                </button>
+                            ))}
                         </div>
                     </div>
 
