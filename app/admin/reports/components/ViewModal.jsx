@@ -94,10 +94,11 @@ function ViewModal({ viewModal, setViewModal }) {
                                         </Tag>
                                     </div>
                                     <div>
-                                        <p className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-1 transition-colors duration-300">Target ID</p>
-                                        <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400 break-all bg-slate-50 dark:bg-slate-900/50 p-2 rounded border border-slate-100 dark:border-slate-800 transition-colors duration-300">
-                                            {data.targetId}
-                                        </p>
+                                        <p className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-1 transition-colors duration-300">Target Info</p>
+                                        <div className="bg-slate-50 dark:bg-slate-900/50 p-2 rounded border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                                            <p className="text-[11px] font-bold text-slate-700 dark:text-slate-200 mb-1">{data.targetName || "No name"}</p>
+                                            <p className="text-[9px] font-mono text-slate-400 dark:text-slate-500 break-all">ID: {data.targetId}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

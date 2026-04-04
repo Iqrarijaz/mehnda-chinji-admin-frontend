@@ -134,16 +134,19 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
             ),
         },
         {
-            title: "Type",
-            dataIndex: "targetType",
-            key: "targetType",
+            title: "Target",
+            key: "target",
             width: 170,
             align: "center",
-            sorter: true,
-            render: (type) => (
-                <Tag color={type === 'BUSINESS' ? 'blue' : type === 'PLACE' ? 'green' : 'orange'} className="!rounded-full !px-3 font-bold !border-0 uppercase text-[9px] shadow-sm">
-                    {type}
-                </Tag>
+            render: (record) => (
+                <div className="flex flex-col items-center min-w-0 transition-colors duration-300">
+                    <Tag color={record.targetType === 'BUSINESS' ? 'blue' : record.targetType === 'PLACE' ? 'green' : 'orange'} className="!rounded-full !px-3 font-bold !border-0 uppercase text-[9px] shadow-sm">
+                        {record.targetType}
+                    </Tag>
+                    <span className="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate max-w-full leading-tight block tracking-tight mt-1 transition-colors duration-300">
+                        {record.targetName || "No name"}
+                    </span>
+                </div>
             ),
         },
         {
