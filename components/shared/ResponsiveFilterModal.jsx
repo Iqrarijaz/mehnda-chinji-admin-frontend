@@ -40,13 +40,13 @@ const ResponsiveFilterModal = ({
       closeIcon={<CloseOutlined className="text-slate-400 hover:text-teal-600 transition-colors" />}
       title={
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded bg-teal-50 flex items-center justify-center text-teal-600 shadow-sm">
+          <div className="w-10 h-10 rounded bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center text-teal-600 dark:text-teal-400 shadow-sm transition-colors duration-300">
             {icon}
           </div>
           <div className="flex flex-col">
-            <span className="text-base font-bold text-slate-800 leading-tight">{title}</span>
+            <span className="text-base font-bold text-slate-800 dark:text-slate-100 leading-tight transition-colors duration-300">{title}</span>
             {activeFiltersCount > 0 && (
-              <span className="text-[10px] font-medium text-teal-600 uppercase tracking-wider">
+              <span className="text-[10px] font-medium text-teal-600 dark:text-teal-400 uppercase tracking-wider transition-colors duration-300">
                 {activeFiltersCount} Active {activeFiltersCount === 1 ? 'Filter' : 'Filters'}
               </span>
             )}

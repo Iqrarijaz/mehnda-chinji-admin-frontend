@@ -37,11 +37,17 @@ Axios.interceptors.response.use(
   function (error) {
     // Check for 401 Unauthorized (session expired)
     if (error.response?.status === 401) {
-      // Trigger session expired modal
       if (onSessionExpired) {
         onSessionExpired();
       }
     }
+
+    // Extract detailed error message from response, or use fallbacks
+    const errorMessage = error.response?.data?.message || error.message || "An unexpected error occurred";
+    
+    // Attach the clean message to the error object for consistent component access
+    error.errorMessage = errorMessage;
+
     return Promise.reject(error);
   }
 );

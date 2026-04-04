@@ -11,6 +11,7 @@ import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { CREATE_ROLE } from "@/app/api/admin/roles";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 import PermissionsSelector from "./PermissionsSelector";
 
 // Validation schema
@@ -36,11 +37,11 @@ function AddRoleModal({ modal, setModal }) {
         mutationFn: CREATE_ROLE,
         onSuccess: (data) => {
             toast.success(data?.message || "Role created successfully");
-            queryClient.invalidateQueries("rolesList");
+            queryClient.invalidateQueries([ADMIN_KEYS.ROLES.LIST]);
             handleCloseModal();
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Something went wrong");
+            toast.error(error.errorMessage || "Something went wrong");
         },
     });
 
@@ -66,11 +67,11 @@ function AddRoleModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
+                    <div className="w-8 h-8 rounded bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center text-[#006666] dark:text-teal-400 transition-colors duration-300">
                         <FaShieldAlt size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-[#006666] block mt-1">Create New Role</span>
+                        <span className="text-lg font-bold text-[#006666] dark:text-teal-400 block mt-1 transition-colors duration-300">Create New Role</span>
                     </div>
                 </div>
             }
@@ -107,7 +108,7 @@ function AddRoleModal({ modal, setModal }) {
                                             />
 
                                             <div className="flex flex-col gap-1.5">
-                                                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Role Description <span className="text-red-500">*</span></label>
+                                                <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1">Role Description <span className="text-red-500">*</span></label>
                                                 <div className="relative">
                                                     <Input.TextArea
                                                         name="description"
@@ -115,7 +116,7 @@ function AddRoleModal({ modal, setModal }) {
                                                         value={values.description}
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
-                                                        className="!rounded !border-slate-100 focus:!border-[#006666] !py-1 !text-xs !h-16"
+                                                        className="!rounded !border-slate-100 dark:!border-slate-800 !bg-white dark:!bg-slate-900 !text-slate-700 dark:!text-slate-200 focus:!border-[#006666] !py-1 !text-xs !h-16 transition-all duration-300"
                                                     />
                                                 </div>
                                                 {touched.description && errors.description && (
@@ -125,9 +126,9 @@ function AddRoleModal({ modal, setModal }) {
                                         </div>
                                     </div>
 
-                                    <div className="modal-section !mb-0">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Access Permissions</p>
-                                        <div className="bg-slate-50/50 p-2 rounded border border-slate-100 mt-1">
+                                    <div className="modal-section !mb-0 transition-colors duration-300">
+                                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors duration-300">Access Permissions</p>
+                                        <div className="bg-slate-50/50 dark:bg-slate-900/30 p-2 rounded border border-slate-100 dark:border-slate-800 mt-1 transition-colors duration-300">
                                             <PermissionsSelector
                                                 selectedPermissions={values.permissions}
                                                 onChange={(newPermissions) => setFieldValue("permissions", newPermissions)}
@@ -136,8 +137,8 @@ function AddRoleModal({ modal, setModal }) {
                                     </div>
                                 </>
                             )}
-
-                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+ 
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 transition-colors duration-300">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

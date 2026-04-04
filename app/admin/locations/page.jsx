@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import AddButton from "@/components/InnerPage/AddButton";
@@ -12,7 +12,10 @@ import { useDebounce } from "@/hooks/useDebounce";
 import InnerPageCard from "@/components/layout/InnerPageCard";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { FiFilter } from "react-icons/fi";
+import { HiRefresh } from "react-icons/hi";
 import FilterModal from "./components/FilterModal";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useAdminData } from "@/hooks/useAdminData";
 
 export default function LocationsPage() {
   const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -27,21 +30,16 @@ export default function LocationsPage() {
   });
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
-  // Column Visibility State
-  const [visibleColumns, setVisibleColumns] = useState(["name_en", "name_ur", "type", "status", "actions"]);
-
-  const columnOptions = [
-    { label: "Name (EN)", value: "name_en" },
-    { label: "Name (UR)", value: "name_ur" },
-    { label: "Type", value: "type" },
-    { label: "Status", value: "status" },
-  ];
-
   const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
-  const locationsList = useQuery({
-    queryKey: ["locationsList", JSON.stringify(debFilter)],
-    queryFn: () => LIST_LOCATIONS(debFilter),
-    onError: () => toast.error("Something went wrong. Please try again later."),
+
+  const {
+    listQuery: locationsList,
+    isRefreshing,
+    handleRefresh
+  } = useAdminData({
+    listQueryKey: [ADMIN_KEYS.LOCATIONS.LIST, JSON.stringify(debFilter)],
+    listQueryFn: () => LIST_LOCATIONS(debFilter),
+    onListError: "Failed to fetch locations.",
   });
 
   const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
@@ -50,7 +48,7 @@ export default function LocationsPage() {
     <InnerPageCard title="Locations">
 
       <div className="flex flex-col md:flex-row justify-between mb-4 gap-3 items-start md:items-center">
-        <h1 className="md:hidden text-2xl font-bold text-slate-800">Locations</h1>
+        <h1 className="md:hidden text-2xl font-bold text-slate-800 dark:text-slate-100 transition-colors duration-300">Locations</h1>
 
         <div className="flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:w-auto justify-end">
           {/* Desktop Search (Visible on Tablet/Desktop) */}
@@ -64,6 +62,16 @@ export default function LocationsPage() {
               visibleColumns={visibleColumns}
               setVisibleColumns={setVisibleColumns}
             />
+
+            {/* Refresh Button */}
+            <button
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              title="Refresh Data"
+              className="flex items-center justify-center !h-[32px] !w-[32px] !border !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
+            </button>
 
             {/* Mobile Filter Toggle */}
             <button

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import MenuList from "./MenuList";
+import { hasPermission } from "@/utils/permissions";
 import MainHeader from "./MainHeader";
 import { MenuContext } from "@/context/MenuContext";
 
@@ -50,17 +51,6 @@ function MainLayout({ children }) {
     setExpandedMenus(prev => ({ ...prev, [menuName]: !prev[menuName] }));
   };
 
-  const hasPermission = (item) => {
-    try {
-      const userData = JSON.parse(localStorage.getItem("userData") || "{}");
-      const user = userData?.adminData || userData;
-      if (!item.permission) return true;
-      if (user?.role === "SUPER_ADMIN") return true;
-      return user?.permissions?.includes(item.permission);
-    } catch (e) {
-      return false;
-    }
-  };
 
   const renderMenuItem = (item, isMobileView = false) => {
     const hasSubItems = item.subItems && item.subItems.length > 0;
@@ -125,7 +115,7 @@ function MainLayout({ children }) {
   if (!isInitialized) return null; // Avoid hydration mismatch
 
   return (
-    <div className="flex min-h-screen bg-[#F8FAFC] relative overflow-hidden">
+    <div className="flex min-h-screen bg-[#F8FAFC] dark:bg-slate-900 relative overflow-hidden transition-colors duration-300">
       {/* Mobile Overlay */}
       {isMobile && open && (
         <div
@@ -182,9 +172,9 @@ function MainLayout({ children }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 bg-white flex flex-col max-h-screen w-full overflow-hidden">
+      <main className="flex-1 bg-white dark:bg-[#0F172A] flex flex-col max-h-screen w-full overflow-hidden transition-colors duration-300">
         <MainHeader />
-        <div className="flex-1 overflow-y-auto overflow-x-auto p-4 md:p-6 bg-white">
+        <div className="flex-1 overflow-y-auto overflow-x-auto p-4 md:p-6 bg-white dark:bg-slate-900/50 transition-colors duration-300">
           {children}
         </div>
       </main>

@@ -14,6 +14,7 @@ import { timestampToDate } from "@/utils/date";
 import { DELETE_CATEGORY, UPDATE_CATEGORY_STATUS } from "@/app/api/admin/categories";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { getTagColor } from "@/utils/tagColor";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 
 function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters, visibleColumns }) {
   const queryClient = useQueryClient();
@@ -37,12 +38,13 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters, 
   const manageStatusMutation = useMutation({
     mutationFn: UPDATE_CATEGORY_STATUS,
     onSuccess: (data) => {
-      queryClient.invalidateQueries("categoriesList");
+      queryClient.invalidateQueries([ADMIN_KEYS.CATEGORIES.LIST]);
+      queryClient.invalidateQueries([ADMIN_KEYS.CATEGORIES.COUNTS]);
       toast.success(data?.message || "Status updated");
       closeConfirmModal();
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.error || "Failed to update status");
+      toast.error(error.errorMessage || "Failed to update status");
       closeConfirmModal();
     },
   });
@@ -51,12 +53,13 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters, 
   const deleteMutation = useMutation({
     mutationFn: DELETE_CATEGORY,
     onSuccess: (data) => {
-      queryClient.invalidateQueries("categoriesList");
+      queryClient.invalidateQueries([ADMIN_KEYS.CATEGORIES.LIST]);
+      queryClient.invalidateQueries([ADMIN_KEYS.CATEGORIES.COUNTS]);
       toast.success(data?.message || "Category deleted");
       closeConfirmModal();
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.error || "Failed to delete category");
+      toast.error(error.errorMessage || "Failed to delete category");
       closeConfirmModal();
     },
   });
@@ -103,14 +106,14 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters, 
     items: [
       {
         key: "edit",
-        label: <span className="font-medium">Edit Category</span>,
-        icon: <EditOutlined className="text-[#006666]" />,
+        label: <span className="font-medium text-slate-700 dark:text-slate-300">Edit Category</span>,
+        icon: <EditOutlined className="text-[#006666] dark:text-teal-500" />,
         onClick: () => setModal({
           name: "Update",
           data: record,
           state: true
         }),
-        className: "!rounded hover:!bg-blue-50",
+        className: "!rounded hover:!bg-blue-50 dark:hover:!bg-blue-900/20 transition-colors",
       },
       {
         type: "divider",
@@ -118,13 +121,13 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters, 
       },
       {
         key: "delete",
-        label: <span className="font-medium text-red-600">Delete Category</span>,
-        icon: <DeleteOutlined className="text-red-500" />,
+        label: <span className="font-medium text-red-600 dark:text-red-500">Delete Category</span>,
+        icon: <DeleteOutlined className="text-red-500 dark:text-red-400" />,
         onClick: () => handleDelete(record),
-        className: "!rounded hover:!bg-red-50",
+        className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
       },
     ],
-    className: "!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100",
+    className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
   });
 
 
@@ -138,7 +141,7 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters, 
       sorter: true,
       width: 170,
       render: (en) => (
-        <div className="capitalize font-bold text-slate-800 truncate text-xs">
+        <div className="capitalize font-bold text-slate-800 dark:text-slate-200 truncate text-xs transition-colors duration-300">
           {en}
         </div>
       ),
@@ -151,7 +154,7 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters, 
       align: "left",
       sorter: true,
       render: (ur) => (
-        <div className="text-right font-notoUrdu p-1 text-slate-600 font-medium truncate text-xs">
+        <div className="text-right font-notoUrdu p-1 text-slate-600 dark:text-slate-400 font-medium truncate text-xs transition-colors duration-300">
           {ur}
         </div>
       ),
@@ -193,19 +196,19 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters, 
       key: "createdAt",
       width: 170,
       sorter: true,
-      render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap text-xs">{timestampToDate(text)}</div>,
+      render: (text) => <div className="text-slate-500 dark:text-slate-500 text-xs font-semibold whitespace-nowrap transition-colors duration-300">{timestampToDate(text)}</div>,
     },
     {
       title: "",
       key: "actions",
-      width: 50,
+      width: 70,
       align: "right",
       render: (record) => (
         <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
           <Button
             type="text"
-            icon={<EllipsisOutlined className="text-lg rotate-90" />}
-            className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+            icon={<EllipsisOutlined className="text-base text-slate-400" />}
+            className="!rounded hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8"
           />
         </Dropdown>
       ),
@@ -216,7 +219,7 @@ function CategoryTable({ modal, setModal, categoriesList, onChange, setFilters, 
 
   return (
     <div className="space-y-4">
-      <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
+      <div className="place-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
         <Table
           rowKey="_id"
           className="custom-ant-table"

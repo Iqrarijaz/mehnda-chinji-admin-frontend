@@ -16,6 +16,7 @@ import ConfirmModal from "@/components/shared/ConfirmModal";
 import ViewModal from "./ViewModal";
 import { Menu, Dropdown, Button, Table, Tooltip } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { useState } from "react";
 
 function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns }) {
@@ -48,15 +49,13 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
     const statusMutation = useMutation({
         mutationFn: UPDATE_BUSINESS_STATUS,
         onSuccess: (data) => {
-            queryClient.invalidateQueries({
-                predicate: (query) => query.queryKey[0] === "businessList",
-            });
-            queryClient.invalidateQueries("businessStatusCounts");
+            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.COUNTS]);
             toast.success(data?.message || "Status updated");
             closeConfirmModal();
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to update status");
+            toast.error(error.errorMessage || "Failed to update status");
             closeConfirmModal();
         },
     });
@@ -64,15 +63,13 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
     const deleteMutation = useMutation({
         mutationFn: DELETE_BUSINESS,
         onSuccess: (data) => {
-            queryClient.invalidateQueries({
-                predicate: (query) => query.queryKey[0] === "businessList",
-            });
-            queryClient.invalidateQueries("businessStatusCounts");
+            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.COUNTS]);
             toast.success(data?.message || "Business deleted");
             closeConfirmModal();
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to delete");
+            toast.error(error.errorMessage || "Failed to delete");
             closeConfirmModal();
         },
     });
@@ -106,37 +103,37 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
         const items = [
             {
                 key: "view",
-                label: <span className="font-medium">View Details</span>,
-                icon: <EyeOutlined className="text-[#006666]" />,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">View Details</span>,
+                icon: <EyeOutlined className="text-[#006666] dark:text-teal-500" />,
                 onClick: () => setViewModal({ state: true, data: record }),
-                className: "!rounded hover:!bg-teal-50",
+                className: "!rounded hover:!bg-teal-50 dark:hover:!bg-emerald-900/20 transition-colors",
             },
             {
                 key: "edit",
-                label: <span className="font-medium">Edit Business</span>,
-                icon: <EditOutlined className="text-[#006666]" />,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">Edit Business</span>,
+                icon: <EditOutlined className="text-[#006666] dark:text-teal-500" />,
                 onClick: () => setModal({ name: "Update", data: record, state: true }),
-                className: "!rounded hover:!bg-blue-50",
+                className: "!rounded hover:!bg-blue-50 dark:hover:!bg-blue-900/20 transition-colors",
             },
         ];
 
         if (record.status === "PENDING" || record.status === "REJECTED") {
             items.push({
                 key: "approve",
-                label: <span className="font-medium">Approve</span>,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">Approve</span>,
                 icon: <CheckOutlined className="text-green-500" />,
                 onClick: () => handleStatusChange(record, "APPROVED"),
-                className: "!rounded hover:!bg-green-50",
+                className: "!rounded hover:!bg-green-50 dark:hover:!bg-green-900/20 transition-colors",
             });
         }
 
         if (record.status === "PENDING" || record.status === "APPROVED") {
             items.push({
                 key: "reject",
-                label: <span className="font-medium text-orange-600">Reject</span>,
-                icon: <CloseOutlined className="text-orange-500" />,
+                label: <span className="font-medium text-orange-600 dark:text-orange-500">Reject</span>,
+                icon: <CloseOutlined className="text-orange-500 dark:text-orange-400" />,
                 onClick: () => handleStatusChange(record, "REJECTED"),
-                className: "!rounded hover:!bg-orange-50",
+                className: "!rounded hover:!bg-orange-50 dark:hover:!bg-orange-900/20 transition-colors",
             });
         }
 
@@ -144,15 +141,15 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
 
         items.push({
             key: "delete",
-            label: <span className="font-medium text-red-600">Delete Business</span>,
-            icon: <DeleteOutlined className="text-red-500" />,
+            label: <span className="font-medium text-red-600 dark:text-red-500">Delete Business</span>,
+            icon: <DeleteOutlined className="text-red-500 dark:text-red-400" />,
             onClick: () => handleDelete(record),
-            className: "!rounded hover:!bg-red-50",
+            className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
         });
 
         return {
             items,
-            className: "!rounded !p-2 !min-w-[150px] shadow-xl border border-slate-100",
+            className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
         };
     };
 
@@ -167,7 +164,7 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
             width: 200,
             sorter: true,
             render: (name) => (
-                <span className="font-bold text-slate-800 text-xs truncate leading-tight block">
+                <span className="font-bold text-slate-800 dark:text-slate-200 text-xs truncate leading-tight block transition-colors duration-300">
                     {name}
                 </span>
             ),
@@ -178,7 +175,7 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
             dataIndex: "categoryEn",
             width: 170,
             render: (category) => (
-                <span className="text-[11px] text-slate-400 font-medium block mt-0.5 leading-tight truncate">
+                <span className="text-[11px] text-slate-400 dark:text-slate-500 font-medium block mt-0.5 leading-tight truncate transition-colors duration-300">
                     {category || "No Category"}
                 </span>
             ),
@@ -189,7 +186,7 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
             width: 250,
             render: (record) => (
                 <div className="flex flex-col min-w-0">
-                    <span className="text-slate-600 font-bold text-[11px] leading-tight block">
+                    <span className="text-slate-600 dark:text-slate-300 font-bold text-[11px] leading-tight block transition-colors duration-300">
                         {record.phone || "No Phone"}
                     </span>
                     <Tooltip title={record.address}>
@@ -209,12 +206,12 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
             sorter: true,
             render: (status) => {
                 const colorMap = {
-                    APPROVED: "bg-green-100/50 text-green-700 border-green-200",
-                    REJECTED: "bg-red-100/50 text-red-700 border-red-200",
-                    PENDING: "bg-orange-100/50 text-orange-700 border-orange-200",
+                    APPROVED: "bg-green-100/50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-900/30",
+                    REJECTED: "bg-red-100/50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-900/30",
+                    PENDING: "bg-orange-100/50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-900/30",
                 };
                 return (
-                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold border uppercase tracking-wider ${colorMap[status] || "bg-slate-100 text-slate-700 border-slate-200"}`}>
+                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold border uppercase tracking-wider transition-colors duration-300 ${colorMap[status] || "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-400 border-slate-200 dark:border-slate-700"}`}>
                         {status}
                     </span>
                 );
@@ -227,20 +224,20 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
             width: 170,
             sorter: true,
             render: (text) => (
-                <div className="text-slate-400 font-bold text-[10px] whitespace-nowrap">{timestampToDate(text)}</div>
+                <div className="text-slate-400 dark:text-slate-500 font-bold text-[10px] whitespace-nowrap transition-colors duration-300">{timestampToDate(text)}</div>
             ),
         },
         {
             title: "",
             key: "actions",
-            width: 50,
+            width: 70,
             align: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
-                        icon={<EllipsisOutlined className="text-lg rotate-90" />}
-                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+                        icon={<EllipsisOutlined className="text-base text-slate-400" />}
+                        className="!rounded hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8"
                     />
                 </Dropdown>
             ),
@@ -251,7 +248,7 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
 
     return (
         <div className="space-y-4">
-            <div className="modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
+            <div className="modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

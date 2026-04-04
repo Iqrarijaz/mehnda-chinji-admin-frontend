@@ -134,7 +134,7 @@ function PostCardList({
         return (
             <div className="grid grid-cols-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6">
                 {[...Array(8)].map((_, i) => (
-                    <div key={i} className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 h-[300px]">
+                    <div key={i} className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 h-[300px] animate-pulse">
                         <SkeletonPulse className="h-10 w-10 rounded-full mb-4" />
                         <SkeletonPulse className="h-4 w-3/4 mb-2" />
                         <SkeletonPulse className="h-4 w-1/2 mb-6" />

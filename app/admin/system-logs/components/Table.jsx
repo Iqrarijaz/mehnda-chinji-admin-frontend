@@ -15,13 +15,13 @@ function LogsTable({ logsList, onChange, visibleColumns }) {
         items: [
             {
                 key: "view",
-                label: <span className="font-medium">View JSON Data</span>,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">View JSON Data</span>,
                 icon: <EyeOutlined className="text-emerald-500" />,
                 onClick: () => setViewModal({ open: true, data: record }),
-                className: "!rounded hover:!bg-emerald-50",
+                className: "!rounded hover:!bg-emerald-50 dark:hover:!bg-emerald-900/20 transition-colors",
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100",
+        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     });
 
     const allColumns = [
@@ -30,7 +30,7 @@ function LogsTable({ logsList, onChange, visibleColumns }) {
             dataIndex: "createdAt",
             key: "createdAt",
             width: 170,
-            render: (text) => <div className="text-slate-500 text-xs font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
+            render: (text) => <div className="text-slate-500 dark:text-slate-500 text-xs font-medium whitespace-nowrap transition-colors duration-300">{timestampToDate(text)}</div>,
         },
         {
             title: "Type",
@@ -39,7 +39,7 @@ function LogsTable({ logsList, onChange, visibleColumns }) {
             width: 120,
             align: "center",
             render: (type) => (
-                <Tag color={type === 'ERROR' ? 'red' : 'green'} className="!rounded-full !px-2 font-bold !border-0 uppercase text-[9px]">
+                <Tag color={type === 'ERROR' ? 'red' : 'green'} className="!rounded-full !px-2 font-bold !border-0 uppercase text-[9px] dark:opacity-80">
                     {type}
                 </Tag>
             ),
@@ -49,7 +49,7 @@ function LogsTable({ logsList, onChange, visibleColumns }) {
             dataIndex: "functionName",
             key: "functionName",
             width: 250,
-            render: (text) => <span className="font-semibold text-slate-700 text-xs truncate leading-tight block">{text}</span>,
+            render: (text) => <span className="font-semibold text-slate-700 dark:text-slate-200 text-xs truncate leading-tight block transition-colors duration-300">{text}</span>,
         },
         {
             title: "User ID",
@@ -57,7 +57,7 @@ function LogsTable({ logsList, onChange, visibleColumns }) {
             key: "userId",
             width: 150,
             render: (userId) => (
-                <span className="text-[10px] text-slate-400 font-medium truncate block leading-tight">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate block leading-tight transition-colors duration-300">
                     {userId || "System"}
                 </span>
             ),
@@ -65,14 +65,14 @@ function LogsTable({ logsList, onChange, visibleColumns }) {
         {
             title: "",
             key: "actions",
-            width: 50,
+            width: 70,
             align: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
-                        icon={<EllipsisOutlined className="text-lg rotate-90" />}
-                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+                        icon={<EllipsisOutlined className="text-base text-slate-400" />}
+                        className="!rounded hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8"
                     />
                 </Dropdown>
             ),
@@ -83,7 +83,7 @@ function LogsTable({ logsList, onChange, visibleColumns }) {
 
     return (
         <div className="space-y-4">
-            <div className="modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
+            <div className="modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

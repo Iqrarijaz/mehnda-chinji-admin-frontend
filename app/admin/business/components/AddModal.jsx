@@ -2,16 +2,21 @@
 import React, { useRef, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Modal } from "antd";
+import { Modal, Select, Avatar, Space } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { FaStore, FaMapMarkerAlt, FaPhoneAlt, FaTag } from "react-icons/fa";
+import { FaStore, FaMapMarkerAlt, FaPhoneAlt, FaTag, FaUser } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { CREATE_BUSINESS } from "@/app/api/admin/business";
+import { SEARCH_USERS } from "@/app/api/admin/users";
+import professions from "@/data/professions.json";
 import CustomButton from "@/components/shared/CustomButton";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
+
+const { Option } = Select;
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required("Business name is required"),
@@ -35,19 +40,43 @@ const initialValues = {
 function AddBusinessModal({ modal, setModal }) {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
+    const [users, setUsers] = React.useState([]);
+    const [fetching, setFetching] = React.useState(false);
+    const debounceTimeoutRef = useRef(null);
+
+    const handleSearch = async (value) => {
+        if (!value || value.length < 2) {
+            setUsers([]);
+            return;
+        }
+
+        if (debounceTimeoutRef.current) {
+            clearTimeout(debounceTimeoutRef.current);
+        }
+
+        debounceTimeoutRef.current = setTimeout(async () => {
+            setFetching(true);
+            try {
+                const response = await SEARCH_USERS({ search: value });
+                setUsers(response.data || []);
+            } catch (error) {
+                console.error("Search users error:", error);
+            } finally {
+                setFetching(false);
+            }
+        }, 800);
+    };
 
     const createBusiness = useMutation({
         mutationFn: CREATE_BUSINESS,
         onSuccess: (data) => {
             toast.success(data?.message || "Business created successfully");
-            queryClient.invalidateQueries({
-                predicate: (query) => query.queryKey[0] === "businessList",
-            });
-            queryClient.invalidateQueries("businessStatusCounts");
-            handleCloseModal();
+            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.COUNTS]);
+            handleCloseModal(true);
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Something went wrong");
+            toast.error(error.errorMessage || "Something went wrong");
         },
     });
 
@@ -55,9 +84,23 @@ function AddBusinessModal({ modal, setModal }) {
         createBusiness.mutate(values);
     };
 
-    const handleCloseModal = () => {
-        formikRef.current?.resetForm();
-        setModal({ name: null, state: false, data: null });
+    const handleCloseModal = (force = false) => {
+        if (!force && formikRef.current?.dirty) {
+            Modal.confirm({
+                title: "Unsaved Changes",
+                content: "You have unsaved changes. Are you sure you want to discard them and exit?",
+                okText: "Discard",
+                okType: "danger",
+                cancelText: "Stay",
+                onOk: () => {
+                    formikRef.current?.resetForm();
+                    setModal({ name: null, state: false, data: null });
+                },
+            });
+        } else {
+            formikRef.current?.resetForm();
+            setModal({ name: null, state: false, data: null });
+        }
     };
 
     useEffect(() => {
@@ -92,7 +135,7 @@ function AddBusinessModal({ modal, setModal }) {
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
                 >
-                    {({ isSubmitting }) => (
+                    {({ values, setFieldValue, errors, touched, isSubmitting }) => (
                         <Form className="space-y-3">
                             {createBusiness.status === "loading" ? (
                                 <FormSkeleton fields={5} />
@@ -113,14 +156,50 @@ function AddBusinessModal({ modal, setModal }) {
                                                 />
                                             </div>
                                             <div className="md:col-span-2">
-                                                <FormField
-                                                    label="Owner User ID"
-                                                    name="userId"
-                                                    placeholder="User ID"
-                                                    required
-                                                    className="!h-[32px] !text-xs !rounded"
-                                                    labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
-                                                />
+                                                <div className="mb-1.5 grid">
+                                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1 mb-1">
+                                                        Owner User <span className="text-red-500">*</span>
+                                                    </label>
+                                                    <Select
+                                                        showSearch
+                                                        placeholder="Search user by name..."
+                                                        filterOption={false}
+                                                        onSearch={handleSearch}
+                                                        onChange={(value) => {
+                                                            setFieldValue("userId", value);
+                                                            const selectedUser = users.find(u => u._id === value);
+                                                            if (selectedUser && selectedUser.phone) {
+                                                                setFieldValue("phone", selectedUser.phone);
+                                                            }
+                                                        }}
+                                                        notFoundContent={fetching ? <Loading /> : null}
+                                                        loading={fetching}
+                                                        className="w-full modern-select-box"
+                                                        value={values.userId || undefined}
+                                                    >
+                                                        {users.map((user) => (
+                                                            <Option key={user._id} value={user._id} label={user.name}>
+                                                                <Space>
+                                                                    <Avatar
+                                                                        size="small"
+                                                                        src={user.profileImage}
+                                                                        icon={!user.profileImage && <FaUser />}
+                                                                    />
+                                                                    <div className="flex flex-col">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <span className="text-xs font-bold capitalize">{user.name}</span>
+                                                                            <span className="text-[10px] text-slate-400">({user.email || "No Email"})</span>
+                                                                        </div>
+                                                                        <span className="text-[10px] text-[#006666] font-semibold">{user.phone}</span>
+                                                                    </div>
+                                                                </Space>
+                                                            </Option>
+                                                        ))}
+                                                    </Select>
+                                                    {errors.userId && touched.userId && (
+                                                        <div className="text-red-500 text-[10px] mt-0.5 ml-1">{errors.userId}</div>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -129,21 +208,41 @@ function AddBusinessModal({ modal, setModal }) {
                                     <div className="p-3 rounded border border-slate-100 space-y-3">
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Categorization & Contact</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                            <FormField
-                                                label="Category (EN)"
-                                                name="categoryEn"
-                                                placeholder="Retail"
-                                                required
-                                                className="!h-[32px] !text-xs !rounded"
-                                                labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
-                                            />
-                                            <FormField
-                                                label="Category (UR)"
-                                                name="categoryUr"
-                                                placeholder="ریٹیل"
-                                                className="!h-[32px] !text-xs !rounded font-notoUrdu text-right"
-                                                labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
-                                            />
+                                            <div className="md:col-span-2">
+                                                <div className="mb-1.5 grid">
+                                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1 mb-1">
+                                                        Profession <span className="text-red-500">*</span>
+                                                    </label>
+                                                    <Select
+                                                        showSearch
+                                                        placeholder="Select profession..."
+                                                        optionFilterProp="children"
+                                                        optionLabelProp="label"
+                                                        onChange={(value) => {
+                                                            const profession = professions.find(p => p.name_eng === value);
+                                                            if (profession) {
+                                                                setFieldValue("categoryEn", profession.name_eng);
+                                                                setFieldValue("categoryUr", profession.name_ur);
+                                                            }
+                                                        }}
+                                                        className="w-full modern-select-box"
+                                                        value={values.categoryEn || undefined}
+                                                    >
+                                                        {professions.map((prof, index) => (
+                                                            <Option key={index} value={prof.name_eng} label={`${prof.name_eng.charAt(0).toUpperCase() + prof.name_eng.slice(1)} - ${prof.name_ur}`}>
+                                                                <div className="flex items-center gap-2 w-full truncate">
+                                                                    <span className="text-xs font-bold capitalize whitespace-nowrap">{prof.name_eng}</span>
+                                                                    <span className="text-slate-300 text-[10px]">—</span>
+                                                                    <span className="text-[11px] font-notoUrdu text-slate-400 truncate">{prof.name_ur}</span>
+                                                                </div>
+                                                            </Option>
+                                                        ))}
+                                                    </Select>
+                                                    {errors.categoryEn && touched.categoryEn && (
+                                                        <div className="text-red-500 text-[10px] mt-0.5 ml-1">{errors.categoryEn}</div>
+                                                    )}
+                                                </div>
+                                            </div>
                                             <FormField
                                                 label="Phone"
                                                 name="phone"

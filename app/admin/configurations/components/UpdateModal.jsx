@@ -9,6 +9,7 @@ import CustomButton from "@/components/shared/CustomButton";
 import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import { UPDATE_CONFIGURATION } from "@/app/api/admin/configurations";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { Formik, Form } from "formik";
 
 const { TextArea } = Input;
@@ -45,16 +46,32 @@ function UpdateConfigurationModal({ modal, setModal }) {
         },
         onSuccess: (data) => {
             toast.success(data?.message || "Configuration updated successfully");
-            queryClient.invalidateQueries("configurationsList");
-            handleClose();
+            queryClient.invalidateQueries([ADMIN_KEYS.CONFIGURATIONS.LIST]);
+            handleClose(true);
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Something went wrong");
+            toast.error(error.errorMessage || "Something went wrong");
         },
     });
 
     const handleClose = () => {
-        setModal({ name: null, state: false, data: null });
+        const force = arguments[0] === true;
+        if (!force && formikRef.current?.dirty) {
+            Modal.confirm({
+                title: "Unsaved Changes",
+                content: "You have unsaved changes. Are you sure you want to discard them and exit?",
+                okText: "Discard",
+                okType: "danger",
+                cancelText: "Stay",
+                onOk: () => {
+                    formikRef.current?.resetForm();
+                    setModal({ name: null, state: false, data: null });
+                },
+            });
+        } else {
+            formikRef.current?.resetForm();
+            setModal({ name: null, state: false, data: null });
+        }
     };
 
     const initialValues = {
@@ -68,11 +85,11 @@ function UpdateConfigurationModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
+                    <div className="w-8 h-8 rounded bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center text-[#006666] dark:text-teal-400 transition-colors duration-300">
                         <FaEdit size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-[#006666] block mt-1">Update Configuration</span>
+                        <span className="text-lg font-bold text-[#006666] dark:text-teal-400 block mt-1 transition-colors duration-300">Update Configuration</span>
                     </div>
                 </div>
             }
@@ -101,19 +118,18 @@ function UpdateConfigurationModal({ modal, setModal }) {
                             ) : (
                                 <>
                                     <div className="modal-section space-y-2">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Core Definition</p>
-                                        <div className="flex flex-col gap-1.5">
-                                            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Config Type (Namespace) <span className="text-red-500">*</span></label>
+                                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest pl-1 mt-2 transition-colors duration-300">Core Definition</p>
+                                        <div className="flex flex-col gap-1.5 ">
+                                            <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors duration-300">Config Type (Namespace) <span className="text-red-500">*</span></label>
                                             <div className="relative">
-
                                                 <Input
                                                     value={values.type}
                                                     placeholder="Namespace"
-                                                    className="!pl-3 !h-[32px] !text-xs !rounded !border-slate-200 focus:!border-[#006666]"
+                                                    className="!pl-3 !h-[32px] !text-xs !rounded !border-slate-100 dark:!border-slate-800 !bg-white dark:!bg-slate-900 !text-slate-700 dark:!text-slate-200 focus:!border-[#006666] transition-all duration-300"
                                                     onChange={(e) => setFieldValue("type", e.target.value.toUpperCase())}
                                                 />
                                             </div>
-                                            {errors.type && touched.type && <div className="text-red-500 text-[10px] font-medium ml-1">{errors.type}</div>}
+                                            {errors.type && touched.type && <div className="text-red-500 text-[10px] font-medium ml-1 mt-1 transition-colors duration-300">{errors.type}</div>}
                                         </div>
                                     </div>
 
@@ -145,7 +161,7 @@ function UpdateConfigurationModal({ modal, setModal }) {
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 transition-colors duration-300">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

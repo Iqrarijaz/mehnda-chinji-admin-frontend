@@ -78,3 +78,19 @@ export async function GET_PLACE_STATUS_COUNTS() {
         throw error;
     }
 }
+
+// Upload place image
+export async function UPLOAD_PLACE_IMAGE(data) {
+    try {
+        const response = await Axios.post("/api/public/v1/upload-public-image", data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error uploading place image:", error);
+        throw error;
+    }
+}
+

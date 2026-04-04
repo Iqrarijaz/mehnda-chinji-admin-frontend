@@ -73,7 +73,7 @@ function DeleteSystemLogsModal({ isModalOpen, setIsModalOpen }) {
         {/* Identifier Card */}
         {record?._id && (
           <div className="w-full bg-slate-50 rounded p-4 border border-slate-100 flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded bg-white flex items-center justify-center text-slate-400 shadow-sm">
+            <div className="w-10 h-10 rounded bg-white dark:bg-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 shadow-sm transition-colors duration-300">
               <FaTerminal size={14} />
             </div>
             <div className="text-left overflow-hidden">

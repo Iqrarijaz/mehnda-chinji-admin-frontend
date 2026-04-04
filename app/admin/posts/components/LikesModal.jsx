@@ -23,15 +23,15 @@ function LikesModal({ isOpen, onClose, postId }) {
                     <Avatar
                         src={record.user?.profileImage}
                         size={32}
-                        className="bg-slate-100 border border-slate-200"
+                        className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-colors"
                     >
                         {record.user?.name?.charAt(0)}
                     </Avatar>
                     <div className="flex flex-col">
-                        <span className="font-bold text-[12px] text-slate-800 capitalize leading-tight">
+                        <span className="font-bold text-[12px] text-slate-800 dark:text-slate-200 capitalize leading-tight transition-colors">
                             {record.user?.name || "Unknown User"}
                         </span>
-                        <span className="text-[10px] text-slate-400 font-medium">{record.user?.phone || "No phone"}</span>
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium transition-colors">{record.user?.phone || "No phone"}</span>
                     </div>
                 </div>
             )
@@ -43,7 +43,7 @@ function LikesModal({ isOpen, onClose, postId }) {
             width: 180,
             align: 'right',
             render: (date) => (
-                <div className="text-[10px] text-slate-500 font-medium">
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium transition-colors">
                     {timestampToDateWithTime(date)}
                 </div>
             )
@@ -54,11 +54,11 @@ function LikesModal({ isOpen, onClose, postId }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded bg-red-50 flex items-center justify-center text-red-500">
+                    <div className="w-8 h-8 rounded bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500 dark:text-red-400 transition-colors duration-300">
                         <FaHeart size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-red-700 block mt-1">Post Likes</span>
+                        <span className="text-lg font-bold text-red-700 dark:text-red-400 block mt-1 transition-colors duration-300">Post Likes</span>
                     </div>
                 </div>
             }

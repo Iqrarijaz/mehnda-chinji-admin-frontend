@@ -13,6 +13,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 import InnerPageCard from "@/components/layout/InnerPageCard";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 
 export default function ConfigurationsPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -37,9 +38,9 @@ export default function ConfigurationsPage() {
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
     const configurationsList = useQuery({
-        queryKey: ["configurationsList", JSON.stringify(debFilter)],
+        queryKey: [ADMIN_KEYS.CONFIGURATIONS.LIST, JSON.stringify(debFilter)],
         queryFn: () => CONFIGURATIONS(debFilter),
-        onError: () => toast.error("Something went wrong while fetching configurations."),
+        onError: (error) => toast.error(error.errorMessage || "Failed to fetch configurations."),
     });
 
     const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
@@ -51,7 +52,7 @@ export default function ConfigurationsPage() {
                 <div className="flex gap-2 items-center w-full md:w-auto justify-end">
                     {/* Desktop Search (Hidden on Mobile) */}
                     <div className="hidden md:block">
-                        <SearchInput setFilters={setFilters} />
+                        <SearchInput setFilters={setFilters} className="!max-w-[180px] dark:!bg-slate-900 dark:!border-slate-800" />
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -59,6 +60,7 @@ export default function ConfigurationsPage() {
                             options={columnOptions}
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
+                            className="transition-colors duration-300"
                         />
 
                         <AddButton

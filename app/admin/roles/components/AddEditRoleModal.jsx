@@ -17,14 +17,15 @@ const validationSchema = Yup.object().shape({
 });
 
 const AddEditRoleModal = ({ modal, setModal }) => {
+    const formikRef = React.useRef(null);
     const queryClient = useQueryClient();
     const isEdit = modal.name === "Edit";
 
     const mutation = useMutation(isEdit ? UPDATE_ROLE : CREATE_ROLE, {
         onSuccess: () => {
-            queryClient.invalidateQueries("rolesList");
+            queryClient.invalidateQueries(ADMIN_KEYS.ROLES.LIST);
             toast.success(`Role ${isEdit ? "updated" : "created"} successfully`);
-            handleCancel();
+            handleCancel(true);
         },
         onError: (err) => {
             toast.error(err.response?.data?.message || `Failed to ${isEdit ? "update" : "create"} role`);
@@ -36,8 +37,23 @@ const AddEditRoleModal = ({ modal, setModal }) => {
         setSubmitting(false);
     };
 
-    const handleCancel = () => {
-        setModal({ name: null, data: null, state: false });
+    const handleCancel = (force = false) => {
+        if (!force && formikRef.current?.dirty) {
+            Modal.confirm({
+                title: "Unsaved Changes",
+                content: "You have unsaved changes. Are you sure you want to discard them and exit?",
+                okText: "Discard",
+                okType: "danger",
+                cancelText: "Stay",
+                onOk: () => {
+                    formikRef.current?.resetForm();
+                    setModal({ name: null, data: null, state: false });
+                },
+            });
+        } else {
+            formikRef.current?.resetForm();
+            setModal({ name: null, data: null, state: false });
+        }
     };
 
     return (
@@ -58,7 +74,8 @@ const AddEditRoleModal = ({ modal, setModal }) => {
             className="modern-modal"
             centered
         >
-            <Formik
+        <Formik
+                innerRef={formikRef}
                 initialValues={{
                     name: modal.data?.name || "",
                     description: modal.data?.description || "",

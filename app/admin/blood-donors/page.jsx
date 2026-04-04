@@ -1,8 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useQuery } from "react-query";
+import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import BloodDonorsTable from "./components/Table";
+import AddDonorModal from "./components/AddModal";
 import UpdateDonorModal from "./components/UpdateModal";
 import SelectBox from "@/components/SelectBox";
 import FilterModal from "./components/FilterModal";
@@ -14,7 +16,10 @@ import InnerPageCard from "@/components/layout/InnerPageCard";
 import { StatCardSkeleton } from "@/components/shared/Skeletons";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { FiFilter } from "react-icons/fi";
+import { HiRefresh } from "react-icons/hi";
 import AddButton from "@/components/InnerPage/AddButton";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useAdminData } from "@/hooks/useAdminData";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -35,21 +40,29 @@ export default function BloodDonorsPage() {
         { label: "Name", value: "name" },
         { label: "Blood Group", value: "bloodGroup" },
         { label: "Phone", value: "phone" },
-        { label: "City", value: "city" },
+        { label: "Last Donation", value: "lastDonationDate" },
         { label: "Availability", value: "available" },
+        { label: "City", value: "city" },
+        { label: "Address", value: "address" },
+        { label: "Joined At", value: "createdAt" },
     ];
 
     const debouncedSearch = useDebounce(filters.search, 500);
-    const bloodDonorsList = useQuery({
-        queryKey: ["bloodDonorsList", { ...filters, search: debouncedSearch }],
-        queryFn: () => GET_BLOOD_DONORS({ ...filters, search: debouncedSearch }),
-        keepPreviousData: true,
+
+    const {
+        listQuery: bloodDonorsList,
+        countsQuery,
+        isRefreshing,
+        handleRefresh
+    } = useAdminData({
+        listQueryKey: [ADMIN_KEYS.BLOOD_DONORS.LIST, JSON.stringify({ ...filters, search: debouncedSearch })],
+        listQueryFn: () => GET_BLOOD_DONORS({ ...filters, search: debouncedSearch }),
+        countsQueryKey: [ADMIN_KEYS.BLOOD_DONORS.COUNTS],
+        countsQueryFn: GET_BLOOD_DONOR_STATUS_COUNTS,
+        onListError: "Failed to fetch blood donors.",
     });
 
-    const { data: countsData, isLoading: countsLoading } = useQuery({
-        queryKey: ["bloodDonorsStatusCounts"],
-        queryFn: GET_BLOOD_DONOR_STATUS_COUNTS,
-    });
+    const { data: countsData, isLoading: countsLoading } = countsQuery;
 
     const counts = countsData?.data || { available: 0, unavailable: 0 };
 
@@ -97,13 +110,13 @@ export default function BloodDonorsPage() {
                     {/* Desktop Filters (Visible on Tablet/Desktop) */}
                     <div className="hidden md:flex items-center gap-2">
                         <SelectBox
-                            placeholder="Filter by Blood Group"
+                            placeholder="Blood Group"
                             allowClear
                             handleChange={(val) => onChange({ bloodGroup: val || "", page: 1 })}
                             value={filters.bloodGroup}
                             width={160}
                             options={bloodGroups.map((bg) => ({ value: bg, label: bg }))}
-                            className="custom-selectbox"
+                            className="custom-selectbox mt-1"
                         />
                         <SearchInput setFilters={setFilters} className="!max-w-[180px]" />
                     </div>
@@ -114,6 +127,16 @@ export default function BloodDonorsPage() {
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
                         />
+
+                        {/* Refresh Button */}
+                        <button
+                            onClick={handleRefresh}
+                            disabled={isRefreshing}
+                            title="Refresh Data"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
+                        </button>
 
                         {/* Mobile Filter Toggle */}
                         <div className="relative">
@@ -156,6 +179,7 @@ export default function BloodDonorsPage() {
                 onChange={onChange}
             />
 
+            <AddDonorModal modal={modal} setModal={setModal} />
             <UpdateDonorModal modal={modal} setModal={setModal} />
         </InnerPageCard>
     );

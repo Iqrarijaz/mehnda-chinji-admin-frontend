@@ -21,13 +21,13 @@ function JsonViewerModal({ isModalOpen, setIsModalOpen }) {
   return (
     <Modal
       title={
-        <div className="flex items-center gap-3 px-2 pt-1">
-          <div className="w-10 h-10 rounded bg-slate-100 flex items-center justify-center text-slate-600">
+        <div className="flex items-center gap-3 px-2 pt-1 uppercase">
+          <div className="w-10 h-10 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 transition-colors duration-300">
             <FaTerminal size={16} />
           </div>
           <div>
-            <span className="text-xl font-bold text-slate-900 block">{name}</span>
-            <span className="text-xs text-slate-500 font-normal">Technical data inspection</span>
+            <span className="text-xl font-bold text-slate-900 dark:text-slate-100 block transition-colors duration-300">{name}</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">Technical data inspection</span>
           </div>
         </div>
       }
@@ -59,7 +59,7 @@ function JsonViewerModal({ isModalOpen, setIsModalOpen }) {
           </div>
         </div>
 
-        <div className="flex justify-end pt-6 mt-6 border-t border-slate-100">
+        <div className="flex justify-end pt-6 mt-6 border-t border-slate-100 dark:border-slate-800 transition-colors">
           <Button
             onClick={handleClose}
             className="modal-footer-btn-secondary !px-12"

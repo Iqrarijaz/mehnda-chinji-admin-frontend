@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
@@ -13,7 +13,10 @@ import InnerPageCard from "@/components/layout/InnerPageCard";
 import { StatCardSkeleton } from "@/components/shared/Skeletons";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { FiFilter } from "react-icons/fi";
+import { HiRefresh } from "react-icons/hi";
 import FilterModal from "./components/FilterModal";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useAdminData } from "@/hooks/useAdminData";
 
 const TARGET_TYPES = [
     { label: "Business", value: "BUSINESS" },
@@ -48,16 +51,21 @@ export default function ReportsPage() {
     ];
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
-    const reportsList = useQuery({
-        queryKey: ["reportsList", JSON.stringify(debFilter)],
-        queryFn: () => GET_REPORTS(debFilter),
-        onError: () => toast.error("Something went wrong. Please try again later."),
+
+    const {
+        listQuery: reportsList,
+        countsQuery,
+        isRefreshing,
+        handleRefresh
+    } = useAdminData({
+        listQueryKey: [ADMIN_KEYS.REPORTS.LIST, JSON.stringify(debFilter)],
+        listQueryFn: () => GET_REPORTS(debFilter),
+        countsQueryKey: [ADMIN_KEYS.REPORTS.COUNTS],
+        countsQueryFn: GET_REPORT_STATUS_COUNTS,
+        onListError: "Failed to fetch reports.",
     });
 
-    const { data: countsData, isLoading: countsLoading } = useQuery({
-        queryKey: ["reportStatusCounts"],
-        queryFn: GET_REPORT_STATUS_COUNTS,
-    });
+    const { data: countsData, isLoading: countsLoading } = countsQuery;
 
     const counts = countsData?.data || { pending: 0, reviewed: 0, resolved: 0 };
 
@@ -107,16 +115,16 @@ export default function ReportsPage() {
                 {/* Action Bar (Right) */}
                 <div className="flex gap-2 items-center w-full md:w-auto justify-end">
                     {/* Desktop Filters (Hidden on Mobile) */}
-                    <div className="hidden md:flex items-center gap-3">
+                    <div className="hidden md:flex items-center gap-2">
                         <SelectBox
                             placeholder="Target Type"
                             allowClear
                             handleChange={handleTargetTypeFilter}
-                            width={150}
+                            width={130}
                             options={TARGET_TYPES}
-                            className="custom-selectbox"
+                            className="custom-selectbox dark:!bg-slate-900 dark:!border-slate-800 mt-1"
                         />
-                        <SearchInput setFilters={setFilters} />
+                        <SearchInput setFilters={setFilters} className="w-[180px]" />
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -125,6 +133,17 @@ export default function ReportsPage() {
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
                         />
+
+                        {/* Refresh Button */}
+                        <button
+                            onClick={handleRefresh}
+                            disabled={isRefreshing}
+                            title="Refresh Data"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
+                        </button>
+
                         <AddButton
                             title="Create Report"
                             icon={false}
@@ -144,25 +163,21 @@ export default function ReportsPage() {
             </div>
 
             <div className="flex flex-col mb-4">
-                <ReportsTable 
-                    reportsList={reportsList} 
-                    onChange={onChange} 
-                    visibleColumns={visibleColumns} 
+                <ReportsTable
+                    reportsList={reportsList}
+                    onChange={onChange}
+                    visibleColumns={visibleColumns}
                     setFilters={setFilters}
                     setModal={setModal}
                 />
             </div>
 
             <FilterModal
-                isOpen={isFilterModalOpen}
-                onClose={() => setIsFilterModalOpen(false)}
+                open={isFilterModalOpen}
+                onCancel={() => setIsFilterModalOpen(false)}
                 filters={filters}
                 setFilters={setFilters}
             />
         </InnerPageCard>
     );
 }
-
-const styles = {
-    // any extra styles if needed
-};

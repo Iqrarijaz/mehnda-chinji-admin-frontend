@@ -18,9 +18,10 @@ function FilterModal({ open, onCancel, filters, setFilters }) {
             centered
         >
             <div className="flex flex-col gap-2">
-                <div className="space-y-0.5 px-0.5">
-                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Search by Name/Subject</label>
-                    <SearchInput setFilters={setFilters} className="w-full !h-[32px] !text-xs !rounded" />
+                <div className="space-y-0.5 px-0.5 transition-colors duration-300">
+                    <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1 transition-colors duration-300">Search</label>
+                    <SearchInput
+ setFilters={setFilters} className="w-full !h-[32px] !text-xs !rounded" />
                 </div>
             </div>
         </Modal>

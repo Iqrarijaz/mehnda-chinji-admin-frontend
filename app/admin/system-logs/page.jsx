@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
@@ -10,6 +10,9 @@ import { useDebounce } from "@/hooks/useDebounce";
 import InnerPageCard from "@/components/layout/InnerPageCard";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { FiFilter } from "react-icons/fi";
+import { HiRefresh } from "react-icons/hi";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useAdminData } from "@/hooks/useAdminData";
 
 const LOG_TYPES = [
     { label: "Error", value: "ERROR" },
@@ -24,24 +27,28 @@ export default function SystemLogsPage() {
         type: null,
         onChangeSearch: false,
     });
+    const [isRefreshingState, setIsRefreshingState] = useState(false);
     
     // Column Visibility State
     const [visibleColumns, setVisibleColumns] = useState(["createdAt", "type", "functionName", "userId", "actions"]);
-
+    
     const columnOptions = [
         { label: "Time", value: "createdAt" },
         { label: "Type", value: "type" },
         { label: "Function", value: "functionName" },
         { label: "User ID", value: "userId" },
-        { label: "Actions", value: "actions" },
     ];
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
-    
-    const logsList = useQuery({
-        queryKey: ["systemLogsList", JSON.stringify(debFilter)],
-        queryFn: () => GET_SYSTEM_LOGS(debFilter),
-        onError: () => toast.error("Failed to fetch system logs."),
+
+    const {
+        listQuery: logsList,
+        isRefreshing,
+        handleRefresh
+    } = useAdminData({
+        listQueryKey: [ADMIN_KEYS.LOGS.LIST, JSON.stringify(debFilter)],
+        listQueryFn: () => GET_SYSTEM_LOGS(debFilter),
+        onListError: "Failed to fetch system logs.",
     });
 
     const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
@@ -85,6 +92,16 @@ export default function SystemLogsPage() {
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
                         />
+
+                        {/* Refresh Button */}
+                        <button
+                            onClick={handleRefresh}
+                            disabled={isRefreshing}
+                            title="Refresh Data"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
+                        </button>
                     </div>
                 </div>
             </div>

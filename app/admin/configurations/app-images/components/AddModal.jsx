@@ -22,7 +22,7 @@ function AddAppImagesModal({ modal, setModal }) {
         onSuccess: (data) => {
             toast.success(data?.message || "App image set created successfully");
             queryClient.invalidateQueries("appImagesList");
-            handleClose();
+            handleClose(true);
         },
         onError: (error) => {
             toast.error(error?.response?.data?.message || "Something went wrong");
@@ -30,11 +30,31 @@ function AddAppImagesModal({ modal, setModal }) {
     });
 
     const handleClose = () => {
-        setName("");
-        setKey("");
-        setPreviewFiles([]);
-        setErrors({});
-        setModal({ name: null, state: false, data: null });
+        const force = arguments[0] === true;
+        const isDirty = name.trim() !== "" || key.trim() !== "" || previewFiles.length > 0;
+
+        if (!force && isDirty) {
+            Modal.confirm({
+                title: "Unsaved Changes",
+                content: "You have unsaved changes. Are you sure you want to discard them and exit?",
+                okText: "Discard",
+                okType: "danger",
+                cancelText: "Stay",
+                onOk: () => {
+                    setName("");
+                    setKey("");
+                    setPreviewFiles([]);
+                    setErrors({});
+                    setModal({ name: null, state: false, data: null });
+                },
+            });
+        } else {
+            setName("");
+            setKey("");
+            setPreviewFiles([]);
+            setErrors({});
+            setModal({ name: null, state: false, data: null });
+        }
     };
 
     const handleFileChange = (e) => {

@@ -43,14 +43,14 @@ function ContactUsDetailModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
+                    <div className="w-10 h-10 rounded bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center text-[#006666] dark:text-teal-400 transition-colors duration-300">
                         <InfoCircleOutlined className="text-xl" />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-[#006666] block">Contact Request Details</span>
-                        <div className="flex items-center gap-1.5 mt-0.5">
-                            <span className="font-mono font-black text-[#006666] text-[10px] tracking-wider bg-[#006666]/5 px-2 py-0.5 rounded border border-[#006666]/10">#{contact?.requestId}</span>
-                            <span className="text-[11px] text-slate-400 font-normal italic">reviewing user message</span>
+                        <span className="text-lg font-bold text-[#006666] dark:text-teal-500 block transition-colors duration-300">Contact Request Details</span>
+                        <div className="flex items-center gap-1.5 mt-0.5 transition-colors duration-300">
+                            <span className="font-mono font-black text-[#006666] dark:text-teal-500 text-[10px] tracking-wider bg-[#006666]/5 dark:bg-teal-500/10 px-2 py-0.5 rounded border border-[#006666]/10 dark:border-teal-500/20 transition-colors duration-300">#{contact?.requestId}</span>
+                            <span className="text-[11px] text-slate-400 dark:text-slate-500 font-normal italic">reviewing user message</span>
                         </div>
                     </div>
                 </div>
@@ -62,9 +62,9 @@ function ContactUsDetailModal({ modal, setModal }) {
             centered
             className="modern-modal"
         >
-            <div className="bg-slate-50/50 p-4 rounded border border-slate-100/50 mt-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
+            <div className="bg-slate-50/50 dark:bg-slate-900/40 p-4 rounded border border-slate-100/50 dark:border-slate-800/50 mt-4 max-h-[80vh] overflow-y-auto custom-scrollbar transition-colors duration-300">
                 {/* Status & Source Bar */}
-                <div className="bg-white rounded p-4 mb-4 shadow-sm flex items-center justify-between border border-slate-100">
+                <div className="bg-white dark:bg-[#1E293B] rounded p-4 mb-4 shadow-sm flex items-center justify-between border border-slate-100 dark:border-slate-800 transition-colors duration-300">
                     <div className="flex items-center gap-3">
                         <Tag color={getStatusColor(contact?.status)} className="m-0 font-bold px-2 py-0.5 rounded-full uppercase text-[10px]">
                             {contact?.status}
@@ -90,26 +90,26 @@ function ContactUsDetailModal({ modal, setModal }) {
 
                 {/* Sender Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div className="bg-white rounded p-4 shadow-sm border border-slate-100">
-                        <label className="text-slate-400 font-bold text-[9px] uppercase tracking-widest mb-1.5 block">Sender Name</label>
+                    <div className="bg-white dark:bg-[#1E293B] rounded p-4 shadow-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                        <label className="text-slate-400 dark:text-slate-500 font-bold text-[9px] uppercase tracking-widest mb-1.5 block">Sender Name</label>
                         <div className="flex items-center gap-2">
-                            <UserOutlined className="text-slate-400" />
-                            <span className="text-slate-900 font-bold text-sm truncate">{contact?.name}</span>
+                            <UserOutlined className="text-slate-400 dark:text-slate-500" />
+                            <span className="text-slate-900 dark:text-slate-100 font-bold text-sm truncate">{contact?.name}</span>
                         </div>
                     </div>
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-                        <label className="text-slate-400 font-bold text-[9px] uppercase tracking-widest mb-1.5 block">Email Address</label>
+                    <div className="bg-white dark:bg-[#1E293B] rounded-xl p-4 shadow-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                        <label className="text-slate-400 dark:text-slate-500 font-bold text-[9px] uppercase tracking-widest mb-1.5 block">Email Address</label>
                         <div className="flex items-center gap-2">
-                            <MailOutlined className="text-slate-400" />
-                            <span className="text-slate-900 font-bold text-sm truncate">{contact?.email}</span>
+                            <MailOutlined className="text-slate-400 dark:text-slate-500" />
+                            <span className="text-slate-900 dark:text-slate-100 font-bold text-sm truncate">{contact?.email}</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Message Content */}
-                <div className="bg-white rounded p-4 mb-4 shadow-sm border border-slate-100">
-                    <label className="text-slate-400 font-bold text-[9px] uppercase tracking-widest mb-2 block">Message Description</label>
-                    <div className="text-slate-600 text-[13px] leading-relaxed whitespace-pre-wrap bg-slate-50/50 p-4 rounded border border-slate-100/50 italic font-medium min-h-[120px]">
+                <div className="bg-white dark:bg-[#1E293B] rounded p-4 mb-4 shadow-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                    <label className="text-slate-400 dark:text-slate-500 font-bold text-[9px] uppercase tracking-widest mb-2 block transition-colors duration-300">Message Description</label>
+                    <div className="text-slate-600 dark:text-slate-400 text-[13px] leading-relaxed whitespace-pre-wrap bg-slate-50/50 dark:bg-slate-900/30 p-4 rounded border border-slate-100/50 dark:border-slate-800/50 italic font-medium min-h-[120px] transition-colors duration-300">
                         "{contact?.description}"
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
@@ -12,7 +12,11 @@ import StatCard from "@/components/shared/StatCard";
 import InnerPageCard from "@/components/layout/InnerPageCard";
 import { StatCardSkeleton } from "@/components/shared/Skeletons";
 import { FiFilter } from "react-icons/fi";
+import { HiRefresh } from "react-icons/hi";
 import FilterModal from "./components/FilterModal";
+import ConfirmModal from "@/components/shared/ConfirmModal";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useAdminData } from "@/hooks/useAdminData";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
 export default function ContactUsPage() {
@@ -26,6 +30,19 @@ export default function ContactUsPage() {
         onChangeSearch: false,
     });
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+    const [confirmModal, setConfirmModal] = useState({
+        isOpen: false,
+        title: "",
+        description: "",
+        onConfirm: null,
+        variant: "primary",
+        confirmText: "Confirm",
+        cancelText: "Cancel"
+    });
+
+    const closeConfirmModal = () => {
+        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+    };
 
     // Column Visibility State
     const [visibleColumns, setVisibleColumns] = useState(["name", "email", "source", "status", "createdAt", "actions"]);
@@ -39,17 +56,21 @@ export default function ContactUsPage() {
     ];
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
-    const contactList = useQuery({
-        queryKey: ["contactRequests", JSON.stringify(debFilter)],
-        queryFn: () => GET_CONTACT_REQUESTS(debFilter),
-        keepPreviousData: true,
-        onError: () => toast.error("Failed to fetch contact requests."),
+
+    const {
+        listQuery: contactList,
+        countsQuery,
+        isRefreshing,
+        handleRefresh
+    } = useAdminData({
+        listQueryKey: [ADMIN_KEYS.CONTACT.LIST, JSON.stringify(debFilter)],
+        listQueryFn: () => GET_CONTACT_REQUESTS(debFilter),
+        countsQueryKey: [ADMIN_KEYS.CONTACT.COUNTS],
+        countsQueryFn: GET_CONTACT_STATUS_COUNTS,
+        onListError: "Failed to fetch contact requests.",
     });
 
-    const { data: countsData, isLoading: countsLoading } = useQuery({
-        queryKey: ["contactStatusCounts"],
-        queryFn: GET_CONTACT_STATUS_COUNTS,
-    });
+    const { data: countsData, isLoading: countsLoading } = countsQuery;
 
     const statusMutation = useMutation({
         mutationFn: async ({ id, status }) => {
@@ -57,11 +78,13 @@ export default function ContactUsPage() {
         },
         onSuccess: () => {
             toast.success("Status updated successfully");
-            queryClient.invalidateQueries("contactRequests");
-            queryClient.invalidateQueries("contactStatusCounts");
+            queryClient.invalidateQueries([ADMIN_KEYS.CONTACT.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.CONTACT.COUNTS]);
+            closeConfirmModal();
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to update status");
+            toast.error(error.errorMessage || "Failed to update status");
+            closeConfirmModal();
         },
     });
 
@@ -71,11 +94,13 @@ export default function ContactUsPage() {
         },
         onSuccess: () => {
             toast.success("Request deleted successfully");
-            queryClient.invalidateQueries("contactRequests");
-            queryClient.invalidateQueries("contactStatusCounts");
+            queryClient.invalidateQueries([ADMIN_KEYS.CONTACT.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.CONTACT.COUNTS]);
+            closeConfirmModal();
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to delete request");
+            toast.error(error.errorMessage || "Failed to delete request");
+            closeConfirmModal();
         },
     });
 
@@ -90,13 +115,27 @@ export default function ContactUsPage() {
     const onChange = (data) => setFilters((prev) => ({ ...prev, ...data }));
 
     const onDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this contact request?")) {
-            deleteMutation.mutate(id);
-        }
+        setConfirmModal({
+            isOpen: true,
+            title: 'Confirm Deletion',
+            description: 'Are you sure you want to delete this contact request? This action cannot be undone.',
+            confirmText: 'Yes, Delete',
+            cancelText: 'Cancel',
+            variant: 'danger',
+            onConfirm: () => deleteMutation.mutate(id)
+        });
     };
 
     const onUpdateStatus = (id, status) => {
-        statusMutation.mutate({ id, status });
+        setConfirmModal({
+            isOpen: true,
+            title: 'Confirm Status Update',
+            description: `Are you sure you want to mark this request as ${status.toLowerCase()}?`,
+            confirmText: `Yes, ${status.charAt(0) + status.slice(1).toLowerCase()}`,
+            cancelText: 'Cancel',
+            variant: 'primary',
+            onConfirm: () => statusMutation.mutate({ id, status })
+        });
     };
 
     return (
@@ -142,6 +181,17 @@ export default function ContactUsPage() {
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
                         />
+
+                        {/* Refresh Button */}
+                        <button
+                            onClick={handleRefresh}
+                            disabled={isRefreshing}
+                            title="Refresh Data"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
+                        </button>
+
                         <AddButton
                             title="Add Contact"
                             icon={false}
@@ -152,7 +202,7 @@ export default function ContactUsPage() {
                         {/* Mobile Filter Toggle */}
                         <button
                             onClick={() => setIsFilterModalOpen(true)}
-                            className="mobile-filter-btn md:hidden"
+                            className="mobile-filter-btn md:hidden dark:text-slate-400 dark:hover:text-teal-400 transition-colors"
                             title="Filters"
                         >
                             <FiFilter size={18} />
@@ -180,6 +230,18 @@ export default function ContactUsPage() {
                 onCancel={() => setIsFilterModalOpen(false)}
                 filters={filters}
                 setFilters={setFilters}
+            />
+
+            <ConfirmModal
+                isOpen={confirmModal.isOpen}
+                onClose={closeConfirmModal}
+                onConfirm={confirmModal.onConfirm}
+                title={confirmModal.title}
+                description={confirmModal.description}
+                confirmText={confirmModal.confirmText}
+                cancelText={confirmModal.cancelText}
+                variant={confirmModal.variant}
+                loading={statusMutation.isLoading || deleteMutation.isLoading}
             />
         </InnerPageCard>
     );

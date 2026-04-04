@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import AddButton from "@/components/InnerPage/AddButton";
@@ -16,7 +16,10 @@ import InnerPageCard from "@/components/layout/InnerPageCard";
 import { StatCardSkeleton } from "@/components/shared/Skeletons";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { FiFilter } from "react-icons/fi";
+import { HiRefresh } from "react-icons/hi";
 import FilterModal from "./components/FilterModal";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useAdminData } from "@/hooks/useAdminData";
 
 export default function UsersPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -46,17 +49,21 @@ export default function UsersPage() {
     ];
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
-    const usersList = useQuery({
-        queryKey: ["usersList", JSON.stringify(debFilter)],
-        queryFn: () => GET_USERS(debFilter),
-        keepPreviousData: true,
-        onError: () => toast.error("Failed to fetch users."),
+
+    const {
+        listQuery: usersList,
+        countsQuery,
+        isRefreshing,
+        handleRefresh
+    } = useAdminData({
+        listQueryKey: [ADMIN_KEYS.USERS.LIST, JSON.stringify(debFilter)],
+        listQueryFn: () => GET_USERS(debFilter),
+        countsQueryKey: [ADMIN_KEYS.USERS.COUNTS],
+        countsQueryFn: GET_USER_STATUS_COUNTS,
+        onListError: "Failed to fetch users.",
     });
 
-    const { data: countsData, isLoading: countsLoading } = useQuery({
-        queryKey: ["usersStatusCounts"],
-        queryFn: GET_USER_STATUS_COUNTS,
-    });
+    const { data: countsData, isLoading: countsLoading } = countsQuery;
 
     const counts = React.useMemo(() =>
         countsData?.data || { active: 0, inactive: 0, male: 0, female: 0 },
@@ -118,10 +125,20 @@ export default function UsersPage() {
                             setVisibleColumns={setVisibleColumns}
                         />
 
+                        {/* Refresh Button */}
+                        <button
+                            onClick={handleRefresh}
+                            disabled={isRefreshing}
+                            title="Refresh Data"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
+                        </button>
+
                         {/* Mobile Filter Toggle */}
                         <button
                             onClick={() => setIsFilterModalOpen(true)}
-                            className="mobile-filter-btn md:hidden"
+                            className="mobile-filter-btn md:hidden dark:text-slate-400 dark:hover:text-teal-400 transition-colors"
                             title="Filters"
                         >
                             <FiFilter size={20} />

@@ -61,3 +61,12 @@ export async function GET_USER_STATUS_COUNTS() {
         throw error;
     }
 }
+
+export async function SEARCH_USERS(params) {
+    try {
+        const response = await Axios.get("/api/admin/users/search", { params });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

@@ -33,11 +33,11 @@ function CommentsModal({ isOpen, onClose, postId }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
+                    <div className="w-8 h-8 rounded bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center text-[#006666] dark:text-teal-400 transition-colors duration-300">
                         <FaCommentDots size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-[#006666] block mt-1">Post Comments</span>
+                        <span className="text-lg font-bold text-[#006666] dark:text-teal-400 block mt-1 transition-colors duration-300">Post Comments</span>
                     </div>
                 </div>
             }
@@ -82,7 +82,7 @@ function CommentsModal({ isOpen, onClose, postId }) {
                             }}
                             renderItem={(item) => (
                                 <List.Item
-                                    className="group hover:bg-slate-50/50 p-2.5 rounded transition-all duration-200 border-none mb-1"
+                                    className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/50 p-2.5 rounded transition-all duration-200 border-none mb-1"
                                     actions={[
                                         <Popconfirm
                                             key="delete"
@@ -110,23 +110,23 @@ function CommentsModal({ isOpen, onClose, postId }) {
                                             <Avatar
                                                 src={item.user?.profileImage}
                                                 size={32}
-                                                className="bg-slate-100 border border-slate-200 shadow-sm"
+                                                className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm transition-colors"
                                             >
                                                 {item.user?.name?.charAt(0)}
                                             </Avatar>
                                         }
                                         title={
                                             <div className="flex items-center justify-between">
-                                                <span className="font-bold text-[13px] text-slate-800 capitalize leading-tight">
+                                                <span className="font-bold text-[13px] text-slate-800 dark:text-slate-200 capitalize leading-tight transition-colors">
                                                     {item.user?.name || "Anonymous User"}
                                                 </span>
-                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                                                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tighter transition-colors">
                                                     {timestampToDateWithTime(item.createdAt)}
                                                 </span>
                                             </div>
                                         }
                                         description={
-                                            <div className="mt-1 text-slate-600 text-xs leading-relaxed whitespace-pre-wrap bg-white/50 p-2 rounded border border-slate-100/50 italic">
+                                            <div className="mt-1 text-slate-600 dark:text-slate-400 text-xs leading-relaxed whitespace-pre-wrap bg-white/50 dark:bg-slate-900/30 p-2 rounded border border-slate-100/50 dark:border-slate-800/50 italic transition-colors">
                                                 "{item.text}"
                                             </div>
                                         }

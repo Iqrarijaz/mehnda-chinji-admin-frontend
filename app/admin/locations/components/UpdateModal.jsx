@@ -12,6 +12,7 @@ import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_LOCATION, GET_LOCATION_BY_TYPE } from "@/app/api/admin/locations";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 
 const { Option } = Select;
 
@@ -55,13 +56,11 @@ function UpdateLocationModal({ modal, setModal }) {
     mutationFn: (payload) => UPDATE_LOCATION(payload),
     onSuccess: (data) => {
       toast.success(data?.message || "Location updated successfully");
-      queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey[0] === "locationsList",
-      });
-      handleCloseModal();
+      queryClient.invalidateQueries([ADMIN_KEYS.LOCATIONS.LIST]);
+      handleCloseModal(true);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.error || "Failed to update location");
+      toast.error(error.errorMessage || "Failed to update location");
     },
   });
 
@@ -84,7 +83,23 @@ function UpdateLocationModal({ modal, setModal }) {
   }, [isModalOpen, fetchTehsils]);
 
   const handleCloseModal = useCallback(() => {
-    setModal({ name: null, state: false, data: null });
+    const force = arguments[0] === true;
+    if (!force && formikRef.current?.dirty) {
+      Modal.confirm({
+        title: "Unsaved Changes",
+        content: "You have unsaved changes. Are you sure you want to discard them and exit?",
+        okText: "Discard",
+        okType: "danger",
+        cancelText: "Stay",
+        onOk: () => {
+          formikRef.current?.resetForm();
+          setModal({ name: null, state: false, data: null });
+        },
+      });
+    } else {
+      formikRef.current?.resetForm();
+      setModal({ name: null, state: false, data: null });
+    }
   }, [setModal]);
 
   const handleSubmit = useCallback((values) => {

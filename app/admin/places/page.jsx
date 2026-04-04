@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import AddButton from "@/components/InnerPage/AddButton";
@@ -16,7 +16,10 @@ import InnerPageCard from "@/components/layout/InnerPageCard";
 import { StatCardSkeleton } from "@/components/shared/Skeletons";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { FiFilter } from "react-icons/fi";
+import { HiRefresh } from "react-icons/hi";
 import FilterModal from "./components/FilterModal";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useAdminData } from "@/hooks/useAdminData";
 
 export default function PlacesPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -24,7 +27,7 @@ export default function PlacesPage() {
         itemsPerPage: 20,
         currentPage: 1,
         search: null,
-        categoryId: null,
+        search: null,
         sortOrder: -1,
         sortingKey: "_id",
         onChangeSearch: false,
@@ -34,11 +37,10 @@ export default function PlacesPage() {
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
     // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["name", "category", "address", "contact", "status", "isActive", "createdAt", "actions"]);
+    const [visibleColumns, setVisibleColumns] = useState(["name", "address", "contact", "status", "isActive", "createdAt", "actions"]);
 
     const columnOptions = [
         { label: "Name", value: "name" },
-        { label: "Category", value: "category" },
         { label: "Address", value: "address" },
         { label: "Contact", value: "contact" },
         { label: "Reg. Status", value: "status" },
@@ -47,24 +49,25 @@ export default function PlacesPage() {
     ];
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
-    const placesList = useQuery({
-        queryKey: ["placesList", JSON.stringify(debFilter)],
-        queryFn: () => GET_PLACES(debFilter),
-        onError: () => toast.error("Something went wrong. Please try again later."),
+
+    const {
+        listQuery: placesList,
+        countsQuery,
+        isRefreshing,
+        handleRefresh
+    } = useAdminData({
+        listQueryKey: [ADMIN_KEYS.PLACES.LIST, JSON.stringify(debFilter)],
+        listQueryFn: () => GET_PLACES(debFilter),
+        countsQueryKey: [ADMIN_KEYS.PLACES.COUNTS],
+        countsQueryFn: GET_PLACE_STATUS_COUNTS,
+        onListError: "Failed to fetch places.",
     });
 
-    const { data: countsData, isLoading: countsLoading } = useQuery({
-        queryKey: ["placeStatusCounts"],
-        queryFn: GET_PLACE_STATUS_COUNTS,
-    });
+    const { data: countsData, isLoading: countsLoading } = countsQuery;
 
     const counts = countsData?.data || { approved: 0, pending: 0, rejected: 0 };
 
     const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
-
-    const handleCategoryFilter = (value) => {
-        setFilters((prev) => ({ ...prev, categoryId: value || null, currentPage: 1 }));
-    };
 
     const statCards = [
         { label: "Approved", short: "App", key: "APPROVED", color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
@@ -107,17 +110,9 @@ export default function PlacesPage() {
                 <div className="flex flex-wrap md:flex-nowrap gap-3 items-center w-full md:w-auto justify-end">
                     {/* Desktop Filters (Visible on Tablet/Desktop) */}
                     <div className="hidden md:flex items-center gap-3">
-                        <SelectBox
-                            placeholder="Filter by Category"
-                            allowClear
-                            handleChange={handleCategoryFilter}
-                            width={160}
-                            options={PLACE_CATEGORIES.map((cat) => ({ value: cat.value, label: cat.label }))}
-                            className="custom-selectbox !h-[32px]"
-                        />
-                        <SearchInput 
-                            setFilters={setFilters} 
-                            className="!max-w-[180px] !h-[32px]" 
+                        <SearchInput
+                            setFilters={setFilters}
+                            className="!max-w-[180px] !h-[32px] mt-1"
                         />
                     </div>
 
@@ -126,8 +121,20 @@ export default function PlacesPage() {
                             options={columnOptions}
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
-                            className="!h-[32px] !border-2 !border-[#006666] !text-[#006666] !text-[10px] font-medium"
                         />
+
+                        {/* Refresh Button */}
+                        <button
+                            onClick={handleRefresh}
+                            disabled={isRefreshing}
+                            title="Refresh Data"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <HiRefresh
+                                size={16}
+                                className={isRefreshing ? "animate-spin" : ""}
+                            />
+                        </button>
 
                         {/* Mobile Filter Toggle */}
                         <button
@@ -142,7 +149,7 @@ export default function PlacesPage() {
                             title="Add Place"
                             icon={false}
                             onClick={() => setModal({ name: "Add", data: null, state: true })}
-                            className="!h-[32px] !border-2 !border-[#006666] !bg-white !text-[#006666] hover:!bg-[#006666] hover:!text-white !rounded !text-[10px] font-medium shadow-sm transition-all !px-3"
+                            className="!h-[32px] !border-2 !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded !text-[10px] font-medium shadow-sm transition-all !px-3"
                         />
                     </div>
                 </div>
@@ -167,7 +174,6 @@ export default function PlacesPage() {
                 onCancel={() => setIsFilterModalOpen(false)}
                 filters={filters}
                 setFilters={setFilters}
-                handleCategoryFilter={handleCategoryFilter}
             />
         </InnerPageCard>
     );

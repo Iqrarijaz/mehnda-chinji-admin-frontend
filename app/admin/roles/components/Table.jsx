@@ -9,6 +9,7 @@ import Loading from "@/animations/homePageLoader";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { DELETE_ROLE } from "@/app/api/admin/roles";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { Pagination, Table, Tag, Tooltip, Menu, Dropdown, Button } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
@@ -36,12 +37,12 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
     const deleteMutation = useMutation({
         mutationFn: DELETE_ROLE,
         onSuccess: () => {
-            queryClient.invalidateQueries("rolesList");
+            queryClient.invalidateQueries([ADMIN_KEYS.ROLES.LIST]);
             toast.success("Role deleted successfully");
             closeConfirmModal();
         },
-        onError: () => {
-            toast.error("Failed to delete role");
+        onError: (error) => {
+            toast.error(error.errorMessage || "Failed to delete role");
             closeConfirmModal();
         },
     });
@@ -71,28 +72,28 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
         items: [
             {
                 key: "edit",
-                label: <span className="font-medium">Edit Role</span>,
-                icon: <EditOutlined className="text-[#006666]" />,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">Edit Role</span>,
+                icon: <EditOutlined className="text-[#006666] dark:text-teal-500" />,
                 onClick: () => setModal({
                     name: "Edit",
                     data: record,
                     state: true,
                 }),
-                className: "!rounded hover:!bg-blue-50",
+                className: "!rounded hover:!bg-blue-50 dark:hover:!bg-blue-900/20 transition-colors",
             },
             {
                 type: "divider",
-                className: "!my-1",
+                className: "!my-1 dark:border-slate-800",
             },
             {
                 key: "delete",
-                label: <span className="font-medium text-red-600">Delete Role</span>,
-                icon: <DeleteOutlined className="text-red-500" />,
+                label: <span className="font-medium text-red-600 dark:text-red-500">Delete Role</span>,
+                icon: <DeleteOutlined className="text-red-500 dark:text-red-400" />,
                 onClick: () => handleDelete(record),
-                className: "!rounded hover:!bg-red-50",
+                className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
             },
         ],
-        className: "!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100",
+        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     });
 
 
@@ -100,15 +101,26 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
 
     const allColumns = [
         {
-            title: "Role Info",
+            title: "Role Name",
+            dataIndex: "name",
             key: "name",
-            width: 250,
+            width: 150,
             sorter: true,
-            render: (record) => (
-                <div className="flex flex-col min-w-0">
-                    <span className="font-bold text-slate-800 text-xs truncate leading-tight block">{record.name}</span>
-                    <span className="text-[10px] text-slate-400 font-medium truncate block leading-tight mt-0.5">{record.description || "No description provided"}</span>
-                </div>
+            render: (name) => (
+                <span className="font-bold text-slate-700 dark:text-slate-200 text-[11px] truncate leading-tight block tracking-tight transition-colors duration-300">
+                    {name}
+                </span>
+            ),
+        },
+        {
+            title: "Description",
+            dataIndex: "description",
+            key: "description",
+            width: 250,
+            render: (description) => (
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate block leading-tight transition-colors duration-300">
+                    {description || "No description provided"}
+                </span>
             ),
         },
         {
@@ -118,9 +130,9 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
             width: 170,
             align: "center",
             render: (permissions) => (
-                <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-teal-50 text-[#006666] border border-teal-100/50">
+                <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-teal-50 dark:bg-teal-900/30 text-[#006666] dark:text-teal-400 border border-teal-100/50 dark:border-teal-800/50 transition-colors duration-300 shadow-sm">
                     <SecurityScanOutlined className="text-[10px]" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider">
+                    <span className="text-[9px] font-bold uppercase tracking-wider">
                         {permissions?.length || 0} PERMS
                     </span>
                 </div>
@@ -129,14 +141,14 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
         {
             title: "",
             key: "actions",
-            width: 50,
+            width: 70,
             align: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
-                        icon={<EllipsisOutlined className="text-lg rotate-90" />}
-                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+                        icon={<EllipsisOutlined className="text-base text-slate-400" />}
+                        className="!rounded hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8 transition-all"
                     />
                 </Dropdown>
             ),
@@ -147,7 +159,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
 
     return (
         <div className="space-y-4">
-            <div className="modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
+            <div className="modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

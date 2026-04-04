@@ -9,6 +9,7 @@ import CustomButton from "@/components/shared/CustomButton";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import { GET_SUPPORT_TICKET_BY_ID, REPLY_TO_TICKET, UPDATE_TICKET_STATUS } from "@/app/api/admin/support";
 import { timestampToDate } from "@/utils/date";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { useEffect, useRef, useState } from "react";
 
 const { TextArea } = Input;
@@ -22,10 +23,29 @@ function ManageTicketModal({ modal, setModal }) {
     const scrollRef = useRef(null);
 
     const closeModal = () => {
-        setModal({ ...modal, state: false });
-        setTicket(null);
-        setReply("");
-        setFileList([]);
+        const force = arguments[0] === true;
+        const isDirty = reply.trim() !== "" || fileList.length > 0;
+
+        if (!force && isDirty) {
+            Modal.confirm({
+                title: "Unsaved Response",
+                content: "You have an unsaved response. Are you sure you want to discard it and exit?",
+                okText: "Discard",
+                okType: "danger",
+                cancelText: "Stay",
+                onOk: () => {
+                    setModal({ ...modal, state: false });
+                    setTicket(null);
+                    setReply("");
+                    setFileList([]);
+                },
+            });
+        } else {
+            setModal({ ...modal, state: false });
+            setTicket(null);
+            setReply("");
+            setFileList([]);
+        }
     };
 
     const fetchTicket = async () => {
@@ -63,10 +83,10 @@ function ManageTicketModal({ modal, setModal }) {
             setReply("");
             setFileList([]);
             fetchTicket();
-            queryClient.invalidateQueries("ticketsList");
+            queryClient.invalidateQueries([ADMIN_KEYS.SUPPORT.LIST]);
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to send reply");
+            toast.error(error.errorMessage || "Failed to send reply");
         },
     });
 
@@ -77,10 +97,10 @@ function ManageTicketModal({ modal, setModal }) {
         onSuccess: (data) => {
             toast.success("Status updated successfully");
             fetchTicket();
-            queryClient.invalidateQueries("ticketsList");
+            queryClient.invalidateQueries([ADMIN_KEYS.SUPPORT.LIST]);
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to update status");
+            toast.error(error.errorMessage || "Failed to update status");
         },
     });
 
@@ -116,14 +136,14 @@ function ManageTicketModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
+                    <div className="w-10 h-10 rounded bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center text-[#006666] dark:text-teal-400 transition-colors duration-300">
                         <MessageOutlined className="text-lg" />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-slate-900 block">Ticket Management</span>
-                        <div className="flex items-center gap-1.5 mt-0.5">
-                            <span className="font-mono font-black text-[#006666] text-[10px] tracking-wider bg-[#006666]/5 px-2 py-0.5 rounded border border-[#006666]/10">#{ticket?.ticketId}</span>
-                            <span className="text-[11px] text-slate-400 font-normal italic">investigating support request</span>
+                        <span className="text-lg font-bold text-slate-900 dark:text-slate-100 block transition-colors duration-300">Ticket Management</span>
+                        <div className="flex items-center gap-1.5 mt-0.5 transition-colors duration-300">
+                            <span className="font-mono font-black text-[#006666] dark:text-teal-500 text-[10px] tracking-wider bg-[#006666]/5 dark:bg-teal-500/10 px-2 py-0.5 rounded border border-[#006666]/10 dark:border-teal-500/20 transition-colors duration-300">#{ticket?.ticketId}</span>
+                            <span className="text-[11px] text-slate-400 dark:text-slate-500 font-normal italic transition-colors duration-300">investigating support request</span>
                         </div>
                     </div>
                 </div>
@@ -135,15 +155,15 @@ function ManageTicketModal({ modal, setModal }) {
             centered
             className="modern-modal"
         >
-            <div className="bg-slate-50/50 p-3 rounded border border-slate-100/50 mt-4 max-h-[85vh] overflow-y-auto custom-scrollbar">
+            <div className="bg-slate-50/50 dark:bg-slate-900/40 p-3 rounded border border-slate-100/50 dark:border-slate-800/50 mt-4 max-h-[85vh] overflow-y-auto custom-scrollbar transition-colors duration-300">
                 {/* Info & Status Bar */}
-                <div className="bg-white rounded p-3 mb-3 shadow-sm flex items-center justify-between border border-slate-100">
+                <div className="bg-white dark:bg-slate-900 rounded p-3 mb-3 shadow-sm flex items-center justify-between border border-slate-100 dark:border-slate-800 transition-colors duration-300">
                     <div className="flex flex-col">
                         <div className="flex items-center gap-2">
-                            <span className="font-bold text-slate-800 text-sm capitalize leading-tight">{ticket?.userId?.name}</span>
+                            <span className="font-bold text-slate-800 dark:text-slate-200 text-sm capitalize leading-tight transition-colors duration-300">{ticket?.userId?.name}</span>
                             {ticket?.status && getStatusTag(ticket.status)}
                         </div>
-                        <span className="text-[10px] text-slate-400 font-medium mt-0.5">{ticket?.userId?.email} | {ticket?.userId?.phoneNumber}</span>
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5 transition-colors duration-300">{ticket?.userId?.email} | {ticket?.userId?.phoneNumber}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Mark Status:</span>
@@ -161,14 +181,14 @@ function ManageTicketModal({ modal, setModal }) {
                 </div>
 
                 {/* Subject & Description */}
-                <div className="bg-white rounded p-4 mb-3 shadow-sm border border-slate-100 space-y-2.5">
+                <div className="bg-white dark:bg-slate-900 rounded p-4 mb-3 shadow-sm border border-slate-100 dark:border-slate-800 space-y-2.5 transition-colors duration-300">
                     <div>
-                        <label className="text-slate-400 font-bold text-[9px] uppercase tracking-widest mb-1 block">Subject Line</label>
-                        <div className="text-slate-900 font-bold text-sm leading-tight">{ticket?.subject}</div>
+                        <label className="text-slate-400 dark:text-slate-500 font-bold text-[9px] uppercase tracking-widest mb-1 block">Subject Line</label>
+                        <div className="text-slate-900 dark:text-slate-100 font-bold text-sm leading-tight transition-colors duration-300">{ticket?.subject}</div>
                     </div>
-                    <div className="pt-2 border-t border-slate-50">
-                        <label className="text-slate-400 font-bold text-[9px] uppercase tracking-widest mb-1 block">Issue Description</label>
-                        <div className="text-slate-600 text-[11px] leading-relaxed whitespace-pre-wrap bg-slate-50/50 p-3 rounded border border-slate-100/50 italic font-medium">
+                    <div className="pt-2 border-t border-slate-50 dark:border-slate-800">
+                        <label className="text-slate-400 dark:text-slate-500 font-bold text-[9px] uppercase tracking-widest mb-1 block">Issue Description</label>
+                        <div className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed whitespace-pre-wrap bg-slate-50/50 dark:bg-slate-900/30 p-3 rounded border border-slate-100/50 dark:border-slate-800/50 italic font-medium transition-colors duration-300">
                             "{ticket?.description}"
                         </div>
                     </div>
@@ -176,25 +196,25 @@ function ManageTicketModal({ modal, setModal }) {
 
                 {/* Chat Area */}
                 <div className="mb-3 px-1">
-                    <label className="text-slate-400 font-bold text-[9px] uppercase tracking-widest mb-2 block">Conversation Log</label>
+                    <label className="text-slate-400 dark:text-slate-500 font-bold text-[9px] uppercase tracking-widest mb-2 block">Conversation Log</label>
                     <div
                         ref={scrollRef}
                         className="space-y-3 max-h-[35vh] overflow-y-auto p-1 scroll-smooth"
                     >
                         {!ticket ? (
-                            <div className="bg-white rounded p-6 border border-slate-100">
+                            <div className="bg-white dark:bg-[#1E293B] rounded p-6 border border-slate-100 dark:border-slate-800 transition-colors duration-300">
                                 <FormSkeleton fields={4} />
                             </div>
                         ) : (
                             ticket.messages?.map((msg, i) => (
                                 <div key={i} className={`flex ${msg.sender === 'admin' ? 'justify-end' : 'justify-start'}`}>
-                                    <div className={`max-w-[85%] rounded p-3 shadow-sm ${msg.sender === 'admin' ? 'bg-[#006666] text-white' : 'bg-white border border-slate-100 text-slate-700'}`}>
-                                        <div className={`flex items-center gap-2 mb-1.5 border-b pb-1 ${msg.sender === 'admin' ? 'border-white/10' : 'border-slate-50'}`}>
-                                            {msg.sender === 'admin' ? <FaUserTie size={10} className="text-teal-200" /> : <FaUser size={10} className="text-emerald-500" />}
+                                    <div className={`max-w-[85%] rounded p-3 shadow-sm transition-colors duration-300 ${msg.sender === 'admin' ? 'bg-[#006666] text-white shadow-emerald-500/10' : 'bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}>
+                                        <div className={`flex items-center gap-2 mb-1.5 border-b pb-1 ${msg.sender === 'admin' ? 'border-white/10' : 'border-slate-50 dark:border-slate-800/50'}`}>
+                                            {msg.sender === 'admin' ? <FaUserTie size={10} className="text-teal-200" /> : <FaUser size={10} className="text-emerald-500 dark:text-emerald-400" />}
                                             <span className={`text-[9px] uppercase font-black tracking-tight ${msg.sender === 'admin' ? 'text-teal-50' : 'text-slate-400'}`}>
                                                 {msg.sender === 'admin' ? 'Support Agent' : 'User'}
                                             </span>
-                                            <span className={`text-[9px] ml-auto flex items-center gap-1 opacity-60 ${msg.sender === 'admin' ? 'text-teal-50' : 'text-slate-300'}`}>
+                                            <span className={`text-[9px] ml-auto flex items-center gap-1 opacity-60 ${msg.sender === 'admin' ? 'text-teal-50' : 'text-slate-300 dark:text-slate-500'}`}>
                                                 <FaClock size={8} /> {timestampToDate(msg.createdAt)}
                                             </span>
                                         </div>
@@ -218,14 +238,14 @@ function ManageTicketModal({ modal, setModal }) {
 
                 {/* Input Area */}
                 {ticket?.status !== "CLOSED" && (
-                    <div className="bg-white rounded p-3 shadow-sm border border-slate-100">
-                        <label className="text-slate-400 font-bold text-[9px] uppercase tracking-widest mb-1.5 block">Compose Response</label>
+                    <div className="bg-white dark:bg-slate-900 rounded p-3 shadow-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                        <label className="text-slate-400 dark:text-slate-500 font-bold text-[9px] uppercase tracking-widest mb-1.5 block">Compose Response</label>
                         <TextArea
                             value={reply}
                             onChange={(e) => setReply(e.target.value)}
                             placeholder="Type a message to the user..."
                             autoSize={{ minRows: 2, maxRows: 4 }}
-                            className="mb-2 !text-xs !bg-slate-50/50 !border-slate-100 focus:!border-[#006666] !rounded"
+                            className="mb-2 !text-xs !bg-slate-50/50 dark:!bg-slate-900/50 !border-slate-100 dark:!border-slate-800 focus:!border-[#006666] !rounded !text-slate-700 dark:!text-slate-200"
                         />
                         <div className="flex justify-between items-center">
                             <Upload

@@ -15,6 +15,7 @@ import { UPDATE_EMAIL_TEMPLATE_STATUS, DELETE_EMAIL_TEMPLATE } from "@/app/api/a
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { Pagination, Table, Switch, Tag, Menu, Dropdown, Button, Checkbox, Tooltip } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { useState } from "react";
 
 function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
@@ -105,12 +106,12 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
     items: [
       {
         key: "edit",
-        label: <span className="font-medium">Edit Template</span>,
-        icon: <EditOutlined className="text-[#006666]" />,
+        label: <span className="font-medium text-slate-700 dark:text-slate-300">Edit Template</span>,
+        icon: <EditOutlined className="text-[#006666] dark:text-teal-500" />,
         onClick: () => {
           router.push(`${PATH_ROUTER?.EDIT_EMAIL_TEMPLATE}/${record._id}`);
         },
-        className: "!rounded hover:!bg-blue-50",
+        className: "!rounded hover:!bg-blue-50 dark:hover:!bg-blue-900/20 transition-colors",
       },
       {
         type: "divider",
@@ -118,13 +119,13 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       },
       {
         key: "delete",
-        label: <span className="font-medium text-red-600">Delete Template</span>,
-        icon: <DeleteOutlined className="text-red-500" />,
+        label: <span className="font-medium text-red-600 dark:text-red-500">Delete Template</span>,
+        icon: <DeleteOutlined className="text-red-500 dark:text-red-400" />,
         onClick: () => handleDelete(record),
-        className: "!rounded hover:!bg-red-50",
+        className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
       },
     ],
-    className: "!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100",
+    className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
   });
 
   const columnOptions = [
@@ -135,41 +136,6 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
     { label: "Created At", value: "createdAt" },
   ];
 
-  const visibilityMenu = {
-    items: columnOptions.map(opt => ({
-      key: opt.value,
-      label: (
-        <Checkbox value={opt.value} className="font-medium text-slate-700 w-full" onClick={(e) => e.stopPropagation()}>
-          {opt.label}
-        </Checkbox>
-      ),
-      className: "!bg-transparent !cursor-default hover:!bg-slate-50 !rounded !py-1",
-    })),
-    // Wrap with Checkbox.Group logic using _menuWrapper if needed, but Antd 5 items are cleaner.
-    // However, since it's a Checkbox.Group, we might need to use dropdownRender.
-    // Let's try to keep the Checkbox.Group as a label item or use dropdownRender.
-  };
-
-  const visibilityDropdown = (
-    <div className="bg-white !rounded !p-3 shadow-xl border border-slate-100 min-w-[180px]">
-      <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
-        Toggle Columns
-      </div>
-      <Checkbox.Group
-        value={visibleColumns}
-        onChange={setVisibleColumns}
-        className="flex flex-col gap-2"
-      >
-        {columnOptions.map(opt => (
-          <div key={opt.value} className="hover:bg-slate-50 rounded py-1 px-2 transition-colors">
-            <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
-              {opt.label}
-            </Checkbox>
-          </div>
-        ))}
-      </Checkbox.Group>
-    </div>
-  );
 
   const allColumns = [
     {
@@ -179,7 +145,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       width: 200,
       sorter: true,
       render: (text) => (
-        <div className="capitalize font-bold text-slate-800 tracking-tight flex items-center gap-2">
+        <div className="capitalize font-bold text-slate-800 dark:text-slate-200 tracking-tight flex items-center gap-2 transition-colors duration-300">
           <MailOutlined className="text-slate-400 text-xs" />
           {text}
         </div>
@@ -238,14 +204,14 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
     {
       title: "",
       key: "actions",
-      width: 60,
+      width: 70,
       align: "right",
       render: (record) => (
         <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
           <Button
             type="text"
-            icon={<MoreOutlined className="text-lg" />}
-            className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+            icon={<EllipsisOutlined className="text-base text-slate-400" />}
+            className="!rounded hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8"
           />
         </Dropdown>
       ),
@@ -257,17 +223,14 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
   return (
     <div className="space-y-4">
       <div className="flex justify-end px-1">
-        <Dropdown dropdownRender={() => visibilityDropdown} trigger={['click']}>
-          <Button
-            icon={<SettingOutlined />}
-            className="!rounded !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
-          >
-            Columns
-          </Button>
-        </Dropdown>
+        <ColumnVisibilityDropdown
+          options={columnOptions}
+          visibleColumns={visibleColumns}
+          setVisibleColumns={setVisibleColumns}
+        />
       </div>
 
-      <div className="modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
+      <div className="modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
         <Table
           rowKey="_id"
           className="custom-ant-table"

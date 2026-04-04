@@ -17,6 +17,7 @@ import ConfirmModal from "@/components/shared/ConfirmModal";
 import { Modal, Pagination, Table, Tag, Tooltip, Switch, Menu, Dropdown, Button, Checkbox, Popover } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 
 function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibleColumns }) {
     const queryClient = useQueryClient();
@@ -41,15 +42,13 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
     const requestStatusMutation = useMutation({
         mutationFn: UPDATE_PLACE_REQUEST_STATUS,
         onSuccess: (data) => {
-            queryClient.invalidateQueries({
-                predicate: (query) => query.queryKey[0] === "placesList",
-            });
-            queryClient.invalidateQueries("placeStatusCounts");
+            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.COUNTS]);
             toast.success(data?.message || "Request status updated");
             closeConfirmModal();
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to update request status");
+            toast.error(error.errorMessage || "Failed to update request status");
             closeConfirmModal();
         },
     });
@@ -58,15 +57,13 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
     const manageStatusMutation = useMutation({
         mutationFn: UPDATE_PLACE_STATUS,
         onSuccess: (data) => {
-            queryClient.invalidateQueries({
-                predicate: (query) => query.queryKey[0] === "placesList",
-            });
-            queryClient.invalidateQueries("placeStatusCounts");
+            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.COUNTS]);
             toast.success(data?.message || "Status updated");
             closeConfirmModal();
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to update status");
+            toast.error(error.errorMessage || "Failed to update status");
             closeConfirmModal();
         },
     });
@@ -75,15 +72,13 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
     const deleteMutation = useMutation({
         mutationFn: DELETE_PLACE,
         onSuccess: (data) => {
-            queryClient.invalidateQueries({
-                predicate: (query) => query.queryKey[0] === "placesList",
-            });
-            queryClient.invalidateQueries("placeStatusCounts");
+            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.COUNTS]);
             toast.success(data?.message || "Place deleted");
             closeConfirmModal();
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to delete place");
+            toast.error(error.errorMessage || "Failed to delete place");
             closeConfirmModal();
         },
     });
@@ -154,21 +149,21 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
         items: [
             {
                 key: "view",
-                label: <span className="font-medium">View Details</span>,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">View Details</span>,
                 icon: <EyeOutlined className="text-emerald-500" />,
                 onClick: () => setViewModal({ open: true, data: record }),
-                className: "!rounded hover:!bg-emerald-50",
+                className: "!rounded hover:!bg-emerald-50 dark:hover:!bg-emerald-900/20 transition-colors",
             },
             {
                 key: "edit",
-                label: <span className="font-medium">Edit Place</span>,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">Edit Place</span>,
                 icon: <EditOutlined className="text-[#006666]" />,
                 onClick: () => setModal({
                     name: "Update",
                     data: record,
                     state: true
                 }),
-                className: "!rounded hover:!bg-blue-50",
+                className: "!rounded hover:!bg-blue-50 dark:hover:!bg-blue-900/20 transition-colors",
             },
             {
                 type: "divider",
@@ -176,17 +171,17 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
             },
             {
                 key: "approve",
-                label: <span className="font-medium text-green-600">Approve</span>,
-                icon: <CheckCircleOutlined className="text-green-600" />,
+                label: <span className="font-medium text-green-600 dark:text-green-500">Approve</span>,
+                icon: <CheckCircleOutlined className="text-green-600 dark:text-green-500" />,
                 onClick: () => handleApprove(record),
-                className: "!rounded hover:!bg-green-50",
+                className: "!rounded hover:!bg-green-50 dark:hover:!bg-green-900/20 transition-colors",
             },
             {
                 key: "reject",
-                label: <span className="font-medium text-orange-600">Reject</span>,
-                icon: <CloseCircleOutlined className="text-orange-600" />,
+                label: <span className="font-medium text-orange-600 dark:text-orange-500">Reject</span>,
+                icon: <CloseCircleOutlined className="text-orange-600 dark:text-orange-500" />,
                 onClick: () => handleReject(record),
-                className: "!rounded hover:!bg-orange-50",
+                className: "!rounded hover:!bg-orange-50 dark:hover:!bg-orange-900/20 transition-colors",
             },
             {
                 type: "divider",
@@ -194,13 +189,13 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
             },
             {
                 key: "delete",
-                label: <span className="font-medium text-red-600">Delete Place</span>,
+                label: <span className="font-medium text-red-600 dark:text-red-500">Delete Place</span>,
                 icon: <DeleteOutlined className="text-red-500" />,
                 onClick: () => handleDelete(record),
-                className: "!rounded hover:!bg-red-50",
+                className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100",
+        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     });
 
 
@@ -214,7 +209,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
             width: 200,
             render: (name) => (
                 <Tooltip title={name} placement="topLeft">
-                    <div className="capitalize font-bold text-slate-800 truncate cursor-help">
+                    <div className="capitalize font-bold text-slate-500 dark:text-slate-400 truncate cursor-help transition-colors">
                         {name}
                     </div>
                 </Tooltip>
@@ -237,13 +232,25 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
             ),
         },
         {
+            title: "Type",
+            dataIndex: "type",
+            key: "type",
+            width: 150,
+            align: "center",
+            render: (type) => (
+                <span className="px-3 py-1 rounded-full capitalize font-bold text-orange-700 bg-orange-50 border border-orange-100 shadow-sm text-[10px]">
+                    {type || "—"}
+                </span>
+            ),
+        },
+        {
             title: "Address",
             dataIndex: "address",
             key: "address",
             width: 250,
             render: (address) => (
                 <Tooltip title={address} placement="topLeft">
-                    <div className="text-slate-500 font-medium truncate cursor-help">
+                    <div className="capitalize text-slate-500 dark:text-slate-400 font-medium truncate cursor-help transition-colors">
                         {address || "—"}
                     </div>
                 </Tooltip>
@@ -253,40 +260,33 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
             title: "Contact",
             dataIndex: "contact",
             key: "contact",
-            width: 170,
+            width: 100,
+            align: "center",
             render: (contact) => {
                 if (!contact || contact.length === 0) return <span className="text-slate-400">—</span>;
 
-                const primary = contact[0];
-                const others = contact.slice(1);
-
                 return (
-                    <div className="flex items-center gap-2">
-                        <div className="text-slate-600 font-medium truncate max-w-[120px]">
-                            {primary.name}: {primary.number}
-                        </div>
-                        {others.length > 0 && (
-                            <Popover
-                                content={
-                                    <div className="space-y-2 p-1">
-                                        {contact.map((c, i) => (
-                                            <div key={i} className="flex flex-col border-b border-slate-50 last:border-0 pb-1 last:pb-0">
-                                                <span className="text-[10px] font-bold text-slate-400 uppercase leading-none">{c.name}</span>
-                                                <span className="text-sm font-medium text-slate-700">{c.number}</span>
-                                            </div>
-                                        ))}
+                    <Popover
+                        content={
+                            <div className="space-y-2 p-1">
+                                {contact.map((c, i) => (
+                                    <div key={i} className="flex flex-col border-b border-slate-50 last:border-0 pb-1 last:pb-0">
+                                        <span className="text-[10px] font-bold text-slate-400 capitalize leading-none">{c.name}</span>
+                                        <span className="text-sm font-medium text-slate-700">{c.number}</span>
                                     </div>
-                                }
-                                title={<span className="text-xs font-bold text-slate-400 uppercase tracking-wider">All Contacts</span>}
-                                trigger="hover"
-                                placement="topRight"
-                            >
-                                <Tag className="!m-0 !rounded-full !bg-teal-50 !text-teal-600 !border-teal-100 !px-2 !py-0 !text-[10px] font-bold cursor-pointer hover:!bg-teal-100 transition-colors">
-                                    +{others.length}
-                                </Tag>
-                            </Popover>
-                        )}
-                    </div>
+                                ))}
+                            </div>
+                        }
+                        title={<span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Contact Details</span>}
+                        trigger="click"
+                        placement="topRight"
+                    >
+                        <Button
+                            type="text"
+                            icon={<EyeOutlined className="text-teal-600" />}
+                            className="hover:!bg-teal-50 !rounded-full !flex items-center justify-center mx-auto"
+                        />
+                    </Popover>
                 );
             }
         },
@@ -354,7 +354,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
 
     return (
         <div className="space-y-3">
-            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
+            <div className="place-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

@@ -13,6 +13,7 @@ import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_CATEGORY } from "@/app/api/admin/categories";
 import SelectBox from "@/components/SelectBox";
 import CustomButton from "@/components/shared/CustomButton";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 
 
 const validationSchema = Yup.object().shape({
@@ -30,13 +31,12 @@ function UpdateCategoryModal({ modal, setModal }) {
     mutationFn: (payload) => UPDATE_CATEGORY(payload),
     onSuccess: (data) => {
       toast.success(data?.message || "Category updated successfully");
-      queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey[0] === "categoriesList",
-      });
-      setModal({ name: null, state: false, data: null });
+      queryClient.invalidateQueries([ADMIN_KEYS.CATEGORIES.LIST]);
+      queryClient.invalidateQueries([ADMIN_KEYS.CATEGORIES.COUNTS]);
+      handleCloseModal(true);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      toast.error(error.errorMessage || "Something went wrong");
     },
   });
 
@@ -52,7 +52,23 @@ function UpdateCategoryModal({ modal, setModal }) {
   };
 
   const handleCloseModal = () => {
-    setModal({ name: null, state: false, data: null });
+    const force = arguments[0] === true;
+    if (!force && formikRef.current?.dirty) {
+      Modal.confirm({
+        title: "Unsaved Changes",
+        content: "You have unsaved changes. Are you sure you want to discard them and exit?",
+        okText: "Discard",
+        okType: "danger",
+        cancelText: "Stay",
+        onOk: () => {
+          formikRef.current?.resetForm();
+          setModal({ name: null, state: false, data: null });
+        },
+      });
+    } else {
+      formikRef.current?.resetForm();
+      setModal({ name: null, state: false, data: null });
+    }
   };
 
   return (

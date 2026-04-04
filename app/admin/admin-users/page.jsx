@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import AdminUsersTable from "./components/Table";
@@ -14,7 +14,10 @@ import InnerPageCard from "@/components/layout/InnerPageCard";
 import { StatCardSkeleton } from "@/components/shared/Skeletons";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { FiFilter } from "react-icons/fi";
+import { HiRefresh } from "react-icons/hi";
 import FilterModal from "./components/FilterModal";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useAdminData } from "@/hooks/useAdminData";
 
 export default function AdminUsersPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -41,17 +44,21 @@ export default function AdminUsersPage() {
     ];
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
-    const adminUsersList = useQuery({
-        queryKey: ["adminUsersList", JSON.stringify(debFilter)],
-        queryFn: () => GET_ADMIN_USERS(debFilter),
-        keepPreviousData: true,
-        onError: () => toast.error("Failed to fetch admin users."),
+
+    const {
+        listQuery: adminUsersList,
+        countsQuery,
+        isRefreshing,
+        handleRefresh
+    } = useAdminData({
+        listQueryKey: [ADMIN_KEYS.ADMIN_USERS.LIST, JSON.stringify(debFilter)],
+        listQueryFn: () => GET_ADMIN_USERS(debFilter),
+        countsQueryKey: [ADMIN_KEYS.ADMIN_USERS.COUNTS],
+        countsQueryFn: GET_ADMIN_USER_STATUS_COUNTS,
+        onListError: "Failed to fetch admin users.",
     });
 
-    const { data: countsData, isLoading: countsLoading } = useQuery({
-        queryKey: ["adminUsersStatusCounts"],
-        queryFn: GET_ADMIN_USER_STATUS_COUNTS,
-    });
+    const { data: countsData, isLoading: countsLoading } = countsQuery;
 
     const counts = countsData?.data || { active: 0, inactive: 0 };
 
@@ -106,6 +113,16 @@ export default function AdminUsersPage() {
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
                         />
+
+                        {/* Refresh Button */}
+                        <button
+                            onClick={handleRefresh}
+                            disabled={isRefreshing}
+                            title="Refresh Data"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
+                        </button>
 
                         {/* Mobile Filter Toggle */}
                         <button

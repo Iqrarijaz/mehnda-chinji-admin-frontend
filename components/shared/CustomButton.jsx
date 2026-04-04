@@ -28,11 +28,11 @@ const CustomButton = ({
   const getVariantClasses = () => {
     switch (type) {
       case "primary":
-        return "!bg-[#006666] !text-white border-none shadow-lg shadow-teal-400/10 hover:!bg-[#004d4d]";
+        return "!bg-[#006666] !text-white border-none shadow-lg shadow-teal-400/10 hover:!bg-[#004d4d] transition-colors";
       case "secondary":
-        return "!bg-white !text-slate-600 !border-slate-200 hover:!border-slate-300 hover:!bg-slate-50";
+        return "!bg-white dark:!bg-slate-900 !text-slate-600 dark:!text-slate-300 !border-slate-200 dark:!border-slate-800 hover:!border-slate-300 hover:!bg-slate-50 dark:hover:!bg-slate-800 transition-colors";
       case "danger":
-        return "!bg-red-500 !text-white border-none shadow-lg shadow-red-400/10 hover:!bg-red-600";
+        return "!bg-red-500 !text-white border-none shadow-lg shadow-red-400/10 hover:!bg-red-600 transition-colors";
       default:
         return "";
     }

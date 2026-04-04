@@ -29,10 +29,10 @@ function ResetPasswordModal({ modal, setModal }) {
         mutationFn: RESET_USER_PASSWORD,
         onSuccess: (data) => {
             toast.success(data?.message || "Password reset successfully");
-            setModal({ name: null, state: false, data: null });
+            handleCancel(true);
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Something went wrong");
+            toast.error(error.errorMessage || "Something went wrong");
         },
     });
 
@@ -45,19 +45,34 @@ function ResetPasswordModal({ modal, setModal }) {
         resetPassword.mutate({ _id: modal?.data?._id, password: values.password });
     };
 
-    const handleCancel = () => {
-        setModal({ name: null, state: false, data: null });
+    const handleCancel = (force = false) => {
+        if (!force && formikRef.current?.dirty) {
+            Modal.confirm({
+                title: "Unsaved Changes",
+                content: "You have unsaved changes. Are you sure you want to discard them and exit?",
+                okText: "Discard",
+                okType: "danger",
+                cancelText: "Stay",
+                onOk: () => {
+                    formikRef.current?.resetForm();
+                    setModal({ name: null, state: false, data: null });
+                },
+            });
+        } else {
+            formikRef.current?.resetForm();
+            setModal({ name: null, state: false, data: null });
+        }
     };
 
     return (
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded bg-red-50 flex items-center justify-center text-red-600">
+                    <div className="w-8 h-8 rounded bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-600 dark:text-red-400 transition-colors duration-300">
                         <FaLock size={14} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-red-700 block mt-1">Reset Password</span>
+                        <span className="text-lg font-bold text-red-700 dark:text-red-500 block mt-1 transition-colors duration-300">Reset Password</span>
                     </div>
                 </div>
             }
@@ -81,9 +96,9 @@ function ResetPasswordModal({ modal, setModal }) {
                                 <FormSkeleton fields={2} />
                             ) : (
                                 <>
-                                    <div className="p-2 bg-slate-50/50 rounded-md border border-slate-100 mb-1">
-                                        <p className="text-slate-500 text-[10px] leading-tight font-medium uppercase tracking-tight">
-                                            Resetting password for: <span className="font-bold text-slate-800">{modal?.data?.name || "this user"}</span>
+                                    <div className="p-2 bg-slate-50/50 dark:bg-slate-900/50 rounded-md border border-slate-100 dark:border-slate-800 mb-1 transition-colors duration-300">
+                                        <p className="text-slate-500 dark:text-slate-400 text-[10px] leading-tight font-medium uppercase tracking-tight">
+                                            Resetting password for: <span className="font-bold text-slate-800 dark:text-slate-100">{modal?.data?.name || "this user"}</span>
                                         </p>
                                     </div>
 
@@ -95,7 +110,7 @@ function ResetPasswordModal({ modal, setModal }) {
                                             placeholder="••••••••"
                                             required
                                             className="!h-[32px] !text-xs !rounded"
-                                            labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
+                                            labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors duration-300"
                                         />
                                         <FormField
                                             label="Confirm New Password"
@@ -104,13 +119,13 @@ function ResetPasswordModal({ modal, setModal }) {
                                             placeholder="••••••••"
                                             required
                                             className="!h-[32px] !text-xs !rounded"
-                                            labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
+                                            labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors duration-300"
                                         />
                                     </div>
                                 </>
                             )}
 
-                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 transition-colors duration-300">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

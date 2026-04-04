@@ -12,6 +12,7 @@ import FormField from "@/components/InnerPage/FormField";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import SelectBox from "@/components/SelectBox";
 import CustomButton from "@/components/shared/CustomButton";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -37,12 +38,12 @@ const UpdateUserModal = React.memo(({ modal, setModal }) => {
         mutationFn: UPDATE_USER,
         onSuccess: (data) => {
             toast.success(data?.message || "User updated successfully");
-            queryClient.invalidateQueries("usersList");
-            queryClient.invalidateQueries("usersStatusCounts");
-            handleCancel();
+            queryClient.invalidateQueries([ADMIN_KEYS.USERS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.USERS.COUNTS]);
+            handleCancel(true);
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Something went wrong");
+            toast.error(error.errorMessage || "Something went wrong");
         },
     });
 
@@ -50,8 +51,23 @@ const UpdateUserModal = React.memo(({ modal, setModal }) => {
         updateUser.mutate({ _id: modal.data?._id, ...values });
     };
 
-    const handleCancel = () => {
-        setModal({ name: null, data: null, state: false });
+    const handleCancel = (force = false) => {
+        if (!force && formikRef.current?.dirty) {
+            Modal.confirm({
+                title: "Unsaved Changes",
+                content: "You have unsaved changes. Are you sure you want to discard them and exit?",
+                okText: "Discard",
+                okType: "danger",
+                cancelText: "Stay",
+                onOk: () => {
+                    formikRef.current?.resetForm();
+                    setModal({ name: null, data: null, state: false });
+                },
+            });
+        } else {
+            formikRef.current?.resetForm();
+            setModal({ name: null, data: null, state: false });
+        }
     };
 
     useEffect(() => {
@@ -64,11 +80,11 @@ const UpdateUserModal = React.memo(({ modal, setModal }) => {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
+                    <div className="w-8 h-8 rounded bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center text-[#006666] dark:text-teal-400 transition-colors duration-300">
                         <FaUserEdit size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-[#006666] block mt-1">Update User Details</span>
+                        <span className="text-lg font-bold text-[#006666] dark:text-teal-500 block mt-1 transition-colors duration-300">Update User Details</span>
                     </div>
                 </div>
             }
@@ -94,16 +110,16 @@ const UpdateUserModal = React.memo(({ modal, setModal }) => {
                             ) : (
                                 <>
                                     <div className="modal-section">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Account Info</p>
-                                        <FormField label="Full Name" name="name" placeholder="Name" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
-                                        <FormField label="Email Address" name="email" type="email" placeholder="Email" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
+                                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors duration-300">Account Info</p>
+                                        <FormField label="Full Name" name="name" placeholder="Name" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors duration-300" />
+                                        <FormField label="Email Address" name="email" type="email" placeholder="Email" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors duration-300" />
                                     </div>
 
                                     <div className="modal-section">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Profile Data</p>
+                                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors duration-300">Profile Data</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="flex flex-col gap-1.5 overflow-hidden">
-                                                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Role <span className="text-red-500">*</span></label>
+                                                <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors duration-300">Role <span className="text-red-500">*</span></label>
                                                 <SelectBox
                                                     value={values.role}
                                                     handleChange={(val) => setFieldValue("role", val)}
@@ -118,7 +134,7 @@ const UpdateUserModal = React.memo(({ modal, setModal }) => {
                                             </div>
 
                                             <div className="flex flex-col gap-1.5 overflow-hidden">
-                                                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Gender <span className="text-red-500">*</span></label>
+                                                <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors duration-300">Gender <span className="text-red-500">*</span></label>
                                                 <SelectBox
                                                     value={values.gender}
                                                     handleChange={(val) => setFieldValue("gender", val)}
@@ -135,12 +151,12 @@ const UpdateUserModal = React.memo(({ modal, setModal }) => {
                                     </div>
 
                                     <div className="px-1 mt-2 mb-2">
-                                        <FormField label="Phone Number" name="phone" placeholder="+92 ..." className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
+                                        <FormField label="Phone Number" name="phone" placeholder="+92 ..." className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors duration-300" />
                                     </div>
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 transition-colors">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

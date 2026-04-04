@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import RolesTable from "./components/Table";
@@ -12,7 +12,10 @@ import { useDebounce } from "@/hooks/useDebounce";
 import InnerPageCard from "@/components/layout/InnerPageCard";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { FiFilter } from "react-icons/fi";
+import { HiRefresh } from "react-icons/hi";
 import FilterModal from "./components/FilterModal";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useAdminData } from "@/hooks/useAdminData";
 
 export default function RolesPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -31,17 +34,21 @@ export default function RolesPage() {
     const [visibleColumns, setVisibleColumns] = useState(["name", "description", "permissions", "actions"]);
 
     const columnOptions = [
-        { label: "Name", value: "name" },
+        { label: "Role Name", value: "name" },
         { label: "Description", value: "description" },
-        { label: "Permissions", value: "permissions" },
+        { label: "Access Level", value: "permissions" },
     ];
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
-    const rolesList = useQuery({
-        queryKey: ["rolesList", JSON.stringify(debFilter)],
-        queryFn: () => GET_ROLES(debFilter),
-        keepPreviousData: true,
-        onError: () => toast.error("Failed to fetch roles."),
+
+    const {
+        listQuery: rolesList,
+        isRefreshing,
+        handleRefresh
+    } = useAdminData({
+        listQueryKey: [ADMIN_KEYS.ROLES.LIST, JSON.stringify(debFilter)],
+        listQueryFn: () => GET_ROLES(debFilter),
+        onListError: "Failed to fetch roles.",
     });
 
     const onChange = (data) => setFilters((prev) => ({ ...prev, ...data }));
@@ -63,6 +70,16 @@ export default function RolesPage() {
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
                         />
+
+                        {/* Refresh Button */}
+                        <button
+                            onClick={handleRefresh}
+                            disabled={isRefreshing}
+                            title="Refresh Data"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
+                        </button>
 
                         {/* Mobile Filter Toggle */}
                         <button

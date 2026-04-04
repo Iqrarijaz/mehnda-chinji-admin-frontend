@@ -15,6 +15,7 @@ import ViewModal from "./ViewModal";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { Pagination, Table, Tag, Tooltip, Menu, Dropdown, Button } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { useState } from "react";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
@@ -41,13 +42,13 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
     const statusMutation = useMutation({
         mutationFn: UPDATE_REPORT_STATUS,
         onSuccess: (data) => {
-            queryClient.invalidateQueries(["reportsList"]);
-            queryClient.invalidateQueries("reportStatusCounts");
+            queryClient.invalidateQueries([ADMIN_KEYS.REPORTS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.REPORTS.COUNTS]);
             toast.success(data?.message || "Status updated successfully");
             closeConfirmModal();
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to update status");
+            toast.error(error.errorMessage || "Failed to update status");
             closeConfirmModal();
         },
     });
@@ -77,38 +78,38 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
         items: [
             {
                 key: "view",
-                label: <span className="font-medium">View Details</span>,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">View Details</span>,
                 icon: <EyeOutlined className="text-emerald-500" />,
                 onClick: () => setViewModal({ open: true, data: record }),
-                className: "!rounded hover:!bg-emerald-50",
+                className: "!rounded hover:!bg-emerald-50 dark:hover:!bg-emerald-900/20 transition-colors",
             },
             {
                 type: "divider",
-                className: "!my-1",
+                className: "!my-1 dark:border-slate-800",
             },
             {
                 key: "reviewed",
-                label: <span className="font-medium">Mark Reviewed</span>,
-                icon: <SolutionOutlined className="text-[#006666]" />,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">Mark Reviewed</span>,
+                icon: <SolutionOutlined className="text-[#006666] dark:text-teal-400" />,
                 onClick: () => handleUpdateStatus(record, 'REVIEWED'),
-                className: "!rounded hover:!bg-blue-50",
+                className: "!rounded hover:!bg-blue-50 dark:hover:!bg-blue-900/20 transition-colors duration-200",
             },
             {
                 key: "resolved",
-                label: <span className="font-medium">Mark Resolved</span>,
+                label: <span className="font-medium text-green-600 dark:text-green-500">Mark Resolved</span>,
                 icon: <CheckCircleOutlined className="text-green-600" />,
                 onClick: () => handleUpdateStatus(record, 'RESOLVED'),
-                className: "!rounded hover:!bg-green-50",
+                className: "!rounded hover:!bg-green-50 dark:hover:!bg-green-900/20 transition-colors duration-200",
             },
             {
                 key: "pending",
-                label: <span className="font-medium">Mark Pending</span>,
+                label: <span className="font-medium text-orange-600 dark:text-orange-500">Mark Pending</span>,
                 icon: <ClockCircleOutlined className="text-orange-500" />,
                 onClick: () => handleUpdateStatus(record, 'PENDING'),
-                className: "!rounded hover:!bg-orange-50",
+                className: "!rounded hover:!bg-orange-50 dark:hover:!bg-orange-900/20 transition-colors duration-200",
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100",
+        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     });
 
 
@@ -122,11 +123,11 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
             width: 180,
             sorter: true,
             render: (reporter) => (
-                <div className="flex flex-col min-w-0">
-                    <span className="font-bold text-slate-800 text-xs truncate leading-tight block">
+                <div className="flex flex-col min-w-0 transition-colors duration-300">
+                    <span className="font-bold text-slate-700 dark:text-slate-200 text-[11px] truncate leading-tight block tracking-tight transition-colors duration-300">
                         {reporter ? `${reporter.firstName} ${reporter.lastName}` : "Anonymous"}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-medium tracking-wide truncate block mt-0.5">
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium tracking-wide truncate block mt-0.5 transition-colors duration-300">
                         {reporter?.phone || "No phone"}
                     </span>
                 </div>
@@ -140,7 +141,7 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
             align: "center",
             sorter: true,
             render: (type) => (
-                <Tag color={type === 'BUSINESS' ? 'blue' : type === 'PLACE' ? 'green' : 'orange'} className="!rounded-full !px-2 font-bold !border-0 uppercase text-[9px]">
+                <Tag color={type === 'BUSINESS' ? 'blue' : type === 'PLACE' ? 'green' : 'orange'} className="!rounded-full !px-3 font-bold !border-0 uppercase text-[9px] shadow-sm">
                     {type}
                 </Tag>
             ),
@@ -150,9 +151,9 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
             key: "reason",
             width: 250,
             render: (record) => (
-                <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-slate-700 text-xs truncate leading-tight block">{record.reason}</span>
-                    <span className="text-[10px] text-slate-400 font-medium truncate block leading-tight mt-0.5">{record.description || "No further details"}</span>
+                <div className="flex flex-col min-w-0 transition-colors duration-300">
+                    <span className="font-bold text-slate-700 dark:text-slate-200 text-[11px] truncate leading-tight block tracking-tight transition-colors duration-300">{record.reason}</span>
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate block leading-tight mt-0.5 transition-colors duration-300">{record.description || "No further details"}</span>
                 </div>
             ),
         },
@@ -170,7 +171,7 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
                     PENDING: "warning",
                 };
                 return (
-                    <Tag color={colorMap[status] || "default"} className="!rounded-full !px-2 font-bold !border-0 uppercase text-[9px]">
+                    <Tag color={colorMap[status] || "default"} className="!rounded-full !px-3 font-bold !border-0 uppercase text-[9px] shadow-sm">
                         {status || "PENDING"}
                     </Tag>
                 );
@@ -182,19 +183,19 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
             key: "createdAt",
             width: 170,
             sorter: true,
-            render: (text) => <div className="text-slate-500 text-xs font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
+            render: (text) => <div className="text-slate-500 dark:text-slate-400 text-[10px] font-bold whitespace-nowrap transition-colors duration-300 uppercase tracking-tight">{timestampToDate(text)}</div>,
         },
         {
             title: "",
             key: "actions",
-            width: 50,
+            width: 70,
             align: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
-                        icon={<EllipsisOutlined className="text-lg rotate-90" />}
-                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+                        icon={<EllipsisOutlined className="text-base text-slate-400" />}
+                        className="!rounded hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8"
                     />
                 </Dropdown>
             ),
@@ -205,7 +206,7 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
 
     return (
         <div className="space-y-4">
-            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
+            <div className="place-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

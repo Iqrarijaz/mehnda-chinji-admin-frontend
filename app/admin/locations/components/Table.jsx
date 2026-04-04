@@ -11,6 +11,7 @@ import { timestampToDate } from "@/utils/date";
 import { DELETE_LOCATION, UPDATE_LOCATION_STATUS } from "@/app/api/admin/locations";
 import { Modal, Pagination, Table, Tag, Switch, Menu, Dropdown, Button } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { useState } from "react";
 
 function PageTable({ modal, setModal, locationsList, onChange, setFilters, visibleColumns }) {
@@ -23,11 +24,11 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters, visib
   const manageStatusMutation = useMutation({
     mutationFn: UPDATE_LOCATION_STATUS,
     onSuccess: (data) => {
-      queryClient.invalidateQueries("locationsList");
+      queryClient.invalidateQueries([ADMIN_KEYS.LOCATIONS.LIST]);
       toast.success(data?.message || "Status updated");
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.error || "Failed to update status");
+      toast.error(error.errorMessage || "Failed to update status");
     },
   });
 
@@ -35,12 +36,12 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters, visib
   const deleteMutation = useMutation({
     mutationFn: DELETE_LOCATION,
     onSuccess: (data) => {
-      queryClient.invalidateQueries("locationsList");
+      queryClient.invalidateQueries([ADMIN_KEYS.LOCATIONS.LIST]);
       toast.success(data?.message || "Location deleted");
       setDeleteModalData(null);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.error || "Failed to delete location");
+      toast.error(error.errorMessage || "Failed to delete location");
     },
   });
 
@@ -85,14 +86,14 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters, visib
     items: [
       {
         key: "edit",
-        label: <span className="font-medium">Edit Location</span>,
-        icon: <EditOutlined className="text-[#006666]" />,
+        label: <span className="font-medium text-slate-700 dark:text-slate-300">Edit Location</span>,
+        icon: <EditOutlined className="text-[#006666] dark:text-teal-500" />,
         onClick: () => setModal({
           name: "Update",
           data: record,
           state: true
         }),
-        className: "!rounded hover:!bg-blue-50",
+        className: "!rounded hover:!bg-blue-50 dark:hover:!bg-blue-900/20 transition-colors",
       },
       {
         type: "divider",
@@ -100,13 +101,13 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters, visib
       },
       {
         key: "delete",
-        label: <span className="font-medium text-red-600">Delete Location</span>,
-        icon: <DeleteOutlined className="text-red-500" />,
+        label: <span className="font-medium text-red-600 dark:text-red-500">Delete Location</span>,
+        icon: <DeleteOutlined className="text-red-500 dark:text-red-400" />,
         onClick: () => handleDelete(record),
-        className: "!rounded hover:!bg-red-50",
+        className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
       },
     ],
-    className: "!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100",
+    className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
   });
 
 
@@ -120,10 +121,10 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters, visib
       width: 250,
       render: (record) => (
         <div className="flex flex-col min-w-0">
-          <span className="font-bold text-slate-800 text-xs truncate leading-tight block">
+          <span className="font-bold text-slate-800 dark:text-slate-200 text-xs truncate leading-tight block transition-colors duration-300">
             {record.name?.en}
           </span>
-          <span className="text-[11px] text-slate-400 font-medium font-notoUrdu block mt-0.5 leading-tight">
+          <span className="text-[11px] text-slate-400 dark:text-slate-500 font-medium font-notoUrdu block mt-0.5 leading-tight transition-colors duration-300">
             {record.name?.ur}
           </span>
         </div>
@@ -171,14 +172,14 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters, visib
     {
       title: "",
       key: "actions",
-      width: 50,
+      width: 70,
       align: "right",
       render: (record) => (
         <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
           <Button
             type="text"
-            icon={<EllipsisOutlined className="text-lg rotate-90" />}
-            className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+            icon={<EllipsisOutlined className="text-base text-slate-400" />}
+            className="!rounded hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8"
           />
         </Dropdown>
       ),
@@ -189,7 +190,7 @@ function PageTable({ modal, setModal, locationsList, onChange, setFilters, visib
 
   return (
     <div className="space-y-4">
-      <div className="modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
+      <div className="modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
         <Table
           rowKey="_id"
           className="custom-ant-table"

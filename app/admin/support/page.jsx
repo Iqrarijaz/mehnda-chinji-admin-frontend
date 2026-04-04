@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
@@ -11,6 +11,9 @@ import StatCard from "@/components/shared/StatCard";
 import InnerPageCard from "@/components/layout/InnerPageCard";
 import { StatCardSkeleton } from "@/components/shared/Skeletons";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
+import { HiRefresh } from "react-icons/hi";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useAdminData } from "@/hooks/useAdminData";
 
 export default function SupportPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -36,17 +39,21 @@ export default function SupportPage() {
     ];
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
-    const ticketsList = useQuery({
-        queryKey: ["ticketsList", JSON.stringify(debFilter)],
-        queryFn: () => GET_SUPPORT_TICKETS(debFilter),
-        keepPreviousData: true,
-        onError: () => toast.error("Failed to fetch support tickets."),
+
+    const {
+        listQuery: ticketsList,
+        countsQuery,
+        isRefreshing,
+        handleRefresh
+    } = useAdminData({
+        listQueryKey: [ADMIN_KEYS.SUPPORT.LIST, JSON.stringify(debFilter)],
+        listQueryFn: () => GET_SUPPORT_TICKETS(debFilter),
+        countsQueryKey: [ADMIN_KEYS.SUPPORT.COUNTS],
+        countsQueryFn: GET_SUPPORT_STATUS_COUNTS,
+        onListError: "Failed to fetch support tickets.",
     });
 
-    const { data: countsData, isLoading: countsLoading } = useQuery({
-        queryKey: ["supportStatusCounts"],
-        queryFn: GET_SUPPORT_STATUS_COUNTS,
-    });
+    const { data: countsData, isLoading: countsLoading } = countsQuery;
 
     const counts = countsData?.data || { OPEN: 0, IN_PROGRESS: 0, CLOSED: 0 };
 
@@ -101,6 +108,17 @@ export default function SupportPage() {
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
                         />
+
+                        {/* Refresh Button */}
+                        <button
+                            onClick={handleRefresh}
+                            disabled={isRefreshing}
+                            title="Refresh Data"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
+                        </button>
+                        {/* Mobile Filter Toggle if needed - but support page seems to use search only */}
                     </div>
                 </div>
             </div>

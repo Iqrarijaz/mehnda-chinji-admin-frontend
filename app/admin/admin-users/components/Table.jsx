@@ -12,6 +12,8 @@ import { getTagColor } from "@/utils/tagColor";
 import { Menu, Dropdown, Button, Table, Switch } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
+import ConfirmModal from "@/components/shared/ConfirmModal";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 
 const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleColumns }) => {
     const queryClient = useQueryClient();
@@ -45,13 +47,13 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
     const manageStatusMutation = useMutation({
         mutationFn: UPDATE_ADMIN_USER_STATUS,
         onSuccess: (data) => {
-            queryClient.invalidateQueries("adminUsersList");
-            queryClient.invalidateQueries("adminUsersStatusCounts");
+            queryClient.invalidateQueries([ADMIN_KEYS.ADMIN_USERS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.ADMIN_USERS.COUNTS]);
             toast.success(data?.message || "Status updated successfully");
             closeConfirmModal();
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to update status");
+            toast.error(error.errorMessage || "Failed to update status");
             closeConfirmModal();
         },
     });
@@ -60,13 +62,13 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
     const deleteMutation = useMutation({
         mutationFn: DELETE_ADMIN_USER,
         onSuccess: () => {
-            queryClient.invalidateQueries("adminUsersList");
-            queryClient.invalidateQueries("adminUsersStatusCounts");
+            queryClient.invalidateQueries([ADMIN_KEYS.ADMIN_USERS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.ADMIN_USERS.COUNTS]);
             toast.success("Admin user deleted successfully");
             closeConfirmModal();
         },
         onError: (err) => {
-            toast.error(err.response?.data?.message || "Failed to delete admin user");
+            toast.error(err.errorMessage || "Failed to delete admin user");
             closeConfirmModal();
         },
     });
@@ -103,10 +105,10 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
         items: [
             {
                 key: "edit",
-                label: <span className="font-medium">Edit User</span>,
-                icon: <EditOutlined className="text-[#006666]" />,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">Edit User</span>,
+                icon: <EditOutlined className="text-[#006666] dark:text-teal-500" />,
                 onClick: () => setModal({ name: "Edit", data: record, state: true }),
-                className: "!rounded hover:!bg-blue-50",
+                className: "!rounded hover:!bg-blue-50 dark:hover:!bg-blue-900/20 transition-colors",
             },
             {
                 type: "divider",
@@ -114,13 +116,13 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
             },
             {
                 key: "delete",
-                label: <span className="font-medium text-red-600">Delete User</span>,
-                icon: <DeleteOutlined className="text-red-500" />,
+                label: <span className="font-medium text-red-600 dark:text-red-500">Delete User</span>,
+                icon: <DeleteOutlined className="text-red-500 dark:text-red-400" />,
                 onClick: () => handleDelete(record),
-                className: "!rounded hover:!bg-red-50",
+                className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
             },
         ],
-        className: "!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100",
+        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     });
 
 
@@ -133,9 +135,9 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
             width: 200,
             sorter: true,
             render: (record) => (
-                <div className="flex flex-col min-w-0">
-                    <span className="font-bold text-slate-800 text-xs truncate leading-tight block">{record.name}</span>
-                    <span className="text-[10px] text-slate-400 font-medium truncate block leading-tight mt-0.5">{record.email}</span>
+                <div className="flex flex-col min-w-0 transition-colors duration-300">
+                    <span className="font-bold text-slate-800 dark:text-slate-200 text-xs truncate leading-tight block">{record.name}</span>
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate block leading-tight mt-0.5">{record.email}</span>
                 </div>
             ),
         },
@@ -145,7 +147,7 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
             key: "phone",
             width: 170,
             sorter: true,
-            render: (text) => <span className="text-slate-600 font-semibold text-xs whitespace-nowrap">{text || "—"}</span>,
+            render: (text) => <span className="text-slate-600 dark:text-slate-400 font-semibold text-xs whitespace-nowrap transition-colors duration-300">{text || "—"}</span>,
         },
         {
             title: "Role Type",
@@ -155,7 +157,7 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
             align: "center",
             sorter: true,
             render: (role) => (
-                <div 
+                <div
                     className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-current"
                     style={{ backgroundColor: `${getTagColor(role)}15`, color: getTagColor(role) }}
                 >
@@ -181,14 +183,14 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
         {
             title: "",
             key: "actions",
-            width: 50,
+            width: 70,
             align: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
-                        icon={<EllipsisOutlined className="text-lg rotate-90" />}
-                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+                        icon={<EllipsisOutlined className="text-base text-slate-400" />}
+                        className="!rounded hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8"
                     />
                 </Dropdown>
             ),
@@ -199,7 +201,7 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
 
     return (
         <div className="space-y-4">
-            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
+            <div className="place-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

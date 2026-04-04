@@ -18,6 +18,9 @@ import { useDebounce } from "@/hooks/useDebounce";
 import InnerPageCard from "@/components/layout/InnerPageCard";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { FiFilter } from "react-icons/fi";
+import { HiRefresh } from "react-icons/hi";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useAdminData } from "@/hooks/useAdminData";
 
 const POST_TYPES = [
     { value: "GENERAL", label: "General" },
@@ -63,17 +66,20 @@ export default function PostsPage() {
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
     const onChange = useCallback((data) => setFilters((old) => ({ ...old, ...data })), []);
 
-    // Table view query
-    const postsList = useQuery({
-        queryKey: ["postsList", JSON.stringify(debFilter)],
-        queryFn: () => GET_POSTS(debFilter),
-        enabled: viewMode === "table",
-        onError: () => toast.error("Something went wrong. Please try again later."),
+    // 1. Standard Query (Table View)
+    const {
+        listQuery: postsList,
+        isRefreshing: isRefreshingTable,
+        handleRefresh: handleRefreshTable
+    } = useAdminData({
+        listQueryKey: [ADMIN_KEYS.POSTS.LIST, JSON.stringify(debFilter)],
+        listQueryFn: () => GET_POSTS(debFilter),
+        onListError: "Failed to fetch posts.",
     });
 
-    // Card view infinite query
+    // 2. Infinite Query (Card View)
     const infinitePostsQuery = useInfiniteQuery({
-        queryKey: ["postsListInfinite", JSON.stringify({ ...debFilter, currentPage: undefined })],
+        queryKey: [ADMIN_KEYS.POSTS.INFINITE, JSON.stringify({ ...debFilter, currentPage: undefined })],
         queryFn: async ({ pageParam = 1 }) => {
             const result = await GET_POSTS({ ...debFilter, currentPage: pageParam });
             return { ...result, currentPage: pageParam };
@@ -83,37 +89,28 @@ export default function PostsPage() {
             return currentPage < totalPages ? currentPage + 1 : undefined;
         },
         enabled: viewMode === "cards",
-        onError: () => toast.error("Something went wrong. Please try again later."),
+        onError: () => toast.error("Failed to fetch infinite posts."),
     });
 
-    const flattenedPosts = useMemo(() => {
-        if (!infinitePostsQuery.data?.pages) return [];
-        return infinitePostsQuery.data.pages.flatMap((p) => p?.data || []);
-    }, [infinitePostsQuery.data?.pages]);
+    const [isRefreshingInfinite, setIsRefreshingInfinite] = useState(false);
 
-    const unifiedPostsList = useMemo(() => {
-        if (viewMode === "table") return postsList;
-        const lastPage = infinitePostsQuery.data?.pages?.[infinitePostsQuery.data.pages.length - 1];
-        return {
-            status: infinitePostsQuery.status,
-            data: { data: flattenedPosts, pagination: lastPage?.pagination || {} },
-            isFetchingNextPage: infinitePostsQuery.isFetchingNextPage,
-        };
-    }, [viewMode, postsList, infinitePostsQuery, flattenedPosts]);
-
-    const hasMore = infinitePostsQuery.hasNextPage;
-    const loadMore = useCallback(() => {
-        if (hasMore && !infinitePostsQuery.isFetchingNextPage) {
-            infinitePostsQuery.fetchNextPage();
+    const handleRefresh = useCallback(async () => {
+        if (viewMode === "table") {
+            await handleRefreshTable();
+        } else {
+            setIsRefreshingInfinite(true);
+            try {
+                await infinitePostsQuery.refetch();
+                toast.success("Recent posts synchronized!");
+            } catch {
+                toast.error("Failed to sync posts.");
+            } finally {
+                setIsRefreshingInfinite(false);
+            }
         }
-    }, [hasMore, infinitePostsQuery]);
+    }, [viewMode, handleRefreshTable, infinitePostsQuery]);
 
-    const handleTypeFilter = useCallback((value) =>
-        setFilters((prev) => ({ ...prev, type: value || null, currentPage: 1 })), []);
-    const handleStatusFilter = useCallback((value) =>
-        setFilters((prev) => ({ ...prev, status: value || null, currentPage: 1 })), []);
-
-    const hasActiveFilters = filters?.type || filters?.status || filters?.search;
+    const isRefreshing = viewMode === "table" ? isRefreshingTable : isRefreshingInfinite;
 
     return (
         <InnerPageCard>
@@ -122,17 +119,17 @@ export default function PostsPage() {
             {/* Header row with Title and Mobile Controls */}
             <div className="flex flex-col md:flex-row justify-between mb-4 gap-3 items-start md:items-center">
                 <div className="flex items-center gap-3">
-                    <h1 className="inner-page-title text-2xl md:text-3xl text-black p-0 font-semibold">Posts</h1>
-                    <div className="hidden md:flex items-center bg-gray-100 rounded p-1">
+                    <h1 className="inner-page-title text-2xl md:text-3xl text-black dark:text-slate-100 p-0 font-semibold transition-colors duration-300">Posts</h1>
+                    <div className="hidden md:flex items-center bg-gray-100 dark:bg-slate-800 rounded p-1 transition-colors duration-300">
                         <button
                             onClick={() => setViewMode("cards")}
-                            className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm transition-colors ${viewMode === "cards" ? "bg-[#006666] text-white shadow-lg shadow-teal-900/10" : "text-gray-600 hover:text-gray-900"}`}
+                            className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm transition-colors ${viewMode === "cards" ? "bg-[#006666] text-white shadow-lg shadow-teal-900/10" : "text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100"}`}
                         >
                             <FaThLarge size={12} /> Cards
                         </button>
                         <button
                             onClick={() => setViewMode("table")}
-                            className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm transition-colors ${viewMode === "table" ? "bg-[#006666] text-white shadow-lg shadow-teal-900/10" : "text-gray-600 hover:text-gray-900"}`}
+                            className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm transition-colors ${viewMode === "table" ? "bg-[#006666] text-white shadow-lg shadow-teal-900/10" : "text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100"}`}
                         >
                             <FaTable size={12} /> Table
                         </button>
@@ -143,8 +140,8 @@ export default function PostsPage() {
                 <div className="flex gap-2 items-center w-full md:w-auto justify-end">
                     {/* Desktop Filters (Hidden on Mobile) */}
                     <div className="hidden md:flex items-center gap-3">
-                        <SelectBox placeholder="Filter by Type" allowClear handleChange={handleTypeFilter} value={filters?.type} width={160} options={POST_TYPES.map((t) => ({ value: t.value, label: t.label }))} />
-                        <SelectBox placeholder="Filter by Status" allowClear handleChange={handleStatusFilter} value={filters?.status} width={160} options={STATUS_OPTIONS.map((s) => ({ value: s.value, label: s.label }))} />
+                        <SelectBox placeholder="Type" allowClear handleChange={handleTypeFilter} value={filters?.type} width={160} options={POST_TYPES.map((t) => ({ value: t.value, label: t.label }))} />
+                        <SelectBox placeholder="Status" allowClear handleChange={handleStatusFilter} value={filters?.status} width={160} options={STATUS_OPTIONS.map((s) => ({ value: s.value, label: s.label }))} />
                         <SearchInput setFilters={setFilters} pageKey="currentPage" />
                     </div>
 
@@ -155,6 +152,16 @@ export default function PostsPage() {
                             visibleColumns={visibleColumns}
                             setVisibleColumns={setVisibleColumns}
                         />
+
+                        {/* Refresh Button */}
+                        <button
+                            onClick={handleRefresh}
+                            disabled={isRefreshing}
+                            title="Refresh Data"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
+                        </button>
 
                         {/* View Mode Toggle (Mobile Only) */}
                         <button

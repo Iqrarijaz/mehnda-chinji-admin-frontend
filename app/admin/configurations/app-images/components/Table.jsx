@@ -68,17 +68,17 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
         items: [
             {
                 key: "view",
-                label: <span className="font-medium text-slate-700">View Details</span>,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">View Details</span>,
                 icon: <EyeOutlined className="text-emerald-500" />,
                 onClick: () => setModal({ name: "View", data: record, state: true }),
-                className: "!rounded hover:!bg-emerald-50",
+                className: "!rounded hover:!bg-emerald-50 dark:hover:!bg-emerald-900/20 transition-colors",
             },
             {
                 key: "edit",
-                label: <span className="font-medium text-slate-700">Edit Details</span>,
-                icon: <EditOutlined className="text-[#006666]" />,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">Edit Details</span>,
+                icon: <EditOutlined className="text-[#006666] dark:text-teal-500" />,
                 onClick: () => setModal({ name: "Edit", data: record, state: true }),
-                className: "!rounded hover:!bg-blue-50",
+                className: "!rounded hover:!bg-blue-50 dark:hover:!bg-blue-900/20 transition-colors",
             },
             {
                 type: "divider",
@@ -86,13 +86,13 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
             },
             {
                 key: "delete",
-                label: <span className="font-medium text-red-600">Delete Permanently</span>,
-                icon: <DeleteOutlined className="text-red-500" />,
+                label: <span className="font-medium text-red-600 dark:text-red-500">Delete Permanently</span>,
+                icon: <DeleteOutlined className="text-red-500 dark:text-red-400" />,
                 onClick: () => handleDelete(record),
-                className: "!rounded hover:!bg-red-50",
+                className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100",
+        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     });
 
 
@@ -106,7 +106,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
             sorter: true,
             render: (name) => (
                 <Tooltip title={name} placement="topLeft">
-                    <div className="capitalize font-bold text-slate-800 truncate cursor-help">
+                    <div className="capitalize font-bold text-slate-800 dark:text-slate-200 truncate cursor-help transition-colors duration-300">
                         {name}
                     </div>
                 </Tooltip>
@@ -153,8 +153,8 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
-                        icon={<EllipsisOutlined className="text-lg text-slate-400" />}
-                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
+                        icon={<EllipsisOutlined className="text-base text-slate-400" />}
+                        className="!rounded hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8"
                     />
                 </Dropdown>
             ),
@@ -165,7 +165,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
 
     return (
         <div className="space-y-3">
-            <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
+            <div className="place-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

@@ -61,7 +61,7 @@ function PostCard({
 
         if (count === 0) {
             return (
-                <div className="w-full h-48 flex flex-col items-center justify-center bg-slate-50 text-slate-300 gap-2 border-b border-slate-100">
+                <div className="w-full h-48 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900/50 text-slate-300 dark:text-slate-600 gap-2 border-b border-slate-100 dark:border-slate-800 transition-colors">
                     <PictureOutlined className="text-4xl" />
                     <span className="text-xs font-medium uppercase tracking-wider">No Media</span>
                 </div>
@@ -69,7 +69,7 @@ function PostCard({
         }
 
         return (
-            <div className="relative group overflow-hidden border-b border-slate-100 h-56">
+            <div className="relative group overflow-hidden border-b border-slate-100 dark:border-slate-800 h-56">
                 <img
                     src={imageUrl}
                     alt="Post media"
@@ -91,16 +91,16 @@ function PostCard({
 
     return (
         <>
-            <div className="bg-white rounded overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col w-full break-inside-avoid mb-6 group/card">
+            <div className="bg-white dark:bg-slate-900 rounded overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl dark:shadow-teal-500/5 hover:-translate-y-1 transition-all duration-300 flex flex-col w-full break-inside-avoid mb-6 group/card">
                 {/* Header */}
-                <div className="p-4 flex items-center justify-between border-b border-slate-50">
+                <div className="p-4 flex items-center justify-between border-b border-slate-50 dark:border-slate-800/50 transition-colors">
                     <div className="flex items-center gap-3">
                         <Avatar
                             icon={<UserOutlined />}
-                            className="!bg-teal-50 !text-teal-600 border border-teal-100"
+                            className="!bg-teal-50 dark:!bg-teal-900/20 !text-teal-600 dark:!text-teal-400 border border-teal-100 dark:border-teal-900/30 transition-colors"
                         />
                         <div className="flex flex-col">
-                            <span className="text-xs font-bold text-slate-900 group-hover/card:text-[#006666] transition-colors line-clamp-1">
+                            <span className="text-xs font-bold text-slate-900 dark:text-slate-100 group-hover/card:text-[#006666] dark:group-hover/card:text-teal-400 transition-colors line-clamp-1">
                                 {post?.authorName || "Anonymous User"}
                             </span>
                             <div className="flex items-center gap-2 text-[10px] text-slate-400 font-medium">
@@ -129,12 +129,12 @@ function PostCard({
                 {/* Content */}
                 <div className="p-4 flex-1">
                     {post?.title && (
-                        <h3 className="text-sm font-bold text-slate-800 mb-2 leading-snug line-clamp-2">
+                        <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-2 leading-snug line-clamp-2 transition-colors">
                             {post.title}
                         </h3>
                     )}
                     <div className="relative">
-                        <p className="text-slate-600 text-xs leading-relaxed">
+                        <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed transition-colors">
                             {isExpanded ? post?.content : (
                                 <>
                                     {post?.content?.substring(0, 120)}
@@ -157,7 +157,7 @@ function PostCard({
                 </div>
 
                 {/* Engagement Stats */}
-                <div className="px-4 py-3 flex items-center gap-4 border-t border-slate-50 bg-slate-50/30">
+                <div className="px-4 py-3 flex items-center gap-4 border-t border-slate-50 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-900/20 transition-colors">
                     <Tooltip title="View Likes">
                         <div
                             className="flex items-center gap-1.5 cursor-pointer group/stat"
@@ -166,10 +166,10 @@ function PostCard({
                                 setLikesModal({ open: true, postId: post._id });
                             }}
                         >
-                            <div className="w-7 h-7 rounded-full bg-red-50 flex items-center justify-center group-hover/stat:bg-red-100 transition-colors">
+                            <div className="w-7 h-7 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center group-hover/stat:bg-red-100 dark:group-hover/stat:bg-red-900/40 transition-colors">
                                 <HeartFilled className="text-red-500 text-[11px]" />
                             </div>
-                            <span className="text-xs font-bold text-slate-600 group-hover/stat:text-red-600">
+                            <span className="text-xs font-bold text-slate-600 dark:text-slate-400 group-hover/stat:text-red-600 dark:group-hover/stat:text-red-400 transition-colors">
                                 {post?.likesCount || 0}
                             </span>
                         </div>
@@ -182,10 +182,10 @@ function PostCard({
                                 setCommentsModal({ open: true, postId: post._id });
                             }}
                         >
-                            <div className="w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center group-hover/stat:bg-blue-100 transition-colors">
-                                <MessageFilled className="text-[#006666] text-[11px]" />
+                            <div className="w-7 h-7 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center group-hover/stat:bg-blue-100 dark:group-hover/stat:bg-blue-900/40 transition-colors">
+                                <MessageFilled className="text-[#006666] dark:text-teal-400 text-[11px]" />
                             </div>
-                            <span className="text-xs font-bold text-slate-600 group-hover/stat:text-[#006666]">
+                            <span className="text-xs font-bold text-slate-600 dark:text-slate-400 group-hover/stat:text-[#006666] dark:group-hover/stat:text-teal-400 transition-colors">
                                 {post?.commentsCount || 0}
                             </span>
                         </div>
@@ -193,9 +193,9 @@ function PostCard({
                 </div>
 
                 {/* Footer Actions */}
-                <div className="p-4 pt-3 flex items-center justify-between border-t border-slate-100">
-                    <div className="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded border border-slate-100">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Status</span>
+                <div className="p-4 pt-3 flex items-center justify-between border-t border-slate-100 dark:border-slate-800 transition-colors">
+                    <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-900/40 px-3 py-1.5 rounded border border-slate-100 dark:border-slate-800">
+                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tighter">Status</span>
                         <Switch
                             checked={isActive}
                             onChange={() => onStatusChange(post)}
@@ -208,7 +208,7 @@ function PostCard({
                             <Button
                                 icon={<EditOutlined />}
                                 onClick={() => onEdit(post)}
-                                className="!rounded !border-slate-100 hover:!border-[#006666] hover:!text-[#006666] !flex items-center justify-center !h-9 !w-9 bg-white shadow-sm"
+                                className="!rounded !border-slate-100 dark:!border-slate-800 hover:!border-[#006666] dark:hover:!border-teal-400 hover:!text-[#006666] dark:hover:!text-teal-400 !flex items-center justify-center !h-9 !w-9 bg-white dark:bg-slate-900 shadow-sm transition-all"
                             />
                         </Tooltip>
                         <Tooltip title="Delete Post">
@@ -216,7 +216,7 @@ function PostCard({
                                 icon={<DeleteOutlined />}
                                 onClick={() => onDelete(post)}
                                 danger
-                                className="!rounded !border-red-100 hover:!border-red-500 !flex items-center justify-center !h-9 !w-9 bg-white shadow-sm"
+                                className="!rounded !border-red-100 dark:!border-red-900/30 hover:!border-red-500 !flex items-center justify-center !h-9 !w-9 bg-white dark:bg-slate-900 shadow-sm transition-all"
                             />
                         </Tooltip>
                     </div>

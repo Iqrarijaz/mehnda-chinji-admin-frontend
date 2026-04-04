@@ -10,6 +10,7 @@ import JsonViewerModal from "./JsonViewerModal";
 import DeleteSystemLogsModal from "./DeleteModal";
 import { Menu, Dropdown, Button, Checkbox, Table, Pagination } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
+import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { useState } from "react";
 
 function SystemLogsTable({ systemLogsList, onChange }) {
@@ -37,13 +38,13 @@ function SystemLogsTable({ systemLogsList, onChange }) {
     items: [
       {
         key: "delete",
-        label: <span className="font-medium text-red-600">Delete Log</span>,
-        icon: <DeleteOutlined className="text-red-500" />,
+        label: <span className="font-medium text-red-600 dark:text-red-500">Delete Log</span>,
+        icon: <DeleteOutlined className="text-red-500 dark:text-red-400" />,
         onClick: () => setIsModalOpen({ name: "Delete", state: true, record }),
-        className: "!rounded hover:!bg-red-50",
+        className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
       },
     ],
-    className: "!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100",
+    className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
   });
 
   const columnOptions = [
@@ -56,26 +57,6 @@ function SystemLogsTable({ systemLogsList, onChange }) {
     { label: "Created At", value: "createdAt" },
   ];
 
-  const visibilityDropdown = (
-    <div className="bg-white !rounded !p-3 shadow-xl border border-slate-100 min-w-[180px]">
-      <div className="px-2 pb-2 mb-2 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
-        Toggle Columns
-      </div>
-      <Checkbox.Group
-        value={visibleColumns}
-        onChange={setVisibleColumns}
-        className="flex flex-col gap-2"
-      >
-        {columnOptions.map(opt => (
-          <div key={opt.value} className="hover:bg-slate-50 rounded py-1 px-2 transition-colors">
-            <Checkbox value={opt.value} className="font-medium text-slate-700 w-full">
-              {opt.label}
-            </Checkbox>
-          </div>
-        ))}
-      </Checkbox.Group>
-    </div>
-  );
 
   // Table columns configuration
   const allColumns = [
@@ -86,7 +67,7 @@ function SystemLogsTable({ systemLogsList, onChange }) {
       width: 170,
       sorter: true,
       render: (record) => (
-        <div className="capitalize font-bold text-slate-800 truncate">{record}</div>
+        <div className="capitalize font-bold text-slate-800 dark:text-slate-200 truncate transition-colors duration-300">{record}</div>
       ),
     },
     {
@@ -193,14 +174,14 @@ function SystemLogsTable({ systemLogsList, onChange }) {
     {
       title: "",
       key: "actions",
-      width: 60,
+      width: 70,
       align: "right",
       render: (record) => (
         <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
           <Button
             type="text"
-            icon={<MoreOutlined className="text-lg" />}
-            className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-10 !w-10"
+            icon={<EllipsisOutlined className="text-base text-slate-400" />}
+            className="!rounded hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8"
           />
         </Dropdown>
       ),
@@ -213,17 +194,14 @@ function SystemLogsTable({ systemLogsList, onChange }) {
   return (
     <div className="space-y-4">
       <div className="flex justify-end px-1">
-        <Dropdown dropdownRender={() => visibilityDropdown} trigger={['click']}>
-          <Button
-            icon={<SettingOutlined />}
-            className="!rounded !h-[42px] !px-4 !border-slate-200 !text-slate-600 font-semibold hover:!border-[#006666] hover:!text-[#006666] flex items-center gap-2"
-          >
-            Columns
-          </Button>
-        </Dropdown>
+        <ColumnVisibilityDropdown
+          options={columnOptions}
+          visibleColumns={visibleColumns}
+          setVisibleColumns={setVisibleColumns}
+        />
       </div>
 
-      <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
+      <div className="place-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
         <Table
           rowKey="_id"
           className="custom-ant-table"

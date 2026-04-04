@@ -18,6 +18,7 @@ import ConfirmModal from "@/components/shared/ConfirmModal";
 import { Modal, Pagination, Table, Tag, Switch, Menu, Dropdown, Button, Checkbox, Tooltip } from "antd";
 import { useCallback, useState } from "react";
 import { TableSkeleton } from "@/components/shared/Skeletons";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 
 function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikesModal, setCommentsModal, visibleColumns }) {
     const queryClient = useQueryClient();
@@ -42,13 +43,13 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
     const manageStatusMutation = useMutation({
         mutationFn: UPDATE_POST_STATUS,
         onSuccess: (data) => {
-            queryClient.invalidateQueries("postsList");
-            queryClient.invalidateQueries("postsListInfinite");
+            queryClient.invalidateQueries([ADMIN_KEYS.POSTS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.POSTS.INFINITE]);
             toast.success(data?.message || "Status updated");
             closeConfirmModal();
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to update status");
+            toast.error(error.errorMessage || "Failed to update status");
             closeConfirmModal();
         },
     });
@@ -57,13 +58,13 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
     const deleteMutation = useMutation({
         mutationFn: DELETE_POST,
         onSuccess: (data) => {
-            queryClient.invalidateQueries("postsList");
-            queryClient.invalidateQueries("postsListInfinite");
+            queryClient.invalidateQueries([ADMIN_KEYS.POSTS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.POSTS.INFINITE]);
             toast.success(data?.message || "Post deleted");
             closeConfirmModal();
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to delete post");
+            toast.error(error.errorMessage || "Failed to delete post");
             closeConfirmModal();
         },
     });
@@ -110,21 +111,21 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
         items: [
             {
                 key: "view",
-                label: <span className="font-medium">View Post</span>,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">View Post</span>,
                 icon: <EyeOutlined className="text-emerald-500" />,
                 onClick: () => setViewModal({ open: true, data: record }),
-                className: "!rounded hover:!bg-emerald-50",
+                className: "!rounded hover:!bg-emerald-50 dark:hover:!bg-emerald-900/20 transition-colors",
             },
             {
                 key: "edit",
-                label: <span className="font-medium">Edit Post</span>,
-                icon: <EditOutlined className="text-[#006666]" />,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">Edit Post</span>,
+                icon: <EditOutlined className="text-[#006666] dark:text-teal-500" />,
                 onClick: () => setModal({
                     name: "Update",
                     data: record,
                     state: true
                 }),
-                className: "!rounded hover:!bg-blue-50",
+                className: "!rounded hover:!bg-blue-50 dark:hover:!bg-blue-900/20 transition-colors",
             },
             {
                 type: "divider",
@@ -132,13 +133,13 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             },
             {
                 key: "delete",
-                label: <span className="font-medium text-red-600">Delete Post</span>,
-                icon: <DeleteOutlined className="text-red-500" />,
+                label: <span className="font-medium text-red-600 dark:text-red-500">Delete Post</span>,
+                icon: <DeleteOutlined className="text-red-500 dark:text-red-400" />,
                 onClick: () => handleDelete(record),
-                className: "!rounded hover:!bg-red-50",
+                className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
             },
         ],
-        className: "!rounded !p-2 !min-w-[140px] shadow-xl border border-slate-100",
+        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     });
 
 
@@ -168,7 +169,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             width: 250,
             render: (content) => (
                 <Tooltip title={content} placement="topLeft">
-                    <div className="text-slate-700 font-medium truncate cursor-help text-xs">
+                    <div className="text-slate-700 dark:text-slate-200 font-medium truncate cursor-help text-xs transition-colors duration-300">
                         {content?.substring(0, 80)}{content?.length > 80 ? '...' : ''}
                     </div>
                 </Tooltip>
@@ -184,9 +185,9 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             render: (count, record) => (
                 <Button
                     type="text"
-                    icon={<LikeOutlined className="text-[#006666] !text-xs" />}
+                    icon={<LikeOutlined className="text-[#006666] dark:text-teal-500 !text-xs" />}
                     onClick={() => setLikesModal({ open: true, postId: record._id })}
-                    className="!rounded hover:!bg-blue-50 !h-7 font-bold text-slate-600 !text-xs !flex items-center gap-1"
+                    className="!rounded hover:!bg-blue-50 dark:hover:!bg-blue-900/20 !h-7 font-bold text-slate-600 dark:text-slate-400 !text-xs !flex items-center gap-1 transition-all"
                 >
                     {count || 0}
                 </Button>
@@ -202,9 +203,9 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             render: (count, record) => (
                 <Button
                     type="text"
-                    icon={<MessageOutlined className="text-emerald-500 !text-xs" />}
+                    icon={<MessageOutlined className="text-emerald-500 dark:text-emerald-400 !text-xs" />}
                     onClick={() => setCommentsModal({ open: true, postId: record._id })}
-                    className="!rounded hover:!bg-emerald-50 !h-7 font-bold text-slate-600 !text-xs !flex items-center gap-1"
+                    className="!rounded hover:!bg-emerald-50 dark:hover:!bg-emerald-900/20 !h-7 font-bold text-slate-600 dark:text-slate-400 !text-xs !flex items-center gap-1 transition-all"
                 >
                     {count || 0}
                 </Button>
@@ -232,19 +233,19 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
             key: "createdAt",
             width: 170,
             sorter: true,
-            render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap text-xs">{timestampToDateWithTime(text)}</div>,
+            render: (text) => <div className="text-slate-500 dark:text-slate-500 text-xs font-semibold whitespace-nowrap transition-colors duration-300">{timestampToDateWithTime(text)}</div>,
         },
     {
       title: "",
       key: "actions",
-      width: 50,
+      width: 70,
       align: "right",
       render: (record) => (
         <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
           <Button
             type="text"
-            icon={<EllipsisOutlined className="text-lg rotate-90" />}
-            className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+            icon={<EllipsisOutlined className="text-base text-slate-400" />}
+            className="!rounded hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8"
           />
         </Dropdown>
       ),
@@ -255,7 +256,7 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
 
   return (
     <div className="space-y-4">
-      <div className="place-holder-table modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
+      <div className="place-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

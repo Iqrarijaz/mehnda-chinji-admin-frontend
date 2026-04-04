@@ -38,17 +38,17 @@ function SupportTable({ modal, setModal, ticketsList, onChange, visibleColumns }
         items: [
             {
                 key: "manage",
-                label: <span className="font-medium">View & Manage</span>,
-                icon: <CommentOutlined className="text-emerald-500" />,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">Manage Ticket</span>,
+                icon: <SettingOutlined className="text-[#006666] dark:text-teal-500" />,
                 onClick: () => setModal({
                     name: "Manage",
                     data: record,
                     state: true
                 }),
-                className: "!rounded hover:!bg-emerald-50",
+                className: "!rounded hover:!bg-emerald-50 dark:hover:!bg-emerald-900/20 transition-colors",
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100",
+        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     });
 
 
@@ -62,7 +62,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange, visibleColumns }
             width: 120,
             sorter: true,
             render: (text) => (
-                <span className="font-mono font-black text-[#006666] text-[10px] tracking-widest uppercase">#{text}</span>
+                <span className="font-mono font-black text-[#006666] dark:text-teal-500 text-[10px] tracking-widest uppercase transition-colors duration-300">#{text}</span>
             ),
         },
         {
@@ -72,7 +72,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange, visibleColumns }
             width: 200,
             sorter: true,
             render: (text) => (
-                <span className="font-bold text-slate-800 text-xs truncate block max-w-[150px]">{text}</span>
+                <span className="font-bold text-slate-800 dark:text-slate-100 text-xs truncate block max-w-[150px] transition-colors duration-300">{text}</span>
             ),
         },
         {
@@ -81,8 +81,8 @@ function SupportTable({ modal, setModal, ticketsList, onChange, visibleColumns }
             width: 180,
             render: (record) => (
                 <div className="flex flex-col min-w-0">
-                    <span className="text-[10px] text-slate-800 font-bold uppercase truncate">{record.userId?.name || "Unknown User"}</span>
-                    <span className="text-[10px] text-slate-400 font-medium">{record.userId?.phoneNumber || "No Phone"}</span>
+                    <span className="text-[10px] text-slate-800 dark:text-slate-200 font-bold uppercase truncate transition-colors duration-300">{record.userId?.name || "Unknown User"}</span>
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium transition-colors duration-300">{record.userId?.phoneNumber || "No Phone"}</span>
                 </div>
             ),
         },
@@ -93,7 +93,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange, visibleColumns }
             width: 250,
             render: (text) => (
                 <Tooltip title={text}>
-                    <div className="text-slate-500 text-[11px] leading-relaxed truncate max-w-[200px]">
+                    <div className="text-slate-500 dark:text-slate-400 text-[11px] leading-relaxed truncate max-w-[200px] transition-colors duration-300">
                         {text || "No description provided"}
                     </div>
                 </Tooltip>
@@ -113,7 +113,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange, visibleColumns }
                 const labels = { OPEN: "OPEN", IN_PROGRESS: "IN PROGRESS", CLOSED: "CLOSED" };
                 const color = colors[s] || "slate";
                 return (
-                    <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-${color}-50 text-${color}-600 border border-${color}-100/50`}>
+                    <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-${color}-50 dark:bg-${color}-900/20 text-${color}-600 dark:text-${color}-400 border border-${color}-100/50 dark:border-${color}-900/30 transition-colors duration-300`}>
                         <span className="h-1 w-1 rounded-full" style={{ backgroundColor: dotColors[s] || "#64748b" }} />
                         <span className="text-[9px] font-bold uppercase tracking-wider">{labels[s] || s}</span>
                     </div>
@@ -126,19 +126,19 @@ function SupportTable({ modal, setModal, ticketsList, onChange, visibleColumns }
             key: "createdAt",
             width: 170,
             sorter: true,
-            render: (text) => <div className="text-slate-500 text-xs font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
+            render: (text) => <div className="text-slate-500 dark:text-slate-500 text-xs font-medium whitespace-nowrap transition-colors duration-300">{timestampToDate(text)}</div>,
         },
         {
             title: "",
             key: "actions",
-            width: 50,
+            width: 70,
             align: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
-                        icon={<EllipsisOutlined className="text-lg rotate-90" />}
-                        className="!rounded hover:!bg-slate-100 !flex items-center justify-center !h-8 !w-8 transition-all"
+                        icon={<EllipsisOutlined className="text-base text-slate-400" />}
+                        className="!rounded hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8"
                     />
                 </Dropdown>
             ),
@@ -149,7 +149,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange, visibleColumns }
 
     return (
         <div className="space-y-4">
-            <div className="modern-table shadow-sm border border-slate-100 rounded overflow-hidden bg-white">
+            <div className="modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

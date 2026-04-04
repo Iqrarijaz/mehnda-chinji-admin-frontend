@@ -7,7 +7,6 @@ import {
     LogoutOutlined,
     MailOutlined,
     PhoneOutlined,
-    SafetyCertificateOutlined,
     CheckOutlined,
     CloseOutlined,
     CameraOutlined,
@@ -65,7 +64,7 @@ const ProfileModal = ({ open, onCancel }) => {
             toast.warning("Name cannot be empty");
             return;
         }
-        
+
         setLoading(true);
         try {
             const userData = JSON.parse(localStorage.getItem("userData"));
@@ -117,17 +116,17 @@ const ProfileModal = ({ open, onCancel }) => {
             onCancel={onCancel}
             footer={null}
             centered
-            width={400}
+            width={480}
             className="modern-modal profile-modal-modern"
         >
-            <div className="flex flex-col items-center py-2">
+            <div className="flex flex-col items-center py-2.5 px-2">
                 {/* Profile Header Section */}
-                <div className="relative mb-6 mt-2">
-                    <div className="relative p-1.5 bg-gradient-to-tr from-teal-600 to-teal-400 rounded-full shadow-lg">
+                <div className="relative mb-10 mt-2">
+                    <div className="relative p-1 bg-gradient-to-tr from-teal-600 to-teal-400 rounded-full shadow-lg">
                         <Avatar
-                            size={100}
+                            size={80}
                             icon={<UserOutlined />}
-                            className="bg-white text-teal-600 border-4 border-white"
+                            className="bg-white text-teal-600 border-2 border-white"
                             src={user?.adminData?.profileImage}
                         />
                         {!isEditing && (
@@ -144,21 +143,21 @@ const ProfileModal = ({ open, onCancel }) => {
                 </div>
 
                 {/* Name and Role Section */}
-                <div className="text-center px-6 w-full mb-6">
+                <div className="text-center px-4 w-full mb-6">
                     {isEditing ? (
                         <Input
-                            prefix={<UserOutlined className="text-slate-400 mr-2" />}
+                            prefix={<UserOutlined className="text-slate-400 mr-1.5 text-xs" />}
                             value={editForm.name}
                             onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                             placeholder="Full Name"
-                            className="!h-[44px] !rounded !border-2 !border-slate-100 focus:!border-teal-500 !text-center !font-bold !text-slate-800"
+                            className="!h-[32px] !rounded !border-2 !border-slate-100 focus:!border-teal-500 !text-center !font-medium !text-slate-800 !text-[12px]"
                         />
                     ) : (
                         <>
-                            <h2 className="text-2xl font-black text-slate-800 tracking-tight leading-tight">
+                            <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 tracking-tight leading-tight capitalize">
                                 {user?.adminData?.name || "Administrator"}
                             </h2>
-                            <p className="text-[10px] font-black text-teal-600 uppercase tracking-[0.2em] mt-1 opacity-80">
+                            <p className="text-[10px] font-black text-teal-600 dark:text-teal-400 uppercase tracking-[0.2em] mt-1 opacity-80">
                                 {user?.adminData?.role?.replace(/_/g, " ") || "SUPER ADMIN"}
                             </p>
                         </>
@@ -166,19 +165,19 @@ const ProfileModal = ({ open, onCancel }) => {
                 </div>
 
                 {/* Verification Badge - Redesigned */}
-                <div className="w-full px-8 mb-6">
-                    <div className="flex items-center justify-center gap-2.5 bg-teal-50/50 py-3 px-4 rounded border border-teal-100/50 shadow-sm">
+                <div className="w-full px-6 mb-4">
+                    <div className="flex items-center justify-center gap-2.5 bg-teal-50/50 dark:bg-teal-900/10 py-3 px-4 rounded border border-teal-100/50 dark:border-teal-900/20 shadow-sm">
                         <FaCheckCircle className="text-teal-500" size={16} />
-                        <span className="text-[11px] font-black text-teal-700 uppercase tracking-widest">Account Active & Verified</span>
+                        <span className="text-[11px] font-black text-teal-700 dark:text-teal-300 uppercase tracking-widest">Account Active & Verified</span>
                     </div>
                 </div>
 
                 {/* Details Section */}
-                <div className="w-full space-y-4 px-8 mb-8">
+                <div className="w-full space-y-3 px-6 mb-8">
                     <div className="flex flex-col gap-1.5">
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] ml-1">Email Terminal</span>
-                        <div className="flex items-center gap-3 text-slate-600 bg-slate-50/50 p-3.5 rounded border border-slate-100 transition-all">
-                            <MailOutlined className="text-teal-600" />
+                        <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300 bg-slate-50/50 dark:bg-slate-800/50 p-3.5 rounded border border-slate-100 dark:border-slate-800 transition-all">
+                            <MailOutlined className="text-teal-600 dark:text-teal-400" />
                             <span className="text-sm font-semibold truncate">{user?.adminData?.email || "N/A"}</span>
                         </div>
                     </div>
@@ -187,15 +186,15 @@ const ProfileModal = ({ open, onCancel }) => {
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] ml-1">Secure Contact</span>
                         {isEditing ? (
                             <Input
-                                prefix={<PhoneOutlined className="text-teal-600 mr-2" />}
+                                prefix={<PhoneOutlined className="text-teal-600 dark:text-teal-400 mr-1.5 text-xs" />}
                                 value={editForm.phone}
                                 onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
                                 placeholder="Phone Number"
-                                className="!h-[44px] !rounded !border-2 !border-slate-100 focus:!border-teal-500"
+                                className="!h-[32px] !rounded !border-2 !border-slate-100 dark:!border-slate-800 focus:!border-teal-500 !text-[12px]"
                             />
                         ) : (
-                            <div className="flex items-center gap-3 text-slate-700 bg-white p-3.5 rounded border border-slate-100 shadow-sm transition-all hover:border-teal-100">
-                                <PhoneOutlined className="text-teal-600" />
+                            <div className="flex items-center gap-3 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 p-3.5 rounded border border-slate-100 dark:border-slate-800 shadow-sm transition-all hover:border-teal-100 dark:hover:border-teal-900/30">
+                                <PhoneOutlined className="text-teal-600 dark:text-teal-400" />
                                 <span className="text-sm font-bold">{user?.adminData?.phone || "N/A"}</span>
                             </div>
                         )}
@@ -203,7 +202,7 @@ const ProfileModal = ({ open, onCancel }) => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="w-full px-8 pb-4">
+                <div className="w-full px-6 pb-2">
                     {isEditing ? (
                         <div className="flex gap-3 w-full">
                             <Button
@@ -227,10 +226,10 @@ const ProfileModal = ({ open, onCancel }) => {
                         <Button
                             type="primary"
                             danger
-                            icon={<FaSignOutAlt />}
+                            icon={<FaSignOutAlt className="text-xs" />}
                             onClick={handleLogout}
                             loading={isLoggingOut}
-                            className="modal-footer-btn-danger w-full !bg-gradient-to-r !from-red-600 !to-red-500 !border-none !shadow-xl !shadow-red-500/10"
+                            className="modal-footer-btn-danger w-full !h-[32px] !text-[10px] !bg-gradient-to-r !from-red-600 !to-red-500 !border-none !shadow-lg !shadow-red-500/10"
                         >
                             Sign Out Account
                         </Button>

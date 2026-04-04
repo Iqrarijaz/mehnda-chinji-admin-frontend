@@ -14,6 +14,7 @@ import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_ADMIN_USER } from "@/app/api/admin/admin-users";
 import { GET_ACTIVE_ROLES } from "@/app/api/admin/roles";
 import CustomButton from "@/components/shared/CustomButton";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 
 const { Option } = Select;
 
@@ -31,7 +32,7 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
     const queryClient = useQueryClient();
 
     const { data: rolesData, isLoading: rolesLoading } = useQuery(
-        "activeRolesList",
+        [ADMIN_KEYS.ROLES.LIST, "active"],
         GET_ACTIVE_ROLES,
         {
             staleTime: 30000,
@@ -44,12 +45,12 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
         mutationFn: UPDATE_ADMIN_USER,
         onSuccess: (data) => {
             toast.success(data?.message || "Admin user updated successfully");
-            queryClient.invalidateQueries("adminUsersList");
-            queryClient.invalidateQueries("adminUsersStatusCounts");
-            handleCloseModal();
+            queryClient.invalidateQueries([ADMIN_KEYS.ADMIN_USERS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.ADMIN_USERS.COUNTS]);
+            handleCloseModal(true);
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Something went wrong");
+            toast.error(error.errorMessage || "Something went wrong");
         },
     });
 
@@ -76,7 +77,23 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
     };
 
     const handleCloseModal = () => {
-        setModal({ name: null, state: false, data: null });
+        const force = arguments[0] === true;
+        if (!force && formikRef.current?.dirty) {
+            Modal.confirm({
+                title: "Unsaved Changes",
+                content: "You have unsaved changes. Are you sure you want to discard them and exit?",
+                okText: "Discard",
+                okType: "danger",
+                cancelText: "Stay",
+                onOk: () => {
+                    formikRef.current?.resetForm();
+                    setModal({ name: null, state: false, data: null });
+                },
+            });
+        } else {
+            formikRef.current?.resetForm();
+            setModal({ name: null, state: false, data: null });
+        }
     };
 
     return (

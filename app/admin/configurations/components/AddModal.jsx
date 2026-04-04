@@ -9,6 +9,7 @@ import CustomButton from "@/components/shared/CustomButton";
 import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import { CREATE_CONFIGURATION } from "@/app/api/admin/configurations";
+import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { Formik, Form } from "formik";
 
 const { TextArea } = Input;
@@ -44,17 +45,32 @@ function AddConfigurationModal({ modal, setModal }) {
         },
         onSuccess: (data) => {
             toast.success(data?.message || "Configuration added successfully");
-            queryClient.invalidateQueries("configurationsList");
-            handleClose();
+            queryClient.invalidateQueries([ADMIN_KEYS.CONFIGURATIONS.LIST]);
+            handleClose(true);
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Something went wrong");
+            toast.error(error.errorMessage || "Something went wrong");
         },
     });
 
     const handleClose = () => {
-        formikRef.current?.resetForm();
-        setModal({ name: null, state: false, data: null });
+        const force = arguments[0] === true;
+        if (!force && formikRef.current?.dirty) {
+            Modal.confirm({
+                title: "Unsaved Changes",
+                content: "You have unsaved changes. Are you sure you want to discard them and exit?",
+                okText: "Discard",
+                okType: "danger",
+                cancelText: "Stay",
+                onOk: () => {
+                    formikRef.current?.resetForm();
+                    setModal({ name: null, state: false, data: null });
+                },
+            });
+        } else {
+            formikRef.current?.resetForm();
+            setModal({ name: null, state: false, data: null });
+        }
     };
 
     const initialValues = {
@@ -68,11 +84,11 @@ function AddConfigurationModal({ modal, setModal }) {
         <Modal
             title={
                 <div className="flex items-center gap-2 px-0 py-1">
-                    <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
+                    <div className="w-8 h-8 rounded bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center text-[#006666] dark:text-teal-400 transition-colors duration-300">
                         <FaCogs size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-[#006666] block mt-1">New System Config</span>
+                        <span className="text-lg font-bold text-[#006666] dark:text-teal-400 block mt-1 transition-colors duration-300">New System Config</span>
                     </div>
                 </div>
             }
@@ -100,15 +116,14 @@ function AddConfigurationModal({ modal, setModal }) {
                             ) : (
                                 <>
                                     <div className="modal-section space-y-2">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Core Definition</p>
-                                        <div className="flex flex-col gap-1.5">
-                                            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Config Type (Namespace) <span className="text-red-500">*</span></label>
+                                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest pl-1 mt-2">Core Definition</p>
+                                        <div className="flex flex-col gap-1.5 transition-colors duration-300">
+                                            <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors duration-300">Config Type (Namespace) <span className="text-red-500">*</span></label>
                                             <div className="relative">
-
                                                 <Input
                                                     value={values.type}
                                                     placeholder="CITIES, PROFESSIONS..."
-                                                    className="!pl-3 !h-[32px] !text-xs !rounded !border-slate-200 focus:!border-[#006666]"
+                                                    className="!pl-3 !h-[32px] !text-xs !rounded !border-slate-100 dark:!border-slate-800 !bg-white dark:!bg-slate-900 !text-slate-700 dark:!text-slate-200 focus:!border-[#006666] transition-all duration-300"
                                                     onChange={(e) => setFieldValue("type", e.target.value.toUpperCase())}
                                                 />
                                             </div>
@@ -144,7 +159,7 @@ function AddConfigurationModal({ modal, setModal }) {
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 transition-colors duration-300">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"
