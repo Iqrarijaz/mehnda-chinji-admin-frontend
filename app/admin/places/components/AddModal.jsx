@@ -6,6 +6,7 @@ import { Modal, Input } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { FaPlus, FaTrash, FaMapMarkerAlt, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaImage, FaCamera } from "react-icons/fa";
+import TimingPicker from "@/components/TimingPicker";
 import { UPLOAD_PLACE_IMAGE } from "@/app/api/admin/places";
 
 import Loading from "@/animations/homePageLoader";
@@ -343,8 +344,11 @@ function AddPlaceModal({ modal, setModal }) {
                                     {/* Section 4: Operational Data */}
                                     <div className="modal-section !mb-0">
                                         <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Operational Data</p>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                            <FormField label="Timings" name="timing" placeholder="9:00 AM - 5:00 PM" className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
+                                        <div className="grid grid-cols-1 gap-3">
+                                            <TimingPicker
+                                                value={values.timing}
+                                                onChange={(val) => setFieldValue("timing", val)}
+                                            />
                                             <FormField label="Services" name="services" placeholder="Prayer, Help" className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
                                         </div>
                                     </div>

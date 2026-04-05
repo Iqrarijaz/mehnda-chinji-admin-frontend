@@ -27,20 +27,21 @@ export default function PlacesPage() {
         itemsPerPage: 20,
         currentPage: 1,
         search: null,
-        search: null,
         sortOrder: -1,
         sortingKey: "_id",
         onChangeSearch: false,
         advance: null,
         status: null,
+        category: null,
     });
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
     // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["name", "address", "contact", "status", "isActive", "createdAt", "actions"]);
+    const [visibleColumns, setVisibleColumns] = useState(["name", "category", "address", "contact", "status", "isActive", "createdAt", "actions"]);
 
     const columnOptions = [
         { label: "Name", value: "name" },
+        { label: "Category", value: "category" },
         { label: "Address", value: "address" },
         { label: "Contact", value: "contact" },
         { label: "Reg. Status", value: "status" },
@@ -110,6 +111,25 @@ export default function PlacesPage() {
                 <div className="flex flex-wrap md:flex-nowrap gap-3 items-center w-full md:w-auto justify-end">
                     {/* Desktop Filters (Visible on Tablet/Desktop) */}
                     <div className="hidden md:flex items-center gap-3">
+                        <SelectBox
+                            options={[
+                                { label: "All Categories", value: "" },
+                                ...PLACE_CATEGORIES,
+                            ]}
+                            value={filters.category || ""}
+                            handleChange={(val) =>
+                                setFilters((prev) => ({
+                                    ...prev,
+                                    category: val || null,
+                                    currentPage: 1,
+                                }))
+                            }
+                            placeholder="All Categories"
+                            allowClear={true}
+                            width="160px"
+                            height="32px"
+                            className="mt-2"
+                        />
                         <SearchInput
                             setFilters={setFilters}
                             className="!max-w-[180px] !h-[32px] mt-1"
