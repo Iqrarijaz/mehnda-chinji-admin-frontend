@@ -216,8 +216,10 @@ function UpdateBusinessModal({ modal, setModal }) {
                                                     <Select
                                                         showSearch
                                                         placeholder="Select profession..."
-                                                        optionFilterProp="children"
                                                         optionLabelProp="label"
+                                                        filterOption={(input, option) =>
+                                                            option?.value?.toLowerCase().includes(input.toLowerCase())
+                                                        }
                                                         onChange={(value) => {
                                                             const profession = professions.find(p => p.name_eng === value);
                                                             if (profession) {
@@ -228,7 +230,9 @@ function UpdateBusinessModal({ modal, setModal }) {
                                                         className="w-full modern-select-box"
                                                         value={values.categoryEn || undefined}
                                                     >
-                                                        {professions.map((prof, index) => (
+                                                        {[...professions]
+                                                            .sort((a, b) => a.name_eng.localeCompare(b.name_eng))
+                                                            .map((prof, index) => (
                                                             <Option key={index} value={prof.name_eng} label={`${prof.name_eng.charAt(0).toUpperCase() + prof.name_eng.slice(1)} - ${prof.name_ur}`}>
                                                                 <div className="flex items-center gap-2 w-full truncate">
                                                                     <span className="text-xs font-bold capitalize whitespace-nowrap">{prof.name_eng}</span>

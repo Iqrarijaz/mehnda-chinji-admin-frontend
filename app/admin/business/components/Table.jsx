@@ -170,13 +170,24 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
             ),
         },
         {
-            title: "Business Type",
+            title: "Category EN",
             key: "categoryEn",
             dataIndex: "categoryEn",
-            width: 170,
-            render: (category) => (
-                <span className="text-[11px] text-slate-400 dark:text-slate-500 font-medium block mt-0.5 leading-tight truncate transition-colors duration-300">
-                    {category || "No Category"}
+            width: 150,
+            render: (val) => (
+                <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 capitalize leading-tight truncate block transition-colors duration-300">
+                    {val || "—"}
+                </span>
+            ),
+        },
+        {
+            title: "Category UR",
+            key: "categoryUr",
+            dataIndex: "categoryUr",
+            width: 150,
+            render: (val) => (
+                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 leading-tight truncate block font-notoUrdu transition-colors duration-300" dir="rtl">
+                    {val || "—"}
                 </span>
             ),
         },

@@ -96,7 +96,7 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
             centered
             width={600}
             open={modal?.name === "Add" && modal?.state}
-            onCancel={handleCloseModal}
+            onCancel={() => handleCloseModal(false)}
             footer={null}
             className="modern-modal"
         >
@@ -165,7 +165,7 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"
-                                    onClick={handleCloseModal}
+                                    onClick={() => handleCloseModal(false)}
                                 />
                                 <CustomButton
                                     label="Add User"

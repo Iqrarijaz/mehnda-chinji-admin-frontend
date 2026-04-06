@@ -72,8 +72,7 @@ const AddAdminUserModal = React.memo(({ modal, setModal }) => {
         createAdminUser.mutate(payload);
     };
 
-    const handleCloseModal = () => {
-        const force = arguments[0] === true;
+    const handleCloseModal = (force = false) => {
         if (!force && formikRef.current?.dirty) {
             Modal.confirm({
                 title: "Unsaved Changes",
@@ -113,7 +112,7 @@ const AddAdminUserModal = React.memo(({ modal, setModal }) => {
             centered
             width={600}
             open={modal?.name === "Add" && modal?.state}
-            onCancel={handleCloseModal}
+            onCancel={() => handleCloseModal(false)}
             footer={null}
             className="modern-modal"
         >
@@ -199,7 +198,7 @@ const AddAdminUserModal = React.memo(({ modal, setModal }) => {
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"
-                                    onClick={handleCloseModal}
+                                    onClick={() => handleCloseModal(false)}
                                 />
                                 <CustomButton
                                     label="Create Account"

@@ -77,8 +77,7 @@ function AddLocationModal({ modal, setModal }) {
     }
   }, []);
 
-  const handleCloseModal = useCallback(() => {
-    const force = arguments[0] === true;
+  const handleCloseModal = useCallback((force = false) => {
     if (!force && formikRef.current?.dirty) {
       Modal.confirm({
         title: "Unsaved Changes",
@@ -128,7 +127,7 @@ function AddLocationModal({ modal, setModal }) {
       centered
       width={600}
       open={isModalOpen}
-      onCancel={handleCloseModal}
+      onCancel={() => handleCloseModal(false)}
       footer={null}
       className="modern-modal"
     >
@@ -212,7 +211,7 @@ function AddLocationModal({ modal, setModal }) {
                 <CustomButton
                   label="Cancel"
                   type="secondary"
-                  onClick={handleCloseModal}
+                  onClick={() => handleCloseModal(false)}
                 />
                 <CustomButton
                   label="Create Location"

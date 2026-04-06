@@ -85,8 +85,11 @@ function AddDonorModal({ modal, setModal }) {
         },
     });
 
-    const handleSubmit = (values) => {
-        createDonor.mutate(values);
+    const handleSubmit = (values, { setSubmitting }) => {
+        createDonor.mutate(values, {
+            onError: () => setSubmitting(false),
+            onSuccess: () => setSubmitting(false),
+        });
     };
 
     const handleCloseModal = (force = false) => {
@@ -129,7 +132,7 @@ function AddDonorModal({ modal, setModal }) {
             centered
             width={600}
             open={modal?.name === "Add" && modal?.state}
-            onCancel={handleCloseModal}
+            onCancel={() => handleCloseModal(false)}
             footer={null}
             className="modern-modal"
         >
@@ -259,7 +262,7 @@ function AddDonorModal({ modal, setModal }) {
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"
-                                    onClick={handleCloseModal}
+                                    onClick={() => handleCloseModal(false)}
                                 />
                                 <CustomButton
                                     label="Register Donor"

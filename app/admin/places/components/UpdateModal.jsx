@@ -77,7 +77,10 @@ function UpdatePlaceModal({ modal, setModal }) {
             lng: (values.lng === 0 || values.lng === "0") ? "0" : values.lng,
         };
 
-        updatePlace.mutate(payload);
+        updatePlace.mutate(payload, {
+            onError: () => setSubmitting(false),
+            onSuccess: () => setSubmitting(false),
+        });
     };
 
     const handleCloseModal = (force = false) => {
@@ -164,7 +167,7 @@ function UpdatePlaceModal({ modal, setModal }) {
             centered
             width={600}
             open={modal?.name === "Update" && modal?.state}
-            onCancel={handleCloseModal}
+            onCancel={() => handleCloseModal(false)}
             footer={null}
             className="modern-modal"
         >
@@ -342,7 +345,7 @@ function UpdatePlaceModal({ modal, setModal }) {
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"
-                                    onClick={handleCloseModal}
+                                    onClick={() => handleCloseModal(false)}
                                 />
                                 <CustomButton
                                     label="Update Place"

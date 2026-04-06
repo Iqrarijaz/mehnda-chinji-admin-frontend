@@ -112,6 +112,39 @@ export default function PostsPage() {
 
     const isRefreshing = viewMode === "table" ? isRefreshingTable : isRefreshingInfinite;
 
+    // Filter handlers
+    const handleTypeFilter = useCallback((value) => {
+        setFilters((old) => ({ ...old, type: value || null, currentPage: 1 }));
+    }, []);
+
+    const handleStatusFilter = useCallback((value) => {
+        setFilters((old) => ({ ...old, status: value || null, currentPage: 1 }));
+    }, []);
+
+    const hasActiveFilters = !!(filters.type || filters.status || filters.search);
+
+    // Unified list + infinite helpers
+    const unifiedPostsList = useMemo(() => {
+        if (viewMode === "table") {
+            return postsList?.data?.data || [];
+        }
+        return infinitePostsQuery.data?.pages?.flatMap((p) => p?.data || []) || [];
+    }, [viewMode, postsList, infinitePostsQuery.data]);
+
+    const hasMore = useMemo(() => {
+        const pages = infinitePostsQuery.data?.pages || [];
+        if (!pages.length) return false;
+        const last = pages[pages.length - 1];
+        const { currentPage, totalPages } = last?.pagination || {};
+        return currentPage < totalPages;
+    }, [infinitePostsQuery.data]);
+
+    const loadMore = useCallback(() => {
+        if (infinitePostsQuery.hasNextPage && !infinitePostsQuery.isFetchingNextPage) {
+            infinitePostsQuery.fetchNextPage();
+        }
+    }, [infinitePostsQuery]);
+
     return (
         <InnerPageCard>
 

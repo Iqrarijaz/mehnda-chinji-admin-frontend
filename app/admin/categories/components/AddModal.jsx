@@ -50,8 +50,7 @@ function AddCategoryModal({ modal, setModal }) {
         createCategory.mutate(values);
     };
 
-    const handleCloseModal = () => {
-        const force = arguments[0] === true;
+    const handleCloseModal = (force = false) => {
         if (!force && formikRef.current?.dirty) {
             Modal.confirm({
                 title: "Unsaved Changes",
@@ -91,7 +90,7 @@ function AddCategoryModal({ modal, setModal }) {
             centered
             width={600}
             open={modal?.name === "Add" && modal?.state}
-            onCancel={handleCloseModal}
+            onCancel={() => handleCloseModal(false)}
             footer={null}
             className="modern-modal"
         >
@@ -142,7 +141,7 @@ function AddCategoryModal({ modal, setModal }) {
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"
-                                    onClick={handleCloseModal}
+                                    onClick={() => handleCloseModal(false)}
                                 />
                                 <CustomButton
                                     label="Add Category"

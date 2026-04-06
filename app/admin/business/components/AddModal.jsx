@@ -80,8 +80,11 @@ function AddBusinessModal({ modal, setModal }) {
         },
     });
 
-    const handleSubmit = (values) => {
-        createBusiness.mutate(values);
+    const handleSubmit = (values, { setSubmitting }) => {
+        createBusiness.mutate(values, {
+            onError: () => setSubmitting(false),
+            onSuccess: () => setSubmitting(false),
+        });
     };
 
     const handleCloseModal = (force = false) => {
@@ -124,7 +127,7 @@ function AddBusinessModal({ modal, setModal }) {
             centered
             width={600}
             open={modal?.name === "Add" && modal?.state}
-            onCancel={handleCloseModal}
+            onCancel={() => handleCloseModal(false)}
             footer={null}
             className="modern-modal"
         >
@@ -185,12 +188,9 @@ function AddBusinessModal({ modal, setModal }) {
                                                                         src={user.profileImage}
                                                                         icon={!user.profileImage && <FaUser />}
                                                                     />
-                                                                    <div className="flex flex-col">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <span className="text-xs font-bold capitalize">{user.name}</span>
-                                                                            <span className="text-[10px] text-slate-400">({user.email || "No Email"})</span>
-                                                                        </div>
-                                                                        <span className="text-[10px] text-[#006666] font-semibold">{user.phone}</span>
+                                                                    <div className="flex items-center gap-1.5">
+                                                                        <span className="text-xs font-bold capitalize">{user.name}</span>
+                                                                        <span className="text-[10px] text-slate-400">({user.email || "No Email"})</span>
                                                                     </div>
                                                                 </Space>
                                                             </Option>
@@ -216,8 +216,10 @@ function AddBusinessModal({ modal, setModal }) {
                                                     <Select
                                                         showSearch
                                                         placeholder="Select profession..."
-                                                        optionFilterProp="children"
                                                         optionLabelProp="label"
+                                                        filterOption={(input, option) =>
+                                                            option?.value?.toLowerCase().includes(input.toLowerCase())
+                                                        }
                                                         onChange={(value) => {
                                                             const profession = professions.find(p => p.name_eng === value);
                                                             if (profession) {
@@ -228,7 +230,9 @@ function AddBusinessModal({ modal, setModal }) {
                                                         className="w-full modern-select-box"
                                                         value={values.categoryEn || undefined}
                                                     >
-                                                        {professions.map((prof, index) => (
+                                                        {[...professions]
+                                                            .sort((a, b) => a.name_eng.localeCompare(b.name_eng))
+                                                            .map((prof, index) => (
                                                             <Option key={index} value={prof.name_eng} label={`${prof.name_eng.charAt(0).toUpperCase() + prof.name_eng.slice(1)} - ${prof.name_ur}`}>
                                                                 <div className="flex items-center gap-2 w-full truncate">
                                                                     <span className="text-xs font-bold capitalize whitespace-nowrap">{prof.name_eng}</span>
@@ -281,7 +285,7 @@ function AddBusinessModal({ modal, setModal }) {
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"
-                                    onClick={handleCloseModal}
+                                    onClick={() => handleCloseModal(false)}
                                 />
                                 <CustomButton
                                     label="Register Business"

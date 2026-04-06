@@ -56,8 +56,11 @@ function UpdateDonorModal({ modal, setModal }) {
         isDeleted: modal?.data?.isDeleted ?? false
     };
 
-    const handleSubmit = (values) => {
-        updateDonor.mutate({ _id: modal?.data?._id, ...values });
+    const handleSubmit = (values, { setSubmitting }) => {
+        updateDonor.mutate({ _id: modal?.data?._id, ...values }, {
+            onError: () => setSubmitting(false),
+            onSuccess: () => setSubmitting(false),
+        });
     };
 
     const handleCloseModal = (force = false) => {
@@ -92,7 +95,7 @@ function UpdateDonorModal({ modal, setModal }) {
             centered
             width={600}
             open={modal.name === "Update" && modal.state}
-            onCancel={handleCloseModal}
+            onCancel={() => handleCloseModal(false)}
             footer={null}
             className="modern-modal"
         >
@@ -173,7 +176,7 @@ function UpdateDonorModal({ modal, setModal }) {
                                 <CustomButton
                                   label="Cancel"
                                   type="secondary"
-                                  onClick={handleCloseModal}
+                                  onClick={() => handleCloseModal(false)}
                                 />
                                 <CustomButton
                                   label="Update Donor"

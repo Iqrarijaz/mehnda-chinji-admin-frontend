@@ -38,7 +38,7 @@ function AddRoleModal({ modal, setModal }) {
         onSuccess: (data) => {
             toast.success(data?.message || "Role created successfully");
             queryClient.invalidateQueries([ADMIN_KEYS.ROLES.LIST]);
-            handleCloseModal();
+            handleCloseModal(true);
         },
         onError: (error) => {
             toast.error(error.errorMessage || "Something went wrong");
@@ -52,9 +52,23 @@ function AddRoleModal({ modal, setModal }) {
         });
     };
 
-    const handleCloseModal = () => {
-        formikRef.current?.resetForm();
-        setModal({ name: null, state: false, data: null });
+    const handleCloseModal = (force = false) => {
+        if (!force && formikRef.current?.dirty) {
+            Modal.confirm({
+                title: "Unsaved Changes",
+                content: "You have unsaved changes. Are you sure you want to discard them and exit?",
+                okText: "Discard",
+                okType: "danger",
+                cancelText: "Stay",
+                onOk: () => {
+                    formikRef.current?.resetForm();
+                    setModal({ name: null, state: false, data: null });
+                },
+            });
+        } else {
+            formikRef.current?.resetForm();
+            setModal({ name: null, state: false, data: null });
+        }
     };
 
     useEffect(() => {
@@ -78,7 +92,7 @@ function AddRoleModal({ modal, setModal }) {
             centered
             width={600}
             open={modal?.name === "Add" && modal?.state}
-            onCancel={handleCloseModal}
+            onCancel={() => handleCloseModal(false)}
             footer={null}
             className="modern-modal"
         >
@@ -142,7 +156,7 @@ function AddRoleModal({ modal, setModal }) {
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"
-                                    onClick={handleCloseModal}
+                                    onClick={() => handleCloseModal(false)}
                                 />
                                 <CustomButton
                                     label="Create Role"
