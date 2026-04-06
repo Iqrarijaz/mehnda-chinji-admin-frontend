@@ -31,7 +31,7 @@ export default function BusinessPage() {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   // Column Visibility State
-  const [visibleColumns, setVisibleColumns] = useState(["name", "categoryEn", "categoryUr", "status", "createdAt", "actions"]);
+  const [visibleColumns, setVisibleColumns] = useState(["name", "categoryEn", "categoryUr", "timing", "status", "createdAt", "actions"]);
 
   const columnOptions = [
     { label: "Business Name", value: "name" },
@@ -40,6 +40,7 @@ export default function BusinessPage() {
     { label: "Phone", value: "phone" },
     { label: "Address", value: "address" },
     { label: "Status", value: "status" },
+    { label: "Timing", value: "timing" },
     { label: "Registered Date", value: "createdAt" },
   ];
 

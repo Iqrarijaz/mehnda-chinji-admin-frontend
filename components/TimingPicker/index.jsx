@@ -48,44 +48,50 @@ function TimeUnit({ label, value, onChange }) {
     const { hour, minute, period } = value;
 
     return (
-        <div className="flex flex-col gap-1 flex-1">
+        <div className="flex flex-col gap-1 w-full">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-0.5">
                 {label}
             </span>
-            <div className="flex gap-1.5 items-center bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-700 rounded px-2 py-1 transition-colors">
+            <div className="flex gap-1 items-center bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-700 rounded px-1 py-1 transition-colors w-full">
                 {/* Hour */}
-                <Select
-                    value={hour || undefined}
-                    onChange={(val) => onChange({ ...value, hour: val })}
-                    options={HOURS}
-                    placeholder="Hr"
-                    style={selectStyle}
-                    className="!w-[58px] timing-select"
-                    variant="borderless"
-                    popupMatchSelectWidth={false}
-                />
+                <div className="flex-1 min-w-0">
+                    <Select
+                        value={hour || undefined}
+                        onChange={(val) => onChange({ ...value, hour: val })}
+                        options={HOURS}
+                        placeholder="Hr"
+                        style={selectStyle}
+                        className="w-full timing-select"
+                        variant="borderless"
+                        popupMatchSelectWidth={false}
+                    />
+                </div>
                 <span className="text-slate-400 font-bold text-sm leading-none">:</span>
                 {/* Minute */}
-                <Select
-                    value={minute}
-                    onChange={(val) => onChange({ ...value, minute: val })}
-                    options={MINUTES}
-                    style={selectStyle}
-                    className="!w-[58px] timing-select"
-                    variant="borderless"
-                    popupMatchSelectWidth={false}
-                    showSearch
-                />
+                <div className="flex-1 min-w-0">
+                    <Select
+                        value={minute}
+                        onChange={(val) => onChange({ ...value, minute: val })}
+                        options={MINUTES}
+                        style={selectStyle}
+                        className="w-full timing-select"
+                        variant="borderless"
+                        popupMatchSelectWidth={false}
+                        showSearch
+                    />
+                </div>
                 {/* AM / PM */}
-                <Select
-                    value={period}
-                    onChange={(val) => onChange({ ...value, period: val })}
-                    options={PERIODS}
-                    style={selectStyle}
-                    className="!w-[60px] timing-select"
-                    variant="borderless"
-                    popupMatchSelectWidth={false}
-                />
+                <div className="flex-1 min-w-0">
+                    <Select
+                        value={period}
+                        onChange={(val) => onChange({ ...value, period: val })}
+                        options={PERIODS}
+                        style={selectStyle}
+                        className="w-full timing-select"
+                        variant="borderless"
+                        popupMatchSelectWidth={false}
+                    />
+                </div>
             </div>
         </div>
     );
@@ -127,10 +133,9 @@ function TimingPicker({ value, onChange, label = "Timings" }) {
                 <FaClock size={10} className="text-slate-400" />
                 {label}
             </label>
-            <div className="flex items-center gap-2">
-                <TimeUnit label="From" value={from} onChange={handleFromChange} />
-                <span className="text-slate-300 dark:text-slate-600 font-bold text-lg mt-4">→</span>
-                <TimeUnit label="To" value={to} onChange={handleToChange} />
+            <div className="flex flex-col gap-3">
+                <TimeUnit label="Opening Time (From)" value={from} onChange={handleFromChange} />
+                <TimeUnit label="Closing Time (To)" value={to} onChange={handleToChange} />
             </div>
             {from.hour && to.hour && (
                 <p className="text-[10px] text-slate-400 dark:text-slate-500 ml-1 italic transition-colors">

@@ -37,7 +37,7 @@ export default function PlacesPage() {
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
     // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["name", "category", "address", "contact", "status", "isActive", "createdAt", "actions"]);
+    const [visibleColumns, setVisibleColumns] = useState(["name", "category", "address", "timing", "contact", "status", "isActive", "createdAt", "actions"]);
 
     const columnOptions = [
         { label: "Name", value: "name" },
@@ -46,6 +46,7 @@ export default function PlacesPage() {
         { label: "Contact", value: "contact" },
         { label: "Reg. Status", value: "status" },
         { label: "Active", value: "isActive" },
+        { label: "Timing", value: "timing" },
         { label: "Created At", value: "createdAt" },
     ];
 

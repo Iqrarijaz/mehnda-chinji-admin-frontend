@@ -192,6 +192,22 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
             ),
         },
         {
+            title: "Timing",
+            key: "timing",
+            dataIndex: "timing",
+            width: 170,
+            render: (timing) => (
+                <Tooltip title={timing || "No Timing Set"} placement="top">
+                    <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-medium truncate cursor-help transition-colors">
+                        <span className="shrink-0 w-4 h-4 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-500 dark:text-blue-400">
+                            <span className="text-[10px]">⏰</span>
+                        </span>
+                        <span className="text-[11px] font-semibold">{timing || "—"}</span>
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
             title: "Contact & Address",
             key: "contact",
             width: 250,

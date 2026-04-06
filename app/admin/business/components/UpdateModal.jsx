@@ -12,6 +12,7 @@ import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_BUSINESS } from "@/app/api/admin/business";
 import { SEARCH_USERS } from "@/app/api/admin/users";
+import TimingPicker from "@/components/TimingPicker";
 import professions from "@/data/professions.json";
 import CustomButton from "@/components/shared/CustomButton";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
@@ -111,6 +112,7 @@ function UpdateBusinessModal({ modal, setModal }) {
         description: modal?.data?.description || "",
         phone: modal?.data?.phone || "",
         address: modal?.data?.address || "",
+        timing: modal?.data?.timing || "",
         isDeleted: modal?.data?.isDeleted ?? false,
     };
 
@@ -262,6 +264,17 @@ function UpdateBusinessModal({ modal, setModal }) {
                                                 required
                                                 className="!h-[32px] !text-xs !rounded"
                                                 labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Operation Data Section */}
+                                    <div className="bg-slate-50/50 p-3 rounded border border-slate-100/50 space-y-3">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Operation Data</p>
+                                        <div className="grid grid-cols-1 gap-3">
+                                            <TimingPicker
+                                                value={values.timing}
+                                                onChange={(val) => setFieldValue("timing", val)}
                                             />
                                         </div>
                                     </div>
