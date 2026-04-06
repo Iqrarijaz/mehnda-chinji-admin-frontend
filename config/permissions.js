@@ -66,5 +66,35 @@ export const PERMISSIONS = {
         READ: "blood_donors.read",
         UPDATE: "blood_donors.update",
         DELETE: "blood_donors.delete",
+    },
+    CONFIGURATIONS: {
+        READ: "configurations.read",
+        UPDATE: "configurations.update",
+    },
+    NOTIFICATION_TEMPLATES: {
+        CREATE: "notification_templates.create",
+        READ: "notification_templates.read",
+        UPDATE: "notification_templates.update",
+        DELETE: "notification_templates.delete",
+    },
+    SUPPORT: {
+        READ: "support.read",
+        REPLY: "support.reply",
+        UPDATE: "support.update",
+        DELETE: "support.delete",
+    },
+    REPORTS: {
+        READ: "reports.read",
+        UPDATE: "reports.update",
+        DELETE: "reports.delete",
+    },
+    CONTACT_US: {
+        READ: "contact_us.read",
+        UPDATE: "contact_us.update",
+        DELETE: "contact_us.delete",
+    },
+    LOGS: {
+        READ: "logs.read",
+        DELETE: "logs.delete",
     }
 };
