@@ -130,15 +130,27 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
 
     const allColumns = [
         {
-            title: "Admin Information",
+            title: "Admin Name",
             key: "name",
+            dataIndex: "name",
             width: 200,
             sorter: true,
-            render: (record) => (
-                <div className="flex flex-col min-w-0 transition-colors duration-300">
-                    <span className="font-bold text-slate-800 dark:text-slate-200 text-xs truncate leading-tight block">{record.name}</span>
-                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate block leading-tight mt-0.5">{record.email}</span>
-                </div>
+            render: (name) => (
+                <span className="font-bold text-slate-800 dark:text-slate-200 text-xs truncate leading-tight block capitalize transition-colors duration-300">
+                    {name}
+                </span>
+            ),
+        },
+        {
+            title: "Email Address",
+            key: "email",
+            dataIndex: "email",
+            width: 220,
+            sorter: true,
+            render: (email) => (
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate block leading-tight transition-colors duration-300">
+                    {email || "—"}
+                </span>
             ),
         },
         {

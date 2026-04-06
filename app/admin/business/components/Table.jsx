@@ -164,7 +164,7 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
             width: 200,
             sorter: true,
             render: (name) => (
-                <span className="font-bold text-slate-800 dark:text-slate-200 text-xs truncate leading-tight block transition-colors duration-300">
+                <span className="font-bold text-slate-800 dark:text-slate-200 text-xs truncate leading-tight block capitalize transition-colors duration-300">
                     {name}
                 </span>
             ),
