@@ -125,7 +125,7 @@ function DashBoard() {
     const [stats, setStats] = useState({
         users: { ACTIVE: 0, INACTIVE: 0, total: 0 },
         businesses: { APPROVED: 0, PENDING: 0, REJECTED: 0, total: 0 },
-        places: { APPROVED: 0, PENDING: 0, REJECTED: 0, total: 0 },
+        essentials: { APPROVED: 0, PENDING: 0, REJECTED: 0, total: 0 },
         donors: { AVAILABLE: 0, UNAVAILABLE: 0, total: 0 },
         reports: { PENDING: 0, REVIEWED: 0, RESOLVED: 0, total: 0 },
         support: { OPEN: 0, IN_PROGRESS: 0, CLOSED: 0, total: 0 },
@@ -158,7 +158,7 @@ function DashBoard() {
             setStats({
                 users: { ...userRes?.data, total: calculateTotal(userRes?.data) },
                 businesses: { ...bizRes?.data, total: calculateTotal(bizRes?.data) },
-                places: { ...placeRes?.data, total: calculateTotal(placeRes?.data) },
+                essentials: { ...placeRes?.data, total: calculateTotal(placeRes?.data) },
                 donors: { ...donorRes?.data, total: calculateTotal(donorRes?.data) },
                 reports: { ...reportRes?.data, total: calculateTotal(reportRes?.data) },
                 support: { ...supportRes?.data, total: calculateTotal(supportRes?.data) },
@@ -247,7 +247,7 @@ function DashBoard() {
                 {[
                     { title: "User Directory", count: stats.users.total, icon: <UserOutlined />, color: "#006666", bg: "rgba(0, 102, 102, 0.03)" },
                     { title: "Active Businesses", count: stats.businesses.APPROVED, icon: <ShopOutlined />, color: "#0ea5e9", bg: "rgba(14, 165, 233, 0.03)" },
-                    { title: "Verified Places", count: stats.places.APPROVED, icon: <EnvironmentOutlined />, color: "#f59e0b", bg: "rgba(245, 158, 11, 0.03)" },
+                    { title: "Verified Essentials", count: stats.essentials.APPROVED, icon: <EnvironmentOutlined />, color: "#f59e0b", bg: "rgba(245, 158, 11, 0.03)" },
                     { title: "Blood Donors", count: stats.donors.total, icon: <UserAddOutlined />, color: "#ef4444", bg: "rgba(239, 68, 68, 0.03)" }
                 ].map((stat, i) => (
                     <div
@@ -284,7 +284,7 @@ function DashBoard() {
                         </div>
                         <div className="p-4 grid grid-cols-2 gap-3">
                             {[
-                                { label: "Add Place", description: "Map new location", icon: <EnvironmentOutlined />, onClick: () => router.push("/admin/essentials?action=add"), color: "text-orange-600", bg: "bg-orange-50 dark:bg-orange-900/10" },
+                                { label: "Add Essential", description: "Map new location", icon: <EnvironmentOutlined />, onClick: () => router.push("/admin/essentials?action=add"), color: "text-orange-600", bg: "bg-orange-50 dark:bg-orange-900/10" },
                                 { label: "Register Biz", description: "Onboard business", icon: <ShopOutlined />, onClick: () => router.push("/admin/business?action=add"), color: "text-blue-600", bg: "bg-blue-50 dark:bg-blue-900/10" },
                                 { label: "New Admin", description: "Elevate permissions", icon: <UserAddOutlined />, onClick: () => router.push("/admin/admin-users?action=add"), color: "text-teal-600 dark:text-teal-400", bg: "bg-teal-50 dark:bg-teal-900/10" },
                                 { label: "Audit Logs", description: "View trace data", icon: <HistoryOutlined />, onClick: () => router.push("/admin/developer/system-logs"), color: "text-slate-600", bg: "bg-slate-50 dark:bg-slate-800" }

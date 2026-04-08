@@ -18,6 +18,8 @@ import { HiRefresh } from "react-icons/hi";
 import FilterModal from "./components/FilterModal";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { useAdminData } from "@/hooks/useAdminData";
+import { hasPermission } from "@/utils/permissions";
+import { PERMISSIONS } from "@/config/permissions";
 
 export default function BusinessPage() {
   const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -137,12 +139,14 @@ export default function BusinessPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <AddButton
-              title="Add Business"
-              icon={false}
-              onClick={() => setModal({ name: "Add", data: null, state: true })}
-              className="!h-[32px] !rounded !px-4 !text-[10px] font-medium shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
-            />
+            {hasPermission(PERMISSIONS.BUSINESSES.CREATE) && (
+              <AddButton
+                title="Add Business"
+                icon={false}
+                onClick={() => setModal({ name: "Add", data: null, state: true })}
+                className="!h-[32px] !rounded !px-4 !text-[10px] font-medium shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+              />
+            )}
           </div>
         </div>
       </div>

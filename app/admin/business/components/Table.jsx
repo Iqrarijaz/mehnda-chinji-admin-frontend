@@ -18,6 +18,8 @@ import { Menu, Dropdown, Button, Table, Tooltip } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { useState } from "react";
+import { hasPermission } from "@/utils/permissions";
+import { PERMISSIONS } from "@/config/permissions";
 
 function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns }) {
     const queryClient = useQueryClient();
@@ -100,52 +102,66 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
     };
 
     const actionMenu = (record) => {
-        const items = [
-            {
+        const items = [];
+
+        // 1. View Details (Allowed if user has business read OR dashboard read)
+        if (hasPermission([PERMISSIONS.BUSINESSES.READ, PERMISSIONS.DASHBOARD.READ])) {
+            items.push({
                 key: "view",
                 label: <span className="font-medium text-slate-700 dark:text-slate-300">View Details</span>,
                 icon: <EyeOutlined className="text-[#006666] dark:text-teal-500" />,
                 onClick: () => setViewModal({ state: true, data: record }),
                 className: "!rounded hover:!bg-teal-50 dark:hover:!bg-emerald-900/20 transition-colors",
-            },
-            {
+            });
+        }
+
+        // 2. Edit Business (Requires update permission)
+        if (hasPermission(PERMISSIONS.BUSINESSES.UPDATE)) {
+            items.push({
                 key: "edit",
                 label: <span className="font-medium text-slate-700 dark:text-slate-300">Edit Business</span>,
                 icon: <EditOutlined className="text-[#006666] dark:text-teal-500" />,
                 onClick: () => setModal({ name: "Update", data: record, state: true }),
                 className: "!rounded hover:!bg-blue-50 dark:hover:!bg-blue-900/20 transition-colors",
-            },
-        ];
-
-        if (record.status === "PENDING" || record.status === "REJECTED") {
-            items.push({
-                key: "approve",
-                label: <span className="font-medium text-slate-700 dark:text-slate-300">Approve</span>,
-                icon: <CheckOutlined className="text-green-500" />,
-                onClick: () => handleStatusChange(record, "APPROVED"),
-                className: "!rounded hover:!bg-green-50 dark:hover:!bg-green-900/20 transition-colors",
             });
         }
 
-        if (record.status === "PENDING" || record.status === "APPROVED") {
-            items.push({
-                key: "reject",
-                label: <span className="font-medium text-orange-600 dark:text-orange-500">Reject</span>,
-                icon: <CloseOutlined className="text-orange-500 dark:text-orange-400" />,
-                onClick: () => handleStatusChange(record, "REJECTED"),
-                className: "!rounded hover:!bg-orange-50 dark:hover:!bg-orange-900/20 transition-colors",
-            });
+        // 3. Status Changes (Requires update permission)
+        if (hasPermission(PERMISSIONS.BUSINESSES.UPDATE)) {
+            if (record.status === "PENDING" || record.status === "REJECTED") {
+                items.push({
+                    key: "approve",
+                    label: <span className="font-medium text-slate-700 dark:text-slate-300">Approve</span>,
+                    icon: <CheckOutlined className="text-green-500" />,
+                    onClick: () => handleStatusChange(record, "APPROVED"),
+                    className: "!rounded hover:!bg-green-50 dark:hover:!bg-green-900/20 transition-colors",
+                });
+            }
+
+            if (record.status === "PENDING" || record.status === "APPROVED") {
+                items.push({
+                    key: "reject",
+                    label: <span className="font-medium text-orange-600 dark:text-orange-500">Reject</span>,
+                    icon: <CloseOutlined className="text-orange-500 dark:text-orange-400" />,
+                    onClick: () => handleStatusChange(record, "REJECTED"),
+                    className: "!rounded hover:!bg-orange-50 dark:hover:!bg-orange-900/20 transition-colors",
+                });
+            }
         }
 
-        items.push({ type: "divider", className: "!my-1" });
-
-        items.push({
-            key: "delete",
-            label: <span className="font-medium text-red-600 dark:text-red-500">Delete Business</span>,
-            icon: <DeleteOutlined className="text-red-500 dark:text-red-400" />,
-            onClick: () => handleDelete(record),
-            className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
-        });
+        // 4. Delete Business (Requires delete permission)
+        if (hasPermission(PERMISSIONS.BUSINESSES.DELETE)) {
+            if (items.length > 0) {
+                items.push({ type: "divider", className: "!my-1" });
+            }
+            items.push({
+                key: "delete",
+                label: <span className="font-medium text-red-600 dark:text-red-500">Delete Business</span>,
+                icon: <DeleteOutlined className="text-red-500 dark:text-red-400" />,
+                onClick: () => handleDelete(record),
+                className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
+            });
+        }
 
         return {
             items,

@@ -57,7 +57,7 @@ function EditEmailTemplateClient() {
             router.push("/admin/settings/email-templates");
         },
         onError: (error) => {
-            console.log(error);
+            console.error("Error updated email template:", error);
             toast.error(
                 error?.response?.data?.error ??
                 "Something went wrong. Please try again later."

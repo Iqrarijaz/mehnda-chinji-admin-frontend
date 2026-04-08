@@ -2,7 +2,6 @@ import { Axios } from "@/interceptors";
 
 export async function LIST_LOCATIONS(data) {
   try {
-    console.log("===========data", data);
     const response = await Axios.get("/api/admin/location/list", {
       params: data,
     });
@@ -15,7 +14,6 @@ export async function LIST_LOCATIONS(data) {
 
 export async function GET_LOCATION_BY_TYPE(data) {
   try {
-    console.log("===========data", data);
     const response = await Axios.get("/api/admin/location/get-by-type", {
       params: data,
     });

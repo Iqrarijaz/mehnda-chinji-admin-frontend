@@ -2,17 +2,11 @@ export const PERMISSIONS = {
     DASHBOARD: {
         READ: "dashboard.read",
     },
-    CATEGORIES: {
-        CREATE: "categories.create",
-        READ: "categories.read",
-        UPDATE: "categories.update",
-        DELETE: "categories.delete",
-    },
-    PLACES: {
-        CREATE: "places.create",
-        READ: "places.read",
-        UPDATE: "places.update",
-        DELETE: "places.delete",
+    ESSENTIALS: {
+        CREATE: "essentials.create",
+        READ: "essentials.read",
+        UPDATE: "essentials.update",
+        DELETE: "essentials.delete",
     },
     BUSINESSES: {
         CREATE: "businesses.create",

@@ -25,6 +25,8 @@ const validationSchema = Yup.object({
     .required("Password is required"),
 });
 
+import { getFirstAuthorizedRoute } from "@/utils/permissions";
+
 function Page() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -33,7 +35,8 @@ function Page() {
   useEffect(() => {
     const isLogged = localStorage.getItem("userData");
     if (isLogged) {
-      router.push("/admin/dashboard");
+      const destination = getFirstAuthorizedRoute();
+      router.push(destination);
     } else {
       setLoading(false);
     }
@@ -47,7 +50,8 @@ function Page() {
     loginMutation.mutate(values, {
       onSuccess: (data) => {
         localStorage.setItem("userData", JSON.stringify(data?.data));
-        router.push("/admin/dashboard");
+        const destination = getFirstAuthorizedRoute();
+        router.push(destination);
         toast.success("Login successfully");
       },
       onError: (error) => {
