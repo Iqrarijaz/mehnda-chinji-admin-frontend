@@ -4,11 +4,11 @@ import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
-import PlacesTable from "./components/Table";
-import AddPlaceModal from "./components/AddModal";
-import UpdatePlaceModal from "./components/UpdateModal";
-import { GET_PLACES, GET_PLACE_STATUS_COUNTS } from "@/app/api/admin/places";
-import { PLACE_CATEGORIES } from "@/config/config";
+import EssentialsTable from "./components/Table";
+import AddEssentialModal from "./components/AddModal";
+import UpdateEssentialModal from "./components/UpdateModal";
+import { GET_ESSENTIALS, GET_ESSENTIAL_STATUS_COUNTS } from "@/app/api/admin/essentials";
+import { ESSENTIAL_CATEGORIES } from "@/config/config";
 import SelectBox from "@/components/SelectBox";
 import { useDebounce } from "@/hooks/useDebounce";
 import StatCard from "@/components/shared/StatCard";
@@ -21,7 +21,7 @@ import FilterModal from "./components/FilterModal";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { useAdminData } from "@/hooks/useAdminData";
 
-export default function PlacesPage() {
+export default function EssentialsPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
     const [filters, setFilters] = useState({
         itemsPerPage: 20,
@@ -53,16 +53,16 @@ export default function PlacesPage() {
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
 
     const {
-        listQuery: placesList,
+        listQuery: essentialsList,
         countsQuery,
         isRefreshing,
         handleRefresh
     } = useAdminData({
-        listQueryKey: [ADMIN_KEYS.PLACES.LIST, JSON.stringify(debFilter)],
-        listQueryFn: () => GET_PLACES(debFilter),
-        countsQueryKey: [ADMIN_KEYS.PLACES.COUNTS],
-        countsQueryFn: GET_PLACE_STATUS_COUNTS,
-        onListError: "Failed to fetch places.",
+        listQueryKey: [ADMIN_KEYS.ESSENTIALS.LIST, JSON.stringify(debFilter)],
+        listQueryFn: () => GET_ESSENTIALS(debFilter),
+        countsQueryKey: [ADMIN_KEYS.ESSENTIALS.COUNTS],
+        countsQueryFn: GET_ESSENTIAL_STATUS_COUNTS,
+        onListError: "Failed to fetch essentials.",
     });
 
     const { data: countsData, isLoading: countsLoading } = countsQuery;
@@ -78,7 +78,7 @@ export default function PlacesPage() {
     ];
 
     return (
-        <InnerPageCard title="Places">
+        <InnerPageCard title="Essentials">
 
             <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-start md:items-center">
                 {/* Status Count Cards (Left) */}
@@ -115,7 +115,7 @@ export default function PlacesPage() {
                         <SelectBox
                             options={[
                                 { label: "All Categories", value: "" },
-                                ...PLACE_CATEGORIES,
+                                ...ESSENTIAL_CATEGORIES,
                             ]}
                             value={filters.category || ""}
                             handleChange={(val) =>
@@ -167,7 +167,7 @@ export default function PlacesPage() {
                         </button>
 
                         <AddButton
-                            title="Add Place"
+                            title="Add Essential"
                             icon={false}
                             onClick={() => setModal({ name: "Add", data: null, state: true })}
                             className="!h-[32px] !border-2 !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded !text-[10px] font-medium shadow-sm transition-all !px-3"
@@ -177,18 +177,18 @@ export default function PlacesPage() {
             </div>
 
             <div className="flex flex-col mb-4">
-                <PlacesTable
+                <EssentialsTable
                     modal={modal}
                     setModal={setModal}
-                    placesList={placesList}
+                    essentialsList={essentialsList}
                     onChange={onChange}
                     setFilters={setFilters}
                     visibleColumns={visibleColumns}
                 />
             </div>
 
-            <AddPlaceModal modal={modal} setModal={setModal} />
-            <UpdatePlaceModal modal={modal} setModal={setModal} />
+            <AddEssentialModal modal={modal} setModal={setModal} />
+            <UpdateEssentialModal modal={modal} setModal={setModal} />
 
             <FilterModal
                 open={isFilterModalOpen}

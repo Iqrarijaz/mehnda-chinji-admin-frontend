@@ -1,8 +1,8 @@
 
 export const ADMIN_KEYS = {
-    PLACES: {
-        LIST: "placesList",
-        COUNTS: "placeStatusCounts",
+    ESSENTIALS: {
+        LIST: "essentialsList",
+        COUNTS: "essentialStatusCounts",
     },
     USERS: {
         LIST: "usersList",
@@ -20,10 +20,7 @@ export const ADMIN_KEYS = {
         LIST: "businessList",
         COUNTS: "businessStatusCounts",
     },
-    CATEGORIES: {
-        LIST: "categoriesList",
-        COUNTS: "categoryStatusCounts",
-    },
+
     REPORTS: {
         LIST: "reportsList",
         COUNTS: "reportStatusCounts",

@@ -21,12 +21,7 @@ const MenuList = [
     link: "/admin/posts",
     permission: "posts.read"
   },
-  {
-    name: "Categories",
-    icon: <FaProductHunt size={20} />,
-    link: "/admin/categories",
-    permission: "categories.read"
-  },
+
   {
     name: "Businesses",
     icon: <FaBuilding size={20} />,
@@ -34,10 +29,10 @@ const MenuList = [
     permission: "businesses.read"
   },
   {
-    name: "Places",
+    name: "Essentials",
     icon: <FaMapMarkerAlt size={20} />,
-    link: "/admin/places",
-    permission: "places.read"
+    link: "/admin/essentials",
+    permission: "essentials.read"
   },
   {
     name: "Users",

@@ -20,7 +20,7 @@ function ViewModal({ viewModal, setViewModal }) {
                         <FaInfoCircle size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-slate-900 dark:text-slate-100 block mt-1 transition-colors duration-300">Place Details</span>
+                        <span className="text-lg font-bold text-slate-900 dark:text-slate-100 block mt-1 transition-colors duration-300">Essential Details</span>
                     </div>
                 </div>
             }
@@ -38,9 +38,9 @@ function ViewModal({ viewModal, setViewModal }) {
                             <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest pl-1 mb-2">General Information</p>
 
                             <div className="space-y-1">
-                                {/* Place Name Row */}
+                                {/* Essential Name Row */}
                                 <div className="flex items-center p-2.5 px-4 bg-slate-50/50 dark:bg-slate-900/40 rounded-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
-                                    <div className="w-1/3 text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Place Name</div>
+                                    <div className="w-1/3 text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Essential Name</div>
                                     <div className="w-2/3 text-[12px] font-bold text-slate-700 dark:text-slate-200 capitalize leading-tight">
                                         {data.name}
                                     </div>

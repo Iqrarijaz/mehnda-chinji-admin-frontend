@@ -10,7 +10,7 @@ import Loading from "@/animations/homePageLoader";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { timestampToDate } from "@/utils/date";
-import { DELETE_PLACE, UPDATE_PLACE_STATUS, UPDATE_PLACE_REQUEST_STATUS } from "@/app/api/admin/places";
+import { DELETE_ESSENTIAL, UPDATE_ESSENTIAL_STATUS, UPDATE_ESSENTIAL_REQUEST_STATUS } from "@/app/api/admin/essentials";
 import ViewModal from "./ViewModal";
 import { getTagColor } from "@/utils/tagColor";
 import ConfirmModal from "@/components/shared/ConfirmModal";
@@ -19,7 +19,7 @@ import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 
-function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibleColumns }) {
+function EssentialsTable({ modal, setModal, essentialsList, onChange, setFilters, visibleColumns }) {
     const queryClient = useQueryClient();
     const [viewModal, setViewModal] = useState({ open: false, data: null });
     const [confirmModal, setConfirmModal] = useState({
@@ -40,10 +40,10 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
 
     // Request status mutation (APPROVED / REJECTED)
     const requestStatusMutation = useMutation({
-        mutationFn: UPDATE_PLACE_REQUEST_STATUS,
+        mutationFn: UPDATE_ESSENTIAL_REQUEST_STATUS,
         onSuccess: (data) => {
-            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.LIST]);
-            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.COUNTS]);
+            queryClient.invalidateQueries([ADMIN_KEYS.ESSENTIALS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.ESSENTIALS.COUNTS]);
             toast.success(data?.message || "Request status updated");
             closeConfirmModal();
         },
@@ -55,10 +55,10 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
 
     // Status mutation
     const manageStatusMutation = useMutation({
-        mutationFn: UPDATE_PLACE_STATUS,
+        mutationFn: UPDATE_ESSENTIAL_STATUS,
         onSuccess: (data) => {
-            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.LIST]);
-            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.COUNTS]);
+            queryClient.invalidateQueries([ADMIN_KEYS.ESSENTIALS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.ESSENTIALS.COUNTS]);
             toast.success(data?.message || "Status updated");
             closeConfirmModal();
         },
@@ -70,15 +70,15 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
 
     // Delete mutation
     const deleteMutation = useMutation({
-        mutationFn: DELETE_PLACE,
+        mutationFn: DELETE_ESSENTIAL,
         onSuccess: (data) => {
-            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.LIST]);
-            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.COUNTS]);
-            toast.success(data?.message || "Place deleted");
+            queryClient.invalidateQueries([ADMIN_KEYS.ESSENTIALS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.ESSENTIALS.COUNTS]);
+            toast.success(data?.message || "Essential deleted");
             closeConfirmModal();
         },
         onError: (error) => {
-            toast.error(error.errorMessage || "Failed to delete place");
+            toast.error(error.errorMessage || "Failed to delete essential");
             closeConfirmModal();
         },
     });
@@ -87,7 +87,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Status Change',
-            description: `Are you sure you want to ${data?.isActive ? 'deactivate' : 'activate'} this place?`,
+            description: `Are you sure you want to ${data?.isActive ? 'deactivate' : 'activate'} this essential?`,
             confirmText: 'Yes, Change',
             cancelText: 'No, Keep',
             variant: 'primary',
@@ -102,7 +102,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Deletion',
-            description: 'Are you sure you want to delete this place? This action cannot be undone.',
+            description: 'Are you sure you want to delete this essential? This action cannot be undone.',
             confirmText: 'Yes, Delete',
             cancelText: 'Cancel',
             variant: 'danger',
@@ -115,7 +115,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
     const handleApprove = (data) => {
         setConfirmModal({
             isOpen: true,
-            title: 'Approve Place',
+            title: 'Approve Essential',
             description: `Are you sure you want to approve "${data.name}"?`,
             confirmText: 'Yes, Approve',
             cancelText: 'Cancel',
@@ -127,7 +127,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
     const handleReject = (data) => {
         setConfirmModal({
             isOpen: true,
-            title: 'Reject Place',
+            title: 'Reject Essential',
             description: `Are you sure you want to reject "${data.name}"?`,
             confirmText: 'Yes, Reject',
             cancelText: 'Cancel',
@@ -156,7 +156,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
             },
             {
                 key: "edit",
-                label: <span className="font-medium text-slate-700 dark:text-slate-300">Edit Place</span>,
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">Edit Essential</span>,
                 icon: <EditOutlined className="text-[#006666]" />,
                 onClick: () => setModal({
                     name: "Update",
@@ -189,7 +189,7 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
             },
             {
                 key: "delete",
-                label: <span className="font-medium text-red-600 dark:text-red-500">Delete Place</span>,
+                label: <span className="font-medium text-red-600 dark:text-red-500">Delete Essential</span>,
                 icon: <DeleteOutlined className="text-red-500" />,
                 onClick: () => handleDelete(record),
                 className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
@@ -370,22 +370,22 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
 
     return (
         <div className="space-y-3">
-            <div className="place-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
+            <div className="essential-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
                     scroll={{ x: 1500, y: 600 }}
                     sticky={true}
                     loading={{
-                        spinning: placesList?.status === "loading",
+                        spinning: essentialsList?.status === "loading",
                         indicator: <TableSkeleton rows={8} columns={8} />,
                     }}
                     columns={activeColumns}
-                    dataSource={placesList?.data?.data}
+                    dataSource={essentialsList?.data?.data}
                     pagination={{
-                        current: placesList?.data?.pagination?.currentPage,
-                        pageSize: placesList?.data?.pagination?.itemsPerPage,
-                        total: placesList?.data?.pagination?.totalItems,
+                        current: essentialsList?.data?.pagination?.currentPage,
+                        pageSize: essentialsList?.data?.pagination?.itemsPerPage,
+                        total: essentialsList?.data?.pagination?.totalItems,
                         showSizeChanger: true,
                         className: "px-4 pb-4",
                         onChange: (page, pageSize) => onChange({ currentPage: Number(page), itemsPerPage: pageSize }),
@@ -412,4 +412,4 @@ function PlacesTable({ modal, setModal, placesList, onChange, setFilters, visibl
     );
 }
 
-export default PlacesTable;
+export default EssentialsTable;

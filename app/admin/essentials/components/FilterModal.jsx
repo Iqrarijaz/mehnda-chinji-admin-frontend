@@ -1,7 +1,7 @@
 import SearchInput from "@/components/InnerPage/SearchInput";
 import SelectBox from "@/components/SelectBox";
 import ResponsiveFilterModal from "@/components/shared/ResponsiveFilterModal";
-import { PLACE_CATEGORIES } from "@/config/config";
+import { ESSENTIAL_CATEGORIES } from "@/config/config";
 import { FaFilter } from "react-icons/fa";
 
 function FilterModal({ open, onCancel, filters, setFilters, handleCategoryFilter }) {
@@ -22,7 +22,7 @@ function FilterModal({ open, onCancel, filters, setFilters, handleCategoryFilter
 
     return (
         <ResponsiveFilterModal
-            title="Filter Places"
+            title="Filter Essentials"
             icon={<FaFilter size={14} />}
             open={open}
             onCancel={onCancel}
@@ -32,7 +32,7 @@ function FilterModal({ open, onCancel, filters, setFilters, handleCategoryFilter
         >
             <div className="flex flex-col gap-2">
                 <div className="space-y-0.5 px-0.5">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Search Places</label>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Search Essentials</label>
                     <SearchInput
                         setFilters={setFilters}
                         className="w-full !h-[32px] !text-xs !rounded"
@@ -47,7 +47,7 @@ function FilterModal({ open, onCancel, filters, setFilters, handleCategoryFilter
                         allowClear
                         handleChange={handleCategoryFilter}
                         width="100%"
-                        options={PLACE_CATEGORIES.map((cat) => ({ value: cat.value, label: cat.label }))}
+                        options={ESSENTIAL_CATEGORIES.map((cat) => ({ value: cat.value, label: cat.label }))}
                         className="modern-select-box"
                         value={filters.category}
                     />

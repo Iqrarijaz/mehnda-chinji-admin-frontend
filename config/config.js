@@ -9,7 +9,7 @@ module.exports = {
         TRAVEL: "TRAVEL",
         BANKS: "BANKS",
     },
-    PLACE_CATEGORY_MAPPING: {
+    ESSENTIAL_CATEGORY_MAPPING: {
         EMERGENCY: 'Emergency',
         EDUCATION: 'Education',
         RELIGIOUS: 'Religious',
@@ -18,7 +18,7 @@ module.exports = {
         TRAVEL: 'Travel',
         BANKS: 'Banks',
     },
-    PLACE_CATEGORIES: [
+    ESSENTIAL_CATEGORIES: [
         { label: "Emergency", value: "EMERGENCY" },
         { label: "Education", value: "EDUCATION" },
         { label: "Religious", value: "RELIGIOUS" },
@@ -27,7 +27,7 @@ module.exports = {
         { label: "Travel", value: "TRAVEL" },
         { label: "Banks", value: "BANKS" },
     ],
-    PLACE_TYPE_MAPPING: {
+    ESSENTIAL_TYPE_MAPPING: {
         EDUCATION: ['school', 'college', 'academy', 'university', 'library', 'coaching center'],
         RELIGIOUS: ['mosque', 'madrasa', 'imam bargah', 'shrine', 'church', 'temple'],
         HEALTH: ['hospital', 'clinic', 'pharmacy', 'laboratory', 'medical store'],

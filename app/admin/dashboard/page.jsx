@@ -23,7 +23,7 @@ import { useRouter } from "next/navigation";
 // API Imports
 import { GET_USER_STATUS_COUNTS } from "@/app/api/admin/users";
 import { GET_BUSINESS_STATUS_COUNTS } from "@/app/api/admin/business";
-import { GET_PLACE_STATUS_COUNTS } from "@/app/api/admin/places";
+import { GET_ESSENTIAL_STATUS_COUNTS } from "@/app/api/admin/essentials";
 import { GET_BLOOD_DONOR_STATUS_COUNTS } from "@/app/api/admin/blood-donors";
 import { GET_REPORT_STATUS_COUNTS } from "@/app/api/admin/reports";
 import { GET_SUPPORT_STATUS_COUNTS } from "@/app/api/admin/support";
@@ -147,7 +147,7 @@ function DashBoard() {
             ] = await Promise.all([
                 GET_USER_STATUS_COUNTS().catch(() => ({ data: {} })),
                 GET_BUSINESS_STATUS_COUNTS().catch(() => ({ data: {} })),
-                GET_PLACE_STATUS_COUNTS().catch(() => ({ data: {} })),
+                GET_ESSENTIAL_STATUS_COUNTS().catch(() => ({ data: {} })),
                 GET_BLOOD_DONOR_STATUS_COUNTS().catch(() => ({ data: {} })),
                 GET_REPORT_STATUS_COUNTS().catch(() => ({ data: {} })),
                 GET_SUPPORT_STATUS_COUNTS().catch(() => ({ data: {} })),
@@ -284,7 +284,7 @@ function DashBoard() {
                         </div>
                         <div className="p-4 grid grid-cols-2 gap-3">
                             {[
-                                { label: "Add Place", description: "Map new location", icon: <EnvironmentOutlined />, onClick: () => router.push("/admin/places?action=add"), color: "text-orange-600", bg: "bg-orange-50 dark:bg-orange-900/10" },
+                                { label: "Add Place", description: "Map new location", icon: <EnvironmentOutlined />, onClick: () => router.push("/admin/essentials?action=add"), color: "text-orange-600", bg: "bg-orange-50 dark:bg-orange-900/10" },
                                 { label: "Register Biz", description: "Onboard business", icon: <ShopOutlined />, onClick: () => router.push("/admin/business?action=add"), color: "text-blue-600", bg: "bg-blue-50 dark:bg-blue-900/10" },
                                 { label: "New Admin", description: "Elevate permissions", icon: <UserAddOutlined />, onClick: () => router.push("/admin/admin-users?action=add"), color: "text-teal-600 dark:text-teal-400", bg: "bg-teal-50 dark:bg-teal-900/10" },
                                 { label: "Audit Logs", description: "View trace data", icon: <HistoryOutlined />, onClick: () => router.push("/admin/developer/system-logs"), color: "text-slate-600", bg: "bg-slate-50 dark:bg-slate-800" }

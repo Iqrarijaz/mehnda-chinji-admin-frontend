@@ -6,13 +6,13 @@ import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { FaPlus, FaTrash, FaMapMarkerAlt, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaCheckCircle, FaEdit, FaImage, FaCamera } from "react-icons/fa";
 import TimingPicker from "@/components/TimingPicker";
-import { UPLOAD_PLACE_IMAGE } from "@/app/api/admin/places";
+import { UPLOAD_ESSENTIAL_IMAGE } from "@/app/api/admin/essentials";
 
 import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
-import { UPDATE_PLACE } from "@/app/api/admin/places";
-import { PLACE_CATEGORIES, PLACE_TYPE_MAPPING } from "@/config/config";
+import { UPDATE_ESSENTIAL } from "@/app/api/admin/essentials";
+import { ESSENTIAL_CATEGORIES, ESSENTIAL_TYPE_MAPPING } from "@/config/config";
 import SelectBox from "@/components/SelectBox";
 import CustomButton from "@/components/shared/CustomButton";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
@@ -33,19 +33,19 @@ const validationSchema = Yup.object().shape({
     )
 });
 
-function UpdatePlaceModal({ modal, setModal }) {
+function UpdateEssentialModal({ modal, setModal }) {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
     const [isUploading, setIsUploading] = React.useState(false);
     const [selectedImage, setSelectedImage] = React.useState(null);
 
-    const updatePlace = useMutation({
-        mutationKey: ["updatePlace"],
-        mutationFn: (payload) => UPDATE_PLACE(payload),
+    const updateEssential = useMutation({
+        mutationKey: ["updateEssential"],
+        mutationFn: (payload) => UPDATE_ESSENTIAL(payload),
         onSuccess: (data) => {
-            toast.success(data?.message || "Place updated successfully");
-            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.LIST]);
-            queryClient.invalidateQueries([ADMIN_KEYS.PLACES.COUNTS]);
+            toast.success(data?.message || "Essential updated successfully");
+            queryClient.invalidateQueries([ADMIN_KEYS.ESSENTIALS.LIST]);
+            queryClient.invalidateQueries([ADMIN_KEYS.ESSENTIALS.COUNTS]);
             handleCloseModal(true);
         },
         onError: (error) => {
@@ -77,7 +77,7 @@ function UpdatePlaceModal({ modal, setModal }) {
             lng: (values.lng === 0 || values.lng === "0") ? "0" : values.lng,
         };
 
-        updatePlace.mutate(payload, {
+        updateEssential.mutate(payload, {
             onError: () => setSubmitting(false),
             onSuccess: () => setSubmitting(false),
         });
@@ -114,7 +114,7 @@ function UpdatePlaceModal({ modal, setModal }) {
         }
 
         try {
-            const res = await UPLOAD_PLACE_IMAGE(formData);
+            const res = await UPLOAD_ESSENTIAL_IMAGE(formData);
             if (res.success) {
                 setFieldValue("images", [res.data.imageUrl]);
                 setSelectedImage(res.data.imageUrl);
@@ -133,9 +133,6 @@ function UpdatePlaceModal({ modal, setModal }) {
             setSelectedImage(modal.data.images[0]);
         }
     }, [modal?.state, modal?.data]);
-
-    // Diagnostic for coordinates mapping
-    // console.log("Modal Data (Update):", modal?.data);
 
     const initialValues = {
         name: modal?.data?.name || "",
@@ -160,7 +157,7 @@ function UpdatePlaceModal({ modal, setModal }) {
                         <FaEdit size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-[#006666] dark:text-teal-500 block mt-1 transition-colors">Edit Place</span>
+                        <span className="text-lg font-bold text-[#006666] dark:text-teal-500 block mt-1 transition-colors">Edit Essential</span>
                     </div>
                 </div>
             }
@@ -181,19 +178,19 @@ function UpdatePlaceModal({ modal, setModal }) {
                 >
                     {({ isSubmitting, values, setFieldValue, errors, touched }) => (
                         <Form className="space-y-4">
-                            {updatePlace.status === "loading" ? (
+                            {updateEssential.status === "loading" ? (
                                 <FormSkeleton fields={6} />
                             ) : (
                                 <>
                                     {/* Image Upload Section */}
                                     <div className="modal-section pb-2">
-                                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3 transition-colors">Place Presentation</p>
+                                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3 transition-colors">Essential Presentation</p>
                                         <div className="relative group">
                                             {selectedImage ? (
                                                 <div className="relative h-40 w-full rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 transition-colors shadow-sm">
                                                     <img
                                                         src={selectedImage}
-                                                        alt="Place"
+                                                        alt="Essential"
                                                         className="w-full h-full object-cover"
                                                     />
                                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -233,13 +230,13 @@ function UpdatePlaceModal({ modal, setModal }) {
                                         <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Core Identification</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="md:col-span-2">
-                                                <FormField label="Place Name" name="name" placeholder="Name" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors" />
+                                                <FormField label="Essential Name" name="name" placeholder="Name" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors" />
                                             </div>
                                             <div className="md:col-span-2">
                                                 <div className="flex flex-col gap-1.5 overflow-hidden">
                                                     <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors">Type</label>
                                                     <SelectBox
-                                                        options={[...new Set(Object.values(PLACE_TYPE_MAPPING).flat())].sort().map((t) => ({
+                                                        options={[...new Set(Object.values(ESSENTIAL_TYPE_MAPPING || {}).flat())].sort().map((t) => ({
                                                             value: t,
                                                             label: t.charAt(0).toUpperCase() + t.slice(1)
                                                         }))}
@@ -348,9 +345,9 @@ function UpdatePlaceModal({ modal, setModal }) {
                                     onClick={() => handleCloseModal(false)}
                                 />
                                 <CustomButton
-                                    label="Update Place"
+                                    label="Update Essential"
                                     htmlType="submit"
-                                    loading={updatePlace.isLoading || isSubmitting || isUploading}
+                                    loading={updateEssential.isLoading || isSubmitting || isUploading}
                                 />
                             </div>
                         </Form>
@@ -361,4 +358,4 @@ function UpdatePlaceModal({ modal, setModal }) {
     );
 }
 
-export default UpdatePlaceModal;
+export default UpdateEssentialModal;
