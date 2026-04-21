@@ -30,6 +30,14 @@ export default function LocationsPage() {
   });
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
+  const columnOptions = [
+    { label: "Location Name", value: "name_en" },
+    { label: "Type", value: "type" },
+    { label: "Status", value: "status" },
+  ];
+
+  const [visibleColumns, setVisibleColumns] = useState(["name_en", "type", "status"]);
+
   const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
 
   const {

@@ -23,12 +23,14 @@ const MenuList = [
     link: "/admin/posts",
     permission: PERMISSIONS.POSTS.READ
   },
+/*
   {
     name: "Locations",
     icon: <FaMapMarkerAlt size={20} />,
     link: "/admin/locations",
     permission: PERMISSIONS.LOCATIONS.READ
   },
+*/
 
   {
     name: "Businesses",
