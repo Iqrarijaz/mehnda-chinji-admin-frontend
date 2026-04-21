@@ -71,7 +71,7 @@ export async function UPDATE_ESSENTIAL_REQUEST_STATUS(data) {
 // Get status counts for essentials (APPROVED / PENDING / REJECTED)
 export async function GET_ESSENTIAL_STATUS_COUNTS() {
     try {
-        const response = await Axios.get("/api/admin/essentials/status-counts");
+        const response = await Axios.get("/api/admin/dashboard/essential-counts");
         return response.data;
     } catch (error) {
         console.error("Error fetching essential status counts:", error);

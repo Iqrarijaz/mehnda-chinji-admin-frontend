@@ -38,7 +38,7 @@ export const DELETE_CONTACT_REQUEST = async (id) => {
 
 export const GET_CONTACT_STATUS_COUNTS = async () => {
     try {
-        const response = await Axios.get("/api/admin/contact-us/status-counts");
+        const response = await Axios.get("/api/admin/dashboard/contact-us-counts");
         return response.data;
     } catch (error) {
         throw error;

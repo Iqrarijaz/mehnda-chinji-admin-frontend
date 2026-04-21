@@ -33,10 +33,20 @@ const validationSchema = Yup.object().shape({
     )
 });
 
+const EVENT_TYPES = [
+    { value: "ADMISSION", label: "Admission" },
+    { value: "SPORTS", label: "Sports" },
+    { value: "HOLIDAY", label: "Holiday" },
+    { value: "EXAM", label: "Exam" },
+    { value: "OTHER", label: "Other" },
+];
+
 function UpdateEssentialModal({ modal, setModal }) {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
     const [isUploading, setIsUploading] = React.useState(false);
+    const [isTopperUploading, setIsTopperUploading] = React.useState(null);
+    const [isEventUploading, setIsEventUploading] = React.useState(null);
     const [selectedImage, setSelectedImage] = React.useState(null);
 
     const updateEssential = useMutation({
@@ -77,10 +87,7 @@ function UpdateEssentialModal({ modal, setModal }) {
             lng: (values.lng === 0 || values.lng === "0") ? "0" : values.lng,
         };
 
-        updateEssential.mutate(payload, {
-            onError: () => setSubmitting(false),
-            onSuccess: () => setSubmitting(false),
-        });
+        updateEssential.mutate(payload);
     };
 
     const handleCloseModal = (force = false) => {
@@ -128,6 +135,61 @@ function UpdateEssentialModal({ modal, setModal }) {
         }
     };
 
+    const handleTopperImageUpload = async (e, index, setFieldValue, currentToppers) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setIsTopperUploading(index);
+        const formData = new FormData();
+        formData.append("image", file);
+
+        try {
+            const res = await UPLOAD_ESSENTIAL_IMAGE(formData);
+            if (res.success) {
+                const updatedToppers = [...currentToppers];
+                updatedToppers[index].image = res.data.imageUrl;
+                setFieldValue("toppers", updatedToppers);
+                toast.success("Topper image uploaded successfully");
+            }
+        } catch (error) {
+            toast.error("Failed to upload topper image");
+            console.error(error);
+        } finally {
+            setIsTopperUploading(null);
+        }
+    };
+
+    const handleEventImageUpload = async (e, eventIndex, setFieldValue, currentEvents) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+
+        setIsEventUploading(eventIndex);
+        
+        try {
+            const uploadedUrls = [];
+            for (const file of files) {
+                const formData = new FormData();
+                formData.append("image", file);
+                const res = await UPLOAD_ESSENTIAL_IMAGE(formData);
+                if (res.success) {
+                    uploadedUrls.push(res.data.imageUrl);
+                }
+            }
+
+            if (uploadedUrls.length > 0) {
+                const updatedEvents = [...currentEvents];
+                updatedEvents[eventIndex].images = [...(updatedEvents[eventIndex].images || []), ...uploadedUrls];
+                setFieldValue("events", updatedEvents);
+                toast.success(`${uploadedUrls.length} image(s) uploaded successfully`);
+            }
+        } catch (error) {
+            toast.error("Failed to upload event images");
+            console.error(error);
+        } finally {
+            setIsEventUploading(null);
+        }
+    };
+
     React.useEffect(() => {
         if (modal?.state && modal?.data?.images?.length > 0) {
             setSelectedImage(modal.data.images[0]);
@@ -144,9 +206,15 @@ function UpdateEssentialModal({ modal, setModal }) {
         lat: modal?.data?.lat ?? modal?.data?.location?.coordinates?.[1] ?? modal?.data?.latitude ?? null,
         lng: modal?.data?.lng ?? modal?.data?.location?.coordinates?.[0] ?? modal?.data?.longitude ?? null,
         type: modal?.data?.type || "",
+        category: modal?.data?.category || "",
         contact: modal?.data?.contact?.length > 0 ? modal.data.contact : [{ name: "", number: "" }],
         isDeleted: modal?.data?.isDeleted ?? false,
         images: modal?.data?.images || [],
+        metadata: {
+            principalName: modal?.data?.metadata?.principalName || ""
+        },
+        toppers: modal?.data?.toppers || [],
+        events: modal?.data?.events || [],
     };
 
     return (
@@ -162,7 +230,7 @@ function UpdateEssentialModal({ modal, setModal }) {
                 </div>
             }
             centered
-            width={600}
+            width={700}
             open={modal?.name === "Update" && modal?.state}
             onCancel={() => handleCloseModal(false)}
             footer={null}
@@ -274,6 +342,22 @@ function UpdateEssentialModal({ modal, setModal }) {
                                         </div>
                                     </div>
 
+                                    {/* Metadata Section for School */}
+                                    {values.type === 'school' && (
+                                        <div className="modal-section">
+                                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">School Information</p>
+                                            <div className="grid grid-cols-1 gap-3">
+                                                <FormField
+                                                    label="Principal Name"
+                                                    name="metadata.principalName"
+                                                    placeholder="Enter principal name"
+                                                    className="!h-[32px] !text-xs !rounded"
+                                                    labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <div className="modal-section">
                                         <div className="flex items-center justify-between mb-2">
                                             <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors">Manage Contacts</p>
@@ -324,6 +408,232 @@ function UpdateEssentialModal({ modal, setModal }) {
                                             )}
                                         </FieldArray>
                                     </div>
+
+                                    {/* Toppers Section for School */}
+                                    {values.type === 'school' && (
+                                        <div className="modal-section">
+                                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">School Toppers</p>
+
+                                            <FieldArray name="toppers">
+                                                {({ push, remove }) => (
+                                                    <div className="space-y-4">
+                                                        {values.toppers.map((topper, index) => (
+                                                            <div key={index} className="p-3 bg-slate-50 dark:bg-slate-900/40 rounded-lg border border-slate-100 dark:border-slate-800 space-y-3 relative">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => remove(index)}
+                                                                    className="absolute top-2 right-2 p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                                                                >
+                                                                    <FaTrash size={12} />
+                                                                </button>
+
+                                                                <div className="flex gap-4 items-start">
+                                                                    {/* Topper Image Upload */}
+                                                                    <div className="relative group w-20 h-20 shrink-0">
+                                                                        {topper.image ? (
+                                                                            <div className="relative w-full h-full rounded-full overflow-hidden border border-slate-200 dark:border-slate-700">
+                                                                                <img src={topper.image} alt="Topper" className="w-full h-full object-cover" />
+                                                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                                                    <label className="cursor-pointer text-white">
+                                                                                        <FaCamera size={12} />
+                                                                                        <input type="file" className="hidden" accept="image/*" onChange={(e) => handleTopperImageUpload(e, index, setFieldValue, values.toppers)} disabled={isTopperUploading === index} />
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <label className={`
+                                                                                w-full h-full rounded-full border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all
+                                                                                ${isTopperUploading === index ? 'bg-slate-100' : 'bg-slate-100/50 hover:bg-teal-50/20 hover:border-teal-500/50'}
+                                                                            `}>
+                                                                                {isTopperUploading === index ? (
+                                                                                    <Loading className="w-4 h-4" />
+                                                                                ) : (
+                                                                                    <FaCamera className="text-slate-400" size={16} />
+                                                                                )}
+                                                                                <input type="file" className="hidden" accept="image/*" onChange={(e) => handleTopperImageUpload(e, index, setFieldValue, values.toppers)} disabled={isTopperUploading === index} />
+                                                                            </label>
+                                                                        )}
+                                                                    </div>
+
+                                                                    <div className="flex-1 grid grid-cols-2 gap-2">
+                                                                        <div className="col-span-1">
+                                                                            <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Name</label>
+                                                                            <Input
+                                                                                value={topper.name}
+                                                                                onChange={(e) => setFieldValue(`toppers.${index}.name`, e.target.value)}
+                                                                                placeholder="Topper Name"
+                                                                                className="!h-[28px] !text-[11px] !rounded"
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-span-1">
+                                                                            <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Father Name</label>
+                                                                            <Input
+                                                                                value={topper.fatherName}
+                                                                                onChange={(e) => setFieldValue(`toppers.${index}.fatherName`, e.target.value)}
+                                                                                placeholder="Father Name"
+                                                                                className="!h-[28px] !text-[11px] !rounded"
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-span-1">
+                                                                            <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Passing Year</label>
+                                                                            <Input
+                                                                                value={topper.passingYear}
+                                                                                onChange={(e) => setFieldValue(`toppers.${index}.passingYear`, e.target.value)}
+                                                                                placeholder="e.g. 2023"
+                                                                                className="!h-[28px] !text-[11px] !rounded"
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-span-1 grid grid-cols-2 gap-1">
+                                                                            <div>
+                                                                                <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Obtained</label>
+                                                                                <Input
+                                                                                    type="number"
+                                                                                    value={topper.obtainedMarks}
+                                                                                    onChange={(e) => setFieldValue(`toppers.${index}.obtainedMarks`, e.target.value)}
+                                                                                    placeholder="Marks"
+                                                                                    className="!h-[28px] !text-[11px] !rounded"
+                                                                                />
+                                                                            </div>
+                                                                            <div>
+                                                                                <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Total</label>
+                                                                                <Input
+                                                                                    type="number"
+                                                                                    value={topper.totalMarks}
+                                                                                    onChange={(e) => setFieldValue(`toppers.${index}.totalMarks`, e.target.value)}
+                                                                                    placeholder="Total"
+                                                                                    className="!h-[28px] !text-[11px] !rounded"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => push({ name: "", fatherName: "", passingYear: "", totalMarks: 0, obtainedMarks: 0, image: "" })}
+                                                            className="w-full py-2 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-lg text-slate-400 hover:text-teal-500 hover:border-teal-500/50 hover:bg-teal-50/10 transition-all flex items-center justify-center gap-2 text-xs font-bold"
+                                                        >
+                                                            <FaPlus size={10} /> Add New Topper
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </FieldArray>
+                                        </div>
+                                    )}
+
+                                    {/* Events Section for School */}
+                                    {values.type === 'school' && (
+                                        <div className="modal-section">
+                                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">School Events</p>
+
+                                            <FieldArray name="events">
+                                                {({ push, remove }) => (
+                                                    <div className="space-y-4">
+                                                        {values.events.map((event, index) => (
+                                                            <div key={index} className="p-3 bg-slate-50 dark:bg-slate-900/40 rounded-lg border border-slate-100 dark:border-slate-800 space-y-3 relative">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => remove(index)}
+                                                                    className="absolute top-2 right-2 p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                                                                >
+                                                                    <FaTrash size={12} />
+                                                                </button>
+
+                                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                                    <div className="md:col-span-1">
+                                                                        <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Event Name</label>
+                                                                        <Input
+                                                                            value={event.name}
+                                                                            onChange={(e) => setFieldValue(`events.${index}.name`, e.target.value)}
+                                                                            placeholder="e.g. Annual Sports"
+                                                                            className="!h-[28px] !text-[11px] !rounded"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="md:col-span-1">
+                                                                        <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Type</label>
+                                                                        <SelectBox
+                                                                            options={EVENT_TYPES}
+                                                                            handleChange={(val) => setFieldValue(`events.${index}.type`, val)}
+                                                                            value={event.type}
+                                                                            placeholder="Select Type"
+                                                                            width="100%"
+                                                                            className="modern-select-box !h-[28px]"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="md:col-span-1">
+                                                                        <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Date</label>
+                                                                        <Input
+                                                                            value={event.date}
+                                                                            onChange={(e) => setFieldValue(`events.${index}.date`, e.target.value)}
+                                                                            placeholder="e.g. 15th Aug 2023"
+                                                                            className="!h-[28px] !text-[11px] !rounded"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="md:col-span-1">
+                                                                        <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Link</label>
+                                                                        <Input
+                                                                            value={event.externalLink}
+                                                                            onChange={(e) => setFieldValue(`events.${index}.externalLink`, e.target.value)}
+                                                                            placeholder="External URL"
+                                                                            className="!h-[28px] !text-[11px] !rounded"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="md:col-span-2">
+                                                                        <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Description</label>
+                                                                        <Input.TextArea
+                                                                            value={event.description}
+                                                                            onChange={(e) => setFieldValue(`events.${index}.description`, e.target.value)}
+                                                                            placeholder="Brief overview..."
+                                                                            rows={2}
+                                                                            className="!text-[11px] !rounded"
+                                                                        />
+                                                                    </div>
+                                                                    
+                                                                    <div className="md:col-span-2">
+                                                                        <label className="text-[10px] font-bold text-slate-500 uppercase ml-1 mb-1 block">Event Images</label>
+                                                                        <div className="flex flex-wrap gap-2">
+                                                                            {event.images?.map((img, imgIdx) => (
+                                                                                <div key={imgIdx} className="relative w-12 h-12 rounded border border-slate-200 overflow-hidden group">
+                                                                                    <img src={img} className="w-full h-full object-cover" />
+                                                                                    <button 
+                                                                                        type="button"
+                                                                                        onClick={() => {
+                                                                                            const updatedImgArray = event.images.filter((_, i) => i !== imgIdx);
+                                                                                            setFieldValue(`events.${index}.images`, updatedImgArray);
+                                                                                        }}
+                                                                                        className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white"
+                                                                                    >
+                                                                                        <FaTrash size={8} />
+                                                                                    </button>
+                                                                                </div>
+                                                                            ))}
+                                                                            <label className={`
+                                                                                w-12 h-12 rounded border-2 border-dashed flex items-center justify-center cursor-pointer transition-all hover:bg-teal-50/20 hover:border-teal-500/50
+                                                                                ${isEventUploading === index ? 'opacity-50 pointer-events-none' : ''}
+                                                                            `}>
+                                                                                {isEventUploading === index ? <Loading className="w-3 h-3" /> : <FaPlus className="text-slate-400" size={12} />}
+                                                                                <input type="file" multiple className="hidden" accept="image/*" onChange={(e) => handleEventImageUpload(e, index, setFieldValue, values.events)} disabled={isEventUploading === index} />
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => push({ name: "", description: "", date: "", type: "", images: [], externalLink: "" })}
+                                                            className="w-full py-2 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-lg text-slate-400 hover:text-teal-500 hover:border-teal-500/50 hover:bg-teal-50/10 transition-all flex items-center justify-center gap-2 text-xs font-bold"
+                                                        >
+                                                            <FaPlus size={10} /> Add New Event
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </FieldArray>
+                                        </div>
+                                    )}
 
                                     <div className="modal-section !mb-0">
                                         <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Other Information</p>

@@ -40,7 +40,7 @@ export async function UPDATE_REPORT_STATUS(data) {
 // Get status counts for reports
 export async function GET_REPORT_STATUS_COUNTS() {
     try {
-        const response = await Axios.get("/api/admin/reports/status-counts");
+        const response = await Axios.get("/api/admin/dashboard/report-counts");
         return response.data;
     } catch (error) {
         console.error("Error fetching report status counts:", error);

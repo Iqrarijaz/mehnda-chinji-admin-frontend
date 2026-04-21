@@ -152,15 +152,104 @@ function ViewModal({ viewModal, setViewModal }) {
                             </div>
                         </div>
 
-                        {/* Other Information Section */}
-                        <div className="modal-section space-y-1.5">
-                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest pl-1 mb-2">Technical Details</p>
-                            <div className="p-3 px-4 bg-slate-50/30 dark:bg-slate-900/20 rounded border border-slate-100 dark:border-slate-800 min-h-[50px] transition-colors duration-300">
-                                <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed italic">
-                                    {data.otherInfo || "No additional technical information provided."}
-                                </p>
+                        {/* School Metadata Section */}
+                        {data.type === 'school' && data.metadata && (
+                            <div className="modal-section space-y-1.5">
+                                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest pl-1 mb-2">School Information</p>
+                                <div className="space-y-1">
+                                    <div className="flex items-center p-2.5 px-4 bg-slate-50/50 dark:bg-slate-900/40 rounded-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                                        <div className="w-1/3 text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Principal</div>
+                                        <div className="w-2/3 text-[12px] font-bold text-slate-700 dark:text-slate-200 capitalize">
+                                            {data.metadata.principalName || "N/A"}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        )}
+
+                        {/* School Events */}
+                        {data.type === 'school' && data.events?.length > 0 && (
+                            <div className="space-y-4 pt-2">
+                                <div className="flex items-center gap-2">
+                                    <FaCalendarAlt className="text-teal-600 dark:text-teal-400" />
+                                    <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 uppercase tracking-tight">Recent & Upcoming Events</h3>
+                                </div>
+                                <div className="grid grid-cols-1 gap-4">
+                                    {data.events.map((event, index) => (
+                                        <div key={index} className="bg-slate-50 dark:bg-slate-900/40 rounded-xl p-4 border border-slate-100 dark:border-slate-800 transition-colors">
+                                            <div className="flex justify-between items-start mb-2">
+                                                <div>
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="px-2 py-0.5 bg-teal-100 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300 text-[10px] font-bold rounded uppercase tracking-wider italic">
+                                                            {event.type || 'EVENT'}
+                                                        </span>
+                                                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">{event.date}</span>
+                                                    </div>
+                                                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 uppercase">{event.name}</h4>
+                                                </div>
+                                                {event.externalLink && (
+                                                    <a href={event.externalLink} target="_blank" rel="noopener noreferrer" className="text-teal-600 dark:text-teal-400 hover:scale-110 transition-transform">
+                                                        <FaExternalLinkAlt size={12} />
+                                                    </a>
+                                                )}
+                                            </div>
+                                            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">{event.description}</p>
+                                            
+                                            {event.images?.length > 0 && (
+                                                <div className="flex flex-wrap gap-2 pt-1">
+                                                    {event.images.map((img, imgIdx) => (
+                                                        <div key={imgIdx} className="w-16 h-16 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 cursor-zoom-in hover:scale-105 transition-transform">
+                                                            <img src={img} className="w-full h-full object-cover" />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* School Toppers Section */}
+                        {data.type === 'school' && data.toppers && data.toppers.length > 0 && (
+                            <div className="modal-section space-y-1.5">
+                                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest pl-1 mb-2">School Toppers</p>
+                                <div className="grid grid-cols-1 gap-2">
+                                    {data.toppers.map((topper, i) => (
+                                        <div key={i} className="flex items-center gap-3 p-3 bg-slate-50/50 dark:bg-slate-900/40 rounded-lg border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                                            <div className="w-12 h-12 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700 flex-shrink-0 bg-white dark:bg-slate-800">
+                                                {topper.image ? (
+                                                    <img src={topper.image} alt={topper.name} className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                                        <FaEye size={16} />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex justify-between items-start">
+                                                    <h4 className="text-[12px] font-bold text-slate-700 dark:text-slate-200 capitalize truncate">{topper.name}</h4>
+                                                    <Tag className="rounded-full px-2 font-bold text-[8px] uppercase tracking-normal m-0 bg-teal-100/50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 border-none">
+                                                        {topper.passingYear}
+                                                    </Tag>
+                                                </div>
+                                                <div className="flex items-center gap-4 mt-0.5">
+                                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                                                        <span className="font-bold uppercase text-[8px] opacity-70 mr-1">S/O:</span>
+                                                        {topper.fatherName}
+                                                    </p>
+                                                    <p className="text-[10px] text-teal-600 dark:text-teal-400 font-bold whitespace-nowrap">
+                                                        {topper.obtainedMarks} / {topper.totalMarks}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Other Information Section */}
 
                         {/* Location Metadata Section */}
                         <div className="modal-section !mb-0">

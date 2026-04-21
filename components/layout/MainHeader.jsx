@@ -7,9 +7,7 @@ import { Badge, Tooltip, Popover, Avatar } from "antd";
 import { useRouter } from "next/navigation";
 import ProfileModal from "./ProfileModal";
 import GlobalSearch from "./GlobalSearch";
-import { GET_REPORT_STATUS_COUNTS } from "@/app/api/admin/reports";
-import { GET_SUPPORT_STATUS_COUNTS } from "@/app/api/admin/support";
-import { GET_CONTACT_STATUS_COUNTS } from "@/app/api/admin/contact-us";
+import { GET_SUPPORT_STATS } from "@/app/api/admin/dashboard";
 import { LOGOUT } from "@/app/api/login";
 import { toast } from "react-toastify";
 import { RiLogoutCircleRLine } from "react-icons/ri";
@@ -42,16 +40,13 @@ function MainHeader() {
 
   const fetchCounts = async () => {
     try {
-      const [reportsRes, supportRes, contactsRes] = await Promise.all([
-        GET_REPORT_STATUS_COUNTS(),
-        GET_SUPPORT_STATUS_COUNTS(),
-        GET_CONTACT_STATUS_COUNTS()
-      ]);
+        const statsRes = await GET_SUPPORT_STATS();
+        const d = statsRes?.data || {};
 
       setCounts({
-        reports: reportsRes?.data || {},
-        support: supportRes?.data || {},
-        contacts: contactsRes?.data || {}
+        reports: d.reports || {},
+        support: d.support || {},
+        contacts: d.contacts || {}
       });
     } catch (error) {
       console.error("Error fetching notification counts:", error);

@@ -66,7 +66,7 @@ export async function DELETE_BUSINESS(data) {
 
 export async function GET_BUSINESS_STATUS_COUNTS() {
     try {
-        const response = await Axios.get("/api/admin/business/status-counts");
+        const response = await Axios.get("/api/admin/dashboard/business-counts");
         return response.data;
     } catch (error) {
         console.error("Error fetching business status counts:", error);

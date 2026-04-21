@@ -58,7 +58,7 @@ export async function DELETE_ADMIN_USER(data) {
 
 export async function GET_ADMIN_USER_STATUS_COUNTS() {
     try {
-        const response = await Axios.get("/api/admin/moderators/status-counts");
+        const response = await Axios.get("/api/admin/dashboard/moderator-counts");
         return response.data;
     } catch (error) {
         throw error;

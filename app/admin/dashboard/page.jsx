@@ -21,77 +21,16 @@ import {
 import { useRouter } from "next/navigation";
 
 // API Imports
-import { GET_USER_STATUS_COUNTS } from "@/app/api/admin/users";
-import { GET_BUSINESS_STATUS_COUNTS } from "@/app/api/admin/business";
-import { GET_ESSENTIAL_STATUS_COUNTS } from "@/app/api/admin/essentials";
-import { GET_BLOOD_DONOR_STATUS_COUNTS } from "@/app/api/admin/blood-donors";
-import { GET_REPORT_STATUS_COUNTS } from "@/app/api/admin/reports";
-import { GET_SUPPORT_STATUS_COUNTS } from "@/app/api/admin/support";
-import { GET_CONTACT_STATUS_COUNTS } from "@/app/api/admin/contact-us";
-import { LIST_SYSTEM_LOGS } from "@/app/api/admin/developers/systemLogs";
+import {
+    GET_COMMUNITY_STATS,
+    GET_MARKETPLACE_STATS,
+    GET_SUPPORT_STATS
+} from "@/app/api/admin/dashboard";
 import TrendingChart from "@/components/shared/TrendingChart";
 
 import { timestampToDate } from "@/utils/date";
 
-// Memoized Activity Table
-const ActivityTable = React.memo(({ logs, loading }) => {
-    const columns = [
-        {
-            title: "Administrator",
-            dataIndex: "adminName",
-            key: "adminName",
-            render: (text) => (
-                <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center text-[10px] font-bold text-teal-600 dark:text-teal-400 border border-teal-100 dark:border-teal-900/30 uppercase">
-                        {text?.charAt(0) || "S"}
-                    </div>
-                    <span className="font-bold text-slate-700 dark:text-slate-200 text-[11px] transition-colors duration-300">{text || "System"}</span>
-                </div>
-            )
-        },
-        {
-            title: "Module",
-            dataIndex: "module",
-            key: "module",
-            render: (text) => (
-                <Tag className="!rounded-sm border-none bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-black text-[9px] uppercase tracking-tighter px-1.5 py-0 transition-colors duration-300">
-                    {text}
-                </Tag>
-            )
-        },
-        {
-            title: "Action Description",
-            dataIndex: "action",
-            key: "action",
-            render: (text) => (
-                <span className="text-slate-600 dark:text-slate-400 font-medium text-[11px] line-clamp-1 transition-colors duration-300">{text}</span>
-            )
-        },
-        {
-            title: "Timestamp",
-            dataIndex: "createdAt",
-            key: "createdAt",
-            width: 100,
-            render: (text) => (
-                <span className="text-slate-400 text-[10px] font-medium">
-                    {timestampToDate(text)}
-                </span>
-            )
-        }
-    ];
 
-    return (
-        <Table
-            columns={columns}
-            dataSource={logs}
-            loading={loading}
-            rowKey="_id"
-            pagination={false}
-            size="small"
-            className="compact-table modern-table"
-        />
-    );
-});
 
 // Memoized Quick Action Button with premium tactical styling
 const QuickActionButton = React.memo(({ icon, label, description, onClick, colorClass = "text-teal-600", bgClass = "bg-teal-50" }) => (
@@ -132,7 +71,7 @@ function DashBoard() {
         contacts: { PENDING: 0, REVIEWED: 0, RESOLVED: 0, total: 0 }
     });
 
-    const [recentLogs, setRecentLogs] = useState([]);
+
     const [loading, setLoading] = useState(true);
 
     const calculateTotal = (data) =>
@@ -141,30 +80,25 @@ function DashBoard() {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const [
-                userRes, bizRes, placeRes, donorRes,
-                reportRes, supportRes, contactRes, logsRes
-            ] = await Promise.all([
-                GET_USER_STATUS_COUNTS().catch(() => ({ data: {} })),
-                GET_BUSINESS_STATUS_COUNTS().catch(() => ({ data: {} })),
-                GET_ESSENTIAL_STATUS_COUNTS().catch(() => ({ data: {} })),
-                GET_BLOOD_DONOR_STATUS_COUNTS().catch(() => ({ data: {} })),
-                GET_REPORT_STATUS_COUNTS().catch(() => ({ data: {} })),
-                GET_SUPPORT_STATUS_COUNTS().catch(() => ({ data: {} })),
-                GET_CONTACT_STATUS_COUNTS().catch(() => ({ data: {} })),
-                LIST_SYSTEM_LOGS({ page: 1, limit: 12 }).catch(() => ({ data: { docs: [] } }))
+            const [commRes, marketRes, supportRes] = await Promise.all([
+                GET_COMMUNITY_STATS().catch(() => ({ data: {} })),
+                GET_MARKETPLACE_STATS().catch(() => ({ data: {} })),
+                GET_SUPPORT_STATS().catch(() => ({ data: {} })),
             ]);
 
+            const community = commRes?.data || {};
+            const marketplace = marketRes?.data || {};
+            const support = supportRes?.data || {};
+
             setStats({
-                users: { ...userRes?.data, total: calculateTotal(userRes?.data) },
-                businesses: { ...bizRes?.data, total: calculateTotal(bizRes?.data) },
-                essentials: { ...placeRes?.data, total: calculateTotal(placeRes?.data) },
-                donors: { ...donorRes?.data, total: calculateTotal(donorRes?.data) },
-                reports: { ...reportRes?.data, total: calculateTotal(reportRes?.data) },
-                support: { ...supportRes?.data, total: calculateTotal(supportRes?.data) },
-                contacts: { ...contactRes?.data, total: calculateTotal(contactRes?.data) }
+                users: { ...community.users, total: calculateTotal(community.users) },
+                donors: { ...community.donors, total: calculateTotal(community.donors) },
+                businesses: { ...marketplace.businesses, total: calculateTotal(marketplace.businesses) },
+                essentials: { ...marketplace.essentials, total: calculateTotal(marketplace.essentials) },
+                reports: { ...support.reports, total: calculateTotal(support.reports) },
+                support: { ...support.support, total: calculateTotal(support.support) },
+                contacts: { ...support.contacts, total: calculateTotal(support.contacts) }
             });
-            setRecentLogs(logsRes?.data?.docs || []);
         } catch (error) {
             console.error("Dashboard data fetch failed:", error);
         } finally {
@@ -273,74 +207,60 @@ function DashBoard() {
             {/* Layout Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-                {/* Left Section: Quick Actions & Alerts (4 Cols) */}
-                <div className="lg:col-span-4 space-y-6">
+                {/* Center Section: Quick Actions & Alerts (Expanded to full width) */}
+                <div className="lg:col-span-12 space-y-6">
 
-                    {/* Quick Shortcuts */}
-                    <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
-                        <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between">
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Tactical Shortcuts</span>
-                            <PlusOutlined className="text-slate-300 dark:text-slate-600 text-xs" />
-                        </div>
-                        <div className="p-4 grid grid-cols-2 gap-3">
-                            {[
-                                { label: "Add Essential", description: "Map new location", icon: <EnvironmentOutlined />, onClick: () => router.push("/admin/essentials?action=add"), color: "text-orange-600", bg: "bg-orange-50 dark:bg-orange-900/10" },
-                                { label: "Register Biz", description: "Onboard business", icon: <ShopOutlined />, onClick: () => router.push("/admin/business?action=add"), color: "text-blue-600", bg: "bg-blue-50 dark:bg-blue-900/10" },
-                                { label: "New Admin", description: "Elevate permissions", icon: <UserAddOutlined />, onClick: () => router.push("/admin/admin-users?action=add"), color: "text-teal-600 dark:text-teal-400", bg: "bg-teal-50 dark:bg-teal-900/10" },
-                                { label: "Audit Logs", description: "View trace data", icon: <HistoryOutlined />, onClick: () => router.push("/admin/developer/system-logs"), color: "text-slate-600", bg: "bg-slate-50 dark:bg-slate-800" }
-                            ].map((item, i) => (
-                                <QuickActionButton
-                                    key={i}
-                                    {...item}
-                                />
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Attention Required */}
-                    <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
-                        <div className="px-5 py-3 border-b border-slate-50 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between">
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500">Critical Attention</span>
-                            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                        </div>
-                        <div className="divide-y divide-slate-50 dark:divide-slate-800">
-                            {[
-                                { label: "Pending Reports", count: stats.reports.PENDING, icon: <AlertOutlined />, color: "text-red-500", bg: "bg-red-50 dark:bg-red-900/10", link: "/admin/reports" },
-                                { label: "Support Tickets", count: stats.support.OPEN, icon: <CustomerServiceOutlined />, color: "text-orange-500", bg: "bg-orange-50 dark:bg-orange-900/10", link: "/admin/support" },
-                                { label: "New Messages", count: stats.contacts.PENDING, icon: <MailOutlined />, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-900/10", link: "/admin/contact-us" }
-                            ].map((item, idx) => (
-                                <div
-                                    key={idx}
-                                    onClick={() => router.push(item.link)}
-                                    className="px-5 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className={`w-8 h-8 rounded ${item.bg} ${item.color} flex items-center justify-center border border-black/5`}>
-                                            {item.icon}
-                                        </div>
-                                        <span className="text-xs font-bold text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-slate-100 transition-colors">{item.label}</span>
-                                    </div>
-                                    <span className={`text-[11px] font-black px-2 py-0.5 rounded ${item.bg} ${item.color}`}>
-                                        {item.count}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Right Section: System Logs (8 Cols) */}
-                <div className="lg:col-span-8">
-                    <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden h-full flex flex-col">
-                        <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <HistoryOutlined className="text-teal-600 dark:text-teal-400" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Global Activity Loop</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Quick Shortcuts */}
+                        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+                            <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between">
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Tactical Shortcuts</span>
+                                <PlusOutlined className="text-slate-300 dark:text-slate-600 text-xs" />
                             </div>
-                            <Tag className="!m-0 !text-[9px] font-black uppercase tracking-tighter border-none bg-cyan-50 dark:bg-cyan-900/20 text-cyan-600 dark:text-cyan-400">Real-time Feed</Tag>
+                            <div className="p-4 grid grid-cols-2 gap-3">
+                                {[
+                                    { label: "Add Essential", description: "Map new location", icon: <EnvironmentOutlined />, onClick: () => router.push("/admin/essentials?action=add"), color: "text-orange-600", bg: "bg-orange-50 dark:bg-orange-900/10" },
+                                    { label: "Register Biz", description: "Onboard business", icon: <ShopOutlined />, onClick: () => router.push("/admin/business?action=add"), color: "text-blue-600", bg: "bg-blue-50 dark:bg-blue-900/10" },
+                                    { label: "New Admin", description: "Elevate permissions", icon: <UserAddOutlined />, onClick: () => router.push("/admin/admin-users?action=add"), color: "text-teal-600 dark:text-teal-400", bg: "bg-teal-50 dark:bg-teal-900/10" },
+                                    { label: "System Status", description: "Operational", icon: <HistoryOutlined />, onClick: () => fetchData(), color: "text-slate-600", bg: "bg-slate-50 dark:bg-slate-800" }
+                                ].map((item, i) => (
+                                    <QuickActionButton
+                                        key={i}
+                                        {...item}
+                                    />
+                                ))}
+                            </div>
                         </div>
-                        <div className="flex-1 overflow-auto custom-scrollbar">
-                            <ActivityTable logs={recentLogs} loading={loading} />
+
+                        {/* Attention Required */}
+                        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+                            <div className="px-5 py-3 border-b border-slate-50 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between">
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500">Critical Attention</span>
+                                <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                            </div>
+                            <div className="divide-y divide-slate-50 dark:divide-slate-800">
+                                {[
+                                    { label: "Pending Reports", count: stats.reports.PENDING, icon: <AlertOutlined />, color: "text-red-500", bg: "bg-red-50 dark:bg-red-900/10", link: "/admin/reports" },
+                                    { label: "Support Tickets", count: stats.support.OPEN, icon: <CustomerServiceOutlined />, color: "text-orange-500", bg: "bg-orange-50 dark:bg-orange-900/10", link: "/admin/support" },
+                                    { label: "New Messages", count: stats.contacts.PENDING, icon: <MailOutlined />, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-900/10", link: "/admin/contact-us" }
+                                ].map((item, idx) => (
+                                    <div
+                                        key={idx}
+                                        onClick={() => router.push(item.link)}
+                                        className="px-5 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className={`w-8 h-8 rounded ${item.bg} ${item.color} flex items-center justify-center border border-black/5`}>
+                                                {item.icon}
+                                            </div>
+                                            <span className="text-xs font-bold text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-slate-100 transition-colors">{item.label}</span>
+                                        </div>
+                                        <span className={`text-[11px] font-black px-2 py-0.5 rounded ${item.bg} ${item.color}`}>
+                                            {item.count}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
