@@ -45,5 +45,8 @@ export const ADMIN_KEYS = {
     POSTS: {
         LIST: "postsList",
         INFINITE: "infinitePostsQuery",
+    },
+    CONFIGURATIONS: {
+        LIST: "configurationsList",
     }
 };

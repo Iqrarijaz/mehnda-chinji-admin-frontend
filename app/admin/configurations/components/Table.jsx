@@ -5,7 +5,7 @@ import {
     EditOutlined,
     DeleteOutlined,
     EyeOutlined,
-    MoreOutlined,
+    EllipsisOutlined,
     SettingOutlined
 } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "react-query";
