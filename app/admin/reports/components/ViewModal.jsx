@@ -25,7 +25,7 @@ function ViewModal({ viewModal, setViewModal }) {
             open={open}
             onCancel={handleClose}
             footer={null}
-            width={600}
+            width={800}
             centered
             className="modern-modal"
         >
@@ -52,7 +52,7 @@ function ViewModal({ viewModal, setViewModal }) {
                                 <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1 transition-colors duration-300">Primary Violation</p>
                                 <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 transition-colors duration-300">{data.reason}</h3>
                             </div>
- 
+
                             {data.description && (
                                 <div className="pt-2 border-t border-slate-50 dark:border-slate-800/50 transition-colors duration-300">
                                     <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5 transition-colors duration-300">Detailed Description</p>
@@ -65,7 +65,7 @@ function ViewModal({ viewModal, setViewModal }) {
 
                         {/* Entities Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                             {/* Reporter Card */}
+                            {/* Reporter Card */}
                             <div className="p-4 bg-white dark:bg-slate-900/40 rounded border border-slate-100 dark:border-slate-800 transition-colors duration-300">
                                 <div className="flex items-center gap-2 mb-3 text-emerald-600 dark:text-emerald-400 transition-colors duration-300">
                                     <FaUser size={10} />
@@ -80,7 +80,7 @@ function ViewModal({ viewModal, setViewModal }) {
                                 </div>
                             </div>
 
-                             {/* Target Card */}
+                            {/* Target Card */}
                             <div className="p-4 bg-white dark:bg-slate-900/40 rounded border border-slate-100 dark:border-slate-800 transition-colors duration-300">
                                 <div className="flex items-center gap-2 mb-3 text-[#006666] dark:text-teal-400 transition-colors duration-300">
                                     <FaBullseye size={10} />

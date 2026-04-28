@@ -90,7 +90,7 @@ function AddRoleModal({ modal, setModal }) {
                 </div>
             }
             centered
-            width={600}
+            width={800}
             open={modal?.name === "Add" && modal?.state}
             onCancel={() => handleCloseModal(false)}
             footer={null}
@@ -151,7 +151,7 @@ function AddRoleModal({ modal, setModal }) {
                                     </div>
                                 </>
                             )}
- 
+
                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 transition-colors duration-300">
                                 <CustomButton
                                     label="Cancel"

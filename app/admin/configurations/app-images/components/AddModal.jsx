@@ -29,8 +29,8 @@ function AddAppImagesModal({ modal, setModal }) {
         },
     });
 
-    const handleClose = () => {
-        const force = arguments[0] === true;
+    const handleClose = (forceClose = false) => {
+        const force = forceClose === true;
         const isDirty = name.trim() !== "" || key.trim() !== "" || previewFiles.length > 0;
 
         if (!force && isDirty) {
@@ -116,7 +116,7 @@ function AddAppImagesModal({ modal, setModal }) {
             onCancel={handleClose}
             footer={null}
             centered
-            width={600}
+            width={800}
             className="modern-modal"
         >
             <div className="p-1">
@@ -166,7 +166,7 @@ function AddAppImagesModal({ modal, setModal }) {
                             </div>
                             {errors.images && <span className="text-red-500 text-[10px] font-medium ml-1">{errors.images}</span>}
 
-                             {/* Preview Grid */}
+                            {/* Preview Grid */}
                             {previewFiles.length > 0 && (
                                 <div className="grid grid-cols-5 gap-2 mt-2">
                                     {previewFiles.map((item, idx) => (

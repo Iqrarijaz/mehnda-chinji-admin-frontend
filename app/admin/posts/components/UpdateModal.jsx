@@ -111,8 +111,8 @@ function UpdatePostModal({ modal, setModal }) {
         updatePost.mutate(payload);
     };
 
-    const handleCloseModal = () => {
-        const force = arguments[0] === true;
+    const handleCloseModal = (forceClose = false) => {
+        const force = forceClose === true;
         if (!force && formikRef.current?.dirty) {
             Modal.confirm({
                 title: "Unsaved Changes",
@@ -158,7 +158,7 @@ function UpdatePostModal({ modal, setModal }) {
                 </div>
             }
             centered
-            width={600}
+            width={800}
             open={modal?.name === "Update" && modal?.state}
             onCancel={handleCloseModal}
             footer={null}

@@ -93,7 +93,7 @@ function UpdateDonorModal({ modal, setModal }) {
                 </div>
             }
             centered
-            width={600}
+            width={800}
             open={modal.name === "Update" && modal.state}
             onCancel={() => handleCloseModal(false)}
             footer={null}
@@ -120,7 +120,7 @@ function UpdateDonorModal({ modal, setModal }) {
 
                                             <div className="flex flex-col gap-1.5">
                                                 <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1 transition-colors duration-300">Blood Group <span className="text-red-500">*</span></label>
-                                                 <Select
+                                                <Select
                                                     value={values.bloodGroup}
                                                     onChange={(val) => setFieldValue("bloodGroup", val)}
                                                     size="middle"
@@ -137,7 +137,7 @@ function UpdateDonorModal({ modal, setModal }) {
                                                 </Select>
                                                 {errors.bloodGroup && touched.bloodGroup && <div className="text-red-500 text-[10px] font-medium">{errors.bloodGroup}</div>}
                                             </div>
- 
+
                                             <FormField label="Mobile Number" name="phone" placeholder="Contact number" required className="!h-[32px] !text-xs" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" icon={<FaPhone className="opacity-20" size={10} />} />
                                         </div>
                                     </div>
@@ -174,14 +174,14 @@ function UpdateDonorModal({ modal, setModal }) {
 
                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 transition-colors">
                                 <CustomButton
-                                  label="Cancel"
-                                  type="secondary"
-                                  onClick={() => handleCloseModal(false)}
+                                    label="Cancel"
+                                    type="secondary"
+                                    onClick={() => handleCloseModal(false)}
                                 />
                                 <CustomButton
-                                  label="Update Donor"
-                                  htmlType="submit"
-                                  loading={updateDonor.isLoading || isSubmitting}
+                                    label="Update Donor"
+                                    htmlType="submit"
+                                    loading={updateDonor.isLoading || isSubmitting}
                                 />
                             </div>
                         </Form>

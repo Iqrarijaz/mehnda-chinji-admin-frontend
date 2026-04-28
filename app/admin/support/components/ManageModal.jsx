@@ -22,8 +22,8 @@ function ManageTicketModal({ modal, setModal }) {
     const [fileList, setFileList] = useState([]);
     const scrollRef = useRef(null);
 
-    const closeModal = () => {
-        const force = arguments[0] === true;
+    const closeModal = (forceClose = false) => {
+        const force = forceClose === true;
         const isDirty = reply.trim() !== "" || fileList.length > 0;
 
         if (!force && isDirty) {

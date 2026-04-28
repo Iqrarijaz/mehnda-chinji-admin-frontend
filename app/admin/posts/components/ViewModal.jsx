@@ -83,7 +83,7 @@ function ViewModal({ viewModal, setViewModal }) {
                     className="w-full"
                 />
             }
-            width={600}
+            width={800}
             className="modern-modal"
         >
             <div className="p-1">

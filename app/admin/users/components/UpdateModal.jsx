@@ -89,7 +89,7 @@ const UpdateUserModal = React.memo(({ modal, setModal }) => {
                 </div>
             }
             centered
-            width={600}
+            width={800}
             open={modal.name === "Update" && modal.state}
             onCancel={handleCancel}
             footer={null}

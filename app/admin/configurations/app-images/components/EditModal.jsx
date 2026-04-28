@@ -42,8 +42,8 @@ function EditAppImagesModal({ modal, setModal }) {
         },
     });
 
-    const handleClose = () => {
-        const force = arguments[0] === true;
+    const handleClose = (forceClose = false) => {
+        const force = forceClose === true;
         const isDirty = (
             name !== (modal.data?.name || "") ||
             key !== (modal.data?.key || "") ||
@@ -123,7 +123,7 @@ function EditAppImagesModal({ modal, setModal }) {
             onCancel={handleClose}
             footer={null}
             centered
-            width={600}
+            width={800}
             className="modern-modal"
         >
             <div className="p-1">
@@ -222,7 +222,7 @@ function EditAppImagesModal({ modal, setModal }) {
                         </div>
                     </div>
 
-                     {/* Footer */}
+                    {/* Footer */}
                     <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                         <CustomButton
                             label="Cancel"

@@ -130,7 +130,7 @@ function AddDonorModal({ modal, setModal }) {
                 </div>
             }
             centered
-            width={600}
+            width={800}
             open={modal?.name === "Add" && modal?.state}
             onCancel={() => handleCloseModal(false)}
             footer={null}
@@ -179,10 +179,10 @@ function AddDonorModal({ modal, setModal }) {
                                                         {users.map((user) => (
                                                             <Option key={user._id} value={user._id} label={user.name}>
                                                                 <Space>
-                                                                    <Avatar 
-                                                                        size="small" 
-                                                                        src={user.profileImage} 
-                                                                        icon={!user.profileImage && <FaUser />} 
+                                                                    <Avatar
+                                                                        size="small"
+                                                                        src={user.profileImage}
+                                                                        icon={!user.profileImage && <FaUser />}
                                                                         className="flex-shrink-0"
                                                                     />
                                                                     <div className="flex flex-col">

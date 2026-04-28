@@ -40,8 +40,8 @@ function MainHeader() {
 
   const fetchCounts = async () => {
     try {
-        const statsRes = await GET_SUPPORT_STATS();
-        const d = statsRes?.data || {};
+      const statsRes = await GET_SUPPORT_STATS();
+      const d = statsRes?.data || {};
 
       setCounts({
         reports: d.reports || {},
@@ -168,7 +168,7 @@ function MainHeader() {
               Manage <span className="text-teal-400 dark:text-teal-500">&rarr;</span>
             </div>
           </button>
-          
+
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 p-2 rounded hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 transition-colors group px-2"
@@ -309,15 +309,9 @@ function MainHeader() {
 
         <div className="w-[1px] h-6 bg-white/20 mx-1" />
 
-        <Popover
-          content={<ProfilePopover />}
-          trigger={['hover', 'click']}
-          placement="bottomRight"
-          overlayClassName="rich-notification-popover"
-        >
           <button
             onClick={() => setIsProfileOpen(true)}
-            className="flex items-center gap-2 p-1 px-1 rounded-full hover:bg-white/10 transition-all border border-white/20 group shadow-sm active:scale-95"
+            className="flex items-center gap-2 p-1 px-1 rounded-full transition-all border border-white/20 group shadow-sm active:scale-95"
           >
             <Avatar
               size={24}
@@ -326,7 +320,6 @@ function MainHeader() {
               className="bg-transparent border-0 ring-1 ring-white/30"
             />
           </button>
-        </Popover>
       </div>
 
       <ProfileModal

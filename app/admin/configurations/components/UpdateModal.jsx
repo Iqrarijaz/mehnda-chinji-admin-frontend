@@ -54,8 +54,8 @@ function UpdateConfigurationModal({ modal, setModal }) {
         },
     });
 
-    const handleClose = () => {
-        const force = arguments[0] === true;
+    const handleClose = (forceClose = false) => {
+        const force = forceClose === true;
         if (!force && formikRef.current?.dirty) {
             Modal.confirm({
                 title: "Unsaved Changes",
@@ -97,7 +97,7 @@ function UpdateConfigurationModal({ modal, setModal }) {
             onCancel={handleClose}
             footer={null}
             centered
-            width={600}
+            width={800}
             className="modern-modal"
         >
             <div className="p-1">

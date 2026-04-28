@@ -76,8 +76,8 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
         updateAdminUser.mutate(payload);
     };
 
-    const handleCloseModal = () => {
-        const force = arguments[0] === true;
+    const handleCloseModal = (forceClose = false) => {
+        const force = forceClose === true;
         if (!force && formikRef.current?.dirty) {
             Modal.confirm({
                 title: "Unsaved Changes",
@@ -109,7 +109,7 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
                 </div>
             }
             centered
-            width={600}
+            width={800}
             open={modal?.name === "Edit" && modal?.state}
             onCancel={handleCloseModal}
             footer={null}
@@ -135,7 +135,7 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
                                             <FormField label="Full Name" name="name" placeholder="John Doe" required className="!h-[32px] !text-xs" />
                                             <FormField label="Email Address" name="email" type="email" placeholder="john@example.com" disabled required className="!h-[32px] !text-xs" />
                                             <FormField label="Phone Number" name="phone" placeholder="+1..." className="!h-[32px] !text-xs" />
-                                             <div className="flex flex-col gap-1.5">
+                                            <div className="flex flex-col gap-1.5">
                                                 <div className="flex justify-between items-center">
                                                     <label className="text-slate-700 font-semibold text-xs">Update Password</label>
                                                     <span className="text-[9px] text-slate-400 font-bold uppercase">Optional</span>
@@ -161,7 +161,7 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="flex flex-col gap-1.5">
                                                 <label className="text-slate-700 font-semibold text-xs">Permission Role <span className="text-red-500">*</span></label>
-                                                 <Select
+                                                <Select
                                                     value={values.accessRoleId}
                                                     onChange={(value) => {
                                                         const selectedRole = rolesData?.data?.find(r => r._id === value);
@@ -182,7 +182,7 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
 
                                             <div className="flex flex-col gap-1.5">
                                                 <label className="text-slate-700 font-semibold text-xs">Account Status</label>
-                                                 <Select
+                                                <Select
                                                     value={values.status}
                                                     onChange={(value) => setFieldValue("status", value)}
                                                     className="w-full modern-select-box"
@@ -197,7 +197,7 @@ const UpdateAdminUserModal = React.memo(({ modal, setModal }) => {
                                 </>
                             )}
 
-                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"

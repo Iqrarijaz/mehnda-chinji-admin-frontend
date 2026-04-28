@@ -94,7 +94,7 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
                 </div>
             }
             centered
-            width={600}
+            width={800}
             open={modal?.name === "Add" && modal?.state}
             onCancel={() => handleCloseModal(false)}
             footer={null}

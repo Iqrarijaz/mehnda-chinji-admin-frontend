@@ -125,7 +125,7 @@ function AddLocationModal({ modal, setModal }) {
         </div>
       }
       centered
-      width={600}
+      width={800}
       open={isModalOpen}
       onCancel={() => handleCloseModal(false)}
       footer={null}

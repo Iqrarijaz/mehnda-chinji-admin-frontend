@@ -82,8 +82,8 @@ function UpdateLocationModal({ modal, setModal }) {
     }
   }, [isModalOpen, fetchTehsils]);
 
-  const handleCloseModal = useCallback(() => {
-    const force = arguments[0] === true;
+  const handleCloseModal = useCallback((forceClose = false) => {
+    const force = forceClose === true;
     if (!force && formikRef.current?.dirty) {
       Modal.confirm({
         title: "Unsaved Changes",
@@ -126,7 +126,7 @@ function UpdateLocationModal({ modal, setModal }) {
         </div>
       }
       centered
-      width={600}
+      width={800}
       open={isModalOpen}
       onCancel={handleCloseModal}
       footer={null}

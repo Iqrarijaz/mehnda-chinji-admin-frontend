@@ -127,7 +127,7 @@ function AddBusinessModal({ modal, setModal }) {
                 </div>
             }
             centered
-            width={600}
+            width={800}
             open={modal?.name === "Add" && modal?.state}
             onCancel={() => handleCloseModal(false)}
             footer={null}
@@ -235,14 +235,14 @@ function AddBusinessModal({ modal, setModal }) {
                                                         {[...professions]
                                                             .sort((a, b) => a.name_eng.localeCompare(b.name_eng))
                                                             .map((prof, index) => (
-                                                            <Option key={index} value={prof.name_eng} label={`${prof.name_eng.charAt(0).toUpperCase() + prof.name_eng.slice(1)} - ${prof.name_ur}`}>
-                                                                <div className="flex items-center gap-2 w-full truncate">
-                                                                    <span className="text-xs font-bold capitalize whitespace-nowrap">{prof.name_eng}</span>
-                                                                    <span className="text-slate-300 text-[10px]">—</span>
-                                                                    <span className="text-[11px] font-notoUrdu text-slate-400 truncate">{prof.name_ur}</span>
-                                                                </div>
-                                                            </Option>
-                                                        ))}
+                                                                <Option key={index} value={prof.name_eng} label={`${prof.name_eng.charAt(0).toUpperCase() + prof.name_eng.slice(1)} - ${prof.name_ur}`}>
+                                                                    <div className="flex items-center gap-2 w-full truncate">
+                                                                        <span className="text-xs font-bold capitalize whitespace-nowrap">{prof.name_eng}</span>
+                                                                        <span className="text-slate-300 text-[10px]">—</span>
+                                                                        <span className="text-[11px] font-notoUrdu text-slate-400 truncate">{prof.name_ur}</span>
+                                                                    </div>
+                                                                </Option>
+                                                            ))}
                                                     </Select>
                                                     {errors.categoryEn && touched.categoryEn && (
                                                         <div className="text-red-500 text-[10px] mt-0.5 ml-1">{errors.categoryEn}</div>

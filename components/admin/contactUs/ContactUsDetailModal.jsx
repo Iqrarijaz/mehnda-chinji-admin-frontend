@@ -58,7 +58,7 @@ function ContactUsDetailModal({ modal, setModal }) {
             open={modal.state && modal.name === "ViewDetails"}
             onCancel={closeModal}
             footer={null}
-            width={600}
+            width={800}
             centered
             className="modern-modal"
         >
