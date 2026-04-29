@@ -122,7 +122,7 @@ body {
 .antd-table-custom {
   background: white;
   border-radius: 4px !important;
-  border: 1px solid #e2e8f0 !important;
+  border: 2px solid #e2e8f0 !important;
   overflow: hidden;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
@@ -155,7 +155,7 @@ body {
   }
 
   .ant-pagination-item {
-    border: 1px solid #e2e8f0 !important;
+    border: 2px solid #e2e8f0 !important;
     background: white !important;
     transition: all 0.2s !important;
 
@@ -181,7 +181,7 @@ body {
 
   .ant-pagination-prev,
   .ant-pagination-next {
-    border: 1px solid #e2e8f0 !important;
+    border: 2px solid #e2e8f0 !important;
     background: white !important;
     transition: all 0.2s !important;
 
@@ -209,7 +209,7 @@ body {
         display: flex !important;
         align-items: center !important;
         background: #006666 !important;
-        border: 1px solid #006666 !important;
+        border: 2px solid #006666 !important;
         color: white !important;
 
         .ant-select-selection-item {
@@ -251,7 +251,7 @@ body {
 .custom-selectbox {
   .ant-select-selector {
     border-radius: 4px !important;
-    border: 1px solid #e2e8f0 !important;
+    border: 2px solid #e2e8f0 !important;
     font-size: 12px !important;
     display: flex !important;
     align-items: center !important;
@@ -292,7 +292,7 @@ body {
     border-radius: 4px;
     transition: all 0.2s;
     cursor: pointer;
-    border: 1px solid #e2e8f0;
+    border: 2px solid #e2e8f0;
     color: #64748b;
 
     &:hover {
@@ -484,7 +484,7 @@ body {
 .filter-button {
   color: white !important;
   background-color: #006666 !important; // Match sidebar
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: 2px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 4px !important;
   height: 38px !important;
   font-size: 14px !important;
@@ -508,7 +508,7 @@ body {
 .custom-search-input {
   height: 32px !important;
   padding: 4px 11px !important;
-  border: 1px solid var(--sidebar-bg) !important; // Primary Teal (Theme Aware)
+  border: 2px solid var(--sidebar-bg) !important; // Primary Teal (Theme Aware)
   border-radius: 2px !important;
   background-color: var(--bg-card) !important;
   display: flex !important;
@@ -538,7 +538,7 @@ body {
   }
 
   .ant-select-selector {
-    border: 1px solid var(--sidebar-bg) !important; // Primary Teal
+    border: 2px solid var(--sidebar-bg) !important; // Primary Teal
     border-radius: 4px !important;
     height: 32px !important;
     padding: 0 11px !important;
@@ -651,7 +651,7 @@ body {
   border-radius: 4px !important;
 
   .ant-select-selector {
-    border: 1px solid var(--sidebar-bg) !important;
+    border: 2px solid var(--sidebar-bg) !important;
     border-radius: 4px !important;
     padding: 0 16px !important;
     height: 32px !important;
@@ -705,7 +705,7 @@ body {
     border-radius: 4px !important;
     overflow: hidden;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    border: 2px solid rgba(0, 0, 0, 0.05);
 
     @media (max-width: 768px) {
       border-radius: 4px 4px 0 0 !important; // Top corners only for bottom sheet
@@ -716,7 +716,7 @@ body {
     margin-bottom: 0 !important;
     padding: 18px 24px !important;
     background: var(--bg-card) !important;
-    border-bottom: 1px solid var(--border-color) !important;
+    border-bottom: 2px solid var(--border-color) !important;
 
     @media (max-width: 768px) {
       padding: 16px 20px !important;
@@ -725,7 +725,7 @@ body {
     .ant-modal-title {
       font-size: 1.1rem !important;
       font-weight: 700 !important;
-    color: var(--sidebar-bg) !important;
+      color: var(--sidebar-bg) !important;
       letter-spacing: -0.025em;
     }
   }
@@ -762,7 +762,7 @@ body {
     margin-top: 0 !important;
     padding: 16px 24px !important;
     background: var(--bg-secondary) !important;
-    border-top: 1px solid var(--border-color) !important;
+    border-top: 2px solid var(--border-color) !important;
     display: flex;
     justify-content: flex-end;
     gap: 12px;
@@ -844,7 +844,7 @@ body {
 // Section styling inside modals
 .modal-section {
   background-color: var(--bg-secondary);
-  border: 1px solid var(--border-color);
+  border: 2px solid var(--border-color);
   border-radius: 4px !important;
   padding: 16px;
   margin-bottom: 16px;
@@ -896,7 +896,7 @@ body {
 .modal-footer-btn-secondary {
   @extend .modal-footer-btn;
   background-color: var(--bg-card) !important;
-  border: 1px solid var(--border-color) !important;
+  border: 2px solid var(--border-color) !important;
   color: var(--text-secondary) !important;
 
   &:hover {
@@ -954,7 +954,7 @@ body {
 .place-holder-table {
   border-radius: 4px !important;
   background-color: var(--bg-card) !important;
-  border: 1px solid var(--border-color) !important;
+  border: 2px solid var(--border-color) !important;
   box-shadow: var(--shadow-sm) !important;
 }
 
@@ -1125,7 +1125,7 @@ body {
 
 .ant-tag {
   user-select: none;
-  border: 1px solid var(--border-color);
+  border: 2px solid var(--border-color);
   border-radius: 4px !important;
   background-color: var(--bg-card) !important;
   color: var(--text-primary) !important;
@@ -1139,7 +1139,7 @@ body {
 .custom-tag-input {
   user-select: none;
   color: var(--text-primary) !important;
-  border: 1px solid var(--border-color);
+  border: 2px solid var(--border-color);
   border-radius: 4px !important;
   background-color: var(--bg-card) !important;
   padding: 6px 6px !important;
@@ -1307,7 +1307,7 @@ body::-webkit-scrollbar-thumb {
 .Toastify__toast--success {
   background: #d1fae5 !important;
   color: #064e3b !important;
-  border: 1px solid #a7f3d0 !important;
+  border: 2px solid #a7f3d0 !important;
 
   &::before {
     background: #34d399;
@@ -1317,7 +1317,7 @@ body::-webkit-scrollbar-thumb {
 .Toastify__toast--error {
   background: #fee2e2 !important;
   color: #7f1d1d !important;
-  border: 1px solid #fca5a5 !important;
+  border: 2px solid #fca5a5 !important;
 
   &::before {
     background: #f87171;
@@ -1327,7 +1327,7 @@ body::-webkit-scrollbar-thumb {
 .Toastify__toast--warning {
   background: #fef3c7 !important;
   color: #78350f !important;
-  border: 1px solid #fde68a !important;
+  border: 2px solid #fde68a !important;
 
   &::before {
     background: #fbbf24;
@@ -1337,7 +1337,7 @@ body::-webkit-scrollbar-thumb {
 .Toastify__toast--info {
   background: #dbeafe !important;
   color: #1e3a5f !important;
-  border: 1px solid #93c5fd !important;
+  border: 2px solid #93c5fd !important;
 
   &::before {
     background: #60a5fa;
@@ -1475,7 +1475,7 @@ body::-webkit-scrollbar-thumb {
     border-radius: 4px;
     background: #f1f5f9;
     color: #475569;
-    border: 1px solid #e2e8f0;
+    border: 2px solid #e2e8f0;
 
     &:active {
       background: #e2e8f0;
@@ -1507,7 +1507,7 @@ body::-webkit-scrollbar-thumb {
 
 .Toastify__toast {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
-  border: 1px solid #e2e8f0;
+  border: 2px solid #e2e8f0;
   padding: 12px 16px !important;
   min-height: 48px !important;
 }
@@ -1535,18 +1535,19 @@ body::-webkit-scrollbar-thumb {
 
 /* Ant Design Global Overrides for Premium Dark Mode */
 .dark {
-  .ant-dropdown-menu, 
-  .ant-select-dropdown, 
+
+  .ant-dropdown-menu,
+  .ant-select-dropdown,
   .ant-menu-vertical,
   .ant-menu-submenu-popup,
   .ant-popover-inner,
   .ant-picker-panel-container {
     background-color: #1E293B !important; // Matches --bg-card
-    border: 1px solid #334155 !important; // Matches --border-color
+    border: 2px solid #334155 !important; // Matches --border-color
     box-shadow: var(--shadow-md) !important;
     padding: 4px !important;
 
-    .ant-dropdown-menu-item, 
+    .ant-dropdown-menu-item,
     .ant-menu-item,
     .ant-select-item,
     .ant-dropdown-menu-submenu-title {
@@ -1554,13 +1555,13 @@ body::-webkit-scrollbar-thumb {
       border-radius: 4px !important;
       margin: 2px 0 !important;
       transition: all 0.2s ease !important;
-      
-      &:hover, 
-      &-active, 
+
+      &:hover,
+      &-active,
       &-selected,
       &.ant-dropdown-menu-item-active {
         // High priority override to beat legacy inline hover:!bg-xxx-50 classes
-        background-color: rgba(0, 102, 102, 0.25) !important; 
+        background-color: rgba(0, 102, 102, 0.25) !important;
         color: #5eead4 !important; // Teal-300 for premium legibility
       }
 
@@ -1594,7 +1595,7 @@ body::-webkit-scrollbar-thumb {
   .ant-tooltip-inner {
     background-color: #1E293B !important;
     color: #F8FAFC !important;
-    border: 1px solid #334155 !important;
+    border: 2px solid #334155 !important;
     font-size: 11px !important;
     font-weight: 500 !important;
   }
@@ -1611,13 +1612,14 @@ body::-webkit-scrollbar-thumb {
     .ant-pagination-item {
       background-color: #1E293B !important; // slate-800
       border-color: #334155 !important; // slate-700
-      
+
       a {
         color: #94A3B8 !important; // slate-400
       }
 
       &:hover {
         border-color: #14B8A6 !important; // teal-500
+
         a {
           color: #5EEAD4 !important; // teal-300
         }
@@ -1626,14 +1628,14 @@ body::-webkit-scrollbar-thumb {
       &-active {
         background-color: #006666 !important;
         border-color: #006666 !important;
-        
+
         a {
           color: #FFFFFF !important;
         }
       }
     }
 
-    .ant-pagination-prev, 
+    .ant-pagination-prev,
     .ant-pagination-next,
     .ant-pagination-jump-prev,
     .ant-pagination-jump-next {
@@ -1663,7 +1665,7 @@ body::-webkit-scrollbar-thumb {
         border-color: #334155 !important;
         color: #F8FAFC !important;
       }
-      
+
       .ant-select-arrow {
         color: #94A3B8 !important;
       }
