@@ -10,7 +10,6 @@ import AppImagesTable from "./components/Table";
 import AddAppImagesModal from "./components/AddModal";
 import EditAppImagesModal from "./components/EditModal";
 import ViewAppImagesModal from "./components/ViewModal";
-import InnerPageCard from "@/components/layout/InnerPageCard";
 import StatCard from "@/components/shared/StatCard";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { AppstoreOutlined } from "@ant-design/icons";
@@ -48,7 +47,7 @@ export default function AppImagesPage() {
     const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
 
     return (
-        <InnerPageCard title="App Images">
+        <>
 
 
             <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-start md:items-center">
@@ -104,6 +103,6 @@ export default function AppImagesPage() {
             <AddAppImagesModal modal={modal} setModal={setModal} />
             <EditAppImagesModal modal={modal} setModal={setModal} />
             <ViewAppImagesModal modal={modal} setModal={setModal} />
-        </InnerPageCard>
+        </>
     );
 }

@@ -83,6 +83,11 @@ const MenuList = [
         link: "/admin/configurations/app-images",
         permission: PERMISSIONS.CONFIGURATIONS.READ,
       },
+      {
+        name: "Upload",
+        link: "/admin/configurations/upload",
+        permission: PERMISSIONS.CONFIGURATIONS.READ,
+      },
     ],
   },
   {

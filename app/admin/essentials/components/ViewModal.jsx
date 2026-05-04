@@ -171,7 +171,7 @@ function ViewModal({ viewModal, setViewModal }) {
                         {data.type === 'school' && data.events?.length > 0 && (
                             <div className="space-y-4 pt-2">
                                 <div className="flex items-center gap-2">
-                                    <FaCalendarAlt className="text-teal-600 dark:text-teal-400" />
+                                    {/* <FaCalendarAlt className="text-teal-600 dark:text-teal-400" /> */}
                                     <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 uppercase tracking-tight">Recent & Upcoming Events</h3>
                                 </div>
                                 <div className="grid grid-cols-1 gap-4">
@@ -194,7 +194,7 @@ function ViewModal({ viewModal, setViewModal }) {
                                                 )}
                                             </div>
                                             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">{event.description}</p>
-                                            
+
                                             {event.images?.length > 0 && (
                                                 <div className="flex flex-wrap gap-2 pt-1">
                                                     {event.images.map((img, imgIdx) => (

@@ -136,7 +136,7 @@ const GlobalSearch = () => {
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           onFocus={() => setIsOpen(true)}
-          className="w-full h-[32px] pl-9 pr-4 bg-white/10 border border-white/20 rounded text-xs text-white placeholder:text-white/40 focus:outline-none focus:bg-white focus:text-slate-800 dark:focus:bg-slate-800 dark:focus:text-slate-100 transition-all focus:border-[#006666] focus:ring-4 focus:ring-teal-900/10"
+          className="w-full h-[32px] pl-9 pr-4 bg-white/10 border border-white/20 rounded-[2px] text-xs text-white placeholder:text-white/40 focus:outline-none focus:bg-white focus:text-slate-800 dark:focus:bg-slate-800 dark:focus:text-slate-100 transition-all focus:border-[#006666] focus:ring-4 focus:ring-teal-900/10"
         />
       </div>
 

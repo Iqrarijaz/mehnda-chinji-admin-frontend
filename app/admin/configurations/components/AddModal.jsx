@@ -13,7 +13,6 @@ import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { Formik, Form } from "formik";
 
 const { TextArea } = Input;
-const { Option } = Select;
 
 const validationSchema = Yup.object().shape({
     type: Yup.string().required("Configuration type is required"),
@@ -96,7 +95,8 @@ function AddConfigurationModal({ modal, setModal }) {
             onCancel={handleClose}
             footer={null}
             centered
-            width={800}
+            width={"80vw"}
+            height={"100%"}
             className="modern-modal"
         >
             <div className="p-1">
@@ -116,7 +116,6 @@ function AddConfigurationModal({ modal, setModal }) {
                             ) : (
                                 <>
                                     <div className="modal-section space-y-2">
-                                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest pl-1 mt-2">Core Definition</p>
                                         <div className="flex flex-col gap-1.5 transition-colors duration-300">
                                             <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors duration-300">Config Type (Namespace) <span className="text-red-500">*</span></label>
                                             <div className="relative">

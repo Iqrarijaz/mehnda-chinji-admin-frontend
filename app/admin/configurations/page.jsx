@@ -11,7 +11,6 @@ import ViewConfigurationModal from "./components/ViewModal";
 import { CONFIGURATIONS } from "@/app/api/admin/configurations";
 import { useDebounce } from "@/hooks/useDebounce";
 
-import InnerPageCard from "@/components/layout/InnerPageCard";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 
@@ -46,7 +45,7 @@ export default function ConfigurationsPage() {
     const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
 
     return (
-        <InnerPageCard title="Configurations">
+        <>
             <div className="flex flex-col md:flex-row justify-end mb-3 gap-3 items-center">
                 {/* Action Bar (Right) */}
                 <div className="flex gap-2 items-center w-full md:w-auto justify-end">
@@ -87,6 +86,6 @@ export default function ConfigurationsPage() {
             <AddConfigurationModal modal={modal} setModal={setModal} />
             <UpdateConfigurationModal modal={modal} setModal={setModal} />
             <ViewConfigurationModal modal={modal} setModal={setModal} />
-        </InnerPageCard>
+        </>
     );
 }
