@@ -37,10 +37,12 @@ export default function EssentialsPage() {
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
     // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["name", "category", "address", "timing", "contact", "status", "isActive", "createdAt", "actions"]);
+    const [visibleColumns, setVisibleColumns] = useState(["name", "image", "type", "category", "address", "timing", "contact", "status", "isActive", "createdAt", "actions"]);
 
     const columnOptions = [
         { label: "Name", value: "name" },
+        { label: "File", value: "image" },
+        { label: "Type", value: "type" },
         { label: "Category", value: "category" },
         { label: "Address", value: "address" },
         { label: "Contact", value: "contact" },

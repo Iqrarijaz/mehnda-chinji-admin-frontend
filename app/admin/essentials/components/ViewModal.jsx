@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
 import { Modal, Tag } from "antd";
-import { FaMapMarkerAlt, FaAddressCard, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaEye, FaInfoCircle, FaExternalLinkAlt } from "react-icons/fa";
+import { FaMapMarkerAlt, FaAddressCard, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaEye, FaInfoCircle, FaExternalLinkAlt, FaCopy, FaLink } from "react-icons/fa";
+import { toast } from "react-toastify";
 import CustomButton from "@/components/shared/CustomButton";
 
 function ViewModal({ viewModal, setViewModal }) {
@@ -33,6 +34,22 @@ function ViewModal({ viewModal, setViewModal }) {
             <div className="">
                 {data && (
                     <div className="space-y-4 p-1">
+                        {/* Main Image Preview */}
+                        {data.images && data.images.length > 0 && (
+                            <div className="relative h-44 w-full rounded-lg overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm transition-colors duration-300">
+                                <img
+                                    src={data.images[0]}
+                                    alt={data.name}
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute top-2 right-2">
+                                    <Tag className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-none font-bold text-[10px] text-teal-600 dark:text-teal-400 rounded-full px-3 py-1 m-0">
+                                        Featured Image
+                                    </Tag>
+                                </div>
+                            </div>
+                        )}
+
                         {/* General Information Section */}
                         <div className="modal-section space-y-1.5 pt-1">
                             <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest pl-1 mb-2">General Information</p>
@@ -106,6 +123,26 @@ function ViewModal({ viewModal, setViewModal }) {
                                         {data.description || <span className="text-slate-300 dark:text-slate-600 italic">No description provided</span>}
                                     </div>
                                 </div>
+
+                                {data.images && data.images[0] && (
+                                    <div className="flex items-center p-2.5 px-4 bg-slate-50/50 dark:bg-slate-900/40 rounded-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                                        <div className="w-1/3 text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                                            <FaLink size={8} />
+                                            Image URL
+                                        </div>
+                                        <div className="w-2/3 flex items-center justify-between gap-2 overflow-hidden">
+                                            <span className="text-[10px] font-mono text-slate-500 truncate">{data.images[0]}</span>
+                                            <FaCopy
+                                                size={10}
+                                                className="cursor-pointer text-slate-400 hover:text-teal-600 transition-colors flex-shrink-0"
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(data.images[0]);
+                                                    toast.success("URL copied to clipboard");
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

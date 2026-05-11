@@ -216,6 +216,38 @@ function EssentialsTable({ modal, setModal, essentialsList, onChange, setFilters
             ),
         },
         {
+            title: "File",
+            dataIndex: "images",
+            key: "image",
+            width: 80,
+            align: "center",
+            render: (images) => (
+                <div className="flex items-center justify-center">
+                    {images && images.length > 0 ? (
+                        <div className="w-10 h-10 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm transition-transform duration-300 hover:scale-110">
+                            <img src={images[0]} alt="Essential" className="w-full h-full object-cover" />
+                        </div>
+                    ) : (
+                        <div className="w-10 h-10 rounded-lg bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 flex items-center justify-center text-slate-300">
+                            <span className="text-[10px] font-bold text-slate-400">N/A</span>
+                        </div>
+                    )}
+                </div>
+            ),
+        },
+        {
+            title: "Type",
+            dataIndex: "type",
+            key: "type",
+            width: 150,
+            align: "center",
+            render: (type) => (
+                <span className="px-3 py-1 rounded-full capitalize font-bold text-orange-700 bg-orange-50 border border-orange-100 shadow-sm text-[10px]">
+                    {type || "—"}
+                </span>
+            ),
+        },
+        {
             title: "Category",
             dataIndex: "category",
             key: "category",
@@ -228,18 +260,6 @@ function EssentialsTable({ modal, setModal, essentialsList, onChange, setFilters
                     style={{ backgroundColor: getTagColor(category) }}
                 >
                     {category || "N/A"}
-                </span>
-            ),
-        },
-        {
-            title: "Type",
-            dataIndex: "type",
-            key: "type",
-            width: 150,
-            align: "center",
-            render: (type) => (
-                <span className="px-3 py-1 rounded-full capitalize font-bold text-orange-700 bg-orange-50 border border-orange-100 shadow-sm text-[10px]">
-                    {type || "—"}
                 </span>
             ),
         },

@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { Modal, Input } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { FaPlus, FaTrash, FaMapMarkerAlt, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaImage, FaCamera } from "react-icons/fa";
+import { FaPlus, FaTrash, FaMapMarkerAlt, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaImage, FaCamera, FaCopy, FaLink } from "react-icons/fa";
 import TimingPicker from "@/components/TimingPicker";
 import { UPLOAD_ESSENTIAL_IMAGE } from "@/app/api/admin/essentials";
 
@@ -292,6 +292,34 @@ function AddEssentialModal({ modal, setModal }) {
                                                     <input type="file" className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, setFieldValue)} disabled={isUploading} />
                                                 </label>
                                             )}
+                                        </div>
+                                        <div className="mt-3">
+                                             <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors flex items-center gap-1.5 mb-1.5">
+                                                 <FaLink size={10} className="text-teal-600/70" />
+                                                 Featured Image URL
+                                             </label>
+                                             <Input
+                                                 placeholder="Paste image URL here..."
+                                                 value={values.images[0] || ""}
+                                                 onChange={(e) => {
+                                                     const url = e.target.value;
+                                                     setFieldValue("images", url ? [url] : []);
+                                                     setSelectedImage(url);
+                                                 }}
+                                                 suffix={
+                                                     values.images[0] && (
+                                                         <FaCopy
+                                                             className="cursor-pointer text-slate-400 hover:text-teal-600 transition-colors mr-1"
+                                                             onClick={() => {
+                                                                 navigator.clipboard.writeText(values.images[0]);
+                                                                 toast.success("URL copied to clipboard");
+                                                             }}
+                                                             title="Copy URL"
+                                                         />
+                                                     )
+                                                }
+                                                className="!h-[32px] !text-xs !rounded !bg-slate-50/50 dark:!bg-slate-900/40 !border-slate-200 dark:!border-slate-800 focus:!border-teal-500/50 transition-all"
+                                            />
                                         </div>
                                     </div>
 
