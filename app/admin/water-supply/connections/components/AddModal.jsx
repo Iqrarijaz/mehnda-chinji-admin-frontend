@@ -44,8 +44,10 @@ const AddConnectionModal = React.memo(({ modal, setModal }) => {
         },
     });
 
-    const handleSubmit = React.useCallback((values) => {
-        createConnection.mutate(values);
+    const handleSubmit = React.useCallback((values, { setSubmitting }) => {
+        createConnection.mutate(values, {
+            onSettled: () => setSubmitting(false)
+        });
     }, [createConnection]);
 
     const handleCloseModal = React.useCallback((force = false) => {

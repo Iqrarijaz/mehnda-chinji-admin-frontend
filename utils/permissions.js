@@ -2,8 +2,16 @@ import { PERMISSIONS } from "@/config/permissions";
 import MenuList from "@/components/layout/MenuList";
 
 export const getFirstAuthorizedRoute = () => {
-  const firstMatch = MenuList.find(item => hasPermission(item));
-  return firstMatch ? firstMatch.link : "/admin/dashboard";
+  for (const item of MenuList) {
+    if (hasPermission(item)) {
+      if (item.link) return item.link;
+      if (item.subItems) {
+        const firstSubMatch = item.subItems.find(sub => hasPermission(sub));
+        if (firstSubMatch && firstSubMatch.link) return firstSubMatch.link;
+      }
+    }
+  }
+  return "/admin/dashboard";
 };
 
 export const hasPermission = (permissionOrItem) => {

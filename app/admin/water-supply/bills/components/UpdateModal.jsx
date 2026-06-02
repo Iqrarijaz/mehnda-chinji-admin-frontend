@@ -36,10 +36,13 @@ const UpdateBillModal = React.memo(({ modal, setModal }) => {
         },
     });
 
-    const handleSubmit = React.useCallback((values) => {
+    const handleSubmit = React.useCallback((values, { setSubmitting }) => {
         updateBill.mutate({
             _id: modal.data._id,
-            ...values
+            billingMonth: values.billingMonth,
+            amount: values.amount,
+        }, {
+            onSettled: () => setSubmitting(false)
         });
     }, [updateBill, modal]);
 

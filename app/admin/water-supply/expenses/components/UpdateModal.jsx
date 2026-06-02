@@ -39,11 +39,13 @@ const UpdateExpenseModal = React.memo(({ modal, setModal }) => {
         },
     });
 
-    const handleSubmit = React.useCallback((values) => {
+    const handleSubmit = React.useCallback((values, { setSubmitting }) => {
         updateExpense.mutate({
             _id: modal.data._id,
             ...values,
             expenseDate: expenseDate ? expenseDate.toISOString() : undefined
+        }, {
+            onSettled: () => setSubmitting(false)
         });
     }, [updateExpense, expenseDate, modal]);
 

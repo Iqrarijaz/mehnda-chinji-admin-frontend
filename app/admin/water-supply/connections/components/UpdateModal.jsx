@@ -41,13 +41,15 @@ const UpdateConnectionModal = React.memo(({ modal, setModal }) => {
         },
     });
 
-    const handleSubmit = React.useCallback((values) => {
+    const handleSubmit = React.useCallback((values, { setSubmitting }) => {
         updateConnection.mutate({
             _id: modal.data._id,
             name: values.name,
             phoneNumber: values.phoneNumber,
             address: values.address,
             status: values.status,
+        }, {
+            onSettled: () => setSubmitting(false)
         });
     }, [updateConnection, modal]);
 

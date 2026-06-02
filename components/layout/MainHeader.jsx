@@ -12,6 +12,8 @@ import { LOGOUT } from "@/app/api/login";
 import { toast } from "react-toastify";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { useTheme } from "@/context/ThemeContext";
+import { hasPermission } from "@/utils/permissions";
+import { PERMISSIONS } from "@/config/permissions";
 
 function MainHeader() {
   const { open, toggleMenu } = useContext(MenuContext);
@@ -40,6 +42,12 @@ function MainHeader() {
 
   const fetchCounts = async () => {
     try {
+      const canSeeReports = hasPermission(PERMISSIONS.REPORTS.READ);
+      const canSeeSupport = hasPermission(PERMISSIONS.SUPPORT.READ);
+      const canSeeContacts = hasPermission(PERMISSIONS.CONTACT_US.READ);
+
+      if (!canSeeReports && !canSeeSupport && !canSeeContacts) return;
+
       const statsRes = await GET_SUPPORT_STATS();
       const d = statsRes?.data || {};
 
@@ -220,92 +228,98 @@ function MainHeader() {
         <div className="w-[1px] h-4 bg-white/10 mx-0.5" />
 
         {/* Reports Notification */}
-        <Popover
-          content={
-            <NotificationPopover
-              title="Reports Overview"
-              icon={HiOutlineDocumentReport}
-              counts={counts.reports}
-              path="/admin/reports"
-              statuses={[
-                { label: "Pending Issues", key: "PENDING", colorClass: "bg-red-500" },
-                { label: "Being Reviewed", key: "REVIEWED", colorClass: "bg-orange-500" },
-                { label: "Resolved Items", key: "RESOLVED", colorClass: "bg-green-500" }
-              ]}
-            />
-          }
-          trigger={['hover', 'click']}
-          placement="bottomRight"
-          overlayClassName="rich-notification-popover"
-          mouseEnterDelay={0.1}
-        >
-          <button
-            onClick={() => router.push("/admin/reports")}
-            className="flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition-all text-white active:scale-95 relative"
+        {hasPermission(PERMISSIONS.REPORTS.READ) && (
+          <Popover
+            content={
+              <NotificationPopover
+                title="Reports Overview"
+                icon={HiOutlineDocumentReport}
+                counts={counts.reports}
+                path="/admin/reports"
+                statuses={[
+                  { label: "Pending Issues", key: "PENDING", colorClass: "bg-red-500" },
+                  { label: "Being Reviewed", key: "REVIEWED", colorClass: "bg-orange-500" },
+                  { label: "Resolved Items", key: "RESOLVED", colorClass: "bg-green-500" }
+                ]}
+              />
+            }
+            trigger={['hover', 'click']}
+            placement="bottomRight"
+            overlayClassName="rich-notification-popover"
+            mouseEnterDelay={0.1}
           >
-            <Badge count={counts.reports?.PENDING} size="small" offset={[2, 0]} className="custom-badge" showZero={false} overflowCount={99}>
-              <HiOutlineDocumentReport size={20} className="text-white opacity-80 hover:opacity-100" />
-            </Badge>
-          </button>
-        </Popover>
+            <button
+              onClick={() => router.push("/admin/reports")}
+              className="flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition-all text-white active:scale-95 relative"
+            >
+              <Badge count={counts.reports?.PENDING} size="small" offset={[2, 0]} className="custom-badge" showZero={false} overflowCount={99}>
+                <HiOutlineDocumentReport size={20} className="text-white opacity-80 hover:opacity-100" />
+              </Badge>
+            </button>
+          </Popover>
+        )}
 
         {/* Support Notification */}
-        <Popover
-          content={
-            <NotificationPopover
-              title="Support Desk"
-              icon={HiOutlineSupport}
-              counts={counts.support}
-              path="/admin/support"
-              statuses={[
-                { label: "Open Tickets", key: "OPEN", colorClass: "bg-blue-500" },
-                { label: "In Progress", key: "IN_PROGRESS", colorClass: "bg-orange-500" },
-                { label: "Closed Tickets", key: "CLOSED", colorClass: "bg-slate-400" }
-              ]}
-            />
-          }
-          trigger={['hover', 'click']}
-          placement="bottomRight"
-          overlayClassName="rich-notification-popover"
-        >
-          <button
-            onClick={() => router.push("/admin/support")}
-            className="flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition-all text-white active:scale-95"
+        {hasPermission(PERMISSIONS.SUPPORT.READ) && (
+          <Popover
+            content={
+              <NotificationPopover
+                title="Support Desk"
+                icon={HiOutlineSupport}
+                counts={counts.support}
+                path="/admin/support"
+                statuses={[
+                  { label: "Open Tickets", key: "OPEN", colorClass: "bg-blue-500" },
+                  { label: "In Progress", key: "IN_PROGRESS", colorClass: "bg-orange-500" },
+                  { label: "Closed Tickets", key: "CLOSED", colorClass: "bg-slate-400" }
+                ]}
+              />
+            }
+            trigger={['hover', 'click']}
+            placement="bottomRight"
+            overlayClassName="rich-notification-popover"
           >
-            <Badge count={counts.support?.OPEN} size="small" offset={[2, 0]} className="custom-badge" showZero={false} overflowCount={99}>
-              <HiOutlineSupport size={20} className="text-white opacity-80 hover:opacity-100" />
-            </Badge>
-          </button>
-        </Popover>
+            <button
+              onClick={() => router.push("/admin/support")}
+              className="flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition-all text-white active:scale-95"
+            >
+              <Badge count={counts.support?.OPEN} size="small" offset={[2, 0]} className="custom-badge" showZero={false} overflowCount={99}>
+                <HiOutlineSupport size={20} className="text-white opacity-80 hover:opacity-100" />
+              </Badge>
+            </button>
+          </Popover>
+        )}
 
         {/* Contact Messages Notification */}
-        <Popover
-          content={
-            <NotificationPopover
-              title="Contact Center"
-              icon={HiOutlineMail}
-              counts={counts.contacts}
-              path="/admin/contact-us"
-              statuses={[
-                { label: "New Messages", key: "PENDING", colorClass: "bg-red-500" },
-                { label: "Under Review", key: "REVIEWED", colorClass: "bg-blue-500" },
-                { label: "Replied/Resolved", key: "RESOLVED", colorClass: "bg-green-500" }
-              ]}
-            />
-          }
-          trigger={['hover', 'click']}
-          placement="bottomRight"
-          overlayClassName="rich-notification-popover"
-        >
-          <button
-            onClick={() => router.push("/admin/contact-us")}
-            className="flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition-all text-white active:scale-95"
+        {hasPermission(PERMISSIONS.CONTACT_US.READ) && (
+          <Popover
+            content={
+              <NotificationPopover
+                title="Contact Center"
+                icon={HiOutlineMail}
+                counts={counts.contacts}
+                path="/admin/contact-us"
+                statuses={[
+                  { label: "New Messages", key: "PENDING", colorClass: "bg-red-500" },
+                  { label: "Under Review", key: "REVIEWED", colorClass: "bg-blue-500" },
+                  { label: "Replied/Resolved", key: "RESOLVED", colorClass: "bg-green-500" }
+                ]}
+              />
+            }
+            trigger={['hover', 'click']}
+            placement="bottomRight"
+            overlayClassName="rich-notification-popover"
           >
-            <Badge count={counts.contacts?.PENDING} size="small" offset={[2, 0]} className="custom-badge" showZero={false} overflowCount={99}>
-              <HiOutlineMail size={20} className="text-white opacity-80 hover:opacity-100" />
-            </Badge>
-          </button>
-        </Popover>
+            <button
+              onClick={() => router.push("/admin/contact-us")}
+              className="flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition-all text-white active:scale-95"
+            >
+              <Badge count={counts.contacts?.PENDING} size="small" offset={[2, 0]} className="custom-badge" showZero={false} overflowCount={99}>
+                <HiOutlineMail size={20} className="text-white opacity-80 hover:opacity-100" />
+              </Badge>
+            </button>
+          </Popover>
+        )}
 
         <div className="w-[1px] h-6 bg-white/20 mx-1" />
 

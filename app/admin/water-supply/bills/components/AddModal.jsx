@@ -70,8 +70,10 @@ const AddBillModal = React.memo(({ modal, setModal }) => {
         },
     });
 
-    const handleSubmit = React.useCallback((values) => {
-        createBill.mutate(values);
+    const handleSubmit = React.useCallback((values, { setSubmitting }) => {
+        createBill.mutate(values, {
+            onSettled: () => setSubmitting(false)
+        });
     }, [createBill]);
 
     const handleCloseModal = React.useCallback((force = false) => {

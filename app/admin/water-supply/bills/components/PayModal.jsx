@@ -38,8 +38,10 @@ const PayBillModal = React.memo(({ modal, setModal }) => {
         },
     });
 
-    const handleSubmit = React.useCallback((values) => {
-        payBill.mutate({ billId: modal.data._id, paymentMode: values.paymentMode });
+    const handleSubmit = React.useCallback((values, { setSubmitting }) => {
+        payBill.mutate({ billId: modal.data._id, paymentMode: values.paymentMode }, {
+            onSettled: () => setSubmitting(false)
+        });
     }, [payBill, modal]);
 
     const handleCloseModal = React.useCallback((force = false) => {

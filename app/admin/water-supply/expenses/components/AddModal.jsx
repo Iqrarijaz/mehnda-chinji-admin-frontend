@@ -45,10 +45,12 @@ const AddExpenseModal = React.memo(({ modal, setModal }) => {
         },
     });
 
-    const handleSubmit = React.useCallback((values) => {
+    const handleSubmit = React.useCallback((values, { setSubmitting }) => {
         createExpense.mutate({
             ...values,
             expenseDate: expenseDate ? expenseDate.toISOString() : undefined
+        }, {
+            onSettled: () => setSubmitting(false)
         });
     }, [createExpense, expenseDate]);
 

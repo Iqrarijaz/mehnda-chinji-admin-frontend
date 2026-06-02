@@ -49,8 +49,10 @@ const BulkAddModal = React.memo(({ modal, setModal }) => {
         },
     });
 
-    const handleSubmit = React.useCallback((values) => {
-        bulkCreateBills.mutate(values);
+    const handleSubmit = React.useCallback((values, { setSubmitting }) => {
+        bulkCreateBills.mutate(values, {
+            onSettled: () => setSubmitting(false)
+        });
     }, [bulkCreateBills]);
 
     const handleCloseModal = React.useCallback((force = false) => {
