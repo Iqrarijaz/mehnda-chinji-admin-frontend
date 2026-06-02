@@ -28,9 +28,9 @@ export const TableSkeleton = ({ rows = 5, columns = 5 }) => {
 
 export const StatCardSkeleton = () => {
     return (
-        <div className="min-w-[100px] max-w-[150px] flex-1 h-[40px] rounded border border-slate-100 bg-white shadow-sm flex items-center justify-center px-3 gap-2 overflow-hidden">
-            <SkeletonPulse className="w-6 h-5" />
-            <SkeletonPulse className="w-12 h-3" />
+        <div className="w-full md:w-auto md:min-w-[100px] md:max-w-[150px] flex-1 h-[32px] rounded-[2px] border-2 border-slate-100 bg-white shadow-sm flex items-center justify-center px-3 gap-2 overflow-hidden">
+            <SkeletonPulse className="w-6 h-4" />
+            <SkeletonPulse className="w-12 h-2" />
         </div>
     );
 };

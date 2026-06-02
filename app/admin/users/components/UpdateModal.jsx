@@ -126,7 +126,8 @@ const UpdateUserModal = React.memo(({ modal, setModal }) => {
                                                     options={[
                                                         { value: "USER", label: "USER" },
                                                         { value: "ADMIN", label: "ADMIN" },
-                                                        { value: "SUPER_ADMIN", label: "SUPER_ADMIN" }
+                                                        { value: "SUPER_ADMIN", label: "SUPER_ADMIN" },
+                                                        { value: "APP_ADMIN", label: "APP_ADMIN" }
                                                     ]}
                                                     className="modern-select-box"
                                                 />

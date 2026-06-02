@@ -19,7 +19,8 @@ Axios.interceptors.request.use(
       let local = JSON.parse(localStorage.getItem("userData"));
       const token = local?.token;
       if (token) {
-        config.headers["Authorization"] = token;
+        const normalizedToken = token.startsWith("Bearer ") ? token : `Bearer ${token}`;
+        config.headers["Authorization"] = normalizedToken;
       }
     }
     return config;

@@ -23,14 +23,14 @@ const MenuList = [
     link: "/admin/posts",
     permission: PERMISSIONS.POSTS.READ
   },
-/*
-  {
-    name: "Locations",
-    icon: <FaMapMarkerAlt size={20} />,
-    link: "/admin/locations",
-    permission: PERMISSIONS.LOCATIONS.READ
-  },
-*/
+  /*
+    {
+      name: "Locations",
+      icon: <FaMapMarkerAlt size={20} />,
+      link: "/admin/locations",
+      permission: PERMISSIONS.LOCATIONS.READ
+    },
+  */
 
   {
     name: "Businesses",
@@ -67,6 +67,33 @@ const MenuList = [
     link: "/admin/admin-users",
     icon: <FaUserShield size={20} />,
     permission: PERMISSIONS.ADMIN_USERS.READ
+  },
+  {
+    name: "Water Supply",
+    icon: <FaDroplet size={20} />,
+    permission: PERMISSIONS.WATER_SUPPLY.READ,
+    subItems: [
+      {
+        name: "Connections",
+        link: "/admin/water-supply/connections",
+        permission: PERMISSIONS.WATER_SUPPLY.READ,
+      },
+      {
+        name: "Bills",
+        link: "/admin/water-supply/bills",
+        permission: PERMISSIONS.WATER_SUPPLY.READ,
+      },
+      {
+        name: "Expenses",
+        link: "/admin/water-supply/expenses",
+        permission: PERMISSIONS.WATER_SUPPLY.READ,
+      },
+      {
+        name: "Reports",
+        link: "/admin/water-supply/reports",
+        permission: PERMISSIONS.WATER_SUPPLY.READ,
+      },
+    ],
   },
   {
     name: "Configurations",
@@ -114,6 +141,7 @@ const MenuList = [
     icon: <FaTerminal size={20} />,
     permission: PERMISSIONS.LOGS.READ
   },
+
 ];
 
 

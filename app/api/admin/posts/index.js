@@ -3,8 +3,25 @@ import { Axios } from "@/interceptors";
 // Get list of posts with filters and pagination
 export async function GET_POSTS(data) {
     try {
+        const { currentPage, itemsPerPage, ...rest } = data || {};
+        
+        // Clean up parameters to prevent "null" strings being sent to backend
+        const cleanParams = {};
+        Object.entries({ ...rest, page: currentPage, limit: itemsPerPage }).forEach(([key, value]) => {
+            if (value !== null && value !== undefined && value !== "") {
+                cleanParams[key] = value;
+            }
+        });
+
         const response = await Axios.get("/api/admin/posts/list", {
-            params: data,
+            params: {
+                ...cleanParams,
+                _ts: Date.now(),
+            },
+            headers: {
+                "Cache-Control": "no-cache",
+                Pragma: "no-cache",
+            },
         });
         return response.data;
     } catch (error) {

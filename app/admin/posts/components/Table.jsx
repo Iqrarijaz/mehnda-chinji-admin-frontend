@@ -147,6 +147,25 @@ function PostsTable({ modal, setModal, postsList, onChange, setFilters, setLikes
 
     const allColumns = [
         {
+            title: "Category",
+            dataIndex: "category",
+            key: "category",
+            width: 130,
+            align: "center",
+            sorter: true,
+            render: (category) => (
+                <span
+                    className={`px-2.5 py-0.5 rounded-full capitalize font-bold text-white shadow-sm text-[9px] ${
+                        category === "PRIDE"
+                            ? "bg-indigo-600 dark:bg-indigo-500"
+                            : "bg-teal-600 dark:bg-teal-500"
+                    }`}
+                >
+                    {category || "FEED"}
+                </span>
+            ),
+        },
+        {
             title: "Type",
             dataIndex: "type",
             key: "type",

@@ -48,5 +48,11 @@ export const ADMIN_KEYS = {
     },
     CONFIGURATIONS: {
         LIST: "configurationsList",
+    },
+    WATER_SUPPLY: {
+        CONNECTIONS_LIST: "waterConnectionsList",
+        BILLS_LIST: "waterBillsList",
+        EXPENSES_LIST: "waterExpensesList",
+        REPORTS: "waterReports",
     }
 };

@@ -539,7 +539,7 @@ body {
 
   .ant-select-selector {
     border: 2px solid var(--sidebar-bg) !important; // Primary Teal
-    border-radius: 4px !important;
+    border-radius: 2px !important;
     height: 32px !important;
     padding: 0 11px !important;
     display: flex !important;
@@ -1455,14 +1455,6 @@ body::-webkit-scrollbar-thumb {
     .stat-title {
       font-size: 10px !important;
       letter-spacing: 0.02em !important;
-
-      .stat-title-full {
-        display: none !important;
-      }
-
-      .stat-title-short {
-        display: inline !important;
-      }
     }
   }
 

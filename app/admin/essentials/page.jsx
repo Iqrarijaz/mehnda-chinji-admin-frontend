@@ -111,9 +111,9 @@ export default function EssentialsPage() {
                 </div>
 
                 {/* Filter, Search, Columns and Add Button (Right) */}
-                <div className="flex flex-wrap md:flex-nowrap gap-3 items-center w-full md:w-auto justify-end">
+                <div className="flex flex-wrap md:flex-nowrap gap-1 items-center w-full md:w-auto justify-end">
                     {/* Desktop Filters (Visible on Tablet/Desktop) */}
-                    <div className="hidden md:flex items-center gap-3">
+                    <div className="hidden md:flex items-center gap-1">
                         <SelectBox
                             options={[
                                 { label: "All Categories", value: "" },
@@ -135,11 +135,11 @@ export default function EssentialsPage() {
                         />
                         <SearchInput
                             setFilters={setFilters}
-                            className="!max-w-[180px] !h-[32px] mt-1"
+                            className="!max-w-[180px] !h-[32px] mt-1 !border-2 !rounded-[2px]"
                         />
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1">
                         <ColumnVisibilityDropdown
                             options={columnOptions}
                             visibleColumns={visibleColumns}
@@ -151,7 +151,7 @@ export default function EssentialsPage() {
                             onClick={handleRefresh}
                             disabled={isRefreshing}
                             title="Refresh Data"
-                            className="flex items-center justify-center !h-[32px] !w-[32px] !border !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <HiRefresh
                                 size={16}
@@ -162,17 +162,17 @@ export default function EssentialsPage() {
                         {/* Mobile Filter Toggle */}
                         <button
                             onClick={() => setIsFilterModalOpen(true)}
-                            className="mobile-filter-btn md:hidden"
+                            className="flex md:hidden items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white shadow-sm transition-all"
                             title="Filters"
                         >
-                            <FiFilter size={18} />
+                            <FiFilter size={16} />
                         </button>
 
                         <AddButton
                             title="Add Essential"
                             icon={false}
                             onClick={() => setModal({ name: "Add", data: null, state: true })}
-                            className="!h-[32px] !border-2 !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded !text-[10px] font-medium shadow-sm transition-all !px-3"
+                            className="!h-[32px] !border-2 !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded-[2px] !text-[10px] font-medium shadow-sm transition-all !px-3"
                         />
                     </div>
                 </div>

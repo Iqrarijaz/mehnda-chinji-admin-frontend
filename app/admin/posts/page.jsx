@@ -33,6 +33,10 @@ const STATUS_OPTIONS = [
     { value: "ACTIVE", label: "Active" },
     { value: "INACTIVE", label: "Inactive" },
 ];
+const CATEGORY_OPTIONS = [
+    { value: "FEED", label: "Feed" },
+    { value: "PRIDE", label: "Pride" }
+];
 
 export default function PostsPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -45,6 +49,7 @@ export default function PostsPage() {
         currentPage: 1,
         search: null,
         type: null,
+        category: null,
         status: null,
         sortOrder: -1,
         sortingKey: "_id",
@@ -52,9 +57,10 @@ export default function PostsPage() {
     });
 
     // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["type", "content", "likesCount", "commentsCount", "status", "createdAt", "actions"]);
+    const [visibleColumns, setVisibleColumns] = useState(["category", "type", "content", "likesCount", "commentsCount", "status", "createdAt", "actions"]);
 
     const columnOptions = [
+        { label: "Category", value: "category" },
         { label: "Type", value: "type" },
         { label: "Content", value: "content" },
         { label: "Likes", value: "likesCount" },
@@ -113,6 +119,10 @@ export default function PostsPage() {
     const isRefreshing = viewMode === "table" ? isRefreshingTable : isRefreshingInfinite;
 
     // Filter handlers
+    const handleCategoryFilter = useCallback((value) => {
+        setFilters((old) => ({ ...old, category: value || null, currentPage: 1 }));
+    }, []);
+
     const handleTypeFilter = useCallback((value) => {
         setFilters((old) => ({ ...old, type: value || null, currentPage: 1 }));
     }, []);
@@ -121,15 +131,7 @@ export default function PostsPage() {
         setFilters((old) => ({ ...old, status: value || null, currentPage: 1 }));
     }, []);
 
-    const hasActiveFilters = !!(filters.type || filters.status || filters.search);
-
-    // Unified list + infinite helpers
-    const unifiedPostsList = useMemo(() => {
-        if (viewMode === "table") {
-            return postsList?.data?.data || [];
-        }
-        return infinitePostsQuery.data?.pages?.flatMap((p) => p?.data || []) || [];
-    }, [viewMode, postsList, infinitePostsQuery.data]);
+    const hasActiveFilters = !!(filters.type || filters.status || filters.search || filters.category);
 
     const hasMore = useMemo(() => {
         const pages = infinitePostsQuery.data?.pages || [];
@@ -173,8 +175,9 @@ export default function PostsPage() {
                 <div className="flex gap-2 items-center w-full md:w-auto justify-end">
                     {/* Desktop Filters (Hidden on Mobile) */}
                     <div className="hidden md:flex items-center gap-3">
-                        <SelectBox placeholder="Type" allowClear handleChange={handleTypeFilter} value={filters?.type} width={160} options={POST_TYPES.map((t) => ({ value: t.value, label: t.label }))} />
-                        <SelectBox placeholder="Status" allowClear handleChange={handleStatusFilter} value={filters?.status} width={160} options={STATUS_OPTIONS.map((s) => ({ value: s.value, label: s.label }))} />
+                        <SelectBox placeholder="Category" allowClear handleChange={handleCategoryFilter} value={filters?.category} width={140} options={CATEGORY_OPTIONS} />
+                        <SelectBox placeholder="Type" allowClear handleChange={handleTypeFilter} value={filters?.type} width={140} options={POST_TYPES.map((t) => ({ value: t.value, label: t.label }))} />
+                        <SelectBox placeholder="Status" allowClear handleChange={handleStatusFilter} value={filters?.status} width={140} options={STATUS_OPTIONS.map((s) => ({ value: s.value, label: s.label }))} />
                         <SearchInput setFilters={setFilters} pageKey="currentPage" />
                     </div>
 
@@ -191,7 +194,7 @@ export default function PostsPage() {
                             onClick={handleRefresh}
                             disabled={isRefreshing}
                             title="Refresh Data"
-                            className="flex items-center justify-center !h-[32px] !w-[32px] !border !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
                         </button>
@@ -234,7 +237,7 @@ export default function PostsPage() {
                     <PostCardList
                         modal={modal}
                         setModal={setModal}
-                        postsList={unifiedPostsList}
+                        postsList={infinitePostsQuery}
                         loadMore={loadMore}
                         hasMore={hasMore}
                         setFilters={setFilters}
@@ -245,7 +248,7 @@ export default function PostsPage() {
                     <PostsTable
                         modal={modal}
                         setModal={setModal}
-                        postsList={unifiedPostsList}
+                        postsList={postsList}
                         onChange={onChange}
                         setFilters={setFilters}
                         setLikesModal={setLikesModal}

@@ -126,7 +126,7 @@ function PostCardList({
         });
     }, [deleteMutation]);
 
-    const posts = postsList?.data?.data || [];
+    const posts = postsList?.data?.pages?.flatMap((page) => page?.data || []) || [];
     const isLoading = postsList?.status === "loading";
     const isLoadingMore = postsList?.isFetchingNextPage;
 

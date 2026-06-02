@@ -24,17 +24,14 @@ const StatCard = ({
     return (
         <button
             onClick={onClick}
-            className="stat-card"
+            className="stat-card w-full md:w-auto md:flex-none"
             style={{
                 position: "relative",
-                width: "fit-content",
-                minWidth: "fit-content",
-                flex: "0 0 auto", 
                 background: cardBg,
-                border: `1.5px solid ${cardBorder}`,
-                borderRadius: 4,
+                border: `2px solid ${cardBorder}`,
+                borderRadius: 2,
                 padding: "0 14px",
-                height: 36,
+                height: 32,
                 display: "flex",
                 alignItems: "center",
                 cursor: "pointer",
@@ -133,7 +130,7 @@ const StatCard = ({
                     background: active
                         ? "rgba(255,255,255,0.35)"
                         : color,
-                    borderRadius: "0 0 4px 4px",
+                    borderRadius: "0 0 0 0",
                     opacity: active ? 1 : 0.55,
                 }}
             />

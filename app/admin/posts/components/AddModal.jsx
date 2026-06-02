@@ -43,6 +43,7 @@ const initialValues = {
         relationship: "",
         location: "",
         severity: "MEDIUM",
+        profileImage: "",
     },
     isDeleted: false,
 };
@@ -74,6 +75,21 @@ function AddPostModal({ modal, setModal }) {
         mutationKey: ["deleteImage"],
         mutationFn: DELETE_POST_IMAGE,
     });
+
+    const handleProfileImageUpload = async (options, setFieldValue) => {
+        const { file, onSuccess, onError } = options;
+        const formData = new FormData();
+        formData.append("images", file);
+        try {
+            const response = await uploadImages.mutateAsync(formData);
+            const newImageUrl = response.data[0];
+            setFieldValue("metadata.profileImage", newImageUrl);
+            onSuccess(newImageUrl);
+        } catch (error) {
+            toast.error("Failed to upload profile image");
+            onError(error);
+        }
+    };
 
     const handleUpload = async (options, setFieldValue, currentImages) => {
         const { file, onSuccess, onError } = options;
@@ -115,6 +131,7 @@ function AddPostModal({ modal, setModal }) {
                 deceasedName: values.metadata.deceasedName,
                 dateOfDeath: values.metadata.dateOfDeath,
                 relationship: values.metadata.relationship,
+                profileImage: values.metadata.profileImage,
             };
         } else if (values.type === "ACCIDENT") {
             metadata = {
@@ -185,6 +202,41 @@ function AddPostModal({ modal, setModal }) {
                     {({ values, errors, touched, setFieldValue, handleChange, handleBlur, isSubmitting }) => (
                         <Form className="space-y-2">
                             {createPost.status === "loading" && <Loading />}
+
+                            <div className="modal-section pb-1 border-b border-slate-100 mb-2">
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Profile Image (For Pride/Death cards)</p>
+                                <div className="flex items-center gap-4">
+                                    <Upload
+                                        listType="picture-card"
+                                        className="profile-image-upload scale-[0.9] origin-left"
+                                        showUploadList={false}
+                                        customRequest={(options) => handleProfileImageUpload(options, setFieldValue)}
+                                        accept="image/*"
+                                    >
+                                        {values.metadata.profileImage ? (
+                                            <img 
+                                                src={values.metadata.profileImage} 
+                                                alt="Profile Preview" 
+                                                className="w-full h-full object-cover rounded"
+                                            />
+                                        ) : (
+                                            <div className="flex flex-col items-center justify-center gap-0.5">
+                                                <PlusOutlined style={{ fontSize: '14px', color: '#64748b' }} />
+                                                <div className="text-[9px] font-semibold text-slate-500 uppercase tracking-tight">Upload</div>
+                                            </div>
+                                        )}
+                                    </Upload>
+                                    {values.metadata.profileImage && (
+                                        <CustomButton
+                                            label="Remove Profile Photo"
+                                            type="secondary"
+                                            size="small"
+                                            className="!py-1 !px-2.5 !h-auto text-xs text-red-500 hover:text-red-600"
+                                            onClick={() => setFieldValue("metadata.profileImage", "")}
+                                        />
+                                    )}
+                                </div>
+                            </div>
 
                             <div className="modal-section pb-1">
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Basic Info</p>

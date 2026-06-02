@@ -16,11 +16,17 @@ const STATUS_OPTIONS = [
     { value: "INACTIVE", label: "Inactive" }
 ];
 
+const CATEGORY_OPTIONS = [
+    { value: "FEED", label: "Feed" },
+    { value: "PRIDE", label: "Pride" }
+];
+
 function FilterModal({ isOpen, onClose, filters, setFilters }) {
     const handleReset = () => {
         setFilters({
             search: "",
             type: undefined,
+            category: undefined,
             status: undefined,
             currentPage: 1,
             pageSize: 10
@@ -31,6 +37,7 @@ function FilterModal({ isOpen, onClose, filters, setFilters }) {
     const activeCount = [
         filters.search,
         filters.type,
+        filters.category,
         filters.status
     ].filter(Boolean).length;
 
@@ -45,6 +52,21 @@ function FilterModal({ isOpen, onClose, filters, setFilters }) {
             activeFiltersCount={activeCount}
         >
             <div className="flex flex-col gap-2">
+                <div className="space-y-0.5 px-0.5">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Category</label>
+                    <Select
+                        placeholder="All Categories"
+                        className="w-full modern-select-box"
+                        value={filters.category}
+                        onChange={(val) => setFilters(prev => ({ ...prev, category: val, currentPage: 1 }))}
+                        allowClear
+                    >
+                        {CATEGORY_OPTIONS.map(c => (
+                            <Select.Option key={c.value} value={c.value}>{c.label}</Select.Option>
+                        ))}
+                    </Select>
+                </div>
+
                 <div className="space-y-0.5 px-0.5">
                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Content Search</label>
                     <Input

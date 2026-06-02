@@ -90,5 +90,11 @@ export const PERMISSIONS = {
     LOGS: {
         READ: "logs.read",
         DELETE: "logs.delete",
+    },
+    WATER_SUPPLY: {
+        CREATE: "water_supply.create",
+        READ: "water_supply.read",
+        UPDATE: "water_supply.update",
+        DELETE: "water_supply.delete",
     }
 };
