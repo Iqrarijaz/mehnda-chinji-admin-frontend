@@ -24,13 +24,16 @@ const validationSchema = Yup.object().shape({
     address: Yup.string().required("Address is required"),
     lat: Yup.number().nullable().typeError("Must be a number"),
     lng: Yup.number().nullable().typeError("Must be a number"),
-    type: Yup.string().nullable(),
+    type: Yup.string().required("Type is required"),
+    category: Yup.string().required("Category is required"),
     contact: Yup.array().of(
         Yup.object().shape({
             name: Yup.string().required("Contact name is required"),
-            number: Yup.string().required("Contact number is required"),
+            number: Yup.string()
+                .required("Contact number is required")
+                .matches(/^03\d{9}$/, "Number must start with 03 and be exactly 11 digits"),
         })
-    )
+    ).min(1, "At least one contact is required").required("Contact information is required")
 });
 
 // Initial values
@@ -332,7 +335,7 @@ function AddEssentialModal({ modal, setModal }) {
                                             </div>
                                             <div className="md:col-span-1">
                                                 <div className="flex flex-col gap-1.5 overflow-hidden">
-                                                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors">Category</label>
+                                                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors">Category <span className="text-red-500">*</span></label>
                                                     <SelectBox
                                                         options={ESSENTIAL_CATEGORIES?.map((cat) => ({
                                                             value: cat.value,
@@ -344,11 +347,14 @@ function AddEssentialModal({ modal, setModal }) {
                                                         width="100%"
                                                         className="modern-select-box"
                                                     />
+                                                    {errors.category && touched.category && (
+                                                        <div className="text-red-500 text-[10px] font-medium ml-1">{errors.category}</div>
+                                                    )}
                                                 </div>
                                             </div>
                                             <div className="md:col-span-1">
                                                 <div className="flex flex-col gap-1.5 overflow-hidden">
-                                                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors">Type</label>
+                                                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors">Type <span className="text-red-500">*</span></label>
                                                     <SelectBox
                                                         options={(ESSENTIAL_TYPE_MAPPING?.[values.category] || []).map((t) => ({
                                                             value: t,
@@ -360,6 +366,9 @@ function AddEssentialModal({ modal, setModal }) {
                                                         width="100%"
                                                         className="modern-select-box"
                                                     />
+                                                    {errors.type && touched.type && (
+                                                        <div className="text-red-500 text-[10px] font-medium ml-1">{errors.type}</div>
+                                                    )}
                                                 </div>
                                             </div>
                                             <div className="md:col-span-2">
@@ -405,41 +414,53 @@ function AddEssentialModal({ modal, setModal }) {
                                     {/* Section 3: Contacts */}
                                     <div className="modal-section">
                                         <div className="flex items-center justify-between mb-2">
-                                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors">Contact Information</p>
+                                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors">Contact Information <span className="text-red-500">*</span></p>
                                         </div>
 
                                         <FieldArray name="contact">
                                             {({ push, remove }) => (
                                                 <div className="space-y-2">
                                                     {values.contact.map((_, index) => (
-                                                        <div key={index} className="flex gap-2 items-start">
-                                                            <div className="flex-1 bg-slate-50 dark:bg-slate-900/40 p-1 rounded flex gap-2 border border-slate-100 dark:border-slate-800 transition-colors">
-                                                                <div className="flex-1">
-                                                                    <Input
-                                                                        value={values.contact[index].name}
-                                                                        onChange={(e) => setFieldValue(`contact.${index}.name`, e.target.value)}
-                                                                        placeholder="Label"
-                                                                        className="!border-none !bg-transparent !shadow-none !h-[28px] !text-xs font-bold text-slate-600 dark:text-slate-300 transition-colors"
-                                                                    />
+                                                        <div key={index} className="flex flex-col gap-1">
+                                                            <div className="flex gap-2 items-start">
+                                                                <div className="flex-1 bg-slate-50 dark:bg-slate-900/40 p-1 rounded flex gap-2 border border-slate-100 dark:border-slate-800 transition-colors">
+                                                                    <div className="flex-1">
+                                                                        <Input
+                                                                            value={values.contact[index].name}
+                                                                            onChange={(e) => setFieldValue(`contact.${index}.name`, e.target.value)}
+                                                                            placeholder="Name"
+                                                                            className="!border-none !bg-transparent !shadow-none !h-[28px] !text-xs font-bold text-slate-600 dark:text-slate-300 transition-colors"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 self-center" />
+                                                                    <div className="flex-[1.5] flex items-center">
+                                                                        <Input
+                                                                            value={values.contact[index].number}
+                                                                            onChange={(e) => setFieldValue(`contact.${index}.number`, e.target.value)}
+                                                                            placeholder="Number"
+                                                                            className="!border-none !bg-transparent !shadow-none !h-[28px] !text-xs dark:text-slate-200 transition-colors"
+                                                                        />
+                                                                    </div>
                                                                 </div>
-                                                                <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 self-center" />
-                                                                <div className="flex-[1.5] flex items-center">
-                                                                    <Input
-                                                                        value={values.contact[index].number}
-                                                                        onChange={(e) => setFieldValue(`contact.${index}.number`, e.target.value)}
-                                                                        placeholder="Number"
-                                                                        className="!border-none !bg-transparent !shadow-none !h-[28px] !text-xs dark:text-slate-200 transition-colors"
+                                                                {values.contact.length > 1 && (
+                                                                    <CustomButton
+                                                                        type="secondary"
+                                                                        onClick={() => remove(index)}
+                                                                        icon={<FaTrash size={10} />}
+                                                                        className="!h-[30px] !w-[30px] !rounded flex items-center justify-center p-0"
+                                                                        danger
                                                                     />
-                                                                </div>
+                                                                )}
                                                             </div>
-                                                            {values.contact.length > 1 && (
-                                                                <CustomButton
-                                                                    type="secondary"
-                                                                    onClick={() => remove(index)}
-                                                                    icon={<FaTrash size={10} />}
-                                                                    className="!h-[30px] !w-[30px] !rounded flex items-center justify-center p-0"
-                                                                    danger
-                                                                />
+                                                            {errors.contact?.[index] && touched.contact?.[index] && (
+                                                                <div className="flex gap-2 px-1 text-[10px] text-red-500 font-medium">
+                                                                    {errors.contact[index].name && touched.contact[index].name && (
+                                                                        <span className="flex-1">{errors.contact[index].name}</span>
+                                                                    )}
+                                                                    {errors.contact[index].number && touched.contact[index].number && (
+                                                                        <span className="flex-[1.5]">{errors.contact[index].number}</span>
+                                                                    )}
+                                                                </div>
                                                             )}
                                                         </div>
                                                     ))}
@@ -451,6 +472,9 @@ function AddEssentialModal({ modal, setModal }) {
                                                     >
                                                         <FaPlus size={8} /> Add More Contact
                                                     </button>
+                                                    {typeof errors.contact === "string" && touched.contact && (
+                                                        <div className="text-red-500 text-[10px] font-medium ml-1">{errors.contact}</div>
+                                                    )}
                                                 </div>
                                             )}
                                         </FieldArray>
