@@ -63,13 +63,11 @@ const AddExpenseModal = React.memo(({ modal, setModal }) => {
                 okType: "danger",
                 cancelText: "Stay",
                 onOk: () => {
-                    formikRef.current?.resetForm();
                     setExpenseDate(moment());
                     setModal({ name: null, state: false, data: null });
                 },
             });
         } else {
-            formikRef.current?.resetForm();
             setExpenseDate(moment());
             setModal({ name: null, state: false, data: null });
         }
@@ -77,7 +75,6 @@ const AddExpenseModal = React.memo(({ modal, setModal }) => {
 
     useEffect(() => {
         if (!isModalOpen) {
-            formikRef.current?.resetForm();
             setExpenseDate(moment());
         }
     }, [isModalOpen]);
@@ -99,6 +96,7 @@ const AddExpenseModal = React.memo(({ modal, setModal }) => {
             open={isModalOpen}
             onCancel={() => handleCloseModal(false)}
             footer={null}
+            destroyOnClose={true}
             className="modern-modal"
         >
             <div className="p-1">

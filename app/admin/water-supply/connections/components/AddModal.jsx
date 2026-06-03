@@ -59,21 +59,13 @@ const AddConnectionModal = React.memo(({ modal, setModal }) => {
                 okType: "danger",
                 cancelText: "Stay",
                 onOk: () => {
-                    formikRef.current?.resetForm();
                     setModal({ name: null, state: false, data: null });
                 },
             });
         } else {
-            formikRef.current?.resetForm();
             setModal({ name: null, state: false, data: null });
         }
     }, [setModal]);
-
-    useEffect(() => {
-        if (!modal.state) {
-            formikRef.current?.resetForm();
-        }
-    }, [modal.state]);
 
     return (
         <Modal
@@ -92,6 +84,7 @@ const AddConnectionModal = React.memo(({ modal, setModal }) => {
             open={modal?.name === "Add" && modal?.state}
             onCancel={() => handleCloseModal(false)}
             footer={null}
+            destroyOnClose={true}
             className="modern-modal"
         >
             <div className="p-1">

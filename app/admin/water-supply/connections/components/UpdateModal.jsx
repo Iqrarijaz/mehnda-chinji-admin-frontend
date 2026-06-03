@@ -62,12 +62,10 @@ const UpdateConnectionModal = React.memo(({ modal, setModal }) => {
                 okType: "danger",
                 cancelText: "Stay",
                 onOk: () => {
-                    formikRef.current?.resetForm();
                     setModal({ name: null, state: false, data: null });
                 },
             });
         } else {
-            formikRef.current?.resetForm();
             setModal({ name: null, state: false, data: null });
         }
     }, [setModal]);
@@ -80,8 +78,6 @@ const UpdateConnectionModal = React.memo(({ modal, setModal }) => {
                 address: modal.data.address || "",
                 status: modal.data.status || "ACTIVE",
             });
-        } else if (!isModalOpen) {
-            formikRef.current?.resetForm();
         }
     }, [isModalOpen, modal?.data]);
 
@@ -102,6 +98,7 @@ const UpdateConnectionModal = React.memo(({ modal, setModal }) => {
             open={isModalOpen}
             onCancel={() => handleCloseModal(false)}
             footer={null}
+            destroyOnClose={true}
             className="modern-modal"
         >
             <div className="p-1">

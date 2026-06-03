@@ -53,21 +53,15 @@ const PayBillModal = React.memo(({ modal, setModal }) => {
                 okType: "danger",
                 cancelText: "Stay",
                 onOk: () => {
-                    formikRef.current?.resetForm();
                     setModal({ name: null, state: false, data: null });
                 },
             });
         } else {
-            formikRef.current?.resetForm();
             setModal({ name: null, state: false, data: null });
         }
     }, [setModal, isPayOpen]);
 
-    useEffect(() => {
-        if (!isPayOpen && !isHistoryOpen) {
-            formikRef.current?.resetForm();
-        }
-    }, [isPayOpen, isHistoryOpen]);
+
 
     if (isHistoryOpen) {
         return (
@@ -85,6 +79,7 @@ const PayBillModal = React.memo(({ modal, setModal }) => {
                 open={isHistoryOpen}
                 onCancel={() => handleCloseModal(true)}
                 footer={null}
+                destroyOnClose={true}
                 centered
                 className="modern-modal"
             >
@@ -141,6 +136,7 @@ const PayBillModal = React.memo(({ modal, setModal }) => {
             open={isPayOpen}
             onCancel={() => handleCloseModal(false)}
             footer={null}
+            destroyOnClose={true}
             className="modern-modal"
         >
             <div className="p-1">

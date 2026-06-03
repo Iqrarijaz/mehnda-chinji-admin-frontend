@@ -2,11 +2,12 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Modal } from "antd";
+import { Modal, DatePicker } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import moment from "moment";
+import dayjs from "dayjs";
 
 import FormField from "@/components/InnerPage/FormField";
 import SelectBox from "@/components/SelectBox";
@@ -85,21 +86,13 @@ const AddBillModal = React.memo(({ modal, setModal }) => {
                 okType: "danger",
                 cancelText: "Stay",
                 onOk: () => {
-                    formikRef.current?.resetForm();
                     setModal({ name: null, state: false, data: null });
                 },
             });
         } else {
-            formikRef.current?.resetForm();
             setModal({ name: null, state: false, data: null });
         }
     }, [setModal]);
-
-    useEffect(() => {
-        if (!isModalOpen) {
-            formikRef.current?.resetForm();
-        }
-    }, [isModalOpen]);
 
     return (
         <Modal
@@ -118,6 +111,7 @@ const AddBillModal = React.memo(({ modal, setModal }) => {
             open={isModalOpen}
             onCancel={() => handleCloseModal(false)}
             footer={null}
+            destroyOnClose={true}
             className="modern-modal"
         >
             <div className="p-1">
@@ -149,7 +143,22 @@ const AddBillModal = React.memo(({ modal, setModal }) => {
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                            <FormField label="Billing Month (YYYY-MM)" name="billingMonth" placeholder="2023-10" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1" />
+                                            <div className="flex flex-col space-y-1">
+                                                <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1">
+                                                    Billing Month <span className="text-red-500">*</span>
+                                                </label>
+                                                <DatePicker
+                                                    picker="month"
+                                                    format="YYYY-MM"
+                                                    value={values.billingMonth ? dayjs(values.billingMonth, "YYYY-MM") : null}
+                                                    onChange={(date, dateString) => setFieldValue("billingMonth", dateString)}
+                                                    className={`!h-[32px] !text-xs !rounded !w-full ${errors.billingMonth && touched.billingMonth ? '!border-red-500' : ''}`}
+                                                    allowClear={false}
+                                                />
+                                                {errors.billingMonth && touched.billingMonth && (
+                                                    <div className="text-red-500 text-[10px] ml-1 font-bold">{errors.billingMonth}</div>
+                                                )}
+                                            </div>
                                             <FormField label="Amount" name="amount" type="number" placeholder="500" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1" />
                                         </div>
                                     </div>
