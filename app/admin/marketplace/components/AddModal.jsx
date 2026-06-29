@@ -41,6 +41,7 @@ const AddListingModal = React.memo(function AddListingModal({ modal, setModal })
         formData.append("negotiable", values.negotiable ? "true" : "false");
         formData.append("showPhoneNumber", values.showPhoneNumber ? "true" : "false");
         formData.append("isFeatured", values.isFeatured ? "true" : "false");
+        formData.append("metadata", values.metadataString ? JSON.stringify(JSON.parse(values.metadataString)) : "{}");
 
         // Category & Type structures containing EN & UR translations
         formData.append("category", JSON.stringify({
@@ -170,6 +171,26 @@ const AddListingModal = React.memo(function AddListingModal({ modal, setModal })
                     rules={[{ required: true, message: "Please enter description" }]}
                 >
                     <Input.TextArea rows={4} placeholder="Enter item condition, breed, age details..." />
+                </Form.Item>
+
+                <Form.Item
+                    name="metadataString"
+                    label="Metadata (JSON)"
+                    rules={[
+                        {
+                            validator: (_, value) => {
+                                if (!value) return Promise.resolve();
+                                try {
+                                    JSON.parse(value);
+                                    return Promise.resolve();
+                                } catch (e) {
+                                    return Promise.reject("Invalid JSON format");
+                                }
+                            }
+                        }
+                    ]}
+                >
+                    <Input.TextArea rows={3} placeholder='e.g. { "make": "Toyota", "model": "Civic", "year": 2021 }' />
                 </Form.Item>
 
                 <Form.Item label="Upload Images">

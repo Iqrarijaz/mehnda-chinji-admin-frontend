@@ -181,6 +181,19 @@ const MarketplaceTable = React.memo(({ marketplaceList, setModal, onChange, visi
             }
         },
         {
+            title: "Metadata",
+            dataIndex: "metadata",
+            key: "metadata",
+            width: 150,
+            render: (val) => (
+                <Tooltip title={<pre className="text-xs">{JSON.stringify(val, null, 2)}</pre>}>
+                    <div className="max-w-[150px] overflow-hidden whitespace-nowrap text-ellipsis italic font-mono text-slate-500 text-[10px] cursor-help">
+                        {val && Object.keys(val).length > 0 ? JSON.stringify(val) : "{}"}
+                    </div>
+                </Tooltip>
+            )
+        },
+        {
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",

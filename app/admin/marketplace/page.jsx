@@ -27,15 +27,16 @@ export default function MarketplacePage() {
 
     const [visibleColumns, setVisibleColumns] = useState(["item", "category", "price", "seller", "place", "status", "createdAt", "actions"]);
 
-    const columnOptions = [
+    const columnOptions = React.useMemo(() => [
         { label: "Item / Image", value: "item" },
         { label: "Category / Type", value: "category" },
         { label: "Price", value: "price" },
         { label: "Seller", value: "seller" },
         { label: "Place", value: "place" },
         { label: "Status", value: "status" },
+        { label: "Metadata", value: "metadata" },
         { label: "Created At", value: "createdAt" }
-    ];
+    ], []);
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
 
@@ -53,9 +54,9 @@ export default function MarketplacePage() {
         setFilters((prev) => ({ ...prev, ...data }));
     }, []);
 
-    const handleStatusFilterChange = (value) => {
+    const handleStatusFilterChange = React.useCallback((value) => {
         onChange({ status: value || "", page: 1 });
-    };
+    }, [onChange]);
 
     return (
         <InnerPageCard title="Marketplace Listings">
@@ -64,7 +65,7 @@ export default function MarketplacePage() {
                 <SelectBox
                     placeholder="Status"
                     allowClear
-                    handleChange={(val) => onChange({ status: val || "", page: 1 })}
+                    handleChange={handleStatusFilterChange}
                     value={filters.status}
                     width={160}
                     options={[

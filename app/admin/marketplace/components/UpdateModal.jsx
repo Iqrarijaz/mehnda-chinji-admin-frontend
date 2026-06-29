@@ -33,7 +33,8 @@ const UpdateListingModal = React.memo(function UpdateListingModal({ modal, setMo
                 categoryEn: data.category?.en,
                 categoryUr: data.category?.ur,
                 typeEn: data.type?.en,
-                typeUr: data.type?.ur
+                typeUr: data.type?.ur,
+                metadataString: data.metadata ? JSON.stringify(data.metadata, null, 2) : "{}"
             });
         }
     }, [modal, form]);
@@ -62,6 +63,7 @@ const UpdateListingModal = React.memo(function UpdateListingModal({ modal, setMo
         formData.append("negotiable", values.negotiable ? "true" : "false");
         formData.append("showPhoneNumber", values.showPhoneNumber ? "true" : "false");
         formData.append("isFeatured", values.isFeatured ? "true" : "false");
+        formData.append("metadata", values.metadataString ? JSON.stringify(JSON.parse(values.metadataString)) : "{}");
 
         formData.append("category", JSON.stringify({
             en: values.categoryEn,
@@ -185,6 +187,26 @@ const UpdateListingModal = React.memo(function UpdateListingModal({ modal, setMo
                     rules={[{ required: true, message: "Please enter description" }]}
                 >
                     <Input.TextArea rows={4} placeholder="Enter item details..." />
+                </Form.Item>
+
+                <Form.Item
+                    name="metadataString"
+                    label="Metadata (JSON)"
+                    rules={[
+                        {
+                            validator: (_, value) => {
+                                if (!value) return Promise.resolve();
+                                try {
+                                    JSON.parse(value);
+                                    return Promise.resolve();
+                                } catch (e) {
+                                    return Promise.reject("Invalid JSON format");
+                                }
+                            }
+                        }
+                    ]}
+                >
+                    <Input.TextArea rows={3} placeholder='e.g. { "make": "Toyota", "model": "Civic", "year": 2021 }' />
                 </Form.Item>
 
                 <Form.Item label="Upload New Images (Overwrites existing images)">
