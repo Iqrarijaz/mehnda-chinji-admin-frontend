@@ -96,5 +96,22 @@ export const PERMISSIONS = {
         READ: "water_supply.read",
         UPDATE: "water_supply.update",
         DELETE: "water_supply.delete",
+    },
+    FEEDBACK: {
+        READ: "feedback.read",
+        UPDATE: "feedback.update",
+        DELETE: "feedback.delete",
+    },
+    ANNOUNCEMENTS: {
+        CREATE: "announcements.create",
+        READ: "announcements.read",
+        UPDATE: "announcements.update",
+        DELETE: "announcements.delete",
+    },
+    MARKETPLACE: {
+        CREATE: "marketplace.create",
+        READ: "marketplace.read",
+        UPDATE: "marketplace.update",
+        DELETE: "marketplace.delete",
     }
 };

@@ -41,14 +41,14 @@ export default function ReportsPage() {
     // Column Visibility State
     const [visibleColumns, setVisibleColumns] = useState(["reporter", "targetType", "reason", "description", "status", "createdAt", "actions"]);
 
-    const columnOptions = [
+    const columnOptions = React.useMemo(() => [
         { label: "Reporter", value: "reporter" },
         { label: "Target Type", value: "targetType" },
         { label: "Reason", value: "reason" },
         { label: "Description", value: "description" },
         { label: "Status", value: "status" },
         { label: "Created At", value: "createdAt" },
-    ];
+    ], []);
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
 
@@ -69,17 +69,17 @@ export default function ReportsPage() {
 
     const counts = countsData?.data || { pending: 0, reviewed: 0, resolved: 0 };
 
-    const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
+    const onChange = React.useCallback((data) => setFilters((old) => ({ ...old, ...data })), []);
 
-    const handleTargetTypeFilter = (value) => {
+    const handleTargetTypeFilter = React.useCallback((value) => {
         setFilters((prev) => ({ ...prev, targetType: value || null, currentPage: 1 }));
-    };
+    }, []);
 
-    const statCards = [
+    const statCards = React.useMemo(() => [
         { label: "Pending", short: "Pen", key: "PENDING", count: counts.pending, color: "#ea580c", bg: "#fff7ed", border: "#fed7aa" },
         { label: "Reviewed", short: "Rev", key: "REVIEWED", count: counts.reviewed, color: "#2563eb", bg: "#eff6ff", border: "#bfdbfe" },
         { label: "Resolved", short: "Res", key: "RESOLVED", count: counts.resolved, color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
-    ];
+    ], [counts.pending, counts.reviewed, counts.resolved]);
 
     return (
         <InnerPageCard title="Reports">

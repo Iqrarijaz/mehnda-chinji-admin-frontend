@@ -3,9 +3,8 @@ import React from "react";
 import { Modal, Tag } from "antd";
 import { FaMapMarkerAlt, FaAddressCard, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaEye, FaInfoCircle, FaExternalLinkAlt, FaCopy, FaLink } from "react-icons/fa";
 import { toast } from "react-toastify";
-import CustomButton from "@/components/shared/CustomButton";
 
-function ViewModal({ viewModal, setViewModal }) {
+const ViewModal = React.memo(({ viewModal, setViewModal }) => {
     const { open, data } = viewModal;
 
     const handleClose = () => {
@@ -307,6 +306,8 @@ function ViewModal({ viewModal, setViewModal }) {
             </div>
         </Modal>
     );
-}
+});
+
+ViewModal.displayName = "ViewModal";
 
 export default ViewModal;

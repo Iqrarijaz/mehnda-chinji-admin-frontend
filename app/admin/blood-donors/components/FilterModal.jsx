@@ -6,7 +6,7 @@ import SearchInput from "@/components/InnerPage/SearchInput";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
-function FilterModal({ isOpen, onClose, filters, onChange }) {
+const FilterModal = React.memo(({ isOpen, onClose, filters, onChange }) => {
     const handleReset = () => {
         onChange({
             search: "",
@@ -71,6 +71,8 @@ function FilterModal({ isOpen, onClose, filters, onChange }) {
             </div>
         </ResponsiveFilterModal>
     );
-}
+});
+
+FilterModal.displayName = "FilterModal";
 
 export default FilterModal;

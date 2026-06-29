@@ -26,7 +26,7 @@ const validationSchema = Yup.object().shape({
     address: Yup.string().required("Address is required"),
 });
 
-function UpdateBusinessModal({ modal, setModal }) {
+const UpdateBusinessModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
     const [users, setUsers] = React.useState([]);
@@ -312,6 +312,8 @@ function UpdateBusinessModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
+
+UpdateBusinessModal.displayName = "UpdateBusinessModal";
 
 export default UpdateBusinessModal;

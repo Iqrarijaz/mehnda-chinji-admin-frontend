@@ -1,8 +1,9 @@
+import React from "react";
 import { Modal, Tag, Divider } from "antd";
 import { FaFlag, FaUser, FaBullseye, FaInfoCircle, FaCalendarAlt, FaShieldAlt } from "react-icons/fa";
 import CustomButton from "@/components/shared/CustomButton";
 
-function ViewModal({ viewModal, setViewModal }) {
+const ViewModal = React.memo(({ viewModal, setViewModal }) => {
     const { open, data } = viewModal;
 
     const handleClose = () => {
@@ -128,6 +129,8 @@ function ViewModal({ viewModal, setViewModal }) {
             </div>
         </Modal>
     );
-}
+});
+
+ViewModal.displayName = "ViewModal";
 
 export default ViewModal;

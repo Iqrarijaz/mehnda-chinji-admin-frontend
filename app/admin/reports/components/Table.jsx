@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
     EyeOutlined,
     EllipsisOutlined,
@@ -13,13 +14,11 @@ import { timestampToDate } from "@/utils/date";
 import { UPDATE_REPORT_STATUS } from "@/app/api/admin/reports";
 import ViewModal from "./ViewModal";
 import ConfirmModal from "@/components/shared/ConfirmModal";
-import { Pagination, Table, Tag, Tooltip, Menu, Dropdown, Button } from "antd";
+import { Pagination, Table, Tag, Tooltip, Dropdown, Button } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
-import { useState } from "react";
-import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
-function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
+const ReportsTable = React.memo(({ reportsList, onChange, setFilters, visibleColumns = [] }) => {
     const queryClient = useQueryClient();
     const [viewModal, setViewModal] = useState({ open: false, data: null });
     const [confirmModal, setConfirmModal] = useState({
@@ -32,11 +31,9 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
         cancelText: "Cancel"
     });
 
-
-
-    const closeConfirmModal = () => {
+    const closeConfirmModal = React.useCallback(() => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-    };
+    }, []);
 
     // Status mutation (REVIEWED / RESOLVED)
     const statusMutation = useMutation({
@@ -53,7 +50,7 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
         },
     });
 
-    const handleUpdateStatus = (data, newStatus) => {
+    const handleUpdateStatus = React.useCallback((data, newStatus) => {
         setConfirmModal({
             isOpen: true,
             title: `Update Report Status`,
@@ -63,18 +60,18 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
             variant: 'primary',
             onConfirm: () => statusMutation.mutate({ _id: data._id, status: newStatus })
         });
-    };
+    }, [statusMutation]);
 
-    const handleSorting = (pagination, filters, sorter) => {
+    const handleSorting = React.useCallback((pagination, filters, sorter) => {
         setFilters(prev => ({
             ...prev,
             sortingKey: sorter.field || "_id",
             sortOrder: sorter.order === "ascend" ? 1 : -1,
             currentPage: pagination.current,
         }));
-    };
+    }, [setFilters]);
 
-    const actionMenu = (record) => ({
+    const actionMenu = React.useMemo(() => (record) => ({
         items: [
             {
                 key: "view",
@@ -110,12 +107,9 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
             },
         ],
         className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
-    });
+    }), [handleUpdateStatus]);
 
-
-
-
-    const allColumns = [
+    const allColumns = React.useMemo(() => [
         {
             title: "Reporter",
             dataIndex: "reporter",
@@ -203,9 +197,11 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
                 </Dropdown>
             ),
         }
-    ];
+    ], [actionMenu]);
 
-    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+    const activeColumns = React.useMemo(() => 
+        allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
+        [allColumns, visibleColumns]);
 
     return (
         <div className="space-y-4">
@@ -249,6 +245,8 @@ function ReportsTable({ reportsList, onChange, setFilters, visibleColumns }) {
             </div>
         </div>
     );
-}
+});
+
+ReportsTable.displayName = "ReportsTable";
 
 export default ReportsTable;

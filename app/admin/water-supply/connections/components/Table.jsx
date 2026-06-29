@@ -13,7 +13,7 @@ import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { hasPermission } from "@/utils/permissions";
 import { PERMISSIONS } from "@/config/permissions";
 
-const ConnectionsTable = ({ modal, setModal, connectionsList, onChange, filters, visibleColumns }) => {
+const ConnectionsTable = React.memo(({ modal, setModal, connectionsList, onChange, filters, visibleColumns = [] }) => {
     const { data, isFetching } = connectionsList;
     const queryClient = useQueryClient();
 
@@ -27,9 +27,9 @@ const ConnectionsTable = ({ modal, setModal, connectionsList, onChange, filters,
         cancelText: "Cancel"
     });
 
-    const closeConfirmModal = () => {
+    const closeConfirmModal = React.useCallback(() => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-    };
+    }, []);
 
     const deleteMutation = useMutation({
         mutationFn: DELETE_CONNECTION,
@@ -44,7 +44,7 @@ const ConnectionsTable = ({ modal, setModal, connectionsList, onChange, filters,
         },
     });
 
-    const handleDelete = (record) => {
+    const handleDelete = React.useCallback((record) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Deletion',
@@ -54,9 +54,9 @@ const ConnectionsTable = ({ modal, setModal, connectionsList, onChange, filters,
             variant: 'danger',
             onConfirm: () => deleteMutation.mutate({ connectionId: record._id })
         });
-    };
+    }, [deleteMutation]);
 
-    const actionMenu = (record) => {
+    const actionMenu = React.useMemo(() => (record) => {
         const items = [];
         
         if (hasPermission(PERMISSIONS.WATER_SUPPLY.UPDATE)) {
@@ -93,9 +93,9 @@ const ConnectionsTable = ({ modal, setModal, connectionsList, onChange, filters,
             items,
             className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
         };
-    };
+    }, [setModal, handleDelete]);
 
-    const allColumns = [
+    const allColumns = React.useMemo(() => [
         {
             title: "Connection ID",
             dataIndex: "connectionId",
@@ -177,9 +177,11 @@ const ConnectionsTable = ({ modal, setModal, connectionsList, onChange, filters,
                 </Dropdown>
             )
         }
-    ];
+    ], [actionMenu]);
 
-    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+    const activeColumns = React.useMemo(() => 
+        allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
+        [allColumns, visibleColumns]);
 
     return (
         <div className="space-y-3">
@@ -219,6 +221,8 @@ const ConnectionsTable = ({ modal, setModal, connectionsList, onChange, filters,
             />
         </div>
     );
-};
+});
+
+ConnectionsTable.displayName = "ConnectionsTable";
 
 export default ConnectionsTable;

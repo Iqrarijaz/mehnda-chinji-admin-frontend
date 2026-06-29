@@ -40,20 +40,20 @@ export default function ContactUsPage() {
         cancelText: "Cancel"
     });
 
-    const closeConfirmModal = () => {
+    const closeConfirmModal = React.useCallback(() => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-    };
+    }, []);
 
     // Column Visibility State
     const [visibleColumns, setVisibleColumns] = useState(["name", "email", "source", "status", "createdAt", "actions"]);
     
-    const columnOptions = [
+    const columnOptions = React.useMemo(() => [
         { label: "Name", value: "name" },
         { label: "Email", value: "email" },
         { label: "Source", value: "source" },
         { label: "Status", value: "status" },
         { label: "Created At", value: "createdAt" },
-    ];
+    ], []);
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
 
@@ -73,9 +73,7 @@ export default function ContactUsPage() {
     const { data: countsData, isLoading: countsLoading } = countsQuery;
 
     const statusMutation = useMutation({
-        mutationFn: async ({ id, status }) => {
-            return await UPDATE_CONTACT_REQUEST_STATUS(id, status);
-        },
+        mutationFn: ({ id, status }) => UPDATE_CONTACT_REQUEST_STATUS(id, status),
         onSuccess: () => {
             toast.success("Status updated successfully");
             queryClient.invalidateQueries([ADMIN_KEYS.CONTACT.LIST]);
@@ -89,9 +87,7 @@ export default function ContactUsPage() {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: async (id) => {
-            return await DELETE_CONTACT_REQUEST(id);
-        },
+        mutationFn: (id) => DELETE_CONTACT_REQUEST(id),
         onSuccess: () => {
             toast.success("Request deleted successfully");
             queryClient.invalidateQueries([ADMIN_KEYS.CONTACT.LIST]);
@@ -106,15 +102,15 @@ export default function ContactUsPage() {
 
     const counts = countsData?.data || { PENDING: 0, REVIEWED: 0, RESOLVED: 0 };
 
-    const statCards = [
+    const statCards = React.useMemo(() => [
         { label: "Pending", short: "Pen", key: "PENDING", count: counts.PENDING, color: "#d97706", bg: "#fffbeb", border: "#fde68a" },
         { label: "Reviewed", short: "Rev", key: "REVIEWED", count: counts.REVIEWED, color: "#7c3aed", bg: "#f5f3ff", border: "#ddd6fe" },
         { label: "Resolved", short: "Res", key: "RESOLVED", count: counts.RESOLVED, color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
-    ];
+    ], [counts.PENDING, counts.REVIEWED, counts.RESOLVED]);
 
-    const onChange = (data) => setFilters((prev) => ({ ...prev, ...data }));
+    const onChange = React.useCallback((data) => setFilters((prev) => ({ ...prev, ...data })), []);
 
-    const onDelete = (id) => {
+    const onDelete = React.useCallback((id) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Deletion',
@@ -124,9 +120,9 @@ export default function ContactUsPage() {
             variant: 'danger',
             onConfirm: () => deleteMutation.mutate(id)
         });
-    };
+    }, [deleteMutation]);
 
-    const onUpdateStatus = (id, status) => {
+    const onUpdateStatus = React.useCallback((id, status) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Status Update',
@@ -136,7 +132,7 @@ export default function ContactUsPage() {
             variant: 'primary',
             onConfirm: () => statusMutation.mutate({ id, status })
         });
-    };
+    }, [statusMutation]);
 
     return (
         <InnerPageCard title="Contact Us Requests">

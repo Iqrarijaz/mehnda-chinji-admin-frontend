@@ -54,5 +54,14 @@ export const ADMIN_KEYS = {
         BILLS_LIST: "waterBillsList",
         EXPENSES_LIST: "waterExpensesList",
         REPORTS: "waterReports",
+    },
+    FEEDBACK: {
+        LIST: "feedbackList",
+    },
+    ANNOUNCEMENTS: {
+        LIST: "announcementsList",
+    },
+    MARKETPLACE: {
+        LIST: "marketplaceList",
     }
 };

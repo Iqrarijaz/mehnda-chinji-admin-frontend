@@ -6,7 +6,8 @@ import {
     DeleteOutlined,
     EllipsisOutlined,
     LockOutlined,
-    SettingOutlined
+    SettingOutlined,
+    SoundOutlined
 } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
@@ -16,9 +17,10 @@ import Loading from "@/animations/homePageLoader";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import EmptyState from "@/components/shared/EmptyState";
-import { DELETE_USER, UPDATE_USER } from "@/app/api/admin/users";
+import { DELETE_USER, UPDATE_USER, TOGGLE_PUBLIC_ANNOUNCER } from "@/app/api/admin/users";
 import { timestampToDate } from "@/utils/date";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
+import AssignEssentialModal from "./AssignEssentialModal";
 
 const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilters, visibleColumns }) => {
     const queryClient = useQueryClient();
@@ -67,6 +69,18 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
         },
     });
 
+    const handleTogglePublicAnnouncer = useMutation({
+        mutationKey: ["togglePublicAnnouncer"],
+        mutationFn: (payload) => TOGGLE_PUBLIC_ANNOUNCER(payload),
+        onSuccess: (data) => {
+            toast.success(data?.message || "Public announcer status updated successfully");
+            queryClient.invalidateQueries([ADMIN_KEYS.USERS.LIST]);
+        },
+        onError: (error) => {
+            toast.error(error.errorMessage || "Something went wrong");
+        },
+    });
+
     const closeConfirmModal = React.useCallback(() => {
         setConfirmModal({ state: false, onConfirm: null, title: "", content: "" });
     }, []);
@@ -88,6 +102,25 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                 className: "!rounded hover:!bg-orange-50 dark:hover:!bg-orange-900/20 transition-colors",
             },
             {
+                key: "toggleAnnouncer",
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">
+                    {record.isPublicAnnouncer ? "Disable Announcer" : "Make Announcer"}
+                </span>,
+                icon: <SoundOutlined className="text-teal-600 dark:text-teal-400" />,
+                onClick: () => handleTogglePublicAnnouncer.mutate({
+                    userId: record._id,
+                    isPublicAnnouncer: !record.isPublicAnnouncer
+                }),
+                className: "!rounded hover:!bg-teal-50 dark:hover:!bg-teal-900/20 transition-colors",
+            },
+            {
+                key: "assignEssential",
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">Assign Place</span>,
+                icon: <SettingOutlined className="text-teal-600 dark:text-teal-400" />,
+                onClick: () => setModal({ name: "AssignEssential", data: record, state: true }),
+                className: "!rounded hover:!bg-teal-50 dark:hover:!bg-teal-900/20 transition-colors",
+            },
+            {
                 type: "divider",
                 className: "!my-1",
             },
@@ -105,7 +138,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             },
         ],
         className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
-    }), [setModal, handleDelete]);
+    }), [setModal, handleDelete, handleTogglePublicAnnouncer]);
 
 
 
@@ -126,7 +159,12 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                     >
                         {name?.charAt(0)}
                     </Avatar>
-                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate leading-tight transition-colors duration-300 capitalize">{name}</span>
+                    <div className="flex flex-col min-w-0">
+                        <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate leading-tight transition-colors duration-300 capitalize">{name}</span>
+                        {record.isPublicAnnouncer && (
+                            <span className="text-[9px] text-[#006666] dark:text-teal-400 font-bold mt-0.5 leading-none">Announcer</span>
+                        )}
+                    </div>
                 </div>
             ),
         },
@@ -277,6 +315,11 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                     description={confirmModal.content}
                     loading={handleDelete.isLoading}
                     variant="danger"
+                />
+
+                <AssignEssentialModal
+                    modal={modal}
+                    setModal={setModal}
                 />
             </div>
         </div>

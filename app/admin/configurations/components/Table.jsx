@@ -15,7 +15,7 @@ import Loading from "@/animations/homePageLoader";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { DELETE_CONFIGURATION, UPDATE_CONFIGURATION } from "@/app/api/admin/configurations";
 
-function ConfigurationsTable({ modal, setModal, configurationsList, filters, onChange, visibleColumns }) {
+const ConfigurationsTable = React.memo(({ modal, setModal, configurationsList, filters, onChange, visibleColumns = [] }) => {
     const queryClient = useQueryClient();
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false,
@@ -27,9 +27,9 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
         cancelText: "Cancel"
     });
 
-    const closeConfirmModal = () => {
+    const closeConfirmModal = React.useCallback(() => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-    };
+    }, []);
 
     const updateStatus = useMutation({
         mutationFn: UPDATE_CONFIGURATION,
@@ -57,7 +57,7 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
         },
     });
 
-    const handleStatusChange = (record) => {
+    const handleStatusChange = React.useCallback((record) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Status Change',
@@ -67,9 +67,9 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
             variant: 'primary',
             onConfirm: () => updateStatus.mutate({ _id: record._id, isActive: !record.isActive })
         });
-    };
+    }, [updateStatus]);
 
-    const handleDelete = (record) => {
+    const handleDelete = React.useCallback((record) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Deletion',
@@ -79,9 +79,9 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
             variant: 'danger',
             onConfirm: () => deleteConfig.mutate(record._id)
         });
-    };
+    }, [deleteConfig]);
 
-    const actionMenu = (record) => ({
+    const actionMenu = React.useMemo(() => (record) => ({
         items: [
             {
                 key: "view",
@@ -118,9 +118,9 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
             },
         ],
         className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors duration-300",
-    });
+    }), [setModal, handleDelete]);
 
-    const allColumns = [
+    const allColumns = React.useMemo(() => [
         {
             title: "Type",
             dataIndex: "type",
@@ -174,16 +174,18 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
                 </Dropdown>
             ),
         }
-    ];
+    ], [actionMenu, handleStatusChange, updateStatus.isLoading, updateStatus.variables?._id]);
 
-    const handleTableChange = (pagination, filters, sorter) => {
+    const handleTableChange = React.useCallback((pagination, filters, sorter) => {
         onChange({
             sortOrder: sorter.order === "ascend" ? 1 : -1,
             sortingKey: sorter.field || "_id",
         });
-    };
+    }, [onChange]);
 
-    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+    const activeColumns = React.useMemo(() =>
+        allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
+        [allColumns, visibleColumns]);
 
     return (
         <div className="space-y-4">
@@ -218,6 +220,7 @@ function ConfigurationsTable({ modal, setModal, configurationsList, filters, onC
             </div>
         </div>
     );
-}
+});
 
+ConfigurationsTable.displayName = "ConfigurationsTable";
 export default ConfigurationsTable;

@@ -13,7 +13,7 @@ import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { hasPermission } from "@/utils/permissions";
 import { PERMISSIONS } from "@/config/permissions";
 
-const BillsTable = ({ modal, setModal, billsList, onChange, filters, visibleColumns }) => {
+const BillsTable = React.memo(({ modal, setModal, billsList, onChange, filters, visibleColumns = [] }) => {
     const { data, isFetching } = billsList;
     const queryClient = useQueryClient();
 
@@ -27,9 +27,9 @@ const BillsTable = ({ modal, setModal, billsList, onChange, filters, visibleColu
         cancelText: "Cancel"
     });
 
-    const closeConfirmModal = () => {
+    const closeConfirmModal = React.useCallback(() => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-    };
+    }, []);
 
     const deleteMutation = useMutation({
         mutationFn: DELETE_BILL,
@@ -44,7 +44,7 @@ const BillsTable = ({ modal, setModal, billsList, onChange, filters, visibleColu
         },
     });
 
-    const handleDelete = (record) => {
+    const handleDelete = React.useCallback((record) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Deletion',
@@ -54,9 +54,9 @@ const BillsTable = ({ modal, setModal, billsList, onChange, filters, visibleColu
             variant: 'danger',
             onConfirm: () => deleteMutation.mutate({ billId: record._id })
         });
-    };
+    }, [deleteMutation]);
 
-    const actionMenu = (record) => {
+    const actionMenu = React.useMemo(() => (record) => {
         const items = [];
         
         if (record.status === "PENDING" && hasPermission(PERMISSIONS.WATER_SUPPLY.UPDATE)) {
@@ -100,9 +100,9 @@ const BillsTable = ({ modal, setModal, billsList, onChange, filters, visibleColu
             items,
             className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
         };
-    };
+    }, [setModal, handleDelete]);
 
-    const allColumns = [
+    const allColumns = React.useMemo(() => [
         {
             title: "Connection",
             dataIndex: "connection",
@@ -187,9 +187,11 @@ const BillsTable = ({ modal, setModal, billsList, onChange, filters, visibleColu
                 </Dropdown>
             )
         }
-    ];
+    ], [actionMenu]);
 
-    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+    const activeColumns = React.useMemo(() => 
+        allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
+        [allColumns, visibleColumns]);
 
     return (
         <div className="space-y-3">
@@ -229,6 +231,8 @@ const BillsTable = ({ modal, setModal, billsList, onChange, filters, visibleColu
             />
         </div>
     );
-};
+});
+
+BillsTable.displayName = "BillsTable";
 
 export default BillsTable;

@@ -6,7 +6,7 @@ import ResponsiveFilterModal from "@/components/shared/ResponsiveFilterModal";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { FaFilter } from "react-icons/fa";
 
-function FilterModal({ 
+const FilterModal = React.memo(({ 
     open, 
     onCancel, 
     filters, 
@@ -18,7 +18,7 @@ function FilterModal({
     isRefreshing, 
     handleExport, 
     hasData 
-}) {
+}) => {
     const handleReset = () => {
         onChange({ billingMonth: null, currentPage: 1 });
         if (onCancel) onCancel();
@@ -89,6 +89,8 @@ function FilterModal({
             </div>
         </ResponsiveFilterModal>
     );
-}
+});
+
+FilterModal.displayName = "FilterModal";
 
 export default FilterModal;

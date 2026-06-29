@@ -16,7 +16,7 @@ const validationSchema = Yup.object().shape({
     description: Yup.string().required("Description is required"),
 });
 
-const AddEditRoleModal = ({ modal, setModal }) => {
+const AddEditRoleModal = React.memo(({ modal, setModal }) => {
     const formikRef = React.useRef(null);
     const queryClient = useQueryClient();
     const isEdit = modal.name === "Edit";
@@ -59,22 +59,20 @@ const AddEditRoleModal = ({ modal, setModal }) => {
     return (
         <Modal
             title={
-                <div className="flex items-center gap-2 px-0 py-1">
+                <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center text-[#006666]">
                         {isEdit ? <FaEdit size={16} /> : <FaShieldAlt size={16} />}
                     </div>
-                    <span className="text-lg font-bold text-[#006666] block mt-1">{isEdit ? "Edit" : "Add"} Role</span>
+                    <span className="text-sm font-bold text-slate-800">{isEdit ? "Update Role" : "Create Role"}</span>
                 </div>
             }
             open={modal.state}
-            onCancel={handleCancel}
+            onCancel={() => handleCancel(false)}
             footer={null}
-            destroyOnClose
-            width={700}
-            className="modern-modal"
-            centered
+            width={650}
         >
-        <Formik
+            <Formik
+                enableReinitialize
                 innerRef={formikRef}
                 initialValues={{
                     name: modal.data?.name || "",
@@ -83,40 +81,31 @@ const AddEditRoleModal = ({ modal, setModal }) => {
                 }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
-                enableReinitialize
             >
-                {({
-                    values,
-                    errors,
-                    touched,
-                    handleChange,
-                    handleBlur,
-                    handleSubmit,
-                    isSubmitting,
-                    setFieldValue,
-                }) => (
-                    <Form layout="vertical" onFinish={handleSubmit} className="space-y-2">
+                {({ values, errors, touched, setFieldValue, handleChange, handleBlur, isSubmitting }) => (
+                    <Form className="space-y-4 pt-3">
                         <div className="space-y-1">
-                            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Role Name <span className="text-red-500">*</span></label>
+                            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Role Name</label>
                             <Input
                                 name="name"
-                                placeholder="Enter role name"
                                 value={values.name}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className="!h-[32px] !text-xs !rounded"
+                                placeholder="e.g. MANAGER"
+                                disabled={isEdit}
+                                className="!rounded !text-xs !py-1"
                             />
                             {errors.name && touched.name && <div className="text-red-500 text-[10px] font-medium ml-1">{errors.name}</div>}
                         </div>
 
                         <div className="space-y-1">
-                            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Description <span className="text-red-500">*</span></label>
+                            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Description</label>
                             <Input.TextArea
                                 name="description"
-                                placeholder="Describe role access..."
                                 value={values.description}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
+                                placeholder="Describe role responsibilities"
                                 className="!rounded !text-xs !py-1.5 !h-16"
                             />
                             {errors.description && touched.description && <div className="text-red-500 text-[10px] font-medium ml-1">{errors.description}</div>}
@@ -133,7 +122,7 @@ const AddEditRoleModal = ({ modal, setModal }) => {
                         </div>
 
                         <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
-                            <CustomButton label="Cancel" type="secondary" onClick={handleCancel} />
+                            <CustomButton label="Cancel" type="secondary" onClick={() => handleCancel(false)} />
                             <CustomButton
                                 label={isEdit ? "Update Role" : "Create Role"}
                                 htmlType="submit"
@@ -145,6 +134,8 @@ const AddEditRoleModal = ({ modal, setModal }) => {
             </Formik>
         </Modal>
     );
-};
+});
+
+AddEditRoleModal.displayName = "AddEditRoleModal";
 
 export default AddEditRoleModal;

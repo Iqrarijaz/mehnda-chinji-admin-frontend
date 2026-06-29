@@ -1,40 +1,22 @@
+import React from "react";
 import {
-    EyeOutlined,
     EllipsisOutlined,
     SettingOutlined,
-    MessageOutlined,
-    CommentOutlined
 } from "@ant-design/icons";
-import Loading from "@/animations/homePageLoader";
 import { timestampToDate } from "@/utils/date";
-import { Pagination, Table, Tag, Tooltip, Menu, Dropdown, Button } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
-import { useState } from "react";
-import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
+import { Table, Tooltip, Dropdown, Button } from "antd";
 
-const getTicketStatusColor = (status) => {
-    const s = status?.toUpperCase();
-    switch (s) {
-        case "OPEN": return "orange";
-        case "IN_PROGRESS": return "blue";
-        case "CLOSED": return "green";
-        default: return "default";
-    }
-};
-
-function SupportTable({ modal, setModal, ticketsList, onChange, visibleColumns }) {
-
-
-    const handleSorting = (pagination, filters, sorter) => {
+const SupportTable = React.memo(({ modal, setModal, ticketsList, onChange, filters, visibleColumns = [] }) => {
+    const handleSorting = React.useCallback((pagination, filters, sorter) => {
         onChange({
-            ...filters,
             sortingKey: sorter.field || "createdAt",
             sortOrder: sorter.order === "ascend" ? 1 : -1,
             page: pagination.current,
         });
-    };
+    }, [onChange]);
 
-    const actionMenu = (record) => ({
+    const actionMenu = React.useMemo(() => (record) => ({
         items: [
             {
                 key: "manage",
@@ -49,12 +31,9 @@ function SupportTable({ modal, setModal, ticketsList, onChange, visibleColumns }
             },
         ],
         className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
-    });
+    }), [setModal]);
 
-
-
-
-    const allColumns = [
+    const allColumns = React.useMemo(() => [
         {
             title: "Ticket ID",
             dataIndex: "ticketId",
@@ -143,9 +122,11 @@ function SupportTable({ modal, setModal, ticketsList, onChange, visibleColumns }
                 </Dropdown>
             ),
         }
-    ];
+    ], [actionMenu]);
 
-    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+    const activeColumns = React.useMemo(() =>
+        allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
+        [allColumns, visibleColumns]);
 
     return (
         <div className="space-y-4">
@@ -174,6 +155,7 @@ function SupportTable({ modal, setModal, ticketsList, onChange, visibleColumns }
             </div>
         </div>
     );
-}
+});
 
+SupportTable.displayName = "SupportTable";
 export default SupportTable;

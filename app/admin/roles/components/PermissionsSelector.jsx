@@ -1,8 +1,8 @@
-"use client";
+import React from "react";
 import { Card, Checkbox, Row, Col, Spin } from "antd";
 import { PERMISSIONS } from "@/config/permissions";
 
-const PermissionsSelector = ({ selectedPermissions = [], onChange }) => {
+const PermissionsSelector = React.memo(({ selectedPermissions = [], onChange }) => {
     // const { data: permissionsResponse, isLoading } = useQuery("permissionsList", GET_PERMISSIONS);
     const permissionsMap = PERMISSIONS;
     const isLoading = false;
@@ -10,7 +10,7 @@ const PermissionsSelector = ({ selectedPermissions = [], onChange }) => {
     // Convert permissions map to array format for rendering if needed, 
     // but map iteration key-value is fine.
 
-    const handleModuleCheck = (moduleKey, checked) => {
+    const handleModuleCheck = React.useCallback((moduleKey, checked) => {
         const modulePermissions = Object.values(permissionsMap[moduleKey]);
         let newSelected = [...selectedPermissions];
 
@@ -23,9 +23,9 @@ const PermissionsSelector = ({ selectedPermissions = [], onChange }) => {
             newSelected = newSelected.filter(p => !modulePermissions.includes(p));
         }
         onChange(newSelected);
-    };
+    }, [selectedPermissions, onChange, permissionsMap]);
 
-    const handlePermissionCheck = (permission, checked) => {
+    const handlePermissionCheck = React.useCallback((permission, checked) => {
         let newSelected = [...selectedPermissions];
         if (checked) {
             if (!newSelected.includes(permission)) newSelected.push(permission);
@@ -33,7 +33,7 @@ const PermissionsSelector = ({ selectedPermissions = [], onChange }) => {
             newSelected = newSelected.filter(p => p !== permission);
         }
         onChange(newSelected);
-    };
+    }, [selectedPermissions, onChange]);
 
     if (isLoading) return <Spin />;
 
@@ -85,6 +85,8 @@ const PermissionsSelector = ({ selectedPermissions = [], onChange }) => {
             })}
         </div>
     );
-};
+});
+
+PermissionsSelector.displayName = "PermissionsSelector";
 
 export default PermissionsSelector;

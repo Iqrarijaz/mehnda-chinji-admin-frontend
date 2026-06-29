@@ -29,11 +29,11 @@ export default function ConfigurationsPage() {
     // Column Visibility State
     const [visibleColumns, setVisibleColumns] = useState(["type", "data", "isActive", "actions"]);
 
-    const columnOptions = [
+    const columnOptions = React.useMemo(() => [
         { label: "Type", value: "type" },
         { label: "Data (JSON)", value: "data" },
         { label: "Status", value: "isActive" },
-    ];
+    ], []);
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
     const configurationsList = useQuery({
@@ -42,7 +42,7 @@ export default function ConfigurationsPage() {
         onError: (error) => toast.error(error.errorMessage || "Failed to fetch configurations."),
     });
 
-    const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
+    const onChange = React.useCallback((data) => setFilters((old) => ({ ...old, ...data })), []);
 
     return (
         <>

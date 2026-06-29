@@ -4,7 +4,7 @@ import SearchInput from "@/components/InnerPage/SearchInput";
 import ResponsiveFilterModal from "@/components/shared/ResponsiveFilterModal";
 import { UserOutlined } from "@ant-design/icons";
 
-function FilterModal({ open, onCancel, filters, setFilters }) {
+const FilterModal = React.memo(({ open, onCancel, filters, setFilters }) => {
     const handleGenderChange = (value) => {
         setFilters((prev) => ({ ...prev, gender: value, page: 1 }));
     };
@@ -61,6 +61,8 @@ function FilterModal({ open, onCancel, filters, setFilters }) {
             </div>
         </ResponsiveFilterModal>
     );
-}
+});
+
+FilterModal.displayName = "FilterModal";
 
 export default FilterModal;

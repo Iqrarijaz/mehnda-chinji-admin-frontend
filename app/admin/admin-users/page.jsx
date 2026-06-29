@@ -35,13 +35,13 @@ export default function AdminUsersPage() {
     // Column Visibility State
     const [visibleColumns, setVisibleColumns] = useState(["name", "email", "role", "status", "actions"]);
 
-    const columnOptions = [
+    const columnOptions = React.useMemo(() => [
         { label: "Name", value: "name" },
         { label: "Email", value: "email" },
         { label: "Phone", value: "phone" },
         { label: "Role Type", value: "role" },
         { label: "Status", value: "status" },
-    ];
+    ], []);
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
 
@@ -62,12 +62,12 @@ export default function AdminUsersPage() {
 
     const counts = countsData?.data || { active: 0, inactive: 0 };
 
-    const statCards = [
+    const statCards = React.useMemo(() => [
         { label: "Active", short: "Act", key: "ACTIVE", count: counts.active, color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
         { label: "Inactive", short: "Ina", key: "INACTIVE", count: counts.inactive, color: "#dc2626", bg: "#fef2f2", border: "#fecaca" },
-    ];
+    ], [counts.active, counts.inactive]);
 
-    const onChange = (data) => setFilters((prev) => ({ ...prev, ...data }));
+    const onChange = React.useCallback((data) => setFilters((prev) => ({ ...prev, ...data })), []);
 
     return (
         <InnerPageCard title="Admin Users">

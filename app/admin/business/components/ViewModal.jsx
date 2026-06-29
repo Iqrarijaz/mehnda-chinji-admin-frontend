@@ -11,7 +11,7 @@ import {
 import { timestampToDate } from "@/utils/date";
 import CustomButton from "@/components/shared/CustomButton";
 
-function ViewModal({ open, onCancel, data }) {
+const ViewModal = React.memo(({ open, onCancel, data }) => {
     if (!data) return null;
 
     const statusColors = {
@@ -83,6 +83,14 @@ function ViewModal({ open, onCancel, data }) {
                             <FaCalendarAlt size={10} className="text-orange-500" /> {timestampToDate(data.createdAt)}
                         </span>
                     </Descriptions.Item>
+                    <Descriptions.Item label="Description">
+                        <textarea
+                            className="w-full bg-transparent border-none outline-none resize-none text-slate-700 text-xs cursor-not-allowed p-0 m-0"
+                            value={data.description || "N/A"}
+                            disabled
+                            rows={data.description ? Math.max(2, Math.ceil(data.description.length / 70) + data.description.split('\n').length - 1) : 2}
+                        />
+                    </Descriptions.Item>
                 </Descriptions>
 
                 {/* Additional Info */}
@@ -102,6 +110,8 @@ function ViewModal({ open, onCancel, data }) {
             </div>
         </Modal>
     );
-}
+});
+
+ViewModal.displayName = "ViewModal";
 
 export default ViewModal;

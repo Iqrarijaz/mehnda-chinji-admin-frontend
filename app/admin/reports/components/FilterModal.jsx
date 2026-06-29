@@ -9,7 +9,7 @@ const TARGET_TYPES = [
     { label: "Place", value: "PLACE" },
 ];
 
-function FilterModal({ open, onCancel, filters, setFilters }) {
+const FilterModal = React.memo(({ open, onCancel, filters, setFilters }) => {
     return (
         <ResponsiveFilterModal
             open={open}
@@ -40,6 +40,8 @@ function FilterModal({ open, onCancel, filters, setFilters }) {
             </div>
         </ResponsiveFilterModal>
     );
-}
+});
+
+FilterModal.displayName = "FilterModal";
 
 export default FilterModal;

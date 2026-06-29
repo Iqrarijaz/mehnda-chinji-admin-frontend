@@ -16,9 +16,9 @@ import { getTagColor } from "@/utils/tagColor";
 import { Menu, Dropdown, Button, Switch, Table, Tag, Avatar, Popover } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
-import { useState } from "react";
+import React, { useState } from "react";
 
-function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange, visibleColumns }) {
+const BloodDonorsTable = React.memo(({ modal, setModal, bloodDonorsList, onChange, visibleColumns = [] }) => {
     const queryClient = useQueryClient();
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false,
@@ -30,19 +30,17 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange, visibleC
         cancelText: "Cancel"
     });
 
-
-
-    const closeConfirmModal = () => {
+    const closeConfirmModal = React.useCallback(() => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-    };
+    }, []);
 
-    const handleSorting = (pagination, filters, sorter) => {
+    const handleSorting = React.useCallback((pagination, filters, sorter) => {
         onChange({
             sortingKey: sorter.field || "_id",
             sortOrder: sorter.order === "ascend" ? 1 : -1,
             page: pagination.current,
         });
-    };
+    }, [onChange]);
 
     const statusMutation = useMutation({
         mutationFn: UPDATE_BLOOD_DONOR,
@@ -70,7 +68,7 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange, visibleC
         },
     });
 
-    const handleDelete = (record) => {
+    const handleDelete = React.useCallback((record) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Deletion',
@@ -80,9 +78,13 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange, visibleC
             variant: 'danger',
             onConfirm: () => deleteMutation.mutate({ _id: record._id })
         });
-    };
+    }, [deleteMutation]);
 
-    const actionMenu = (record) => ({
+    const handleStatusToggle = React.useCallback((record, checked) => {
+        statusMutation.mutate({ _id: record._id, available: checked });
+    }, [statusMutation]);
+
+    const actionMenu = React.useMemo(() => (record) => ({
         items: [
             {
                 key: "edit",
@@ -108,12 +110,9 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange, visibleC
             },
         ],
         className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
-    });
+    }), [setModal, handleDelete]);
 
-
-
-
-    const allColumns = [
+    const allColumns = React.useMemo(() => [
         {
             title: "Donor Information",
             key: "name",
@@ -218,7 +217,7 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange, visibleC
             render: (available, record) => (
                 <Switch
                     checked={available}
-                    onChange={(checked) => statusMutation.mutate({ _id: record._id, available: checked })}
+                    onChange={(checked) => handleStatusToggle(record, checked)}
                     className={available ? '!bg-[#006666]' : '!bg-slate-300'}
                     size="small"
                 />
@@ -239,9 +238,11 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange, visibleC
                 </Dropdown>
             ),
         }
-    ];
+    ], [actionMenu, handleStatusToggle]);
 
-    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+    const activeColumns = React.useMemo(() =>
+        allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
+        [allColumns, visibleColumns]);
 
     return (
         <div className="space-y-4">
@@ -282,6 +283,8 @@ function BloodDonorsTable({ modal, setModal, bloodDonorsList, onChange, visibleC
             </div>
         </div>
     );
-}
+});
+
+BloodDonorsTable.displayName = "BloodDonorsTable";
 
 export default BloodDonorsTable;

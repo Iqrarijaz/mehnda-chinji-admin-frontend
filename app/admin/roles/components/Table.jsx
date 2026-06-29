@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
     EditOutlined,
     DeleteOutlined,
@@ -13,9 +14,8 @@ import { ADMIN_KEYS } from "@/constants/queryKeys";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { Pagination, Table, Tag, Tooltip, Menu, Dropdown, Button } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
-import { useState } from "react";
 
-const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) => {
+const RolesTable = React.memo(({ setModal, rolesList, filters, onChange, visibleColumns = [] }) => {
     const queryClient = useQueryClient();
 
     const [confirmModal, setConfirmModal] = useState({
@@ -28,11 +28,9 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
         cancelText: "Cancel"
     });
 
-
-
-    const closeConfirmModal = () => {
+    const closeConfirmModal = React.useCallback(() => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-    };
+    }, []);
 
     const deleteMutation = useMutation({
         mutationFn: DELETE_ROLE,
@@ -47,7 +45,7 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
         },
     });
 
-    const handleDelete = (record) => {
+    const handleDelete = React.useCallback((record) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Deletion',
@@ -57,18 +55,18 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
             variant: 'danger',
             onConfirm: () => deleteMutation.mutate({ _id: record._id })
         });
-    };
+    }, [deleteMutation]);
 
-    const handleSorting = (pagination, filters, sorter) => {
+    const handleSorting = React.useCallback((pagination, filters, sorter) => {
         onChange({
             ...filters,
             sortingKey: sorter.field || "name",
             sortOrder: sorter.order === "ascend" ? 1 : -1,
             currentPage: pagination.current,
         });
-    };
+    }, [onChange]);
 
-    const actionMenu = (record) => ({
+    const actionMenu = React.useMemo(() => (record) => ({
         items: [
             {
                 key: "edit",
@@ -94,12 +92,9 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
             },
         ],
         className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
-    });
+    }), [setModal, handleDelete]);
 
-
-
-
-    const allColumns = [
+    const allColumns = React.useMemo(() => [
         {
             title: "Role Name",
             dataIndex: "name",
@@ -153,9 +148,11 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
                 </Dropdown>
             ),
         },
-    ];
+    ], [actionMenu]);
 
-    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+    const activeColumns = React.useMemo(() =>
+        allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
+        [allColumns, visibleColumns]);
 
     return (
         <div className="space-y-4">
@@ -198,6 +195,8 @@ const RolesTable = ({ setModal, rolesList, filters, onChange, visibleColumns }) 
             </div>
         </div>
     );
-};
+});
+
+RolesTable.displayName = "RolesTable";
 
 export default RolesTable;

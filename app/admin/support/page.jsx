@@ -29,14 +29,14 @@ export default function SupportPage() {
     // Column Visibility State
     const [visibleColumns, setVisibleColumns] = useState(["ticketId", "userId", "subject", "description", "status", "createdAt", "actions"]);
     
-    const columnOptions = [
+    const columnOptions = React.useMemo(() => [
         { label: "Ticket ID", value: "ticketId" },
         { label: "User", value: "userId" },
         { label: "Subject", value: "subject" },
         { label: "Description", value: "description" },
         { label: "Status", value: "status" },
         { label: "Created At", value: "createdAt" },
-    ];
+    ], []);
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
 
@@ -57,13 +57,13 @@ export default function SupportPage() {
 
     const counts = countsData?.data || { OPEN: 0, IN_PROGRESS: 0, CLOSED: 0 };
 
-    const statCards = [
+    const statCards = React.useMemo(() => [
         { label: "Open", key: "OPEN", count: counts.OPEN, color: "#d97706", bg: "#fffbeb", border: "#fde68a" },
         { label: "In Progress", key: "IN_PROGRESS", count: counts.IN_PROGRESS, color: "#7c3aed", bg: "#f5f3ff", border: "#ddd6fe" },
         { label: "Closed", key: "CLOSED", count: counts.CLOSED, color: "#374151", bg: "#f9fafb", border: "#d1d5db" },
-    ];
+    ], [counts.OPEN, counts.IN_PROGRESS, counts.CLOSED]);
 
-    const onChange = (data) => setFilters((prev) => ({ ...prev, ...data }));
+    const onChange = React.useCallback((data) => setFilters((prev) => ({ ...prev, ...data })), []);
 
     return (
         <InnerPageCard title="Support Tickets">

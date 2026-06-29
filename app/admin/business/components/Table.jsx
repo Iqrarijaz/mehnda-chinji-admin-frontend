@@ -4,10 +4,8 @@ import {
     EllipsisOutlined,
     CheckOutlined,
     CloseOutlined,
-    SettingOutlined,
     EyeOutlined
 } from "@ant-design/icons";
-import Loading from "@/animations/homePageLoader";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { timestampToDate } from "@/utils/date";
@@ -17,11 +15,11 @@ import ViewModal from "./ViewModal";
 import { Menu, Dropdown, Button, Table, Tooltip } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
-import { useState } from "react";
+import React, { useState } from "react";
 import { hasPermission } from "@/utils/permissions";
 import { PERMISSIONS } from "@/config/permissions";
 
-function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns }) {
+const BusinessTable = React.memo(({ modal, setModal, businessList, onChange, visibleColumns = [] }) => {
     const queryClient = useQueryClient();
 
     const [confirmModal, setConfirmModal] = useState({
@@ -34,19 +32,18 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
         cancelText: "Cancel",
     });
 
-
     const [viewModal, setViewModal] = useState({ state: false, data: null });
 
-    const closeConfirmModal = () =>
-        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+    const closeConfirmModal = React.useCallback(() =>
+        setConfirmModal((prev) => ({ ...prev, isOpen: false })), []);
 
-    const handleSorting = (pagination, filters, sorter) => {
+    const handleSorting = React.useCallback((pagination, filters, sorter) => {
         onChange({
             sortingKey: sorter.field || "_id",
             sortOrder: sorter.order === "ascend" ? 1 : -1,
             currentPage: pagination.current,
         });
-    };
+    }, [onChange]);
 
     const statusMutation = useMutation({
         mutationFn: UPDATE_BUSINESS_STATUS,
@@ -76,7 +73,7 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
         },
     });
 
-    const handleStatusChange = (record, newStatus) => {
+    const handleStatusChange = React.useCallback((record, newStatus) => {
         setConfirmModal({
             isOpen: true,
             title: `Set Status to ${newStatus}`,
@@ -87,9 +84,9 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
             onConfirm: () =>
                 statusMutation.mutate({ _id: record._id, status: newStatus }),
         });
-    };
+    }, [statusMutation]);
 
-    const handleDelete = (record) => {
+    const handleDelete = React.useCallback((record) => {
         setConfirmModal({
             isOpen: true,
             title: "Confirm Deletion",
@@ -99,9 +96,9 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
             variant: "danger",
             onConfirm: () => deleteMutation.mutate({ _id: record._id }),
         });
-    };
+    }, [deleteMutation]);
 
-    const actionMenu = (record) => {
+    const actionMenu = React.useMemo(() => (record) => {
         const items = [];
 
         // 1. View Details (Allowed if user has business read OR dashboard read)
@@ -167,12 +164,9 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
             items,
             className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
         };
-    };
+    }, [setModal, handleStatusChange, handleDelete]);
 
-
-
-
-    const allColumns = [
+    const allColumns = React.useMemo(() => [
         {
             title: "Business Name",
             key: "name",
@@ -285,9 +279,11 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
                 </Dropdown>
             ),
         },
-    ];
+    ], [actionMenu]);
 
-    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+    const activeColumns = React.useMemo(() =>
+        allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
+        [allColumns, visibleColumns]);
 
     return (
         <div className="space-y-4">
@@ -334,6 +330,8 @@ function BusinessTable({ modal, setModal, businessList, onChange, visibleColumns
             </div>
         </div>
     );
-}
+});
+
+BusinessTable.displayName = "BusinessTable";
 
 export default BusinessTable;

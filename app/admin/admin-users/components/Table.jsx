@@ -1,21 +1,19 @@
+import React, { useState } from "react";
 import {
     EditOutlined,
     DeleteOutlined,
     EllipsisOutlined,
-    SettingOutlined
 } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { DELETE_ADMIN_USER, UPDATE_ADMIN_USER_STATUS } from "@/app/api/admin/admin-users";
-import Loading from "@/animations/homePageLoader";
 import { getTagColor } from "@/utils/tagColor";
-import { Menu, Dropdown, Button, Table, Switch } from "antd";
+import { Dropdown, Button, Table, Switch } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
-import { useState } from "react";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 
-const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleColumns }) => {
+const AdminUsersTable = React.memo(({ setModal, adminUsersList, filters, onChange, visibleColumns = [] }) => {
     const queryClient = useQueryClient();
     const { data, isLoading } = adminUsersList;
 
@@ -29,19 +27,17 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
         cancelText: "Cancel"
     });
 
-
-
-    const closeConfirmModal = () => {
+    const closeConfirmModal = React.useCallback(() => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-    };
+    }, []);
 
-    const handleSorting = (pagination, filters, sorter) => {
+    const handleSorting = React.useCallback((pagination, filters, sorter) => {
         onChange({
             sortingKey: sorter.field || "_id",
             sortOrder: sorter.order === "ascend" ? 1 : -1,
             page: pagination.current,
         });
-    };
+    }, [onChange]);
 
     // Status mutation
     const manageStatusMutation = useMutation({
@@ -73,7 +69,7 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
         },
     });
 
-    const handleStatus = (record) => {
+    const handleStatus = React.useCallback((record) => {
         const newStatus = record.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
         setConfirmModal({
             isOpen: true,
@@ -87,9 +83,9 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
                 status: newStatus
             })
         });
-    };
+    }, [manageStatusMutation]);
 
-    const handleDelete = (record) => {
+    const handleDelete = React.useCallback((record) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Deletion',
@@ -99,9 +95,9 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
             variant: 'danger',
             onConfirm: () => deleteMutation.mutate({ _id: record._id })
         });
-    };
+    }, [deleteMutation]);
 
-    const actionMenu = (record) => ({
+    const actionMenu = React.useMemo(() => (record) => ({
         items: [
             {
                 key: "edit",
@@ -123,12 +119,9 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
             },
         ],
         className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
-    });
+    }), [setModal, handleDelete]);
 
-
-
-
-    const allColumns = [
+    const allColumns = React.useMemo(() => [
         {
             title: "Admin Name",
             key: "name",
@@ -207,9 +200,11 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
                 </Dropdown>
             ),
         },
-    ];
+    ], [actionMenu, handleStatus]);
 
-    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+    const activeColumns = React.useMemo(() =>
+        allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
+        [allColumns, visibleColumns]);
 
     return (
         <div className="space-y-4">
@@ -250,6 +245,7 @@ const AdminUsersTable = ({ setModal, adminUsersList, filters, onChange, visibleC
             </div>
         </div>
     );
-};
+});
 
+AdminUsersTable.displayName = "AdminUsersTable";
 export default AdminUsersTable;

@@ -3,10 +3,8 @@ import { Modal, Input, Select } from "antd";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { FaCogs, FaCode, FaEdit, FaChevronRight, FaInfoCircle } from "react-icons/fa";
+import { FaCode, FaEdit, FaChevronRight, FaInfoCircle } from "react-icons/fa";
 import CustomButton from "@/components/shared/CustomButton";
-
-import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import { UPDATE_CONFIGURATION } from "@/app/api/admin/configurations";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
@@ -29,7 +27,7 @@ const validationSchema = Yup.object().shape({
         }),
 });
 
-function UpdateConfigurationModal({ modal, setModal }) {
+const UpdateConfigurationModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
 
@@ -173,7 +171,7 @@ function UpdateConfigurationModal({ modal, setModal }) {
                                                 </div>
                                                 <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Live Visual Preview</span>
                                             </div>
-                                            
+
                                             <div className="max-h-[600px] overflow-y-auto custom-scrollbar pr-2">
                                                 {(() => {
                                                     try {
@@ -194,8 +192,8 @@ function UpdateConfigurationModal({ modal, setModal }) {
                                                                             <div className="p-4">
                                                                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                                                                     {cat.types?.map((type, tIdx) => (
-                                                                                        <div 
-                                                                                            key={tIdx} 
+                                                                                        <div
+                                                                                            key={tIdx}
                                                                                             className="group flex flex-col items-center p-3 rounded-xl transition-all hover:bg-teal-50/30 dark:hover:bg-teal-900/10 cursor-pointer"
                                                                                             onClick={() => {
                                                                                                 if (type.icon) {
@@ -206,9 +204,9 @@ function UpdateConfigurationModal({ modal, setModal }) {
                                                                                         >
                                                                                             <div className="w-[68px] h-[68px] flex items-center justify-center mb-2 transition-transform group-hover:scale-110 duration-300">
                                                                                                 {type.icon ? (
-                                                                                                    <img 
-                                                                                                        src={type.icon} 
-                                                                                                        alt={type.label} 
+                                                                                                    <img
+                                                                                                        src={type.icon}
+                                                                                                        alt={type.label}
                                                                                                         className="w-full h-full object-contain"
                                                                                                         onError={(e) => {
                                                                                                             e.target.src = "https://via.placeholder.com/68?text=NA";
@@ -279,6 +277,7 @@ function UpdateConfigurationModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
 
+UpdateConfigurationModal.displayName = "UpdateConfigurationModal";
 export default UpdateConfigurationModal;

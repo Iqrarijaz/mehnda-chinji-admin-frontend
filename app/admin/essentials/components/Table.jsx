@@ -1,3 +1,4 @@
+import React from "react";
 import {
     EditOutlined,
     DeleteOutlined,
@@ -19,7 +20,7 @@ import { TableSkeleton } from "@/components/shared/Skeletons";
 import { useState } from "react";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 
-function EssentialsTable({ modal, setModal, essentialsList, onChange, setFilters, visibleColumns }) {
+const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange, setFilters, visibleColumns = [] }) => {
     const queryClient = useQueryClient();
     const [viewModal, setViewModal] = useState({ open: false, data: null });
     const [confirmModal, setConfirmModal] = useState({
@@ -32,11 +33,9 @@ function EssentialsTable({ modal, setModal, essentialsList, onChange, setFilters
         cancelText: "Cancel"
     });
 
-
-
-    const closeConfirmModal = () => {
+    const closeConfirmModal = React.useCallback(() => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-    };
+    }, []);
 
     // Request status mutation (APPROVED / REJECTED)
     const requestStatusMutation = useMutation({
@@ -83,7 +82,7 @@ function EssentialsTable({ modal, setModal, essentialsList, onChange, setFilters
         },
     });
 
-    const handleStatus = (data) => {
+    const handleStatus = React.useCallback((data) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Status Change',
@@ -96,9 +95,9 @@ function EssentialsTable({ modal, setModal, essentialsList, onChange, setFilters
                 isActive: !data.isActive
             })
         });
-    };
+    }, [manageStatusMutation]);
 
-    const handleDelete = (data) => {
+    const handleDelete = React.useCallback((data) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Deletion',
@@ -108,11 +107,12 @@ function EssentialsTable({ modal, setModal, essentialsList, onChange, setFilters
             variant: 'danger',
             onConfirm: () => deleteMutation.mutate({
                 _id: data._id,
+                hardDelete: "true"
             })
         });
-    };
+    }, [deleteMutation]);
 
-    const handleApprove = (data) => {
+    const handleApprove = React.useCallback((data) => {
         setConfirmModal({
             isOpen: true,
             title: 'Approve Essential',
@@ -122,9 +122,9 @@ function EssentialsTable({ modal, setModal, essentialsList, onChange, setFilters
             variant: 'primary',
             onConfirm: () => requestStatusMutation.mutate({ _id: data._id, status: 'APPROVED' })
         });
-    };
+    }, [requestStatusMutation]);
 
-    const handleReject = (data) => {
+    const handleReject = React.useCallback((data) => {
         setConfirmModal({
             isOpen: true,
             title: 'Reject Essential',
@@ -134,18 +134,18 @@ function EssentialsTable({ modal, setModal, essentialsList, onChange, setFilters
             variant: 'danger',
             onConfirm: () => requestStatusMutation.mutate({ _id: data._id, status: 'REJECTED' })
         });
-    };
+    }, [requestStatusMutation]);
 
-    const handleSorting = (pagination, filters, sorter) => {
+    const handleSorting = React.useCallback((pagination, filters, sorter) => {
         setFilters(prev => ({
             ...prev,
             sortingKey: sorter.field || "_id",
             sortOrder: sorter.order === "ascend" ? 1 : -1,
             currentPage: pagination.current,
         }));
-    };
+    }, [setFilters]);
 
-    const actionMenu = (record) => ({
+    const actionMenu = React.useMemo(() => (record) => ({
         items: [
             {
                 key: "view",
@@ -196,11 +196,9 @@ function EssentialsTable({ modal, setModal, essentialsList, onChange, setFilters
             },
         ],
         className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
-    });
+    }), [setModal, handleApprove, handleReject, handleDelete]);
 
-
-
-    const allColumns = [
+    const allColumns = React.useMemo(() => [
         {
             title: "Name",
             dataIndex: "name",
@@ -384,9 +382,11 @@ function EssentialsTable({ modal, setModal, essentialsList, onChange, setFilters
                 </Dropdown>
             ),
         }
-    ];
+    ], [actionMenu, handleStatus]);
 
-    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+    const activeColumns = React.useMemo(() =>
+        allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
+        [allColumns, visibleColumns]);
 
     return (
         <div className="space-y-3">
@@ -430,6 +430,8 @@ function EssentialsTable({ modal, setModal, essentialsList, onChange, setFilters
             </div>
         </div>
     );
-}
+});
+
+EssentialsTable.displayName = "EssentialsTable";
 
 export default EssentialsTable;

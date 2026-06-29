@@ -20,7 +20,7 @@ const validationSchema = Yup.object().shape({
     description: Yup.string().required("Role description is required"),
 });
 
-function UpdateRoleModal({ modal, setModal }) {
+const UpdateRoleModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
 
@@ -60,7 +60,7 @@ function UpdateRoleModal({ modal, setModal }) {
                         <FaEdit size={16} />
                     </div>
                     <div>
-                        <span className="text-lg font-bold text-[#006666] dark:text-teal-400 block mt-1 transition-colors duration-300">Edit Role</span>
+                        <span className="text-lg font-bold text-[#006666] dark:text-teal-400 block mt-1 transition-colors duration-300">Update Role</span>
                     </div>
                 </div>
             }
@@ -73,8 +73,8 @@ function UpdateRoleModal({ modal, setModal }) {
         >
             <div className="p-1">
                 <Formik
-                    innerRef={formikRef}
                     enableReinitialize
+                    innerRef={formikRef}
                     initialValues={initialValues}
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
@@ -91,14 +91,15 @@ function UpdateRoleModal({ modal, setModal }) {
                                             <FormField
                                                 label="Role Title"
                                                 name="name"
-                                                placeholder="Role name"
+                                                placeholder="MODERATOR"
                                                 required
                                                 className="!h-[32px] !text-xs !rounded"
                                                 labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
+                                                disabled
                                             />
 
-                                            <div className="flex flex-col gap-1.5 ">
-                                                <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors duration-300">Role Description <span className="text-red-500">*</span></label>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1">Role Description <span className="text-red-500">*</span></label>
                                                 <div className="relative">
                                                     <Input.TextArea
                                                         name="description"
@@ -110,7 +111,7 @@ function UpdateRoleModal({ modal, setModal }) {
                                                     />
                                                 </div>
                                                 {touched.description && errors.description && (
-                                                    <div className="text-red-500 text-[10px] font-medium ml-1 mt-1">{errors.description}</div>
+                                                    <div className="text-red-500 text-[10px] font-medium ml-1">{errors.description}</div>
                                                 )}
                                             </div>
                                         </div>
@@ -146,6 +147,8 @@ function UpdateRoleModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
+
+UpdateRoleModal.displayName = "UpdateRoleModal";
 
 export default UpdateRoleModal;

@@ -2,8 +2,9 @@
 import React from "react";
 import { Modal, Button, Tag, Divider } from "antd";
 import { timestampToDate } from "@/utils/date";
+import CustomButton from "@/components/shared/CustomButton";
 
-export default function ViewDetailsModal({ open, onClose, data }) {
+const ViewDetailsModal = React.memo(({ open, onClose, data }) => {
     if (!data) return null;
 
     return (
@@ -53,4 +54,8 @@ export default function ViewDetailsModal({ open, onClose, data }) {
             </div>
         </Modal>
     );
-}
+});
+
+ViewDetailsModal.displayName = "ViewDetailsModal";
+
+export default ViewDetailsModal;

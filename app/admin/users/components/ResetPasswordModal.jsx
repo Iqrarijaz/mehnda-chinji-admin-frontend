@@ -6,8 +6,6 @@ import React, { useRef, useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import CustomButton from "@/components/shared/CustomButton";
-
-import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { RESET_USER_PASSWORD } from "@/app/api/admin/users";
@@ -21,7 +19,7 @@ const validationSchema = Yup.object().shape({
         .required("Confirm password is required"),
 });
 
-function ResetPasswordModal({ modal, setModal }) {
+const ResetPasswordModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
 
     const resetPassword = useMutation({
@@ -125,7 +123,7 @@ function ResetPasswordModal({ modal, setModal }) {
                                 </>
                             )}
 
-                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                            <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 transition-colors duration-300">
                                 <CustomButton
                                     label="Cancel"
                                     type="secondary"
@@ -143,6 +141,8 @@ function ResetPasswordModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
+
+ResetPasswordModal.displayName = "ResetPasswordModal";
 
 export default ResetPasswordModal;

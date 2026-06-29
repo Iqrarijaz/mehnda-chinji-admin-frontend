@@ -3,7 +3,7 @@ import SearchInput from "@/components/InnerPage/SearchInput";
 import ResponsiveFilterModal from "@/components/shared/ResponsiveFilterModal";
 import { FaFilter } from "react-icons/fa";
 
-function FilterModal({ open, onCancel, filters, setFilters }) {
+const FilterModal = React.memo(({ open, onCancel, filters, setFilters }) => {
     const handleReset = () => {
         setFilters((prev) => ({
             ...prev,
@@ -39,6 +39,8 @@ function FilterModal({ open, onCancel, filters, setFilters }) {
             </div>
         </ResponsiveFilterModal>
     );
-}
+});
+
+FilterModal.displayName = "FilterModal";
 
 export default FilterModal;

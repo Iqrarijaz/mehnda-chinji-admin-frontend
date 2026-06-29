@@ -13,7 +13,7 @@ import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { hasPermission } from "@/utils/permissions";
 import { PERMISSIONS } from "@/config/permissions";
 
-const ExpensesTable = ({ expensesList, onChange, visibleColumns, setModal }) => {
+const ExpensesTable = React.memo(({ expensesList, onChange, visibleColumns = [], setModal }) => {
     const { data, isFetching } = expensesList;
     const queryClient = useQueryClient();
 
@@ -27,9 +27,9 @@ const ExpensesTable = ({ expensesList, onChange, visibleColumns, setModal }) => 
         cancelText: "Cancel"
     });
 
-    const closeConfirmModal = () => {
+    const closeConfirmModal = React.useCallback(() => {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-    };
+    }, []);
 
     const deleteMutation = useMutation({
         mutationFn: DELETE_EXPENSE,
@@ -44,7 +44,7 @@ const ExpensesTable = ({ expensesList, onChange, visibleColumns, setModal }) => 
         },
     });
 
-    const handleDelete = (record) => {
+    const handleDelete = React.useCallback((record) => {
         setConfirmModal({
             isOpen: true,
             title: 'Confirm Deletion',
@@ -54,9 +54,9 @@ const ExpensesTable = ({ expensesList, onChange, visibleColumns, setModal }) => 
             variant: 'danger',
             onConfirm: () => deleteMutation.mutate({ expenseId: record._id })
         });
-    };
+    }, [deleteMutation]);
 
-    const actionMenu = (record) => {
+    const actionMenu = React.useMemo(() => (record) => {
         const items = [];
         
         if (hasPermission(PERMISSIONS.WATER_SUPPLY.UPDATE)) {
@@ -89,9 +89,9 @@ const ExpensesTable = ({ expensesList, onChange, visibleColumns, setModal }) => 
             items,
             className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
         };
-    };
+    }, [setModal, handleDelete]);
 
-    const allColumns = [
+    const allColumns = React.useMemo(() => [
         {
             title: "Title",
             dataIndex: "title",
@@ -120,7 +120,6 @@ const ExpensesTable = ({ expensesList, onChange, visibleColumns, setModal }) => 
             width: 170,
             render: (date) => (
                 <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-medium truncate transition-colors">
-
                     <span className="text-[11px]">{moment(date).format("MMM DD, YYYY")}</span>
                 </div>
             )
@@ -147,9 +146,11 @@ const ExpensesTable = ({ expensesList, onChange, visibleColumns, setModal }) => 
                 </Dropdown>
             )
         }
-    ];
+    ], [actionMenu]);
 
-    const activeColumns = allColumns.filter(col => visibleColumns.includes(col.key) || col.key === "action");
+    const activeColumns = React.useMemo(() => 
+        allColumns.filter(col => visibleColumns.includes(col.key) || col.key === "action"),
+        [allColumns, visibleColumns]);
 
     return (
         <div className="space-y-3">
@@ -189,6 +190,8 @@ const ExpensesTable = ({ expensesList, onChange, visibleColumns, setModal }) => 
             />
         </div>
     );
-};
+});
+
+ExpensesTable.displayName = "ExpensesTable";
 
 export default ExpensesTable;

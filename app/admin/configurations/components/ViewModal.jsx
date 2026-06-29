@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Modal, Tag, Divider } from "antd";
+import { Modal, Tag } from "antd";
 import { toast } from "react-toastify";
-import { FaCogs, FaCode, FaCalendarAlt, FaShieldAlt, FaInfoCircle, FaFileCode, FaSearch } from "react-icons/fa";
-import CustomButton from "@/components/shared/CustomButton";
+import { FaCode, FaFileCode, FaSearch } from "react-icons/fa";
 
-function ViewConfigurationModal({ modal, setModal }) {
+const ViewConfigurationModal = React.memo(({ modal, setModal }) => {
     const data = modal.data || {};
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -84,39 +83,12 @@ function ViewConfigurationModal({ modal, setModal }) {
             footer={false}
             centered
             width={1200}
-            // height={"650px"}
             style={{ top: 20 }}
             bodyStyle={{ maxHeight: 'calc(100vh - 150px)', overflowY: 'auto' }}
             className="modern-modal"
         >
             <div className="p-1">
                 <div className="space-y-4">
-                    {/* Status & Metadata Grid
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div className="p-3 bg-slate-50/50 dark:bg-slate-900/40 rounded border border-slate-100 dark:border-slate-800 flex items-center justify-between transition-colors duration-300">
-                            <div className="flex items-center gap-2">
-                                <FaShieldAlt className="text-slate-400 dark:text-slate-500" size={14} />
-                                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight">System Status</span>
-                            </div>
-                            <Tag
-                                color={data.isActive ? "success" : "error"}
-                                className="rounded px-2 py-0 border-none font-black text-[8px] uppercase tracking-widest m-0 shadow-sm"
-                            >
-                                {data.isActive ? "ACTIVE" : "INACTIVE"}
-                            </Tag>
-                        </div>
-
-                        <div className="p-3 bg-white dark:bg-slate-900/40 rounded border border-slate-100 dark:border-slate-800 flex items-center justify-between transition-colors duration-300">
-                            <div className="flex items-center gap-2">
-                                <FaCogs className="text-slate-400 dark:text-slate-500" size={14} />
-                                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight">Config Type</span>
-                            </div>
-                            <Tag className="rounded border-none m-0 text-[8px] bg-teal-50 dark:bg-teal-900/30 text-[#006666] dark:text-teal-400 font-bold transition-colors duration-300">
-                                {data.type || "GENERIC"}
-                            </Tag>
-                        </div>
-                    </div> */}
-
                     {/* Visual Categories Display */}
                     {Array.isArray(data.data) && data.data[0]?.category && (
                         <div className="space-y-6">
@@ -143,11 +115,11 @@ function ViewConfigurationModal({ modal, setModal }) {
                                     <div className="p-5">
                                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                                             {cat.types?.map((type, tIdx) => (
-                                                <div 
-                                                    key={tIdx} 
+                                                <div
+                                                    key={tIdx}
                                                     className="group flex flex-col items-center p-4 rounded-xl transition-all hover:bg-teal-50/30 dark:hover:bg-teal-900/10"
                                                 >
-                                                    <div 
+                                                    <div
                                                         className="w-[68px] h-[68px] flex items-center justify-center mb-3 transition-transform group-hover:scale-110 duration-300 cursor-pointer"
                                                         title="Click to copy image URL"
                                                         onClick={() => {
@@ -158,9 +130,9 @@ function ViewConfigurationModal({ modal, setModal }) {
                                                         }}
                                                     >
                                                         {type.icon ? (
-                                                            <img 
-                                                                src={type.icon} 
-                                                                alt={type.label} 
+                                                            <img
+                                                                src={type.icon}
+                                                                alt={type.label}
                                                                 className="w-full h-full object-contain"
                                                                 onError={(e) => {
                                                                     e.target.src = "https://via.placeholder.com/68?text=NA";
@@ -219,6 +191,7 @@ function ViewConfigurationModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
 
+ViewConfigurationModal.displayName = "ViewConfigurationModal";
 export default ViewConfigurationModal;

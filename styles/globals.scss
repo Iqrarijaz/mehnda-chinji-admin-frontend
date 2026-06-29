@@ -564,6 +564,18 @@ body {
   }
 }
 
+.selectbox-rounded-none {
+  .ant-select-selector {
+    border-radius: 0px !important;
+  }
+}
+
+.selectbox-rounded-2px {
+  .ant-select-selector {
+    border-radius: 2px !important;
+  }
+}
+
 .custom-select-no-focus .ant-select-selector {
   border: none !important;
   box-shadow: none !important;

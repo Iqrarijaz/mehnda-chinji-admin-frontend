@@ -4,7 +4,7 @@ import SearchInput from "@/components/InnerPage/SearchInput";
 import { FaFilter } from "react-icons/fa";
 import CustomButton from "@/components/shared/CustomButton";
 
-function FilterModal({ open, onCancel, filters, setFilters }) {
+const FilterModal = React.memo(({ open, onCancel, filters, setFilters }) => {
     return (
         <Modal
             title={
@@ -34,6 +34,8 @@ function FilterModal({ open, onCancel, filters, setFilters }) {
             </div>
         </Modal>
     );
-}
+});
+
+FilterModal.displayName = "FilterModal";
 
 export default FilterModal;

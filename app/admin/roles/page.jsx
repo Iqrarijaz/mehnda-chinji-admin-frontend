@@ -1,7 +1,5 @@
 "use client";
-import React, { useState, useCallback } from "react";
-import { useQuery } from "react-query";
-import { toast } from "react-toastify";
+import React, { useState } from "react";
 import RolesTable from "./components/Table";
 import AddRoleModal from "./components/AddModal";
 import UpdateRoleModal from "./components/UpdateModal";
@@ -33,11 +31,11 @@ export default function RolesPage() {
     // Column Visibility State
     const [visibleColumns, setVisibleColumns] = useState(["name", "description", "permissions", "actions"]);
 
-    const columnOptions = [
+    const columnOptions = React.useMemo(() => [
         { label: "Role Name", value: "name" },
         { label: "Description", value: "description" },
         { label: "Access Level", value: "permissions" },
-    ];
+    ], []);
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);
 
@@ -51,7 +49,7 @@ export default function RolesPage() {
         onListError: "Failed to fetch roles.",
     });
 
-    const onChange = (data) => setFilters((prev) => ({ ...prev, ...data }));
+    const onChange = React.useCallback((data) => setFilters((prev) => ({ ...prev, ...data })), []);
 
     return (
         <InnerPageCard title="Roles Management">

@@ -66,7 +66,7 @@ const EVENT_TYPES = [
     { value: "OTHER", label: "Other" },
 ];
 
-function AddEssentialModal({ modal, setModal }) {
+const AddEssentialModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
     const [isUploading, setIsUploading] = React.useState(false);
@@ -739,7 +739,9 @@ function AddEssentialModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
+
+AddEssentialModal.displayName = "AddEssentialModal";
 
 export default AddEssentialModal;
 

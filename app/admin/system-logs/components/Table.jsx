@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
     EyeOutlined,
     EllipsisOutlined,
@@ -6,12 +7,15 @@ import { timestampToDate } from "@/utils/date";
 import ViewDetailsModal from "./ViewDetailsModal";
 import { Table, Tag, Dropdown, Button } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
-import { useState } from "react";
 
-function LogsTable({ logsList, onChange, visibleColumns }) {
+const LogsTable = React.memo(({ logsList, onChange, visibleColumns = [] }) => {
     const [viewModal, setViewModal] = useState({ open: false, data: null });
 
-    const actionMenu = (record) => ({
+    const handleCloseModal = React.useCallback(() => {
+        setViewModal({ open: false, data: null });
+    }, []);
+
+    const actionMenu = React.useMemo(() => (record) => ({
         items: [
             {
                 key: "view",
@@ -22,9 +26,9 @@ function LogsTable({ logsList, onChange, visibleColumns }) {
             },
         ],
         className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
-    });
+    }), []);
 
-    const allColumns = [
+    const allColumns = React.useMemo(() => [
         {
             title: "Time",
             dataIndex: "createdAt",
@@ -77,9 +81,11 @@ function LogsTable({ logsList, onChange, visibleColumns }) {
                 </Dropdown>
             ),
         }
-    ];
+    ], [actionMenu]);
 
-    const activeColumns = allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key));
+    const activeColumns = React.useMemo(() => 
+        allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
+        [allColumns, visibleColumns]);
 
     return (
         <div className="space-y-4">
@@ -107,12 +113,14 @@ function LogsTable({ logsList, onChange, visibleColumns }) {
                 
                 <ViewDetailsModal 
                     open={viewModal.open} 
-                    onClose={() => setViewModal({ open: false, data: null })} 
+                    onClose={handleCloseModal} 
                     data={viewModal.data} 
                 />
             </div>
         </div>
     );
-}
+});
+
+LogsTable.displayName = "LogsTable";
 
 export default LogsTable;

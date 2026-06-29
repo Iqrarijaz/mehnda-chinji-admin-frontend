@@ -70,3 +70,21 @@ export async function SEARCH_USERS(params) {
         throw error;
     }
 }
+
+export async function TOGGLE_PUBLIC_ANNOUNCER(data) {
+    try {
+        const response = await Axios.post("/api/admin/users/toggle-public-announcer", data);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function ASSIGN_ESSENTIAL(data) {
+    try {
+        const response = await Axios.post("/api/admin/users/assign-essential", data);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

@@ -28,7 +28,7 @@ const initialValues = {
     isDeleted: false,
 };
 
-function AddRoleModal({ modal, setModal }) {
+const AddRoleModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
 
@@ -170,6 +170,8 @@ function AddRoleModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
+
+AddRoleModal.displayName = "AddRoleModal";
 
 export default AddRoleModal;

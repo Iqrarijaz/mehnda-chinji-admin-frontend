@@ -5,13 +5,10 @@ import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { FaCogs, FaCode, FaPlus, FaChevronRight, FaInfoCircle } from "react-icons/fa";
 import CustomButton from "@/components/shared/CustomButton";
-
-import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import { CREATE_CONFIGURATION } from "@/app/api/admin/configurations";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { Formik, Form } from "formik";
-
 const { TextArea } = Input;
 
 const validationSchema = Yup.object().shape({
@@ -28,7 +25,7 @@ const validationSchema = Yup.object().shape({
         }),
 });
 
-function AddConfigurationModal({ modal, setModal }) {
+const AddConfigurationModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
 
@@ -170,7 +167,7 @@ function AddConfigurationModal({ modal, setModal }) {
                                                 </div>
                                                 <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Live Visual Preview</span>
                                             </div>
-                                            
+
                                             <div className="max-h-[600px] overflow-y-auto custom-scrollbar pr-2">
                                                 {(() => {
                                                     try {
@@ -191,8 +188,8 @@ function AddConfigurationModal({ modal, setModal }) {
                                                                             <div className="p-4">
                                                                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                                                                     {cat.types?.map((type, tIdx) => (
-                                                                                        <div 
-                                                                                            key={tIdx} 
+                                                                                        <div
+                                                                                            key={tIdx}
                                                                                             className="group flex flex-col items-center p-3 rounded-xl transition-all hover:bg-teal-50/30 dark:hover:bg-teal-900/10 cursor-pointer"
                                                                                             onClick={() => {
                                                                                                 if (type.icon) {
@@ -203,9 +200,9 @@ function AddConfigurationModal({ modal, setModal }) {
                                                                                         >
                                                                                             <div className="w-[68px] h-[68px] flex items-center justify-center mb-2 transition-transform group-hover:scale-110 duration-300">
                                                                                                 {type.icon ? (
-                                                                                                    <img 
-                                                                                                        src={type.icon} 
-                                                                                                        alt={type.label} 
+                                                                                                    <img
+                                                                                                        src={type.icon}
+                                                                                                        alt={type.label}
                                                                                                         className="w-full h-full object-contain"
                                                                                                         onError={(e) => {
                                                                                                             e.target.src = "https://via.placeholder.com/68?text=NA";
@@ -276,6 +273,7 @@ function AddConfigurationModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
 
+AddConfigurationModal.displayName = "AddConfigurationModal";
 export default AddConfigurationModal;

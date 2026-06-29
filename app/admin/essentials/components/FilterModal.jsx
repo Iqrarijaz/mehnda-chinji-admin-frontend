@@ -1,10 +1,11 @@
+import React from "react";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import SelectBox from "@/components/SelectBox";
 import ResponsiveFilterModal from "@/components/shared/ResponsiveFilterModal";
 import { ESSENTIAL_CATEGORIES } from "@/config/config";
 import { FaFilter } from "react-icons/fa";
 
-function FilterModal({ open, onCancel, filters, setFilters, handleCategoryFilter }) {
+const FilterModal = React.memo(({ open, onCancel, filters, setFilters, handleCategoryFilter }) => {
     const handleReset = () => {
         setFilters((prev) => ({
             ...prev,
@@ -55,6 +56,9 @@ function FilterModal({ open, onCancel, filters, setFilters, handleCategoryFilter
             </div>
         </ResponsiveFilterModal>
     );
-}
+});
+
+FilterModal.displayName = "FilterModal";
 
 export default FilterModal;
+

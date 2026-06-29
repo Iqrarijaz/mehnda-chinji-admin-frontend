@@ -10,11 +10,11 @@ import { FormSkeleton } from "@/components/shared/Skeletons";
 import { GET_SUPPORT_TICKET_BY_ID, REPLY_TO_TICKET, UPDATE_TICKET_STATUS } from "@/app/api/admin/support";
 import { timestampToDate } from "@/utils/date";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const { TextArea } = Input;
 
-function ManageTicketModal({ modal, setModal }) {
+const ManageTicketModal = React.memo(({ modal, setModal }) => {
     const queryClient = useQueryClient();
     const [ticket, setTicket] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -284,6 +284,8 @@ function ManageTicketModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
+
+ManageTicketModal.displayName = "ManageTicketModal";
 
 export default ManageTicketModal;

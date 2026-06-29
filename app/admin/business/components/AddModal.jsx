@@ -39,7 +39,7 @@ const initialValues = {
     isDeleted: false,
 };
 
-function AddBusinessModal({ modal, setModal }) {
+const AddBusinessModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
     const [users, setUsers] = React.useState([]);
@@ -312,6 +312,8 @@ function AddBusinessModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
+
+AddBusinessModal.displayName = "AddBusinessModal";
 
 export default AddBusinessModal;

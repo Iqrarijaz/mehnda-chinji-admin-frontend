@@ -44,7 +44,7 @@ const EVENT_TYPES = [
     { value: "OTHER", label: "Other" },
 ];
 
-function UpdateEssentialModal({ modal, setModal }) {
+const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
     const [isUploading, setIsUploading] = React.useState(false);
@@ -712,6 +712,8 @@ function UpdateEssentialModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
+
+UpdateEssentialModal.displayName = "UpdateEssentialModal";
 
 export default UpdateEssentialModal;

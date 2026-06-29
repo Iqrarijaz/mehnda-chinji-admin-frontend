@@ -1,5 +1,5 @@
 import React from "react";
-import { FaProductHunt, FaUser, FaUserShield, FaMapMarkerAlt, FaBuilding } from "react-icons/fa";
+import { FaProductHunt, FaUser, FaUserShield, FaMapMarkerAlt, FaBuilding, FaRegCommentDots, FaBullhorn } from "react-icons/fa";
 import { RiAdminFill } from "react-icons/ri";
 import { FaQuestionCircle } from "react-icons/fa";
 import { FaBloggerB } from "react-icons/fa6";
@@ -51,10 +51,28 @@ const MenuList = [
     permission: PERMISSIONS.USERS.READ
   },
   {
+    name: "Announcements",
+    icon: <FaBullhorn size={20} />,
+    link: "/admin/announcements",
+    permission: PERMISSIONS.ANNOUNCEMENTS.READ
+  },
+  {
+    name: "Marketplace",
+    icon: <FaProductHunt size={20} />,
+    link: "/admin/marketplace",
+    permission: PERMISSIONS.MARKETPLACE.READ
+  },
+  {
     name: "Blood Donors",
     icon: <FaDroplet size={20} className="text-white" />,
     link: "/admin/blood-donors",
     permission: PERMISSIONS.BLOOD_DONORS.READ
+  },
+  {
+    name: "User Feedback",
+    icon: <FaRegCommentDots size={20} />,
+    link: "/admin/feedback",
+    permission: PERMISSIONS.FEEDBACK.READ
   },
   {
     name: "Roles",

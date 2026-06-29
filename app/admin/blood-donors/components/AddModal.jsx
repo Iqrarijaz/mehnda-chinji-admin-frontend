@@ -7,7 +7,6 @@ import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { FaHeartbeat, FaUser, FaPhone, FaMapMarkerAlt, FaIdCard, FaTint, FaChevronRight } from "react-icons/fa";
 import { SEARCH_USERS } from "@/app/api/admin/users";
-
 import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
@@ -41,7 +40,7 @@ const initialValues = {
     isDeleted: false
 };
 
-function AddDonorModal({ modal, setModal }) {
+const AddDonorModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
     const [users, setUsers] = React.useState([]);
@@ -276,7 +275,9 @@ function AddDonorModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
+
+AddDonorModal.displayName = "AddDonorModal";
 
 // Helper icons not imported
 const FaCheckCircle = (props) => (

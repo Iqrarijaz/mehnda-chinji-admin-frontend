@@ -26,7 +26,7 @@ const validationSchema = Yup.object().shape({
     address: Yup.string().required("Address is required"),
 });
 
-function UpdateDonorModal({ modal, setModal }) {
+const UpdateDonorModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
 
@@ -190,6 +190,8 @@ function UpdateDonorModal({ modal, setModal }) {
             </div>
         </Modal>
     );
-}
+});
+
+UpdateDonorModal.displayName = "UpdateDonorModal";
 
 export default UpdateDonorModal;

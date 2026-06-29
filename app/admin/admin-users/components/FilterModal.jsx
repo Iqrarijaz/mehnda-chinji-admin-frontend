@@ -4,7 +4,7 @@ import SearchInput from "@/components/InnerPage/SearchInput";
 import { FaUserShield } from "react-icons/fa";
 import CustomButton from "@/components/shared/CustomButton";
 
-function FilterModal({ open, onCancel, filters, setFilters }) {
+const FilterModal = React.memo(({ open, onCancel, filters, setFilters }) => {
     return (
         <Modal
             title={<div className="flex items-center gap-2 px-0 py-1">
@@ -30,6 +30,8 @@ function FilterModal({ open, onCancel, filters, setFilters }) {
             </div>
         </Modal>
     );
-}
+});
+
+FilterModal.displayName = "FilterModal";
 
 export default FilterModal;

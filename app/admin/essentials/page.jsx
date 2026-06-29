@@ -1,7 +1,5 @@
 "use client";
-import React, { useState, useCallback } from "react";
-import { useQuery } from "react-query";
-import { toast } from "react-toastify";
+import React, { useState } from "react";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import EssentialsTable from "./components/Table";
@@ -39,7 +37,7 @@ export default function EssentialsPage() {
     // Column Visibility State
     const [visibleColumns, setVisibleColumns] = useState(["name", "image", "type", "category", "address", "timing", "contact", "status", "isActive", "createdAt", "actions"]);
 
-    const columnOptions = [
+    const columnOptions = React.useMemo(() => [
         { label: "Name", value: "name" },
         { label: "File", value: "image" },
         { label: "Type", value: "type" },
@@ -50,7 +48,7 @@ export default function EssentialsPage() {
         { label: "Active", value: "isActive" },
         { label: "Timing", value: "timing" },
         { label: "Created At", value: "createdAt" },
-    ];
+    ], []);
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
 
@@ -71,13 +69,21 @@ export default function EssentialsPage() {
 
     const counts = countsData?.data || { approved: 0, pending: 0, rejected: 0 };
 
-    const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
+    const onChange = React.useCallback((data) => setFilters((old) => ({ ...old, ...data })), []);
 
-    const statCards = [
+    const handleCategoryFilter = React.useCallback((val) => {
+        setFilters((prev) => ({
+            ...prev,
+            category: val || null,
+            currentPage: 1,
+        }));
+    }, []);
+
+    const statCards = React.useMemo(() => [
         { label: "Approved", short: "App", key: "APPROVED", color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
         { label: "Pending", short: "Pen", key: "PENDING", color: "#ea580c", bg: "#fff7ed", border: "#fed7aa" },
         { label: "Rejected", short: "Rej", key: "REJECTED", color: "#dc2626", bg: "#fef2f2", border: "#fecaca" },
-    ];
+    ], []);
 
     return (
         <InnerPageCard title="Essentials">

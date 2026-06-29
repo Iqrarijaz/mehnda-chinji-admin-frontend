@@ -3,14 +3,14 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const ConfigTabs = () => {
-    const pathname = usePathname();
+const tabs = [
+    { name: "System Config", link: "/admin/configurations" },
+    { name: "App Images", link: "/admin/configurations/app-images" },
+    { name: "Upload", link: "/admin/configurations/upload" },
+];
 
-    const tabs = [
-        { name: "System Config", link: "/admin/configurations" },
-        { name: "App Images", link: "/admin/configurations/app-images" },
-        { name: "Upload", link: "/admin/configurations/upload" },
-    ];
+const ConfigTabs = React.memo(() => {
+    const pathname = usePathname();
 
     return (
         <div className="flex items-center gap-1 border-b border-gray-200 dark:border-slate-800 mb-6">
@@ -37,6 +37,8 @@ const ConfigTabs = () => {
             })}
         </div>
     );
-};
+});
+
+ConfigTabs.displayName = "ConfigTabs";
 
 export default ConfigTabs;

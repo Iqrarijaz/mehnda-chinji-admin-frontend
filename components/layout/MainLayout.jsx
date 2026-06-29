@@ -137,7 +137,7 @@ function MainLayout({ children }) {
       >
         <div className="p-4 h-full flex flex-col">
           {/* Logo */}
-          <div className="flex items-center justify-between pt-2 pb-6 border-b border-white/5">
+          {/* <div className="flex items-center justify-between pt-2 pb-6 border-b border-white/5">
             <div className="flex items-center justify-center flex-1">
               <img
                 src="/rehbar_logo_white.png"
@@ -153,7 +153,7 @@ function MainLayout({ children }) {
                 ✕
               </button>
             )}
-          </div>
+          </div> */}
 
           {/* Menu */}
           <nav className="flex-1 mt-4">
