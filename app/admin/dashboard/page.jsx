@@ -91,13 +91,13 @@ function DashBoard() {
             const support = supportRes?.data || {};
 
             setStats({
-                users: { ...community.users, total: calculateTotal(community.users) },
-                donors: { ...community.donors, total: calculateTotal(community.donors) },
-                businesses: { ...marketplace.businesses, total: calculateTotal(marketplace.businesses) },
-                essentials: { ...marketplace.essentials, total: calculateTotal(marketplace.essentials) },
-                reports: { ...support.reports, total: calculateTotal(support.reports) },
-                support: { ...support.support, total: calculateTotal(support.support) },
-                contacts: { ...support.contacts, total: calculateTotal(support.contacts) }
+                users: { ...community.users, total: community.users?.total || (community.users?.active || 0) + (community.users?.inactive || 0) },
+                donors: { ...community.donors, total: community.donors?.total || calculateTotal(community.donors) },
+                businesses: { ...marketplace.businesses, total: marketplace.businesses?.total || calculateTotal(marketplace.businesses) },
+                essentials: { ...marketplace.essentials, total: marketplace.essentials?.total || calculateTotal(marketplace.essentials) },
+                reports: { ...support.reports, total: support.reports?.total || calculateTotal(support.reports) },
+                support: { ...support.support, total: support.support?.total || calculateTotal(support.support) },
+                contacts: { ...support.contacts, total: support.contacts?.total || calculateTotal(support.contacts) }
             });
         } catch (error) {
             console.error("Dashboard data fetch failed:", error);

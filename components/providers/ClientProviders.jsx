@@ -50,6 +50,7 @@ export default function ClientProviders({ children }) {
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: false,
+        staleTime: Infinity,
       },
     },
   }));

@@ -45,7 +45,11 @@ export default function UsersPage() {
         { label: "Gender", value: "gender" },
         { label: "Contact", value: "phone" },
         { label: "Status", value: "status" },
+        { label: "City", value: "city" },
+        { label: "Village", value: "village" },
         { label: "Created At", value: "createdAt" },
+        { label: "Last Activity", value: "lastActivityAt" },
+        { label: "App Version", value: "appVersion" },
     ];
 
     const debFilter = useDebounce(filters, filters.onChangeSearch ? 500 : 0);

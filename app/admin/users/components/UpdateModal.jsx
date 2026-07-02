@@ -13,6 +13,7 @@ import { FormSkeleton } from "@/components/shared/Skeletons";
 import SelectBox from "@/components/SelectBox";
 import CustomButton from "@/components/shared/CustomButton";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { timestampToDate } from "@/utils/date";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -155,6 +156,27 @@ const UpdateUserModal = React.memo(({ modal, setModal }) => {
                                     <div className="px-1 mt-2 mb-2">
                                         <FormField label="Phone Number" name="phone" placeholder="+92 ..." className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors duration-300" />
                                     </div>
+
+                                    {(modal.data?.lastActivityAt || modal.data?.appVersion) && (
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 px-1 mt-2 mb-2">
+                                            {modal.data?.lastActivityAt && (
+                                                <div>
+                                                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors duration-300">Last Activity</label>
+                                                    <div className="text-[12px] text-slate-600 dark:text-slate-300 ml-1 mt-1 font-medium bg-slate-50 dark:bg-slate-800/50 p-2 rounded">
+                                                        {timestampToDate(modal.data.lastActivityAt)}
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {modal.data?.appVersion && (
+                                                <div>
+                                                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors duration-300">App Version</label>
+                                                    <div className="text-[12px] text-slate-600 dark:text-slate-300 ml-1 mt-1 font-medium bg-slate-50 dark:bg-slate-800/50 p-2 rounded">
+                                                        {modal.data.appVersion}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                 </>
                             )}
 
