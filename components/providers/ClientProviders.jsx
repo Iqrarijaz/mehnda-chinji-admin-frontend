@@ -39,6 +39,7 @@ function AntdConfigWrapper({ children }) {
         pauseOnHover
         draggable={false}
         theme={theme === 'dark' ? 'dark' : 'light'}
+        toastClassName="!text-[12px]"
       />
       {children}
     </ConfigProvider>
