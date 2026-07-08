@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Modal, Select, Input } from "antd";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import md5 from "md5";
 import { FaUserPlus, FaUserShield, FaEnvelope, FaPhone, FaLock, FaCheckCircle, FaChevronRight } from "react-icons/fa";
@@ -11,6 +11,7 @@ import { FaUserPlus, FaUserShield, FaEnvelope, FaPhone, FaLock, FaCheckCircle, F
 import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
+import SelectField from "@/components/InnerPage/SelectField";
 import { CREATE_ADMIN_USER } from "@/app/api/admin/admin-users";
 import { GET_ACTIVE_ROLES } from "@/app/api/admin/roles";
 import CustomButton from "@/components/shared/CustomButton";
@@ -41,14 +42,12 @@ const AddAdminUserModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
 
-    const { data: rolesData, isLoading: rolesLoading } = useQuery(
-        [ADMIN_KEYS.ROLES.LIST, "active"],
-        GET_ACTIVE_ROLES,
-        {
-            staleTime: 30000,
-            enabled: modal?.name === "Add" && modal?.state,
-        }
-    );
+    const { data: rolesData, isLoading: rolesLoading } = useQuery({
+        queryKey: [ADMIN_KEYS.ROLES.LIST, "active"],
+        queryFn: GET_ACTIVE_ROLES,
+        staleTime: 30000,
+        enabled: modal?.name === "Add" && modal?.state,
+    });
 
     const createAdminUser = useMutation({
         mutationKey: ["createAdminUser"],
@@ -125,7 +124,7 @@ const AddAdminUserModal = React.memo(({ modal, setModal }) => {
                 >
                     {({ values, errors, touched, setFieldValue, handleChange, handleBlur, isSubmitting }) => (
                         <Form className="space-y-2">
-                            {createAdminUser.isLoading ? (
+                            {createAdminUser.isPending ? (
                                 <FormSkeleton fields={5} />
                             ) : (
                                 <>
@@ -156,39 +155,28 @@ const AddAdminUserModal = React.memo(({ modal, setModal }) => {
                                     <div className="modal-section">
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Permissions & Status</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-slate-700 font-semibold text-xs">Permission Role <span className="text-red-500">*</span></label>
-                                                <Select
-                                                    value={values.accessRoleId}
-                                                    onChange={(value) => {
-                                                        const selectedRole = rolesData?.data?.find(r => r._id === value);
-                                                        setFieldValue("accessRoleId", value);
-                                                        setFieldValue("role", selectedRole?.name || "");
-                                                    }}
-                                                    placeholder="Select role"
-                                                    className="w-full modern-select-box"
-                                                    size="middle"
-                                                    loading={rolesLoading}
-                                                >
-                                                    {rolesData?.data?.map((role) => (
-                                                        <Select.Option key={role._id} value={role._id}>{role.name}</Select.Option>
-                                                    ))}
-                                                </Select>
-                                                {touched.accessRoleId && errors.accessRoleId && <div className="text-red-500 text-[10px] font-medium">{errors.accessRoleId}</div>}
-                                            </div>
+                                            <SelectField
+                                                label="Permission Role"
+                                                name="accessRoleId"
+                                                required
+                                                options={rolesData?.data?.map(role => ({ label: role.name, value: role._id })) || []}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    const selectedRole = rolesData?.data?.find(r => r._id === value);
+                                                    setFieldValue("accessRoleId", value);
+                                                    setFieldValue("role", selectedRole?.name || "");
+                                                }}
+                                            />
 
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-slate-700 font-semibold text-xs">Account Status</label>
-                                                <Select
-                                                    value={values.status}
-                                                    onChange={(value) => setFieldValue("status", value)}
-                                                    className="w-full modern-select-box"
-                                                    size="middle"
-                                                >
-                                                    <Select.Option value="ACTIVE">Authorized / Active</Select.Option>
-                                                    <Select.Option value="INACTIVE">Suspended / Inactive</Select.Option>
-                                                </Select>
-                                            </div>
+                                            <SelectField
+                                                label="Account Status"
+                                                name="status"
+                                                options={[
+                                                    { label: "Authorized / Active", value: "ACTIVE" },
+                                                    { label: "Suspended / Inactive", value: "INACTIVE" }
+                                                ]}
+                                                onChange={(e) => setFieldValue("status", e.target.value)}
+                                            />
                                         </div>
                                     </div>
                                 </>
@@ -203,7 +191,7 @@ const AddAdminUserModal = React.memo(({ modal, setModal }) => {
                                 <CustomButton
                                     label="Create Account"
                                     htmlType="submit"
-                                    loading={createAdminUser.isLoading || isSubmitting}
+                                    loading={createAdminUser.isPending || isSubmitting}
                                 />
                             </div>
                         </Form>

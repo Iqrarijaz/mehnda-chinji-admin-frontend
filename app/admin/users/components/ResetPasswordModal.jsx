@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaLock } from "react-icons/fa";
 import React, { useRef, useEffect, useState } from "react";
@@ -132,7 +132,7 @@ const ResetPasswordModal = React.memo(({ modal, setModal }) => {
                                 <CustomButton
                                     label="Update Password"
                                     htmlType="submit"
-                                    loading={isSubmitting || resetPassword.isLoading}
+                                    loading={isSubmitting || resetPassword.isPending}
                                 />
                             </div>
                         </Form>

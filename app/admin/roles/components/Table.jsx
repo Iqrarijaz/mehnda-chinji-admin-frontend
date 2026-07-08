@@ -7,7 +7,7 @@ import {
     SecurityScanOutlined
 } from "@ant-design/icons";
 import Loading from "@/animations/homePageLoader";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { DELETE_ROLE } from "@/app/api/admin/roles";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
@@ -102,7 +102,7 @@ const RolesTable = React.memo(({ setModal, rolesList, filters, onChange, visible
             width: 150,
             sorter: true,
             render: (name) => (
-                <span className="font-bold text-slate-700 dark:text-slate-200 text-[11px] truncate leading-tight block tracking-tight transition-colors duration-300">
+                <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate leading-tight block tracking-tight transition-colors duration-300">
                     {name}
                 </span>
             ),
@@ -113,7 +113,7 @@ const RolesTable = React.memo(({ setModal, rolesList, filters, onChange, visible
             key: "description",
             width: 250,
             render: (description) => (
-                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate block leading-tight transition-colors duration-300">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate block leading-tight transition-colors duration-300 group-hover:text-slate-300">
                     {description || "No description provided"}
                 </span>
             ),
@@ -138,6 +138,7 @@ const RolesTable = React.memo(({ setModal, rolesList, filters, onChange, visible
             key: "actions",
             width: 70,
             align: "right",
+            fixed: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
@@ -179,7 +180,7 @@ const RolesTable = React.memo(({ setModal, rolesList, filters, onChange, visible
                     onChange={handleSorting}
                 />
 
-                {deleteMutation.isLoading && <Loading />}
+                {deleteMutation.isPending && <Loading />}
 
                 <ConfirmModal
                     isOpen={confirmModal.isOpen}
@@ -190,7 +191,7 @@ const RolesTable = React.memo(({ setModal, rolesList, filters, onChange, visible
                     confirmText={confirmModal.confirmText}
                     cancelText={confirmModal.cancelText}
                     variant={confirmModal.variant}
-                    loading={deleteMutation.isLoading}
+                    loading={deleteMutation.isPending}
                 />
             </div>
         </div>

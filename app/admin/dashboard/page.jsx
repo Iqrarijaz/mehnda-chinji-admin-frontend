@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import UseMount from "@/hooks/useMount";
-import StatCard from "@/components/shared/StatCard";
+import DashboardCard from "@/components/shared/DashboardCard";
 import { Table, Card, Tag, Tooltip, Divider } from "antd";
 import {
     UserOutlined,
@@ -22,10 +22,10 @@ import { useRouter } from "next/navigation";
 
 // API Imports
 import {
-    GET_COMMUNITY_STATS,
-    GET_MARKETPLACE_STATS,
-    GET_SUPPORT_STATS
-} from "@/app/api/admin/dashboard";
+    useCommunityStats,
+    useMarketplaceStats,
+    useSupportStats
+} from "./hooks/useDashboard";
 import TrendingChart from "@/components/shared/TrendingChart";
 
 import { timestampToDate } from "@/utils/date";
@@ -36,13 +36,13 @@ import { timestampToDate } from "@/utils/date";
 const QuickActionButton = React.memo(({ icon, label, description, onClick, colorClass = "text-teal-600", bgClass = "bg-teal-50" }) => (
     <button
         onClick={onClick}
-        className="flex flex-col items-start p-4 rounded-xl border border-slate-100 dark:border-slate-800/50 hover:border-teal-200 dark:hover:border-teal-900/40 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all duration-300 group bg-slate-50/30 dark:bg-slate-900/50 relative overflow-hidden active:scale-[0.97]"
+        className="flex flex-col items-start p-3 rounded-lg border border-slate-100 dark:border-slate-800/50 hover:border-teal-200 dark:hover:border-teal-900/40 hover:bg-white dark:hover:bg-slate-800 transition-all duration-300 group bg-slate-50/30 dark:bg-slate-900/50 relative overflow-hidden active:scale-[0.97]"
     >
         {/* Subtle background glow on hover */}
         <div className={`absolute -right-4 -top-4 w-12 h-12 rounded-full ${bgClass} opacity-0 group-hover:opacity-20 blur-xl transition-opacity`} />
         
-        <div className={`w-9 h-9 rounded-lg ${bgClass} flex items-center justify-center ${colorClass} group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 mb-3 border border-black/5 dark:border-white/5 shadow-sm`}>
-            {React.cloneElement(icon, { className: "text-lg" })}
+        <div className={`w-7 h-7 rounded-lg ${bgClass} flex items-center justify-center ${colorClass} group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 mb-2 border border-black/5 dark:border-white/5`}>
+            {React.cloneElement(icon, { className: "text-base" })}
         </div>
         
         <div className="flex flex-col items-start text-left">
@@ -61,54 +61,45 @@ function DashBoard() {
     const isMounted = UseMount();
     const router = useRouter();
 
-    const [stats, setStats] = useState({
-        users: { ACTIVE: 0, INACTIVE: 0, total: 0 },
-        businesses: { APPROVED: 0, PENDING: 0, REJECTED: 0, total: 0 },
-        essentials: { APPROVED: 0, PENDING: 0, REJECTED: 0, total: 0 },
-        donors: { AVAILABLE: 0, UNAVAILABLE: 0, total: 0 },
-        reports: { PENDING: 0, REVIEWED: 0, RESOLVED: 0, total: 0 },
-        support: { OPEN: 0, IN_PROGRESS: 0, CLOSED: 0, total: 0 },
-        contacts: { PENDING: 0, REVIEWED: 0, RESOLVED: 0, total: 0 }
-    });
+    const { data: community = {}, isLoading: commLoading, refetch: refetchComm } = useCommunityStats();
+    const { data: marketplace = {}, isLoading: marketLoading, refetch: refetchMarket } = useMarketplaceStats();
+    const { data: support = {}, isLoading: supportLoading, refetch: refetchSupport } = useSupportStats();
 
+    const loading = commLoading || marketLoading || supportLoading;
 
-    const [loading, setLoading] = useState(true);
-
-    const calculateTotal = (data) =>
-        Object.values(data || {}).reduce((a, b) => a + (typeof b === 'number' ? b : 0), 0);
+    const stats = useMemo(() => {
+        const u = community.users || {};
+        const b = marketplace.businesses || {};
+        const e = marketplace.essentials || {};
+        return {
+            users: {
+                active: u.active || u.ACTIVE || 0,
+                inactive: u.inactive || u.INACTIVE || 0,
+                total: u.total || 0
+            },
+            businesses: {
+                approved: b.approved || b.APPROVED || 0,
+                pending: b.pending || b.PENDING || 0,
+                rejected: b.rejected || b.REJECTED || 0,
+                total: b.total || 0
+            },
+            essentials: {
+                approved: e.approved || e.APPROVED || 0,
+                pending: e.pending || e.PENDING || 0,
+                rejected: e.rejected || e.REJECTED || 0,
+                total: e.total || 0
+            },
+            reports: support.reports || { PENDING: 0, REVIEWED: 0, RESOLVED: 0, total: 0 },
+            support: support.supportTickets || { OPEN: 0, IN_PROGRESS: 0, CLOSED: 0, total: 0 },
+            contacts: support.contactRequests || { PENDING: 0, REVIEWED: 0, RESOLVED: 0, total: 0 }
+        };
+    }, [community, marketplace, support]);
 
     const fetchData = async () => {
-        try {
-            setLoading(true);
-            const [commRes, marketRes, supportRes] = await Promise.all([
-                GET_COMMUNITY_STATS().catch(() => ({ data: {} })),
-                GET_MARKETPLACE_STATS().catch(() => ({ data: {} })),
-                GET_SUPPORT_STATS().catch(() => ({ data: {} })),
-            ]);
-
-            const community = commRes?.data || {};
-            const marketplace = marketRes?.data || {};
-            const support = supportRes?.data || {};
-
-            setStats({
-                users: { ...community.users, total: community.users?.total || (community.users?.active || 0) + (community.users?.inactive || 0) },
-                donors: { ...community.donors, total: community.donors?.total || calculateTotal(community.donors) },
-                businesses: { ...marketplace.businesses, total: marketplace.businesses?.total || calculateTotal(marketplace.businesses) },
-                essentials: { ...marketplace.essentials, total: marketplace.essentials?.total || calculateTotal(marketplace.essentials) },
-                reports: { ...support.reports, total: support.reports?.total || calculateTotal(support.reports) },
-                support: { ...support.support, total: support.support?.total || calculateTotal(support.support) },
-                contacts: { ...support.contacts, total: support.contacts?.total || calculateTotal(support.contacts) }
-            });
-        } catch (error) {
-            console.error("Dashboard data fetch failed:", error);
-        } finally {
-            setLoading(false);
-        }
+        refetchComm();
+        refetchMarket();
+        refetchSupport();
     };
-
-    useEffect(() => {
-        if (isMounted) fetchData();
-    }, [isMounted]);
 
     // Helper to generate a realistic-looking 7-day trend array ending at the current count
     const generateTrendData = useCallback((currentCount) => {
@@ -125,6 +116,12 @@ function DashBoard() {
         });
     }, []);
 
+    const dashboardStats = useMemo(() => [
+        { title: "User Directory", count: stats.users.total, icon: <UserOutlined />, color: "teal", hexColor: "#006666" },
+        { title: "Active Businesses", count: stats.businesses.approved, icon: <ShopOutlined />, color: "indigo", hexColor: "#6366f1" },
+        { title: "Pending Marketplace", count: stats.businesses.pending + stats.essentials.pending, icon: <ShopOutlined />, color: "amber", hexColor: "#f59e0b" }
+    ], [stats]);
+
     if (!isMounted) return null;
 
     return (
@@ -138,7 +135,7 @@ function DashBoard() {
                     <div>
                         <div className="flex items-center gap-2">
                             <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none uppercase">
-                                Admin <span className="text-[#006666] dark:text-teal-400">Terminal</span>
+                                Dashboard
                             </h1>
                             <div className="flex items-center gap-1 bg-teal-50 dark:bg-teal-900/10 px-1.5 py-0.5 rounded text-[8px] font-black text-teal-600 dark:text-teal-400 border border-teal-100 dark:border-teal-900/20 uppercase tracking-tighter">
                                 <CheckCircleOutlined size={8} /> v2.4.0
@@ -151,17 +148,6 @@ function DashBoard() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                    {/* System Health Monitor */}
-                    <div className="hidden lg:flex items-center gap-4 mr-4 border-r border-slate-100 dark:border-slate-800 pr-4 transition-colors duration-300">
-                        <div className="flex flex-col items-end">
-                            <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest leading-none">Network Latency</span>
-                            <span className="text-[11px] font-bold text-teal-600 dark:text-teal-400 mt-1">24ms <span className="text-[8px] text-slate-300 dark:text-slate-500">Optimum</span></span>
-                        </div>
-                        <div className="flex flex-col items-end">
-                            <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest leading-none">API Status</span>
-                            <span className="text-[11px] font-bold text-teal-600 dark:text-teal-400 mt-1">Operational</span>
-                        </div>
-                    </div>
 
                     <div className="flex items-center gap-2 text-[10px] font-black text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/10 px-3 py-2 rounded-full border border-teal-100 dark:border-teal-900/20 uppercase tracking-widest shadow-sm">
                         <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
@@ -177,30 +163,18 @@ function DashBoard() {
             </div>
 
             {/* Premium Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {[
-                    { title: "User Directory", count: stats.users.total, icon: <UserOutlined />, color: "#006666", bg: "rgba(0, 102, 102, 0.03)" },
-                    { title: "Active Businesses", count: stats.businesses.APPROVED, icon: <ShopOutlined />, color: "#0ea5e9", bg: "rgba(14, 165, 233, 0.03)" },
-                    { title: "Verified Essentials", count: stats.essentials.APPROVED, icon: <EnvironmentOutlined />, color: "#f59e0b", bg: "rgba(245, 158, 11, 0.03)" },
-                    { title: "Blood Donors", count: stats.donors.total, icon: <UserAddOutlined />, color: "#ef4444", bg: "rgba(239, 68, 68, 0.03)" }
-                ].map((stat, i) => (
-                    <div
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {dashboardStats.map((stat, i) => (
+                    <DashboardCard
                         key={i}
-                        className="p-5 rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group backdrop-blur-sm"
-                        style={{ borderLeft: `4px solid ${stat.color}` }}
-                    >
-                        <div className="flex justify-between items-start mb-2">
-                            <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-900/50 text-slate-400 group-hover:text-teal-600 transition-colors">
-                                {stat.icon}
-                            </div>
-                            <Tag className="!m-0 !text-[9px] font-black tracking-widest uppercase border-none bg-slate-100 dark:bg-slate-800 text-slate-400">+12%</Tag>
-                        </div>
-                        <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{stat.title}</h4>
-                        <div className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none">
-                            {(stat.count || 0).toLocaleString()}
-                        </div>
-                        <TrendingChart data={generateTrendData(stat.count)} color={stat.color} />
-                    </div>
+                        title={stat.title}
+                        value={(stat.count || 0).toLocaleString()}
+                        icon={stat.icon}
+                        color={stat.color}
+                        trendChart={
+                            <TrendingChart data={generateTrendData(stat.count)} color={stat.hexColor} height={16} />
+                        }
+                    />
                 ))}
             </div>
 

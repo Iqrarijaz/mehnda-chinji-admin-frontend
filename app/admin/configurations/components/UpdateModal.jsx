@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { Modal, Input, Select } from "antd";
 import * as Yup from "yup";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaCode, FaEdit, FaChevronRight, FaInfoCircle } from "react-icons/fa";
 import CustomButton from "@/components/shared/CustomButton";
@@ -9,9 +9,9 @@ import { FormSkeleton } from "@/components/shared/Skeletons";
 import { UPDATE_CONFIGURATION } from "@/app/api/admin/configurations";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { Formik, Form } from "formik";
+import FormField from "@/components/InnerPage/FormField";
 
 const { TextArea } = Input;
-const { Option } = Select;
 
 const validationSchema = Yup.object().shape({
     type: Yup.string().required("Configuration type is required"),
@@ -121,18 +121,13 @@ const UpdateConfigurationModal = React.memo(({ modal, setModal }) => {
                                         {/* Editor Side */}
                                         <div className="space-y-4">
                                             <div className="modal-section space-y-2">
-                                                <div className="flex flex-col gap-1.5 ">
-                                                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors duration-300">Config Type (Namespace) <span className="text-red-500">*</span></label>
-                                                    <div className="relative">
-                                                        <Input
-                                                            value={values.type}
-                                                            placeholder="Namespace"
-                                                            className="!pl-3 !h-[36px] !text-xs !rounded !border-slate-100 dark:!border-slate-800 !bg-white dark:!bg-slate-900 !text-slate-700 dark:!text-slate-200 focus:!border-[#006666] transition-all duration-300"
-                                                            onChange={(e) => setFieldValue("type", e.target.value.toUpperCase())}
-                                                        />
-                                                    </div>
-                                                    {errors.type && touched.type && <div className="text-red-500 text-[10px] font-medium ml-1 mt-1 transition-colors duration-300">{errors.type}</div>}
-                                                </div>
+                                                <FormField
+                                                    label="Config Type (Namespace)"
+                                                    name="type"
+                                                    placeholder="Namespace"
+                                                    required
+                                                    onChange={(e) => setFieldValue("type", e.target.value.toUpperCase())}
+                                                />
                                             </div>
 
                                             <div className="modal-section !mb-0 space-y-2">
@@ -268,7 +263,7 @@ const UpdateConfigurationModal = React.memo(({ modal, setModal }) => {
                                 <CustomButton
                                     label="Save Changes"
                                     htmlType="submit"
-                                    loading={isSubmitting || updateConfig.isLoading}
+                                    loading={isSubmitting || updateConfig.isPending}
                                 />
                             </div>
                         </Form>

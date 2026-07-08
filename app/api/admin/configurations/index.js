@@ -1,6 +1,6 @@
 import { Axios } from "@/interceptors";
 
-export async function CONFIGURATIONS(data) {
+export async function GET_CONFIGURATIONS(data) {
     try {
         const response = await Axios.get("/api/admin/configuration/list", {
             params: data,

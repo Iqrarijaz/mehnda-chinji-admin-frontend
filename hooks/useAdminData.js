@@ -1,14 +1,9 @@
 
-import { useState, useCallback } from "react";
-import { useQuery } from "react-query";
+import { useState, useCallback, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
-/**
- * Custom hook to encapsulate the common pattern for admin pages:
- * - fetching data list with filters
- * - fetching status counts
- * - handling manual refresh with "isRefreshing" state and toast notifications
- */
+
 export const useAdminData = ({
     listQueryKey,
     listQueryFn,
@@ -24,23 +19,29 @@ export const useAdminData = ({
     const listQuery = useQuery({
         queryKey: listQueryKey,
         queryFn: listQueryFn,
-        keepPreviousData,
-        onError: (err) => {
-            const msg = err?.response?.data?.message || onListError;
-            toast.error(msg);
-        },
+        placeholderData: keepPreviousData ? (previousData) => previousData : undefined,
     });
+
+    useEffect(() => {
+        if (listQuery.isError) {
+            const msg = listQuery.error?.response?.data?.message || onListError;
+            toast.error(msg);
+        }
+    }, [listQuery.isError, listQuery.error, onListError]);
 
     // 2. Fetch status counts data (optional)
     const countsQuery = useQuery({
         queryKey: countsQueryKey,
         queryFn: countsQueryFn,
         enabled: Boolean(countsQueryKey && countsQueryFn),
-        onError: (err) => {
-            const msg = err?.response?.data?.message || onCountsError;
-            toast.error(msg);
-        },
     });
+
+    useEffect(() => {
+        if (countsQuery.isError) {
+            const msg = countsQuery.error?.response?.data?.message || onCountsError;
+            toast.error(msg);
+        }
+    }, [countsQuery.isError, countsQuery.error, onCountsError]);
 
     // 3. Centralized manual refresh handler
     const handleRefresh = useCallback(async () => {

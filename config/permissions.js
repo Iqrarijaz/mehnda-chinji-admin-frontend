@@ -14,18 +14,7 @@ export const PERMISSIONS = {
         UPDATE: "businesses.update",
         DELETE: "businesses.delete",
     },
-    LOCATIONS: {
-        CREATE: "locations.create",
-        READ: "locations.read",
-        UPDATE: "locations.update",
-        DELETE: "locations.delete",
-    },
-    POSTS: {
-        CREATE: "posts.create",
-        READ: "posts.read",
-        UPDATE: "posts.update",
-        DELETE: "posts.delete",
-    },
+
     USERS: {
         CREATE: "users.create",
         READ: "users.read",
@@ -54,12 +43,6 @@ export const PERMISSIONS = {
         READ: "admin_users.read",
         UPDATE: "admin_users.update",
         DELETE: "admin_users.delete",
-    },
-    BLOOD_DONORS: {
-        CREATE: "blood_donors.create",
-        READ: "blood_donors.read",
-        UPDATE: "blood_donors.update",
-        DELETE: "blood_donors.delete",
     },
     CONFIGURATIONS: {
         READ: "configurations.read",
@@ -91,27 +74,37 @@ export const PERMISSIONS = {
         READ: "logs.read",
         DELETE: "logs.delete",
     },
-    WATER_SUPPLY: {
-        CREATE: "water_supply.create",
-        READ: "water_supply.read",
-        UPDATE: "water_supply.update",
-        DELETE: "water_supply.delete",
-    },
     FEEDBACK: {
         READ: "feedback.read",
         UPDATE: "feedback.update",
         DELETE: "feedback.delete",
     },
-    ANNOUNCEMENTS: {
-        CREATE: "announcements.create",
-        READ: "announcements.read",
-        UPDATE: "announcements.update",
-        DELETE: "announcements.delete",
-    },
+
     MARKETPLACE: {
         CREATE: "marketplace.create",
         READ: "marketplace.read",
         UPDATE: "marketplace.update",
         DELETE: "marketplace.delete",
+    },
+    STORE: {
+        CATEGORIES: {
+            CREATE: "store.categories.create",
+            READ: "store.categories.read",
+            UPDATE: "store.categories.update",
+            DELETE: "store.categories.delete",
+        },
+        PRODUCTS: {
+            CREATE: "store.products.create",
+            READ: "store.products.read",
+            UPDATE: "store.products.update",
+            DELETE: "store.products.delete",
+        },
+        ORDERS: {
+            READ: "store.orders.read",
+            UPDATE: "store.orders.update",
+        },
+        ANALYTICS: {
+            READ: "store.analytics.read",
+        }
     }
 };

@@ -3,14 +3,14 @@ import React, { useRef, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Modal } from "antd";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaUserPlus } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
 import FormField from "@/components/InnerPage/FormField";
+import SelectField from "@/components/InnerPage/SelectField";
 import { CREATE_USER } from "@/app/api/admin/users";
-import SelectBox from "@/components/SelectBox";
 import CustomButton from "@/components/shared/CustomButton";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
@@ -109,25 +109,27 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
                 >
                     {({ isSubmitting, values, setFieldValue, errors, touched }) => (
                         <Form className="space-y-2">
-                            {createUser.isLoading ? (
+                            {createUser.isPending ? (
                                 <FormSkeleton fields={5} />
                             ) : (
                                 <>
                                     <div className="modal-section">
                                         <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors duration-300">Account Info</p>
-                                        <FormField label="Full Name" name="name" placeholder="Name" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors duration-300" />
-                                        <FormField label="Email Address" name="email" type="email" placeholder="Email" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors duration-300" />
-                                        <FormField label="Password" name="password" type="password" placeholder="••••••••" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors duration-300" />
+                                        <FormField label="Full Name" name="name" placeholder="Name" required />
+                                        <FormField label="Email Address" name="email" type="email" placeholder="Email" required />
+                                        <FormField label="Password" name="password" type="password" placeholder="••••••••" required />
                                     </div>
 
                                     <div className="modal-section">
                                         <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors duration-300">Profile Data</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="flex flex-col gap-1.5 overflow-hidden">
-                                                <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors duration-300">Role <span className="text-red-500">*</span></label>
-                                                <SelectBox
+                                                <SelectField
+                                                    label="Role"
+                                                    name="role"
+                                                    required
                                                     value={values.role}
-                                                    handleChange={(val) => setFieldValue("role", val)}
+                                                    onChange={(e) => setFieldValue("role", e.target.value)}
                                                     options={[
                                                         { value: "USER", label: "USER" },
                                                         { value: "ADMIN", label: "ADMIN" },
@@ -135,30 +137,28 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
                                                         { value: "APP_ADMIN", label: "APP_ADMIN" },
                                                         { value: "WATER_SUPPLY_ADMIN", label: "WATER_SUPPLY_ADMIN" }
                                                     ]}
-                                                    className="modern-select-box"
                                                 />
-                                                {errors.role && touched.role && <span className="text-red-500 text-[10px] font-medium ml-1">{errors.role}</span>}
                                             </div>
 
                                             <div className="flex flex-col gap-1.5 overflow-hidden">
-                                                <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors duration-300">Gender <span className="text-red-500">*</span></label>
-                                                <SelectBox
+                                                <SelectField
+                                                    label="Gender"
+                                                    name="gender"
+                                                    required
                                                     value={values.gender}
-                                                    handleChange={(val) => setFieldValue("gender", val)}
+                                                    onChange={(e) => setFieldValue("gender", e.target.value)}
                                                     options={[
                                                         { value: "MALE", label: "MALE" },
                                                         { value: "FEMALE", label: "FEMALE" },
                                                         { value: "OTHER", label: "OTHER" }
                                                     ]}
-                                                    className="modern-select-box"
                                                 />
-                                                {errors.gender && touched.gender && <span className="text-red-500 text-[10px] font-medium ml-1">{errors.gender}</span>}
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="px-1 mt-2 mb-2">
-                                        <FormField label="Phone Number" name="phone" placeholder="+92 ..." className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors duration-300" />
+                                        <FormField label="Phone Number" name="phone" placeholder="+92 ..." />
                                     </div>
                                 </>
                             )}
@@ -172,7 +172,7 @@ const AddUserModal = React.memo(({ modal, setModal }) => {
                                 <CustomButton
                                     label="Add User"
                                     htmlType="submit"
-                                    loading={isSubmitting || createUser.isLoading}
+                                    loading={isSubmitting || createUser.isPending}
                                 />
                             </div>
                         </Form>

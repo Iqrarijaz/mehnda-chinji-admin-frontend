@@ -133,6 +133,7 @@ function ContactUsList({ modal, setModal, contactList, onChange, onDelete, onUpd
             key: "actions",
             width: 70,
             align: "right",
+            fixed: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button

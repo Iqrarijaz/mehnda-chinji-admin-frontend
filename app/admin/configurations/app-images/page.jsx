@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
@@ -39,8 +39,13 @@ export default function AppImagesPage() {
     const appImagesList = useQuery({
         queryKey: ["appImagesList", JSON.stringify(debFilter)],
         queryFn: () => GET_APP_IMAGES(debFilter),
-        onError: () => toast.error("Something went wrong while fetching app images."),
     });
+
+    React.useEffect(() => {
+        if (appImagesList.isError) {
+            toast.error(appImagesList.error?.errorMessage || "Failed to fetch App images.");
+        }
+    }, [appImagesList.isError, appImagesList.error]);
 
     const totalSets = appImagesList.data?.pagination?.total || 0;
 
@@ -64,11 +69,10 @@ export default function AppImagesPage() {
                     />
                 </div>
 
-                {/* Filter, Search and Add Button (Right) */}
-                <div className="flex gap-2 items-center w-full md:w-auto justify-end">
-                    {/* Desktop Filters (Hidden on Mobile) */}
-                    <div className="hidden md:flex items-center gap-3 mr-1">
-                        <SearchInput setFilters={setFilters} />
+                {/* Action Bar (Right) */}
+                <div className="flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:w-auto justify-end">
+                    <div className="hidden md:flex items-center gap-2">
+                        <SearchInput setFilters={setFilters} className="!max-w-[180px] !h-[32px] mt-1 !border-2 !rounded-[2px]" />
                     </div>
 
                     <div className="flex items-center gap-2">

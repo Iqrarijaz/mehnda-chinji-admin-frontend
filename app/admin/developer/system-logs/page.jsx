@@ -1,12 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import SystemLogsTable from "./components/Table";
-import { LIST_SYSTEM_LOGS } from "@/app/api/admin/developers/systemLogs";
 import { Select } from "antd";
 import { useDebounce } from "@/hooks/useDebounce";
+import InnerPageCard from "@/components/layout/InnerPageCard";
+import { HiRefresh } from "react-icons/hi";
+import { useDevSystemLogs } from "./hooks/useDevSystemLogs";
 
 export default function SystemLogsPage() {
   const [filters, setFilters] = useState({
@@ -20,44 +22,61 @@ export default function SystemLogsPage() {
   });
 
   const debFilter = useDebounce(filters, filters.onChangeSearch ? 1000 : 0);
-  const systemLogsList = useQuery({
-    queryKey: ["systemLogsList", JSON.stringify(debFilter)],
-    queryFn: () => LIST_SYSTEM_LOGS(debFilter),
-    onError: () => toast.error("Something went wrong. Please try again later."),
-  });
+  
+  const {
+      listQuery: systemLogsList,
+      isRefreshing,
+      handleRefresh
+  } = useDevSystemLogs(debFilter);
 
   const onChange = (data) => setFilters((old) => ({ ...old, ...data }));
 
   return (
-    <>
-      <div className="flex justify-end mb-3 gap-3 items-center">
-        <div className="min-w-[160px]">
-          <Select
-            placeholder="Select Portal"
-            allowClear
-            defaultValue={"ADMIN"}
-            style={{ width: "160px", height: "36px" }}
-            className="custom-selectbox"
-            onChange={(value) => {
-              setFilters((old) => ({
-                ...old,
-                advance: value === null ? null : { portal: value },
-              }));
-            }}
-            options={[
-              { value: "ADMIN", label: "Admin" },
-              { value: "USER", label: "User" },
-              { value: "WEBSITE", label: "Website" },
-            ]}
-          />
-        </div>
-        <div className="flex flex-col md:flex-row gap-2">
-          <SearchInput setFilters={setFilters} searchKey="keyWord" pageKey="currentPage" />
+    <InnerPageCard>
+      <div className="flex flex-col md:flex-row justify-end mb-3 gap-3 items-center">
+        <div className="flex flex-wrap md:flex-nowrap gap-1 items-center w-full md:w-auto justify-end">
+          <div className="hidden md:flex items-center gap-1">
+            <Select
+              placeholder="Select Portal"
+              allowClear
+              defaultValue={"ADMIN"}
+              className="custom-selectbox !w-[160px] !h-[32px] mt-1"
+              onChange={(value) => {
+                setFilters((old) => ({
+                  ...old,
+                  advance: value === null ? null : { portal: value },
+                }));
+              }}
+              options={[
+                { value: "ADMIN", label: "Admin" },
+                { value: "USER", label: "User" },
+                { value: "WEBSITE", label: "Website" },
+              ]}
+            />
+            <SearchInput
+                setFilters={setFilters}
+                searchKey="keyWord"
+                pageKey="currentPage"
+                className="!max-w-[180px] !h-[32px] mt-1 !border-2 !rounded-[2px]"
+            />
+          </div>
+
+          <div className="flex items-center gap-1">
+            {/* Refresh Button */}
+            <button
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                title="Refresh Data"
+                className="flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
+            </button>
+          </div>
         </div>
       </div>
 
 
       <SystemLogsTable systemLogsList={systemLogsList} onChange={onChange} />
-    </>
+    </InnerPageCard>
   );
 }

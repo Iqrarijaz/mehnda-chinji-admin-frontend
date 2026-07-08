@@ -1,21 +1,20 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Modal, Select, Avatar, Space } from "antd";
-import { useMutation, useQueryClient } from "react-query";
+import { Modal, Select, Avatar, Space, Spin, Switch } from "antd";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { FaStore, FaMapMarkerAlt, FaPhoneAlt, FaTag, FaUser } from "react-icons/fa";
+import { FaStore, FaUser } from "react-icons/fa";
 
-import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
-import { CREATE_BUSINESS } from "@/app/api/admin/business";
+import SelectField from "@/components/InnerPage/SelectField";
 import { SEARCH_USERS } from "@/app/api/admin/users";
 import TimingPicker from "@/components/TimingPicker";
 import professions from "@/data/professions.json";
 import CustomButton from "@/components/shared/CustomButton";
-import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useCreateBusiness } from "../hooks/useBusiness";
 
 const { Option } = Select;
 
@@ -36,15 +35,29 @@ const initialValues = {
     phone: "",
     address: "",
     timing: "",
+    hasStore: false,
+    storeSettings: {
+        deliveryAreas: [],
+        minOrderAmount: 0,
+        isStoreActive: true,
+    },
     isDeleted: false,
 };
 
 const AddBusinessModal = React.memo(({ modal, setModal }) => {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
-    const [users, setUsers] = React.useState([]);
-    const [fetching, setFetching] = React.useState(false);
+    const [users, setUsers] = useState([]);
+    const [fetching, setFetching] = useState(false);
     const debounceTimeoutRef = useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (debounceTimeoutRef.current) {
+                clearTimeout(debounceTimeoutRef.current);
+            }
+        };
+    }, []);
 
     const handleSearch = async (value) => {
         if (!value || value.length < 2) {
@@ -60,7 +73,7 @@ const AddBusinessModal = React.memo(({ modal, setModal }) => {
             setFetching(true);
             try {
                 const response = await SEARCH_USERS({ search: value });
-                setUsers(response.data || []);
+                setUsers(response?.data || []);
             } catch (error) {
                 console.error("Search users error:", error);
             } finally {
@@ -69,24 +82,10 @@ const AddBusinessModal = React.memo(({ modal, setModal }) => {
         }, 800);
     };
 
-    const createBusiness = useMutation({
-        mutationFn: CREATE_BUSINESS,
-        onSuccess: (data) => {
-            toast.success(data?.message || "Business created successfully");
-            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.LIST]);
-            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.COUNTS]);
-            handleCloseModal(true);
-        },
-        onError: (error) => {
-            toast.error(error.errorMessage || "Something went wrong");
-        },
-    });
+    const createBusiness = useCreateBusiness(() => handleCloseModal(true));
 
-    const handleSubmit = (values, { setSubmitting }) => {
-        createBusiness.mutate(values, {
-            onError: () => setSubmitting(false),
-            onSuccess: () => setSubmitting(false),
-        });
+    const onSubmit = (values) => {
+        createBusiness.mutate(values);
     };
 
     const handleCloseModal = (force = false) => {
@@ -109,10 +108,11 @@ const AddBusinessModal = React.memo(({ modal, setModal }) => {
     };
 
     useEffect(() => {
-        if (!modal.state) {
+        if (!modal?.state) {
             formikRef.current?.resetForm();
+            setUsers([]);
         }
-    }, [modal.state]);
+    }, [modal?.state]);
 
     return (
         <Modal
@@ -132,17 +132,20 @@ const AddBusinessModal = React.memo(({ modal, setModal }) => {
             onCancel={() => handleCloseModal(false)}
             footer={null}
             className="modern-modal"
+            maskStyle={{ backdropFilter: "blur(4px)" }}
+            destroyOnClose
         >
             <div className="p-1">
                 <Formik
                     innerRef={formikRef}
+                    enableReinitialize
                     initialValues={initialValues}
                     validationSchema={validationSchema}
-                    onSubmit={handleSubmit}
+                    onSubmit={onSubmit}
                 >
-                    {({ values, setFieldValue, errors, touched, isSubmitting }) => (
+                    {({ values, errors, touched, setFieldValue, isSubmitting }) => (
                         <Form className="space-y-3">
-                            {createBusiness.status === "loading" ? (
+                            {createBusiness.isPending ? (
                                 <FormSkeleton fields={5} />
                             ) : (
                                 <>
@@ -154,10 +157,8 @@ const AddBusinessModal = React.memo(({ modal, setModal }) => {
                                                 <FormField
                                                     label="Business Name"
                                                     name="name"
-                                                    placeholder="Name"
+                                                    placeholder="Enter business name"
                                                     required
-                                                    className="!h-[32px] !text-xs !rounded"
-                                                    labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                                 />
                                             </div>
                                             <div className="md:col-span-2">
@@ -177,13 +178,13 @@ const AddBusinessModal = React.memo(({ modal, setModal }) => {
                                                                 setFieldValue("phone", selectedUser.phone);
                                                             }
                                                         }}
-                                                        notFoundContent={fetching ? <Loading /> : null}
+                                                        notFoundContent={fetching ? <Spin size="small" /> : "No users found"}
                                                         loading={fetching}
                                                         className="w-full modern-select-box"
                                                         value={values.userId || undefined}
                                                     >
                                                         {users.map((user) => (
-                                                            <Option key={user._id} value={user._id} label={user.name}>
+                                                            <Option key={user._id} value={user._id}>
                                                                 <Space>
                                                                     <Avatar
                                                                         size="small"
@@ -223,9 +224,9 @@ const AddBusinessModal = React.memo(({ modal, setModal }) => {
                                                             option?.value?.toLowerCase().includes(input.toLowerCase())
                                                         }
                                                         onChange={(value) => {
+                                                            setFieldValue("categoryEn", value);
                                                             const profession = professions.find(p => p.name_eng === value);
                                                             if (profession) {
-                                                                setFieldValue("categoryEn", profession.name_eng);
                                                                 setFieldValue("categoryUr", profession.name_ur);
                                                             }
                                                         }}
@@ -234,15 +235,22 @@ const AddBusinessModal = React.memo(({ modal, setModal }) => {
                                                     >
                                                         {[...professions]
                                                             .sort((a, b) => a.name_eng.localeCompare(b.name_eng))
-                                                            .map((prof, index) => (
-                                                                <Option key={index} value={prof.name_eng} label={`${prof.name_eng.charAt(0).toUpperCase() + prof.name_eng.slice(1)} - ${prof.name_ur}`}>
-                                                                    <div className="flex items-center gap-2 w-full truncate">
-                                                                        <span className="text-xs font-bold capitalize whitespace-nowrap">{prof.name_eng}</span>
-                                                                        <span className="text-slate-300 text-[10px]">—</span>
-                                                                        <span className="text-[11px] font-notoUrdu text-slate-400 truncate">{prof.name_ur}</span>
-                                                                    </div>
-                                                                </Option>
-                                                            ))}
+                                                            .map((prof, index) => {
+                                                                const displayName = prof.name_eng.charAt(0).toUpperCase() + prof.name_eng.slice(1);
+                                                                return (
+                                                                    <Option
+                                                                        key={index}
+                                                                        value={prof.name_eng}
+                                                                        label={`${displayName} - ${prof.name_ur}`}
+                                                                    >
+                                                                        <div className="flex items-center gap-2 w-full truncate">
+                                                                            <span className="text-xs font-bold capitalize whitespace-nowrap">{displayName}</span>
+                                                                            <span className="text-slate-300 text-[10px]">•</span>
+                                                                            <span className="text-[11px] font-notoUrdu text-slate-400 truncate">{prof.name_ur}</span>
+                                                                        </div>
+                                                                    </Option>
+                                                                );
+                                                            })}
                                                     </Select>
                                                     {errors.categoryEn && touched.categoryEn && (
                                                         <div className="text-red-500 text-[10px] mt-0.5 ml-1">{errors.categoryEn}</div>
@@ -252,18 +260,14 @@ const AddBusinessModal = React.memo(({ modal, setModal }) => {
                                             <FormField
                                                 label="Phone"
                                                 name="phone"
-                                                placeholder="+92..."
+                                                placeholder="+92 300 1234567"
                                                 required
-                                                className="!h-[32px] !text-xs !rounded"
-                                                labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
                                             <FormField
                                                 label="Address"
                                                 name="address"
                                                 placeholder="Full Address"
                                                 required
-                                                className="!h-[32px] !text-xs !rounded"
-                                                labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
                                         </div>
                                     </div>
@@ -279,6 +283,61 @@ const AddBusinessModal = React.memo(({ modal, setModal }) => {
                                         </div>
                                     </div>
 
+                                    {/* Online Store Section */}
+                                    <div className="bg-slate-50/50 p-3 rounded border border-slate-100/50 space-y-3">
+                                        <div className="flex items-center justify-between px-1">
+                                            <div>
+                                                <span className="text-xs font-bold text-[#006666] block">Enable Online Store</span>
+                                                <span className="text-[10px] text-slate-400 block">Allow this business to have a digital catalog and receive COD orders.</span>
+                                            </div>
+                                            <Switch
+                                                checked={values.hasStore}
+                                                onChange={(checked) => setFieldValue("hasStore", checked)}
+                                                className="custom-switch"
+                                            />
+                                        </div>
+
+                                        {values.hasStore && (
+                                            <div className="pt-3 border-t border-slate-200/50 grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                <div className="md:col-span-2">
+                                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1 mb-1 block">
+                                                        Delivery Areas
+                                                    </label>
+                                                    <Select
+                                                        mode="tags"
+                                                        placeholder="Type area and press Enter..."
+                                                        className="w-full modern-select-box"
+                                                        value={values.storeSettings.deliveryAreas}
+                                                        onChange={(val) => setFieldValue("storeSettings.deliveryAreas", val)}
+                                                    />
+                                                    <span className="text-[10px] text-slate-400 pl-1">Enter specific areas or sectors this store delivers to.</span>
+                                                    {errors.storeSettings?.deliveryAreas && touched.storeSettings?.deliveryAreas && (
+                                                        <div className="text-red-500 text-[10px] mt-0.5 ml-1">{errors.storeSettings.deliveryAreas}</div>
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <FormField
+                                                        label="Minimum Order Amount"
+                                                        name="storeSettings.minOrderAmount"
+                                                        placeholder="0"
+                                                        type="number"
+                                                    />
+                                                </div>
+                                                <div className="flex items-center justify-between px-1 self-center mt-2">
+                                                    <div>
+                                                        <span className="text-xs font-bold text-slate-600 block">Store Status</span>
+                                                        <span className="text-[10px] text-slate-400 block">Temporarily close/open the store frontend.</span>
+                                                    </div>
+                                                    <Switch
+                                                        checked={values.storeSettings.isStoreActive}
+                                                        onChange={(checked) => setFieldValue("storeSettings.isStoreActive", checked)}
+                                                        className="custom-switch"
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
                                     {/* Description Section */}
                                     <div className="px-1 mt-1">
                                         <FormField
@@ -286,8 +345,6 @@ const AddBusinessModal = React.memo(({ modal, setModal }) => {
                                             name="description"
                                             placeholder="Brief description..."
                                             type="textarea"
-                                            className="!text-xs !rounded !h-16"
-                                            labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                         />
                                     </div>
                                 </>
@@ -296,14 +353,16 @@ const AddBusinessModal = React.memo(({ modal, setModal }) => {
                             {/* Modal Footer Actions */}
                             <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-slate-100">
                                 <CustomButton
-                                    label="Cancel"
-                                    type="secondary"
+                                    text="Cancel"
+                                    variant="outlined"
                                     onClick={() => handleCloseModal(false)}
+                                    disabled={createBusiness.isPending || isSubmitting}
                                 />
                                 <CustomButton
-                                    label="Register Business"
+                                    text={createBusiness.isPending ? "Registering..." : "Register Business"}
+                                    variant="primary"
                                     htmlType="submit"
-                                    loading={createBusiness.isLoading || isSubmitting}
+                                    loading={createBusiness.isPending || isSubmitting}
                                 />
                             </div>
                         </Form>

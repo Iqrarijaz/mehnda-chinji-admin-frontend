@@ -6,18 +6,19 @@ import {
     CloseOutlined,
     EyeOutlined
 } from "@ant-design/icons";
-import { useMutation, useQueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { timestampToDate } from "@/utils/date";
-import { DELETE_BUSINESS, UPDATE_BUSINESS_STATUS } from "@/app/api/admin/business";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import ViewModal from "./ViewModal";
 import { Menu, Dropdown, Button, Table, Tooltip } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useUpdateBusinessStatus, useDeleteBusiness } from "../hooks/useBusiness";
 import React, { useState } from "react";
 import { hasPermission } from "@/utils/permissions";
 import { PERMISSIONS } from "@/config/permissions";
+import CustomTag from "@/components/shared/CustomTag";
 
 const BusinessTable = React.memo(({ modal, setModal, businessList, onChange, visibleColumns = [] }) => {
     const queryClient = useQueryClient();
@@ -45,33 +46,8 @@ const BusinessTable = React.memo(({ modal, setModal, businessList, onChange, vis
         });
     }, [onChange]);
 
-    const statusMutation = useMutation({
-        mutationFn: UPDATE_BUSINESS_STATUS,
-        onSuccess: (data) => {
-            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.LIST]);
-            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.COUNTS]);
-            toast.success(data?.message || "Status updated");
-            closeConfirmModal();
-        },
-        onError: (error) => {
-            toast.error(error.errorMessage || "Failed to update status");
-            closeConfirmModal();
-        },
-    });
-
-    const deleteMutation = useMutation({
-        mutationFn: DELETE_BUSINESS,
-        onSuccess: (data) => {
-            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.LIST]);
-            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.COUNTS]);
-            toast.success(data?.message || "Business deleted");
-            closeConfirmModal();
-        },
-        onError: (error) => {
-            toast.error(error.errorMessage || "Failed to delete");
-            closeConfirmModal();
-        },
-    });
+    const statusMutation = useUpdateBusinessStatus(closeConfirmModal);
+    const deleteMutation = useDeleteBusiness(closeConfirmModal);
 
     const handleStatusChange = React.useCallback((record, newStatus) => {
         setConfirmModal({
@@ -173,10 +149,17 @@ const BusinessTable = React.memo(({ modal, setModal, businessList, onChange, vis
             dataIndex: "name",
             width: 200,
             sorter: true,
-            render: (name) => (
-                <span className="font-bold text-slate-800 dark:text-slate-200 text-xs truncate leading-tight block capitalize transition-colors duration-300">
-                    {name}
-                </span>
+            render: (name, record) => (
+                <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate leading-tight block capitalize transition-colors duration-300">
+                        {name}
+                    </span>
+                    {record.hasStore && (
+                        <span className="shrink-0 px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider bg-teal-50 dark:bg-emerald-950/30 text-[#006666] dark:text-emerald-400 border border-teal-200/50 dark:border-emerald-900/30 select-none">
+                            Store
+                        </span>
+                    )}
+                </div>
             ),
         },
         {
@@ -185,7 +168,7 @@ const BusinessTable = React.memo(({ modal, setModal, businessList, onChange, vis
             dataIndex: "categoryEn",
             width: 150,
             render: (val) => (
-                <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 capitalize leading-tight truncate block transition-colors duration-300">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium capitalize leading-tight truncate block transition-colors duration-300 group-hover:text-slate-300">
                     {val || "—"}
                 </span>
             ),
@@ -196,7 +179,7 @@ const BusinessTable = React.memo(({ modal, setModal, businessList, onChange, vis
             dataIndex: "categoryUr",
             width: 150,
             render: (val) => (
-                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 leading-tight truncate block font-notoUrdu transition-colors duration-300" dir="rtl">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium leading-tight truncate block font-notoUrdu transition-colors duration-300 group-hover:text-slate-300" dir="rtl">
                     {val || "—"}
                 </span>
             ),
@@ -208,11 +191,11 @@ const BusinessTable = React.memo(({ modal, setModal, businessList, onChange, vis
             width: 170,
             render: (timing) => (
                 <Tooltip title={timing || "No Timing Set"} placement="top">
-                    <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-medium truncate cursor-help transition-colors">
+                    <div className="flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate cursor-help transition-colors duration-300 group-hover:text-slate-300">
                         <span className="shrink-0 w-4 h-4 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-500 dark:text-blue-400">
                             <span className="text-[10px]">⏰</span>
                         </span>
-                        <span className="text-[11px] font-semibold">{timing || "—"}</span>
+                        <span>{timing || "—"}</span>
                     </div>
                 </Tooltip>
             ),
@@ -223,11 +206,11 @@ const BusinessTable = React.memo(({ modal, setModal, businessList, onChange, vis
             width: 250,
             render: (record) => (
                 <div className="flex flex-col min-w-0">
-                    <span className="text-slate-600 dark:text-slate-300 font-bold text-[11px] leading-tight block transition-colors duration-300">
+                    <span className="text-[11px] text-slate-800 dark:text-slate-100 font-bold leading-tight block transition-colors duration-300">
                         {record.phone || "No Phone"}
                     </span>
                     <Tooltip title={record.address}>
-                        <span className="text-[10px] text-slate-400 font-medium truncate block mt-0.5 leading-tight">
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate block mt-0.5 leading-tight transition-colors duration-300 group-hover:text-slate-300">
                             {record.address || "No Address"}
                         </span>
                     </Tooltip>
@@ -242,15 +225,13 @@ const BusinessTable = React.memo(({ modal, setModal, businessList, onChange, vis
             width: 170,
             sorter: true,
             render: (status) => {
-                const colorMap = {
-                    APPROVED: "bg-green-100/50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-900/30",
-                    REJECTED: "bg-red-100/50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-900/30",
-                    PENDING: "bg-orange-100/50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-900/30",
+                const colors = {
+                    APPROVED: "green",
+                    REJECTED: "red",
+                    PENDING: "orange",
                 };
                 return (
-                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold border uppercase tracking-wider transition-colors duration-300 ${colorMap[status] || "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-400 border-slate-200 dark:border-slate-700"}`}>
-                        {status}
-                    </span>
+                    <CustomTag text={status} color={colors[status] || "slate"} />
                 );
             },
         },
@@ -261,7 +242,7 @@ const BusinessTable = React.memo(({ modal, setModal, businessList, onChange, vis
             width: 170,
             sorter: true,
             render: (text) => (
-                <div className="text-slate-400 dark:text-slate-500 font-bold text-[10px] whitespace-nowrap transition-colors duration-300">{timestampToDate(text)}</div>
+                <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap transition-colors duration-300 group-hover:text-slate-300">{timestampToDate(text)}</div>
             ),
         },
         {
@@ -269,6 +250,7 @@ const BusinessTable = React.memo(({ modal, setModal, businessList, onChange, vis
             key: "actions",
             width: 70,
             align: "right",
+            fixed: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
@@ -319,7 +301,7 @@ const BusinessTable = React.memo(({ modal, setModal, businessList, onChange, vis
                     confirmText={confirmModal.confirmText}
                     cancelText={confirmModal.cancelText}
                     variant={confirmModal.variant}
-                    loading={statusMutation.isLoading || deleteMutation.isLoading}
+                    loading={statusMutation.isPending || deleteMutation.isPending}
                 />
 
                 <ViewModal

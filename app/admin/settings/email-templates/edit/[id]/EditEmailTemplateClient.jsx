@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useState } from "react";
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import EmailEditor from "react-email-editor";
 import { toast } from "react-toastify";
@@ -24,14 +24,20 @@ function EditEmailTemplateClient() {
             return await GET_EMAIL_TEMPLATE(id);
         },
         enabled: !!id,
-        onSuccess: (data) => {
-            setEmailTemplateData(data?.data);
-        },
-        onError: (error) => {
-            console.error("Error fetching data:", error);
-            toast.error("Something went wrong. Please try again later.");
-        },
     });
+
+    React.useEffect(() => {
+        if (getEmailTemplate.data) {
+            setEmailTemplateData(getEmailTemplate.data?.data);
+        }
+    }, [getEmailTemplate.data]);
+
+    React.useEffect(() => {
+        if (getEmailTemplate.isError) {
+            console.error("Error fetching data:", getEmailTemplate.error);
+            toast.error("Something went wrong. Please try again later.");
+        }
+    }, [getEmailTemplate.isError, getEmailTemplate.error]);
 
     function exportHtml() {
         const editor = emailEditorRef.current?.editor;
@@ -86,7 +92,7 @@ function EditEmailTemplateClient() {
                 </h1>
             </div>
             {getEmailTemplate.isLoading && <Loading />}{" "}
-            {updateEmailTemplateMutation.isLoading && <Loading />}
+            {updateEmailTemplateMutation.isPending && <Loading />}
             <div className="bg-gray-100 p-6 rounded w-full overflow-x-auto">
                 <div className="form-class mx-auto lg:flex lg:gap-6 ">
                     <div className="flex flex-col gap-4 flex-1 lg:w-70">

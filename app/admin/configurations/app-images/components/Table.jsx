@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import { Table, Menu, Dropdown, Button, Tooltip } from "antd";
 import { TableSkeleton } from "@/components/shared/Skeletons";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import Loading from "@/animations/homePageLoader";
@@ -106,7 +106,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
             sorter: true,
             render: (name) => (
                 <Tooltip title={name} placement="topLeft">
-                    <div className="capitalize font-bold text-slate-800 dark:text-slate-200 truncate cursor-help transition-colors duration-300">
+                    <div className="capitalize font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate cursor-help transition-colors duration-300">
                         {name}
                     </div>
                 </Tooltip>
@@ -119,7 +119,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
             width: 170,
             sorter: true,
             render: (key) => (
-                <span className="font-mono text-[10px] bg-slate-50 text-teal-700 px-2.5 py-1 rounded font-bold tracking-wider border border-slate-100">
+                <span className="font-mono text-[10px] bg-slate-50 text-teal-700 px-2.5 py-0.5 rounded font-bold tracking-wider border border-slate-100">
                     {key}
                 </span>
             ),
@@ -131,7 +131,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
             width: 170,
             align: "center",
             render: (images) => (
-                <span className="px-2.5 py-0.5 rounded-full font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 text-[9px] shadow-sm uppercase tracking-tighter">
+                <span className="px-2.5 py-0.5 rounded-full font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 text-[9px] shadow-sm uppercase tracking-wider">
                     {images?.length || 0} Assets
                 </span>
             ),
@@ -142,13 +142,14 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
             key: "createdAt",
             width: 170,
             sorter: true,
-            render: (text) => <div className="text-slate-500 font-medium text-xs whitespace-nowrap">{timestampToDate(text)}</div>,
+            render: (text) => <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap transition-colors duration-300 group-hover:text-slate-300">{timestampToDate(text)}</div>,
         },
         {
             title: "",
             key: "actions",
             width: 70,
             align: "right",
+            fixed: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
@@ -187,7 +188,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
                     }}
                     onChange={handleSorting}
                 />
-                {deleteRecord.isLoading && <Loading />}
+                {deleteRecord.isPending && <Loading />}
 
                 <ConfirmModal
                     isOpen={confirmModal.isOpen}
@@ -198,7 +199,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
                     confirmText={confirmModal.confirmText}
                     cancelText={confirmModal.cancelText}
                     variant={confirmModal.variant}
-                    loading={deleteRecord.isLoading}
+                    loading={deleteRecord.isPending}
                 />
             </div>
         </div>

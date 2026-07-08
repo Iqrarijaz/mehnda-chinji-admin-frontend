@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { Modal, Select, Input } from "antd";
 import { Formik, Form, FieldArray } from "formik";
 import * as Yup from "yup";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaPlus, FaTrash, FaMapMarkerAlt, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaCheckCircle, FaEdit, FaImage, FaCamera, FaCopy, FaLink } from "react-icons/fa";
 import TimingPicker from "@/components/TimingPicker";
@@ -13,7 +13,7 @@ import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
 import { UPDATE_ESSENTIAL } from "@/app/api/admin/essentials";
 import { ESSENTIAL_CATEGORIES, ESSENTIAL_TYPE_MAPPING } from "@/config/config";
-import SelectBox from "@/components/SelectBox";
+import SelectField from "@/components/InnerPage/SelectField";
 import CustomButton from "@/components/shared/CustomButton";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 
@@ -329,29 +329,23 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
                                         <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Core Identification</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="md:col-span-2">
-                                                <FormField label="Essential Name" name="name" placeholder="Name" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors" />
+                                                <FormField label="Essential Name" name="name" placeholder="Name" required />
                                             </div>
                                             <div className="md:col-span-2">
-                                                <div className="flex flex-col gap-1.5 overflow-hidden">
-                                                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors">Type <span className="text-red-500">*</span></label>
-                                                    <SelectBox
-                                                        options={[...new Set(Object.values(ESSENTIAL_TYPE_MAPPING || {}).flat())].sort().map((t) => ({
-                                                            value: t,
-                                                            label: t.charAt(0).toUpperCase() + t.slice(1)
-                                                        }))}
-                                                        handleChange={(value) => setFieldValue("type", value)}
-                                                        value={values.type}
-                                                        placeholder="Select type"
-                                                        width="100%"
-                                                        className="modern-select-box"
-                                                    />
-                                                    {errors.type && touched.type && (
-                                                        <div className="text-red-500 text-[10px] font-medium ml-1">{errors.type}</div>
-                                                    )}
-                                                </div>
+                                                <SelectField
+                                                    label="Type"
+                                                    name="type"
+                                                    required
+                                                    value={values.type}
+                                                    onChange={(e) => setFieldValue("type", e.target.value)}
+                                                    options={[...new Set(Object.values(ESSENTIAL_TYPE_MAPPING || {}).flat())].sort().map((t) => ({
+                                                        value: t,
+                                                        label: t.charAt(0).toUpperCase() + t.slice(1)
+                                                    }))}
+                                                />
                                             </div>
                                             <div className="md:col-span-2">
-                                                <FormField label="Description" name="description" placeholder="Brief description..." type="textarea" className="!h-16 !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors" />
+                                                <FormField label="Description" name="description" placeholder="Brief description..." type="textarea" />
                                             </div>
                                         </div>
                                     </div>
@@ -360,16 +354,13 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
                                         <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Location Details</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="md:col-span-2">
-                                                <FormField label="Full Address" name="address" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors" />
+                                                <FormField label="Full Address" name="address" required />
                                             </div>
                                             <div className="md:col-span-2">
-                                                <div className="flex flex-col gap-1.5">
-                                                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors">Google Maps Link</label>
-                                                    <FormField name="googleAddress" placeholder="Maps URL" className="!h-[32px] !text-xs !rounded" noLabel />
-                                                </div>
+                                                <FormField label="Google Maps Link" name="googleAddress" placeholder="Maps URL" />
                                             </div>
-                                            <FormField label="Latitude" name="lat" type="number" className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors" />
-                                            <FormField label="Longitude" name="lng" type="number" className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors" />
+                                            <FormField label="Latitude" name="lat" type="number" />
+                                            <FormField label="Longitude" name="lng" type="number" />
                                         </div>
                                     </div>
 
@@ -382,8 +373,6 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
                                                     label="Principal Name"
                                                     name="metadata.principalName"
                                                     placeholder="Enter principal name"
-                                                    className="!h-[32px] !text-xs !rounded"
-                                                    labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                                 />
                                             </div>
                                         </div>
@@ -598,14 +587,12 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
                                                                         />
                                                                     </div>
                                                                     <div className="md:col-span-1">
-                                                                        <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Type</label>
-                                                                        <SelectBox
-                                                                            options={EVENT_TYPES}
-                                                                            handleChange={(val) => setFieldValue(`events.${index}.type`, val)}
+                                                                        <SelectField
+                                                                            label="Type"
+                                                                            name={`events.${index}.type`}
                                                                             value={event.type}
-                                                                            placeholder="Select Type"
-                                                                            width="100%"
-                                                                            className="modern-select-box !h-[28px]"
+                                                                            onChange={(e) => setFieldValue(`events.${index}.type`, e.target.value)}
+                                                                            options={EVENT_TYPES}
                                                                         />
                                                                     </div>
                                                                     <div className="md:col-span-1">
@@ -703,7 +690,7 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
                                 <CustomButton
                                     label="Update Essential"
                                     htmlType="submit"
-                                    loading={updateEssential.isLoading || isSubmitting || isUploading}
+                                    loading={updateEssential.isPending || isSubmitting || isUploading}
                                 />
                             </div>
                         </Form>

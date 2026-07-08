@@ -2,20 +2,19 @@
 import React, { useRef, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Modal, Select, Avatar, Space } from "antd";
-import { useMutation, useQueryClient } from "react-query";
+import { Modal, Select, Avatar, Space, Switch } from "antd";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaEdit, FaMapMarkerAlt, FaPhoneAlt, FaTag, FaCheckCircle, FaUser } from "react-icons/fa";
 
 import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
-import { UPDATE_BUSINESS } from "@/app/api/admin/business";
 import { SEARCH_USERS } from "@/app/api/admin/users";
 import TimingPicker from "@/components/TimingPicker";
 import professions from "@/data/professions.json";
 import CustomButton from "@/components/shared/CustomButton";
-import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useUpdateBusiness } from "../hooks/useBusiness";
 
 const { Option } = Select;
 
@@ -67,18 +66,7 @@ const UpdateBusinessModal = React.memo(({ modal, setModal }) => {
         }, 800);
     };
 
-    const updateMutation = useMutation({
-        mutationFn: (payload) => UPDATE_BUSINESS(payload),
-        onSuccess: (data) => {
-            toast.success(data?.message || "Business updated successfully");
-            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.LIST]);
-            queryClient.invalidateQueries([ADMIN_KEYS.BUSINESS.COUNTS]);
-            handleClose(true);
-        },
-        onError: (error) => {
-            toast.error(error.errorMessage || "Something went wrong");
-        },
-    });
+    const updateMutation = useUpdateBusiness(() => handleClose(true));
 
     const handleSubmit = (values) => {
         updateMutation.mutate(values);
@@ -113,6 +101,12 @@ const UpdateBusinessModal = React.memo(({ modal, setModal }) => {
         phone: modal?.data?.phone || "",
         address: modal?.data?.address || "",
         timing: modal?.data?.timing || "",
+        hasStore: modal?.data?.hasStore ?? false,
+        storeSettings: {
+            deliveryAreas: modal?.data?.storeSettings?.deliveryAreas || [],
+            minOrderAmount: modal?.data?.storeSettings?.minOrderAmount || 0,
+            isStoreActive: modal?.data?.storeSettings?.isStoreActive ?? true,
+        },
         isDeleted: modal?.data?.isDeleted ?? false,
     };
 
@@ -159,8 +153,6 @@ const UpdateBusinessModal = React.memo(({ modal, setModal }) => {
                                                     name="name"
                                                     placeholder="Name"
                                                     required
-                                                    className="!h-[32px] !text-xs !rounded"
-                                                    labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                                 />
                                             </div>
                                             <div className="md:col-span-2">
@@ -254,16 +246,12 @@ const UpdateBusinessModal = React.memo(({ modal, setModal }) => {
                                                 name="phone"
                                                 placeholder="Phone"
                                                 required
-                                                className="!h-[32px] !text-xs !rounded"
-                                                labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
                                             <FormField
                                                 label="Address"
                                                 name="address"
                                                 placeholder="Address"
                                                 required
-                                                className="!h-[32px] !text-xs !rounded"
-                                                labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
                                         </div>
                                     </div>
@@ -279,6 +267,58 @@ const UpdateBusinessModal = React.memo(({ modal, setModal }) => {
                                         </div>
                                     </div>
 
+                                    {/* Online Store Section */}
+                                    <div className="bg-slate-50/50 p-3 rounded border border-slate-100/50 space-y-3">
+                                        <div className="flex items-center justify-between px-1">
+                                            <div>
+                                                <span className="text-xs font-bold text-[#006666] block">Enable Online Store</span>
+                                                <span className="text-[10px] text-slate-400 block">Allow this business to have a digital catalog and receive COD orders.</span>
+                                            </div>
+                                            <Switch
+                                                checked={values.hasStore}
+                                                onChange={(checked) => setFieldValue("hasStore", checked)}
+                                                className="custom-switch"
+                                            />
+                                        </div>
+
+                                        {values.hasStore && (
+                                            <div className="pt-3 border-t border-slate-200/50 grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                <div className="md:col-span-2">
+                                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1 mb-1 block">
+                                                        Delivery Areas
+                                                    </label>
+                                                    <Select
+                                                        mode="tags"
+                                                        placeholder="Type area and press Enter..."
+                                                        value={values.storeSettings.deliveryAreas}
+                                                        onChange={(value) => setFieldValue("storeSettings.deliveryAreas", value)}
+                                                        className="w-full modern-select-box"
+                                                    />
+                                                    <span className="text-[10px] text-slate-400 pl-1">Enter specific areas or sectors this store delivers to.</span>
+                                                </div>
+                                                <div>
+                                                    <FormField
+                                                        label="Minimum Order Amount"
+                                                        name="storeSettings.minOrderAmount"
+                                                        placeholder="0"
+                                                        type="number"
+                                                    />
+                                                </div>
+                                                <div className="flex items-center justify-between px-1 self-center mt-2">
+                                                    <div>
+                                                        <span className="text-xs font-bold text-slate-600 block">Store Status</span>
+                                                        <span className="text-[10px] text-slate-400 block">Temporarily close/open the store frontend.</span>
+                                                    </div>
+                                                    <Switch
+                                                        checked={values.storeSettings.isStoreActive}
+                                                        onChange={(checked) => setFieldValue("storeSettings.isStoreActive", checked)}
+                                                        className="custom-switch"
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
                                     {/* Description Section */}
                                     <div className="px-1 mt-1">
                                         <FormField
@@ -286,8 +326,6 @@ const UpdateBusinessModal = React.memo(({ modal, setModal }) => {
                                             name="description"
                                             placeholder="About..."
                                             type="textarea"
-                                            className="!text-xs !rounded !h-16"
-                                            labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                         />
                                     </div>
                                 </>
@@ -303,7 +341,7 @@ const UpdateBusinessModal = React.memo(({ modal, setModal }) => {
                                 <CustomButton
                                     label="Save Changes"
                                     htmlType="submit"
-                                    loading={updateMutation.isLoading || isSubmitting}
+                                    loading={updateMutation.isPending || isSubmitting}
                                 />
                             </div>
                         </Form>

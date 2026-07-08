@@ -1,5 +1,5 @@
 import React from "react";
-import { FaProductHunt, FaUser, FaUserShield, FaMapMarkerAlt, FaBuilding, FaRegCommentDots, FaBullhorn } from "react-icons/fa";
+import { FaProductHunt, FaUser, FaUserShield, FaMapMarkerAlt, FaBuilding, FaRegCommentDots, FaBullhorn, FaStore } from "react-icons/fa";
 import { RiAdminFill } from "react-icons/ri";
 import { FaQuestionCircle } from "react-icons/fa";
 import { FaBloggerB } from "react-icons/fa6";
@@ -17,26 +17,18 @@ const MenuList = [
     link: "/admin/dashboard",
     permission: PERMISSIONS.DASHBOARD.READ
   },
-  {
-    name: "Posts",
-    icon: <FaBloggerB size={20} />,
-    link: "/admin/posts",
-    permission: PERMISSIONS.POSTS.READ
-  },
-  /*
-    {
-      name: "Locations",
-      icon: <FaMapMarkerAlt size={20} />,
-      link: "/admin/locations",
-      permission: PERMISSIONS.LOCATIONS.READ
-    },
-  */
 
   {
     name: "Businesses",
     icon: <FaBuilding size={20} />,
     link: "/admin/business",
-    permission: PERMISSIONS.BUSINESSES.READ
+    permission: [
+      PERMISSIONS.BUSINESSES.READ,
+      PERMISSIONS.STORE.ANALYTICS.READ,
+      PERMISSIONS.STORE.CATEGORIES.READ,
+      PERMISSIONS.STORE.PRODUCTS.READ,
+      PERMISSIONS.STORE.ORDERS.READ
+    ]
   },
   {
     name: "Essentials",
@@ -50,24 +42,14 @@ const MenuList = [
     link: "/admin/users",
     permission: PERMISSIONS.USERS.READ
   },
-  {
-    name: "Announcements",
-    icon: <FaBullhorn size={20} />,
-    link: "/admin/announcements",
-    permission: PERMISSIONS.ANNOUNCEMENTS.READ
-  },
+
   {
     name: "Marketplace",
     icon: <FaProductHunt size={20} />,
     link: "/admin/marketplace",
     permission: PERMISSIONS.MARKETPLACE.READ
   },
-  {
-    name: "Blood Donors",
-    icon: <FaDroplet size={20} className="text-white" />,
-    link: "/admin/blood-donors",
-    permission: PERMISSIONS.BLOOD_DONORS.READ
-  },
+
   {
     name: "User Feedback",
     icon: <FaRegCommentDots size={20} />,
@@ -86,33 +68,7 @@ const MenuList = [
     icon: <FaUserShield size={20} />,
     permission: PERMISSIONS.ADMIN_USERS.READ
   },
-  {
-    name: "Water Supply",
-    icon: <FaDroplet size={20} />,
-    permission: PERMISSIONS.WATER_SUPPLY.READ,
-    subItems: [
-      {
-        name: "Connections",
-        link: "/admin/water-supply/connections",
-        permission: PERMISSIONS.WATER_SUPPLY.READ,
-      },
-      {
-        name: "Bills",
-        link: "/admin/water-supply/bills",
-        permission: PERMISSIONS.WATER_SUPPLY.READ,
-      },
-      {
-        name: "Expenses",
-        link: "/admin/water-supply/expenses",
-        permission: PERMISSIONS.WATER_SUPPLY.READ,
-      },
-      {
-        name: "Reports",
-        link: "/admin/water-supply/reports",
-        permission: PERMISSIONS.WATER_SUPPLY.READ,
-      },
-    ],
-  },
+
   {
     name: "Configurations",
     icon: <IoSettings size={20} />,

@@ -26,10 +26,27 @@ const FilterModal = React.memo(({ open, onCancel, filters, setFilters }) => {
             className="modern-modal"
             centered
         >
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-4 py-2">
                 <div className="space-y-0.5 px-0.5">
                     <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1">Search Business</label>
                     <SearchInput setFilters={setFilters} placeholder="Search..." className="w-full !h-[32px] !text-xs !rounded" />
+                </div>
+                <div className="px-1 flex items-center">
+                    <label className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-400 cursor-pointer select-none">
+                        <input
+                            type="checkbox"
+                            checked={filters.hasStore === true}
+                            onChange={(e) =>
+                                setFilters((prev) => ({
+                                    ...prev,
+                                    hasStore: e.target.checked ? true : null,
+                                    currentPage: 1,
+                                }))
+                            }
+                            className="w-4 h-4 accent-[#006666] rounded cursor-pointer"
+                        />
+                        Only Show Stores (Has Store)
+                    </label>
                 </div>
             </div>
         </Modal>

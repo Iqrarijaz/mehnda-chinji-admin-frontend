@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { ConfigProvider, theme as antdTheme } from "antd";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ToastContainer } from "react-toastify";
 import MenuContextProvider from "@/context/MenuContext";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";

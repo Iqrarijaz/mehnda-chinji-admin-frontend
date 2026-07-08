@@ -1,6 +1,6 @@
 import React from "react";
 import { Table } from "antd";
-import moment from "moment";
+import { format } from "date-fns";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 
 const FeedbackList = React.memo(({ data, isLoading, filters, setFilters, pagination, onUpdateStatus, onDelete }) => {
@@ -70,7 +70,7 @@ const FeedbackList = React.memo(({ data, isLoading, filters, setFilters, paginat
             key: "createdAt", 
             render: (_, record) => (
                 <span className="text-sm text-slate-600 dark:text-slate-400 whitespace-nowrap">
-                    {moment(record.createdAt).format("MMM DD, YYYY HH:mm")}
+                    {format(new Date(record.createdAt), "MMM dd, yyyy HH:mm")}
                 </span>
             ) 
         },

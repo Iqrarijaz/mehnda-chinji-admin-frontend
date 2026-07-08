@@ -17,7 +17,7 @@ import { FiFilter } from "react-icons/fi";
 import { HiRefresh } from "react-icons/hi";
 import FilterModal from "./components/FilterModal";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
-import { useAdminData } from "@/hooks/useAdminData";
+import { useEssentials } from "./hooks/useEssentials";
 
 export default function EssentialsPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -57,13 +57,7 @@ export default function EssentialsPage() {
         countsQuery,
         isRefreshing,
         handleRefresh
-    } = useAdminData({
-        listQueryKey: [ADMIN_KEYS.ESSENTIALS.LIST, JSON.stringify(debFilter)],
-        listQueryFn: () => GET_ESSENTIALS(debFilter),
-        countsQueryKey: [ADMIN_KEYS.ESSENTIALS.COUNTS],
-        countsQueryFn: GET_ESSENTIAL_STATUS_COUNTS,
-        onListError: "Failed to fetch essentials.",
-    });
+    } = useEssentials(debFilter);
 
     const { data: countsData, isLoading: countsLoading } = countsQuery;
 
@@ -86,7 +80,7 @@ export default function EssentialsPage() {
     ], []);
 
     return (
-        <InnerPageCard title="Essentials">
+        <InnerPageCard>
 
             <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-start md:items-center">
                 {/* Status Count Cards (Left) */}

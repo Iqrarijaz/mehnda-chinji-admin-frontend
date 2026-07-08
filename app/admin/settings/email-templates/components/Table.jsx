@@ -8,7 +8,7 @@ import {
 import Loading from "@/animations/homePageLoader";
 import { useRouter } from "next/navigation";
 import { timestampToDate } from "@/utils/date";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { PATH_ROUTER } from "@/routes";
 import { UPDATE_EMAIL_TEMPLATE_STATUS, DELETE_EMAIL_TEMPLATE } from "@/app/api/admin/settings/emailTemplates";
@@ -145,7 +145,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       width: 200,
       sorter: true,
       render: (text) => (
-        <div className="capitalize font-bold text-slate-800 dark:text-slate-200 tracking-tight flex items-center gap-2 transition-colors duration-300">
+        <div className="capitalize font-bold text-slate-800 dark:text-slate-100 text-[11px] tracking-tight flex items-center gap-2 transition-colors duration-300">
           <MailOutlined className="text-slate-400 text-xs" />
           {text}
         </div>
@@ -158,7 +158,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       width: 250,
       render: (template) => (
         <Tooltip title={template?.subject} placement="topLeft">
-          <div className="text-slate-600 font-medium truncate cursor-help">
+          <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate cursor-help transition-colors duration-300 group-hover:text-slate-300">
             {template?.subject || "—"}
           </div>
         </Tooltip>
@@ -171,7 +171,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       width: 250,
       render: (text) => (
         <Tooltip title={text} placement="topLeft">
-          <div className="text-slate-500 font-medium truncate cursor-help">
+          <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate cursor-help transition-colors duration-300 group-hover:text-slate-300">
             {text || "—"}
           </div>
         </Tooltip>
@@ -199,13 +199,14 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
       key: "createdAt",
       width: 170,
       sorter: true,
-      render: (text) => <div className="text-slate-500 font-medium whitespace-nowrap">{timestampToDate(text)}</div>,
+      render: (text) => <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap transition-colors duration-300 group-hover:text-slate-300">{timestampToDate(text)}</div>,
     },
     {
       title: "",
       key: "actions",
       width: 70,
       align: "right",
+      fixed: "right",
       render: (record) => (
         <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
           <Button
@@ -262,7 +263,7 @@ function EmailTemplatesTable({ emailTemplatesList, onChange, filters }) {
           confirmText={confirmModal.confirmText}
           cancelText={confirmModal.cancelText}
           variant={confirmModal.variant}
-          loading={manageStatusMutation.isLoading || deleteMutation.isLoading}
+          loading={manageStatusMutation.isPending || deleteMutation.isPending}
         />
       </div>
     </div>

@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 import { Modal, Input } from "antd";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaShieldAlt, FaAlignLeft, FaCheckSquare } from "react-icons/fa";
 import CustomButton from "@/components/shared/CustomButton";
@@ -105,7 +105,7 @@ const AddRoleModal = React.memo(({ modal, setModal }) => {
                 >
                     {({ values, errors, touched, setFieldValue, handleChange, handleBlur, isSubmitting }) => (
                         <Form className="space-y-2">
-                            {createRole.isLoading ? (
+                            {createRole.isPending ? (
                                 <FormSkeleton fields={4} />
                             ) : (
                                 <>
@@ -117,26 +117,15 @@ const AddRoleModal = React.memo(({ modal, setModal }) => {
                                                 name="name"
                                                 placeholder="MODERATOR"
                                                 required
-                                                className="!h-[32px] !text-xs !rounded"
-                                                labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                             />
 
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1">Role Description <span className="text-red-500">*</span></label>
-                                                <div className="relative">
-                                                    <Input.TextArea
-                                                        name="description"
-                                                        placeholder="Describe role access..."
-                                                        value={values.description}
-                                                        onChange={handleChange}
-                                                        onBlur={handleBlur}
-                                                        className="!rounded !border-slate-100 dark:!border-slate-800 !bg-white dark:!bg-slate-900 !text-slate-700 dark:!text-slate-200 focus:!border-[#006666] !py-1 !text-xs !h-16 transition-all duration-300"
-                                                    />
-                                                </div>
-                                                {touched.description && errors.description && (
-                                                    <div className="text-red-500 text-[10px] font-medium ml-1">{errors.description}</div>
-                                                )}
-                                            </div>
+                                            <FormField
+                                                label="Role Description"
+                                                name="description"
+                                                placeholder="Describe role access..."
+                                                type="textarea"
+                                                required
+                                            />
                                         </div>
                                     </div>
 
@@ -161,7 +150,7 @@ const AddRoleModal = React.memo(({ modal, setModal }) => {
                                 <CustomButton
                                     label="Create Role"
                                     htmlType="submit"
-                                    loading={createRole.isLoading || isSubmitting}
+                                    loading={createRole.isPending || isSubmitting}
                                 />
                             </div>
                         </Form>

@@ -1,14 +1,11 @@
 "use client";
 import React, { useState, useCallback } from "react";
-import { useQuery } from "react-query";
-import { toast } from "react-toastify";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import UsersTable from "./components/Table";
 import AddUserModal from "./components/AddModal";
 import UpdateUserModal from "./components/UpdateModal";
 import ResetPasswordModal from "./components/ResetPasswordModal";
-import { GET_USERS, GET_USER_STATUS_COUNTS } from "@/app/api/admin/users";
 import { useDebounce } from "@/hooks/useDebounce";
 import StatCard from "@/components/shared/StatCard";
 import InnerPageCard from "@/components/layout/InnerPageCard";
@@ -18,8 +15,7 @@ import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDro
 import { FiFilter } from "react-icons/fi";
 import { HiRefresh } from "react-icons/hi";
 import FilterModal from "./components/FilterModal";
-import { ADMIN_KEYS } from "@/constants/queryKeys";
-import { useAdminData } from "@/hooks/useAdminData";
+import { useUsers } from "./hooks/useUsers";
 
 export default function UsersPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -59,13 +55,7 @@ export default function UsersPage() {
         countsQuery,
         isRefreshing,
         handleRefresh
-    } = useAdminData({
-        listQueryKey: [ADMIN_KEYS.USERS.LIST, JSON.stringify(debFilter)],
-        listQueryFn: () => GET_USERS(debFilter),
-        countsQueryKey: [ADMIN_KEYS.USERS.COUNTS],
-        countsQueryFn: GET_USER_STATUS_COUNTS,
-        onListError: "Failed to fetch users.",
-    });
+    } = useUsers(debFilter);
 
     const { data: countsData, isLoading: countsLoading } = countsQuery;
 
@@ -91,7 +81,7 @@ export default function UsersPage() {
     }, []);
 
     return (
-        <InnerPageCard title="App Users">
+        <InnerPageCard className="h-full min-h-0 flex flex-col overflow-hidden">
 
             <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-start md:items-center">
                 {/* Status Count Cards (Left) */}
@@ -118,7 +108,7 @@ export default function UsersPage() {
                 {/* Action Bar (Right) */}
                 <div className="flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:w-auto justify-end">
                     {/* Desktop Search (Visible on Tablet/Desktop) */}
-                    <div className="hidden md:block">
+                    <div className="hidden md:flex items-center gap-2">
                         <SearchInput setFilters={setFilters} className="!max-w-[180px]" />
                     </div>
 
@@ -139,17 +129,6 @@ export default function UsersPage() {
                             <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
                         </button>
 
-                        {/* Mobile Filter Toggle */}
-                        <button
-                            onClick={() => setIsFilterModalOpen(true)}
-                            className="mobile-filter-btn md:hidden dark:text-slate-400 dark:hover:text-teal-400 transition-colors"
-                            title="Filters"
-                        >
-                            <FiFilter size={20} />
-                        </button>
-                    </div>
-
-                    <div className="flex items-center gap-2">
                         <AddButton
                             title="Add User"
                             icon={false}
@@ -157,11 +136,20 @@ export default function UsersPage() {
                             className="!h-[32px] !rounded !px-4 !text-[10px] font-medium shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
                         />
                     </div>
+
+                    {/* Mobile Filter Toggle */}
+                    <button
+                        onClick={() => setIsFilterModalOpen(true)}
+                        className="mobile-filter-btn md:!hidden flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666]"
+                        title="Filters"
+                    >
+                        <FiFilter size={18} />
+                    </button>
                 </div>
             </div>
 
 
-            <div className="overflow-hidden">
+            <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
                 <UsersTable modal={modal} setModal={setModal} usersList={usersList} onChange={onChange} setFilters={setFilters} visibleColumns={visibleColumns} />
             </div>
 

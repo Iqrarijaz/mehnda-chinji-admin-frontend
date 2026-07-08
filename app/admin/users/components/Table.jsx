@@ -9,7 +9,7 @@ import {
     SettingOutlined,
     SoundOutlined
 } from "@ant-design/icons";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { HiOutlineUsers } from "react-icons/hi2";
 
@@ -284,6 +284,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             key: "actions",
             align: "right",
             width: 70,
+            fixed: "right",
             render: (_, record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
@@ -315,8 +316,8 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
     }
 
     return (
-        <div className="space-y-4">
-            <div className="place-holder-table modern-table overflow-hidden">
+        <div className="flex-1 min-h-0 flex flex-col">
+            <div className="place-holder-table modern-table overflow-hidden flex-1 min-h-0 flex flex-col">
                 <Table
                     columns={activeColumns}
                     dataSource={usersList.data?.data?.docs}
@@ -329,15 +330,15 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                         pageSize: usersList.data?.data?.limit,
                         total: usersList.data?.data?.totalDocs,
                         showSizeChanger: true,
-                        className: "px-4 pb-4",
+                        className: "px-4 pb-0 !mb-0",
                     }}
                     onChange={handleSorting}
                     rowKey="_id"
-                    scroll={{ x: 1300, y: 600 }}
+                    scroll={{ x: 1300, y: "calc(100vh - 230px)" }}
                     sticky={true}
-                    className="custom-ant-table"
+                    className="custom-ant-table flex-1"
                 />
-                {(handleStatus.isLoading || handleDelete.isLoading) && <Loading />}
+                {(handleStatus.isPending || handleDelete.isPending) && <Loading />}
 
                 <ConfirmModal
                     isOpen={confirmModal.state}
@@ -345,7 +346,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                     onClose={closeConfirmModal}
                     title={confirmModal.title}
                     description={confirmModal.content}
-                    loading={handleDelete.isLoading}
+                    loading={handleDelete.isPending}
                     variant="danger"
                 />
 

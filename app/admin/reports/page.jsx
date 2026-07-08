@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import AddButton from "@/components/InnerPage/AddButton";
@@ -16,7 +16,7 @@ import { FiFilter } from "react-icons/fi";
 import { HiRefresh } from "react-icons/hi";
 import FilterModal from "./components/FilterModal";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
-import { useAdminData } from "@/hooks/useAdminData";
+import { useReports } from "./hooks/useReports";
 
 const TARGET_TYPES = [
     { label: "Business", value: "BUSINESS" },
@@ -57,13 +57,7 @@ export default function ReportsPage() {
         countsQuery,
         isRefreshing,
         handleRefresh
-    } = useAdminData({
-        listQueryKey: [ADMIN_KEYS.REPORTS.LIST, JSON.stringify(debFilter)],
-        listQueryFn: () => GET_REPORTS(debFilter),
-        countsQueryKey: [ADMIN_KEYS.REPORTS.COUNTS],
-        countsQueryFn: GET_REPORT_STATUS_COUNTS,
-        onListError: "Failed to fetch reports.",
-    });
+    } = useReports(debFilter);
 
     const { data: countsData, isLoading: countsLoading } = countsQuery;
 
@@ -82,7 +76,7 @@ export default function ReportsPage() {
     ], [counts.pending, counts.reviewed, counts.resolved]);
 
     return (
-        <InnerPageCard title="Reports">
+        <InnerPageCard>
 
             <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-start md:items-center">
                 {/* Status Count Cards (Left) */}
@@ -113,8 +107,7 @@ export default function ReportsPage() {
                 </div>
 
                 {/* Action Bar (Right) */}
-                <div className="flex gap-2 items-center w-full md:w-auto justify-end">
-                    {/* Desktop Filters (Hidden on Mobile) */}
+                <div className="flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:w-auto justify-end">
                     <div className="hidden md:flex items-center gap-2">
                         <SelectBox
                             placeholder="Target Type"
@@ -122,9 +115,12 @@ export default function ReportsPage() {
                             handleChange={handleTargetTypeFilter}
                             width={130}
                             options={TARGET_TYPES}
-                            className="custom-selectbox dark:!bg-slate-900 dark:!border-slate-800 mt-1"
+                            className="custom-selectbox dark:!bg-slate-900 dark:!border-slate-800"
                         />
-                        <SearchInput setFilters={setFilters} className="w-[180px]" />
+                        <SearchInput
+                            setFilters={setFilters}
+                            className="!max-w-[180px] !h-[32px] !border-2 !rounded-[2px]"
+                        />
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -150,15 +146,15 @@ export default function ReportsPage() {
                             onClick={() => setModal({ name: "Add", data: null, state: true })}
                             className="!h-[32px] !rounded !px-4 !text-[10px] font-medium shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
                         />
-                        {/* Mobile Filter Toggle */}
-                        <button
-                            onClick={() => setIsFilterModalOpen(true)}
-                            className="mobile-filter-btn md:hidden"
-                            title="Filters"
-                        >
-                            <FiFilter size={18} />
-                        </button>
                     </div>
+                    {/* Mobile Filter Toggle */}
+                    <button
+                        onClick={() => setIsFilterModalOpen(true)}
+                        className="mobile-filter-btn md:!hidden flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white shadow-sm transition-all"
+                        title="Filters"
+                    >
+                        <FiFilter size={16} />
+                    </button>
                 </div>
             </div>
 

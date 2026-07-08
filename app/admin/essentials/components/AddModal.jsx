@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from "react";
 import { Formik, Form, FieldArray } from "formik";
 import * as Yup from "yup";
 import { Modal, Input } from "antd";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaPlus, FaTrash, FaMapMarkerAlt, FaPhoneAlt, FaClock, FaTools, FaChevronRight, FaImage, FaCamera, FaCopy, FaLink } from "react-icons/fa";
 import TimingPicker from "@/components/TimingPicker";
@@ -12,9 +12,9 @@ import { UPLOAD_ESSENTIAL_IMAGE } from "@/app/api/admin/essentials";
 import Loading from "@/animations/homePageLoader";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import FormField from "@/components/InnerPage/FormField";
+import SelectField from "@/components/InnerPage/SelectField";
 import { CREATE_ESSENTIAL } from "@/app/api/admin/essentials";
 import { ESSENTIAL_CATEGORIES, ESSENTIAL_TYPE_MAPPING } from "@/config/config";
-import SelectBox from "@/components/SelectBox";
 import CustomButton from "@/components/shared/CustomButton";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 
@@ -331,48 +331,34 @@ const AddEssentialModal = React.memo(({ modal, setModal }) => {
                                         <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Location Overview</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="md:col-span-1">
-                                                <FormField label="Essential Name" name="name" placeholder="Name" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors" />
+                                                <FormField label="Essential Name" name="name" placeholder="Name" required />
                                             </div>
                                             <div className="md:col-span-1">
-                                                <div className="flex flex-col gap-1.5 overflow-hidden">
-                                                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors">Category <span className="text-red-500">*</span></label>
-                                                    <SelectBox
-                                                        options={ESSENTIAL_CATEGORIES?.map((cat) => ({
-                                                            value: cat.value,
-                                                            label: cat.label
-                                                        })) || []}
-                                                        handleChange={(value) => setFieldValue("category", value)}
-                                                        value={values.category}
-                                                        placeholder="Select Category"
-                                                        width="100%"
-                                                        className="modern-select-box"
-                                                    />
-                                                    {errors.category && touched.category && (
-                                                        <div className="text-red-500 text-[10px] font-medium ml-1">{errors.category}</div>
-                                                    )}
-                                                </div>
+                                                <SelectField
+                                                    label="Category"
+                                                    name="category"
+                                                    required
+                                                    options={ESSENTIAL_CATEGORIES?.map((cat) => ({
+                                                        value: cat.value,
+                                                        label: cat.label
+                                                    })) || []}
+                                                    onChange={(e) => setFieldValue("category", e.target.value)}
+                                                />
                                             </div>
                                             <div className="md:col-span-1">
-                                                <div className="flex flex-col gap-1.5 overflow-hidden">
-                                                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors">Type <span className="text-red-500">*</span></label>
-                                                    <SelectBox
-                                                        options={(ESSENTIAL_TYPE_MAPPING?.[values.category] || []).map((t) => ({
-                                                            value: t,
-                                                            label: t.charAt(0).toUpperCase() + t.slice(1)
-                                                        }))}
-                                                        handleChange={(value) => setFieldValue("type", value)}
-                                                        value={values.type}
-                                                        placeholder="Select Type"
-                                                        width="100%"
-                                                        className="modern-select-box"
-                                                    />
-                                                    {errors.type && touched.type && (
-                                                        <div className="text-red-500 text-[10px] font-medium ml-1">{errors.type}</div>
-                                                    )}
-                                                </div>
+                                                <SelectField
+                                                    label="Type"
+                                                    name="type"
+                                                    required
+                                                    options={(ESSENTIAL_TYPE_MAPPING?.[values.category] || []).map((t) => ({
+                                                        value: t,
+                                                        label: t.charAt(0).toUpperCase() + t.slice(1)
+                                                    }))}
+                                                    onChange={(e) => setFieldValue("type", e.target.value)}
+                                                />
                                             </div>
                                             <div className="md:col-span-2">
-                                                <FormField label="Description" name="description" placeholder="Brief description..." type="textarea" className="!h-16 !text-xs !rounded" labelClassName="!text-[11px] !font-bold text-slate-500 dark:text-slate-400 !uppercase !tracking-tight !ml-1 transition-colors" />
+                                                <FormField label="Description" name="description" placeholder="Brief description..." type="textarea" />
                                             </div>
                                         </div>
                                     </div>
@@ -382,16 +368,13 @@ const AddEssentialModal = React.memo(({ modal, setModal }) => {
                                         <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Geographic Details</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div className="md:col-span-2">
-                                                <FormField label="Physical Address" name="address" placeholder="Full address" required className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
+                                                <FormField label="Physical Address" name="address" placeholder="Full address" required />
                                             </div>
                                             <div className="md:col-span-2">
-                                                <div className="flex flex-col gap-1.5">
-                                                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight ml-1 transition-colors">Google Map Link</label>
-                                                    <FormField name="googleAddress" placeholder="Maps URL" className="!h-[32px] !text-xs !rounded" noLabel />
-                                                </div>
+                                                <FormField label="Google Map Link" name="googleAddress" placeholder="Maps URL" />
                                             </div>
-                                            <FormField label="Latitude" name="lat" type="number" placeholder="0.00" className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
-                                            <FormField label="Longitude" name="lng" type="number" placeholder="0.00" className="!h-[32px] !text-xs !rounded" labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1" />
+                                            <FormField label="Latitude" name="lat" type="number" placeholder="0.00" />
+                                            <FormField label="Longitude" name="lng" type="number" placeholder="0.00" />
                                         </div>
                                     </div>
 
@@ -404,8 +387,6 @@ const AddEssentialModal = React.memo(({ modal, setModal }) => {
                                                     label="Principal Name"
                                                     name="metadata.principalName"
                                                     placeholder="Enter principal name"
-                                                    className="!h-[32px] !text-xs !rounded"
-                                                    labelClassName="!text-[11px] !font-bold !text-slate-500 !uppercase !tracking-tight !ml-1"
                                                 />
                                             </div>
                                         </div>
@@ -730,7 +711,7 @@ const AddEssentialModal = React.memo(({ modal, setModal }) => {
                                 <CustomButton
                                     label="Add Essential"
                                     htmlType="submit"
-                                    loading={createEssential.isLoading || isSubmitting || isUploading}
+                                    loading={createEssential.isPending || isSubmitting || isUploading}
                                 />
                             </div>
                         </Form>

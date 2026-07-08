@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import SupportTable from "./components/Table";
@@ -13,7 +13,7 @@ import { StatCardSkeleton } from "@/components/shared/Skeletons";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 import { HiRefresh } from "react-icons/hi";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
-import { useAdminData } from "@/hooks/useAdminData";
+import { useSupport } from "./hooks/useSupport";
 
 export default function SupportPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -45,13 +45,7 @@ export default function SupportPage() {
         countsQuery,
         isRefreshing,
         handleRefresh
-    } = useAdminData({
-        listQueryKey: [ADMIN_KEYS.SUPPORT.LIST, JSON.stringify(debFilter)],
-        listQueryFn: () => GET_SUPPORT_TICKETS(debFilter),
-        countsQueryKey: [ADMIN_KEYS.SUPPORT.COUNTS],
-        countsQueryFn: GET_SUPPORT_STATUS_COUNTS,
-        onListError: "Failed to fetch support tickets.",
-    });
+    } = useSupport(debFilter);
 
     const { data: countsData, isLoading: countsLoading } = countsQuery;
 
@@ -66,7 +60,7 @@ export default function SupportPage() {
     const onChange = React.useCallback((data) => setFilters((prev) => ({ ...prev, ...data })), []);
 
     return (
-        <InnerPageCard title="Support Tickets">
+        <InnerPageCard>
 
             <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-start md:items-center">
                 {/* Status Count Cards (Left) */}
@@ -96,13 +90,16 @@ export default function SupportPage() {
                 </div>
 
                 {/* Filter, Search and Action (Right) */}
-                <div className="flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:w-auto justify-end">
+                <div className="flex flex-wrap md:flex-nowrap gap-1 items-center w-full md:w-auto justify-end">
                     {/* Desktop Search (Visible on Tablet/Desktop) */}
-                    <div className="hidden md:block">
-                        <SearchInput setFilters={setFilters} className="!max-w-[200px]" />
+                    <div className="hidden md:flex items-center gap-1">
+                        <SearchInput
+                            setFilters={setFilters}
+                            className="!max-w-[200px] !h-[32px] !border-2 !rounded-[2px]"
+                        />
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                         <ColumnVisibilityDropdown
                             options={columnOptions}
                             visibleColumns={visibleColumns}
@@ -118,7 +115,6 @@ export default function SupportPage() {
                         >
                             <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
                         </button>
-                        {/* Mobile Filter Toggle if needed - but support page seems to use search only */}
                     </div>
                 </div>
             </div>

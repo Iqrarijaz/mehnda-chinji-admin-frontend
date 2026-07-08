@@ -78,7 +78,7 @@ body {
 
 .menu-icon {
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 0px;
   padding: 8px !important;
   display: flex;
   justify-content: center;
@@ -121,7 +121,7 @@ body {
 
 .antd-table-custom {
   background: white;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   border: 2px solid #e2e8f0 !important;
   overflow: hidden;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
@@ -129,10 +129,10 @@ body {
 
 .ant-table {
   background: transparent !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
 
   .ant-table-container {
-    border-radius: 12px !important;
+    border-radius: 0px !important;
   }
 }
 
@@ -149,7 +149,7 @@ body {
     min-width: 28px !important;
     height: 28px !important;
     line-height: 26px !important;
-    border-radius: 4px !important;
+    border-radius: 0px !important;
     font-size: 12px !important;
     margin-inline-end: 4px !important;
   }
@@ -205,7 +205,7 @@ body {
         height: 28px !important;
         padding: 0 8px !important;
         font-size: 11px !important;
-        border-radius: 4px !important;
+        border-radius: 0px !important;
         display: flex !important;
         align-items: center !important;
         background: #006666 !important;
@@ -250,7 +250,7 @@ body {
 // Global SelectBox Refinement
 .custom-selectbox {
   .ant-select-selector {
-    border-radius: 4px !important;
+    border-radius: 0px !important;
     border: 2px solid #e2e8f0 !important;
     font-size: 12px !important;
     display: flex !important;
@@ -273,7 +273,7 @@ body {
 
   &.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
     border-color: #006666 !important;
-    box-shadow: 0 0 0 2px rgba(0, 102, 102, 0.1) !important;
+    box-shadow: none !important;
   }
 }
 
@@ -289,7 +289,7 @@ body {
     justify-content: center;
     width: 32px;
     height: 32px;
-    border-radius: 4px;
+    border-radius: 0px;
     transition: all 0.2s;
     cursor: pointer;
     border: 2px solid #e2e8f0;
@@ -358,10 +358,10 @@ body {
   display: flex !important;
   justify-items: center !important;
   align-items: center !important;
-  padding: 8px 12px !important;
+  padding: 4px 8px !important;
   color: #d1d5db !important; // Gray-300 for better contrast on dark teal
   border: none !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
   font-weight: 400;
   position: relative;
@@ -397,7 +397,7 @@ body {
   right: 0;
   bottom: 0;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%); // More pronounced gloss
-  border-radius: 4px;
+  border-radius: 0px;
   pointer-events: none;
 }
 
@@ -407,7 +407,7 @@ body {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, #006666 100%) !important;
   color: white !important;
   border: none !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
@@ -439,12 +439,12 @@ body {
 
   &::-webkit-scrollbar-track {
     background: transparent;
-    border-radius: 4px;
+    border-radius: 0px;
   }
 
   &::-webkit-scrollbar-thumb {
     background: var(--sb-thumb-color);
-    border-radius: 4px;
+    border-radius: 0px;
     opacity: 0.2;
 
     &:hover {
@@ -464,28 +464,24 @@ body {
   color: white !important;
   background-color: #006666 !important; // Teal
   border: none !important;
-  border-radius: 2px !important;
-  margin-left: 6px !important;
+  border-radius: 0px !important;
   padding: 4px 16px !important;
   height: 32px !important;
   font-size: 10px !important;
   font-weight: 400 !important;
   transition: all 0.2s ease-in-out !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 102, 102, 0.2);
 }
 
 .add-button:hover {
   background-color: #090e1a !important;
   border-color: #090e1a !important;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .filter-button {
   color: white !important;
   background-color: #006666 !important; // Match sidebar
   border: 2px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   height: 38px !important;
   font-size: 14px !important;
   font-weight: 400 !important;
@@ -509,7 +505,7 @@ body {
   height: 32px !important;
   padding: 4px 11px !important;
   border: 2px solid var(--sidebar-bg) !important; // Primary Teal (Theme Aware)
-  border-radius: 2px !important;
+  border-radius: 0px !important;
   background-color: var(--bg-card) !important;
   display: flex !important;
   align-items: center !important;
@@ -534,19 +530,18 @@ body {
 
 .custom-selectbox {
   &.ant-select {
-    height: 36px !important;
+    height: 32px !important;
   }
 
   .ant-select-selector {
     border: 2px solid var(--sidebar-bg) !important; // Primary Teal
-    border-radius: 2px !important;
+    border-radius: 0px !important;
     height: 32px !important;
     padding: 0 11px !important;
     display: flex !important;
     align-items: center !important;
     background-color: var(--bg-card) !important;
     box-shadow: none !important;
-    transition: all 0.2s;
 
     .ant-select-selection-item,
     .ant-select-selection-placeholder {
@@ -572,7 +567,7 @@ body {
 
 .selectbox-rounded-2px {
   .ant-select-selector {
-    border-radius: 2px !important;
+    border-radius: 0px !important;
   }
 }
 
@@ -600,7 +595,7 @@ body {
   color: white !important;
   background-color: #006666 !important;
   border: 2px solid #006666 !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   margin-left: 6px !important;
   padding: 2px 8px !important;
   height: 32px !important;
@@ -622,7 +617,7 @@ body {
   color: var(--text-primary) !important;
   background-color: var(--bg-card) !important;
   border: 2px solid var(--border-color) !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   margin-left: 6px !important;
   padding: 2px 8px !important;
   height: 32px !important;
@@ -660,11 +655,11 @@ body {
 
 .ant-select {
   height: 36px !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
 
   .ant-select-selector {
     border: 2px solid var(--sidebar-bg) !important;
-    border-radius: 4px !important;
+    border-radius: 0px !important;
     padding: 0 16px !important;
     height: 32px !important;
     display: flex;
@@ -684,7 +679,7 @@ body {
   .ant-select-selector {
     height: 32px !important;
     padding: 0 12px !important;
-    border-radius: 4px !important;
+    border-radius: 0px !important;
     border: 2px solid #e2e8f0 !important;
     font-size: 12px !important;
     font-family: inherit !important;
@@ -714,13 +709,13 @@ body {
 .modern-modal {
   .ant-modal-content {
     padding: 0 !important;
-    border-radius: 4px !important;
+    border-radius: 0px !important;
     overflow: hidden;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
     border: 2px solid rgba(0, 0, 0, 0.05);
 
     @media (max-width: 768px) {
-      border-radius: 4px 4px 0 0 !important; // Top corners only for bottom sheet
+      border-radius: 0px 0px 0 0 !important; // Top corners only for bottom sheet
     }
   }
 
@@ -756,12 +751,12 @@ body {
 
     &::-webkit-scrollbar-track {
       background: #f8fafc;
-      border-radius: 4px;
+      border-radius: 0px;
     }
 
     &::-webkit-scrollbar-thumb {
       background: #e2e8f0;
-      border-radius: 4px;
+      border-radius: 0px;
     }
 
     @media (max-width: 768px) {
@@ -857,7 +852,7 @@ body {
 .modal-section {
   background-color: var(--bg-secondary);
   border: 2px solid var(--border-color);
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   padding: 16px;
   margin-bottom: 16px;
 
@@ -881,7 +876,7 @@ body {
 // Global button overrides for modals
 .modal-footer-btn {
   height: 36px !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   font-weight: 600 !important;
   padding: 0 20px !important;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -934,7 +929,7 @@ body {
 
 .ant-input {
   padding: 8px 16px !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   transition: all 0.2s;
 
   &:focus,
@@ -944,7 +939,7 @@ body {
 }
 
 .ant-modal-content {
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   padding: 12px !important;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
@@ -953,18 +948,18 @@ body {
   color: var(--text-primary) !important;
   width: 100% !important;
   padding: 6px 16px !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   border: 2px solid var(--border-color) !important;
   background-color: var(--bg-card) !important;
 }
 
 .formit-input:focus {
-  border: 2px solid #006666 !important;
+  border: 0px solid #006666 !important;
   box-shadow: none !important;
 }
 
 .place-holder-table {
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   background-color: var(--bg-card) !important;
   border: 2px solid var(--border-color) !important;
   box-shadow: var(--shadow-sm) !important;
@@ -976,7 +971,7 @@ body {
 
 .select-field {
   width: 100% !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   background-color: var(--bg-card) !important;
 }
 
@@ -992,7 +987,7 @@ body {
 .reset-button {
   background-color: #f3f4f6 !important;
   border: 2px solid #e5e7eb !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   padding: 6px !important;
   font-size: 12px !important;
   font-weight: 500 !important;
@@ -1033,7 +1028,7 @@ body {
 .upload-background-image-antd .ant-upload {
   background-color: var(--bg-card) !important;
   height: 190px !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   border: none !important;
   margin: 0px !important;
   margin-top: 3px !important;
@@ -1059,7 +1054,7 @@ body {
   color: white !important;
   background-color: #ef4444 !important;
   border: 2px solid #ef4444 !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   margin-left: 6px !important;
   padding: 2px 8px !important;
   height: 32px !important;
@@ -1091,8 +1086,8 @@ body {
   font-size: 20px;
   padding: 8px 30px 8px 130px;
   text-align: start;
-  border-top-right-radius: 4px !important;
-  border-bottom-right-radius: 4px !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
 }
 
 .building_logo_img {
@@ -1138,7 +1133,7 @@ body {
 .ant-tag {
   user-select: none;
   border: 2px solid var(--border-color);
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   background-color: var(--bg-card) !important;
   color: var(--text-primary) !important;
   display: flex;
@@ -1152,7 +1147,7 @@ body {
   user-select: none;
   color: var(--text-primary) !important;
   border: 2px solid var(--border-color);
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   background-color: var(--bg-card) !important;
   padding: 6px 6px !important;
   display: flex;
@@ -1223,7 +1218,7 @@ body {
 body {
   --sb-track-color: #ffffff;
   --sb-thumb-color: #006666;
-  --sb-size: 6px;
+  --sb-size: 4px;
 }
 
 body::-webkit-scrollbar {
@@ -1291,7 +1286,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .Toastify__toast {
-  border-radius: 4px !important;
+  border-radius: 0px !important;
   padding: 16px 18px 16px 16px !important;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
   position: relative;
@@ -1410,7 +1405,7 @@ body::-webkit-scrollbar-thumb {
 
 .Toastify__progress-bar {
   height: 3px !important;
-  border-radius: 0 0 4px 4px !important;
+  border-radius: 0 0 0px 0px !important;
 }
 
 .Toastify__progress-bar--success {
@@ -1476,7 +1471,7 @@ body::-webkit-scrollbar-thumb {
     justify-content: center;
     width: 36px;
     height: 36px;
-    border-radius: 4px;
+    border-radius: 0px;
     background: #f1f5f9;
     color: #475569;
     border: 2px solid #e2e8f0;
@@ -1556,9 +1551,10 @@ body::-webkit-scrollbar-thumb {
     .ant-select-item,
     .ant-dropdown-menu-submenu-title {
       color: #F8FAFC !important; // Matches --text-primary
-      border-radius: 4px !important;
+      border-radius: 0px !important;
       margin: 2px 0 !important;
       transition: all 0.2s ease !important;
+
 
       &:hover,
       &-active,
@@ -1676,3 +1672,104 @@ body::-webkit-scrollbar-thumb {
     }
   }
 }
+
+/* Table Action Menu (Popover/Dropdown) Optimization */
+.ant-dropdown-menu,
+.ant-popover-inner {
+  padding: 3px !important;
+}
+
+.ant-dropdown-menu-item,
+.ant-dropdown-menu-submenu-title {
+  padding: 4px 8px !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+}
+
+/* Ensure font size matches the table column for text elements in the dropdown items */
+.ant-dropdown-menu-item span,
+.ant-dropdown-menu-item a {
+  font-size: 12px !important;
+}
+
+/* Table Modals Font Sizing (Set to 12px) */
+.ant-modal,
+.ant-modal-header,
+.ant-modal-title,
+.ant-modal-body,
+.ant-modal-content,
+.ant-modal-footer,
+.ant-modal-confirm-body,
+.ant-modal-confirm-title,
+.ant-modal-confirm-content {
+  font-size: 12px !important;
+}
+
+/* Ensure inputs, labels, select fields and text elements inside modals are strictly 12px */
+.ant-modal label,
+.ant-modal input,
+.ant-modal select,
+.ant-modal textarea,
+.ant-modal button,
+.ant-modal span,
+.ant-modal div,
+.ant-modal p,
+.ant-modal .ant-form-item {
+  font-size: 12px !important;
+}
+
+/* Sidebar Navigation Action Menu (Set to 14px) */
+.side_menu_item,
+.side_menu_item span,
+.side_menu_item a,
+.side_menu_item button,
+.selected-menu-item,
+.selected-menu-item span {
+  font-size: 14px !important;
+}
+
+/* App-wide maximum font-size constraint of 14px */
+h1, h2, h3, h4, h5, h6,
+.text-2xl, .text-xl, .text-lg,
+.ant-modal-title, .ant-card-head-title {
+  font-size: 14px !important;
+}
+
+/* Foolproof custom scrollbar styling for all elements inside Ant Design Table wrappers */
+.ant-table-wrapper * {
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--sb-thumb-color) var(--sb-track-color) !important;
+}
+
+.ant-table-wrapper *::-webkit-scrollbar {
+  width: var(--sb-size) !important;
+  height: var(--sb-size) !important;
+}
+
+.ant-table-wrapper *::-webkit-scrollbar-track {
+  background: var(--sb-track-color) !important;
+  border-radius: 4px !important;
+}
+
+.ant-table-wrapper *::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color) !important;
+  border-radius: 4px !important;
+}
+
+.ant-table-wrapper *::-webkit-scrollbar-thumb:hover {
+  background: var(--sb-thumb-color) !important;
+  filter: brightness(1.2) !important;
+}
+
+/* Align table pagination to bottom-right and eliminate empty vertical space */
+.ant-table-wrapper .ant-table-pagination.ant-pagination {
+  margin: 8px 0 0 0 !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+  justify-content: flex-end !important;
+}
+
+.ant-table-wrapper {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}

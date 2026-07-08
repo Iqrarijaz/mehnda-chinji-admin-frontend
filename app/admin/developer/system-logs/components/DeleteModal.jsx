@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { Button, Modal } from "antd";
 import { FaExclamationTriangle, FaTrashAlt, FaTerminal } from "react-icons/fa";
@@ -89,7 +89,7 @@ function DeleteSystemLogsModal({ isModalOpen, setIsModalOpen }) {
             type="primary"
             danger
             onClick={handleDelete}
-            loading={deleteMutation.isLoading}
+            loading={deleteMutation.isPending}
             icon={<FaTrashAlt size={14} />}
             className="modal-footer-btn-danger w-full !h-[52px] !text-base"
           >

@@ -8,7 +8,7 @@ import {
     EllipsisOutlined,
     SettingOutlined
 } from "@ant-design/icons";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import Loading from "@/animations/homePageLoader";
@@ -127,7 +127,7 @@ const ConfigurationsTable = React.memo(({ modal, setModal, configurationsList, f
             key: "type",
             width: 170,
             sorter: true,
-            render: (type) => <span className="font-bold text-slate-700 dark:text-slate-200 text-[11px] tracking-tight">{type}</span>,
+            render: (type) => <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] tracking-tight transition-colors duration-300">{type}</span>,
         },
         {
             title: "Data (JSON)",
@@ -136,7 +136,7 @@ const ConfigurationsTable = React.memo(({ modal, setModal, configurationsList, f
             width: 250,
             render: (data) => (
                 <Tooltip title={<pre className="text-xs">{JSON.stringify(data, null, 2)}</pre>}>
-                    <div className="max-w-[400px] overflow-hidden whitespace-nowrap text-ellipsis italic font-mono text-slate-500 dark:text-slate-400 font-medium text-[10px] transition-colors duration-300">
+                    <div className="max-w-[400px] overflow-hidden whitespace-nowrap text-ellipsis italic font-mono text-[10px] text-slate-400 dark:text-slate-500 font-medium transition-colors duration-300 group-hover:text-slate-300">
                         {JSON.stringify(data)}
                     </div>
                 </Tooltip>
@@ -153,7 +153,7 @@ const ConfigurationsTable = React.memo(({ modal, setModal, configurationsList, f
                 <Switch
                     checked={isActive}
                     onChange={() => handleStatusChange(record)}
-                    loading={updateStatus.isLoading && updateStatus.variables?._id === record._id}
+                    loading={updateStatus.isPending && updateStatus.variables?._id === record._id}
                     className={isActive ? '!bg-[#006666]' : '!bg-slate-300'}
                     size="small"
                 />
@@ -164,6 +164,7 @@ const ConfigurationsTable = React.memo(({ modal, setModal, configurationsList, f
             key: "actions",
             width: 70,
             align: "right",
+            fixed: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
@@ -174,7 +175,7 @@ const ConfigurationsTable = React.memo(({ modal, setModal, configurationsList, f
                 </Dropdown>
             ),
         }
-    ], [actionMenu, handleStatusChange, updateStatus.isLoading, updateStatus.variables?._id]);
+    ], [actionMenu, handleStatusChange, updateStatus.isPending, updateStatus.variables?._id]);
 
     const handleTableChange = React.useCallback((pagination, filters, sorter) => {
         onChange({
@@ -204,7 +205,7 @@ const ConfigurationsTable = React.memo(({ modal, setModal, configurationsList, f
                     pagination={false}
                     onChange={handleTableChange}
                 />
-                {(updateStatus.isLoading || deleteConfig.isLoading) && <Loading />}
+                {(updateStatus.isPending || deleteConfig.isPending) && <Loading />}
 
                 <ConfirmModal
                     isOpen={confirmModal.isOpen}
@@ -215,7 +216,7 @@ const ConfigurationsTable = React.memo(({ modal, setModal, configurationsList, f
                     confirmText={confirmModal.confirmText}
                     cancelText={confirmModal.cancelText}
                     variant={confirmModal.variant}
-                    loading={updateStatus.isLoading || deleteConfig.isLoading}
+                    loading={updateStatus.isPending || deleteConfig.isPending}
                 />
             </div>
         </div>

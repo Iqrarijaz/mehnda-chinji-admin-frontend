@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { Table, Tag, Button, Dropdown, Avatar, Image } from "antd";
+import { Table, Tag, Button, Dropdown, Avatar, Image, Tooltip } from "antd";
 import { EditOutlined, DeleteOutlined, CheckCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { TableSkeleton } from "@/components/shared/Skeletons";
@@ -96,12 +96,12 @@ const MarketplaceTable = React.memo(({ marketplaceList, setModal, onChange, visi
                     ) : (
                         <Avatar shape="square" size={40} icon="🛍️" />
                     )}
-                    <div className="flex flex-col">
-                        <span className="font-semibold text-slate-800 dark:text-slate-200 capitalize">
+                    <div className="flex flex-col min-w-0">
+                        <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate leading-tight capitalize transition-colors duration-300">
                             {record.title}
                         </span>
                         {record.isFeatured && (
-                            <span className="text-[10px] text-teal-600 bg-teal-50 dark:bg-teal-950/30 px-1.5 py-0.5 rounded font-bold w-fit">
+                            <span className="text-[9px] font-bold uppercase tracking-wider text-teal-600 bg-teal-50 dark:bg-teal-950/30 border border-teal-200 dark:border-teal-900/30 px-2.5 py-0.5 rounded-full w-fit mt-0.5">
                                 FEATURED
                             </span>
                         )}
@@ -110,14 +110,22 @@ const MarketplaceTable = React.memo(({ marketplaceList, setModal, onChange, visi
             )
         },
         {
-            title: "Category / Type",
+            title: "Category",
             key: "category",
             render: (_, record) => (
                 <div className="flex flex-col">
-                    <span className="text-slate-700 dark:text-slate-300 font-medium">
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium transition-colors duration-300 group-hover:text-slate-300">
                         {record.category?.en} ({record.category?.ur})
                     </span>
-                    <span className="text-xs text-slate-500">
+                </div>
+            )
+        },
+        {
+            title: "Type",
+            key: "type",
+            render: (_, record) => (
+                <div className="flex flex-col">
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium transition-colors duration-300 group-hover:text-slate-300">
                         {record.type?.en} ({record.type?.ur})
                     </span>
                 </div>
@@ -128,11 +136,11 @@ const MarketplaceTable = React.memo(({ marketplaceList, setModal, onChange, visi
             key: "price",
             render: (_, record) => (
                 <div className="flex flex-col">
-                    <span className="font-bold text-slate-800 dark:text-slate-200">
+                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] transition-colors duration-300">
                         Rs. {record.price.toLocaleString()}
                     </span>
                     {record.negotiable && (
-                        <span className="text-[10px] text-slate-400 font-semibold">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mt-0.5">
                             Negotiable
                         </span>
                     )}
@@ -143,36 +151,69 @@ const MarketplaceTable = React.memo(({ marketplaceList, setModal, onChange, visi
             title: "Seller",
             key: "seller",
             render: (_, record) => (
-                <div className="flex flex-col">
-                    <span className="font-medium text-slate-700 dark:text-slate-300">
+                <div className="flex flex-col min-w-0">
+                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate leading-tight capitalize transition-colors duration-300">
                         {record.sellerId?.name || "System"}
                     </span>
-                    <span className="text-xs text-slate-500">
-                        {record.sellerPhone}
-                    </span>
                 </div>
+            )
+        },
+        {
+            title: "Seller Phone",
+            key: "sellerPhone",
+            render: (_, record) => (
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium transition-colors duration-300 group-hover:text-slate-300">
+                    {record.sellerPhone}
+                </span>
             )
         },
         {
             title: "Place",
             dataIndex: "place",
             key: "place",
-            render: (text) => <span className="font-medium text-slate-700 dark:text-slate-300">{text}</span>
+            render: (text) => <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate transition-colors duration-300 group-hover:text-slate-300">{text}</span>
         },
         {
             title: "Status",
             dataIndex: "status",
             key: "status",
             render: (status, record) => {
-                let color = "orange";
-                if (status === "live") color = "green";
-                if (status === "rejected") color = "red";
-                if (status === "sold") color = "default";
+                const getStatusStyles = (s) => {
+                    switch (s) {
+                        case "live":
+                            return "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800";
+                        case "pending":
+                            return "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800";
+                        case "rejected":
+                            return "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800";
+                        case "offline":
+                            return "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800";
+                        case "sold":
+                            return "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800";
+                        default:
+                            return "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-800";
+                    }
+                };
+                
+                const getDotStyles = (s) => {
+                    switch (s) {
+                        case "live": return "bg-green-500 animate-pulse";
+                        case "pending": return "bg-orange-500 animate-pulse";
+                        case "rejected": return "bg-red-500";
+                        case "offline": return "bg-purple-500";
+                        case "sold": return "bg-blue-500";
+                        default: return "bg-slate-500";
+                    }
+                };
+
                 return (
                     <div className="flex flex-col gap-1 items-start">
-                        <Tag color={color}>{status?.toUpperCase()}</Tag>
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border shadow-sm transition-colors ${getStatusStyles(status)}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${getDotStyles(status)}`} />
+                            {status}
+                        </span>
                         {status === "rejected" && record.rejectedReason && (
-                            <span className="text-[10px] text-red-500 max-w-[150px] truncate" title={record.rejectedReason}>
+                            <span className="text-[9px] text-red-500 max-w-[150px] truncate font-medium mt-0.5" title={record.rejectedReason}>
                                 {record.rejectedReason}
                             </span>
                         )}
@@ -187,7 +228,7 @@ const MarketplaceTable = React.memo(({ marketplaceList, setModal, onChange, visi
             width: 150,
             render: (val) => (
                 <Tooltip title={<pre className="text-xs">{JSON.stringify(val, null, 2)}</pre>}>
-                    <div className="max-w-[150px] overflow-hidden whitespace-nowrap text-ellipsis italic font-mono text-slate-500 text-[10px] cursor-help">
+                    <div className="max-w-[150px] overflow-hidden whitespace-nowrap text-ellipsis italic font-mono text-[10px] text-slate-400 dark:text-slate-500 font-medium transition-colors duration-300 group-hover:text-slate-300 cursor-help">
                         {val && Object.keys(val).length > 0 ? JSON.stringify(val) : "{}"}
                     </div>
                 </Tooltip>
@@ -197,19 +238,20 @@ const MarketplaceTable = React.memo(({ marketplaceList, setModal, onChange, visi
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",
-            render: (date) => timestampToDate(date)
+            render: (date) => <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap transition-colors duration-300 group-hover:text-slate-300">{timestampToDate(date)}</div>
         },
         {
-            title: "",
+            title: "Actions",
             key: "actions",
-            align: "right",
-            width: 70,
+            align: "center",
+            width: 80,
+            fixed: "right",
             render: (_, record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
                         type="text"
-                        icon={<EllipsisOutlined className="text-base text-slate-400" />}
-                        className="!rounded hover:!bg-slate-300 !flex items-center justify-center !h-4 !w-8"
+                        icon={<EllipsisOutlined className="text-lg text-slate-500" />}
+                        className="hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full"
                     />
                 </Dropdown>
             )
@@ -238,13 +280,13 @@ const MarketplaceTable = React.memo(({ marketplaceList, setModal, onChange, visi
     }
 
     return (
-        <>
+        <div className="place-holder-table modern-table overflow-hidden">
             <Table
                 dataSource={docs}
                 columns={activeColumns}
                 rowKey="_id"
                 onChange={handleSorting}
-                className="custom-table"
+                className="custom-ant-table"
                 loading={{
                     spinning: marketplaceList?.isLoading,
                     indicator: <TableSkeleton rows={8} columns={5} />
@@ -264,11 +306,11 @@ const MarketplaceTable = React.memo(({ marketplaceList, setModal, onChange, visi
                     title={confirmModal.title}
                     description={confirmModal.content}
                     onConfirm={confirmModal.onConfirm}
-                    loading={handleDelete.isLoading}
+                    loading={handleDelete.isPending}
                     variant="danger"
                 />
             )}
-        </>
+        </div>
     );
 });
 

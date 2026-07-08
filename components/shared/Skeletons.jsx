@@ -35,6 +35,18 @@ export const StatCardSkeleton = () => {
     );
 };
 
+export const DashboardCardSkeleton = () => {
+    return (
+        <div className="w-full h-[76px] rounded-xl border border-slate-100/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 p-4 shadow-sm flex items-center justify-between overflow-hidden">
+            <div className="space-y-2 flex-1">
+                <SkeletonPulse className="w-20 h-3" />
+                <SkeletonPulse className="w-16 h-6" />
+            </div>
+            <SkeletonPulse className="w-10 h-10 rounded-lg" />
+        </div>
+    );
+};
+
 export const FormSkeleton = ({ fields = 4 }) => {
     return (
         <div className="space-y-6">

@@ -1,14 +1,16 @@
 "use client";
 import React, { useState, useCallback } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import BusinessTable from "./components/Table";
 import AddBusinessModal from "./components/AddModal";
 import UpdateBusinessModal from "./components/UpdateModal";
+import BusinessTabs from "./components/BusinessTabs";
 import { GET_BUSINESSES, GET_BUSINESS_STATUS_COUNTS } from "@/app/api/admin/business";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useRouter } from "next/navigation";
 import StatCard from "@/components/shared/StatCard";
 import InnerPageCard from "@/components/layout/InnerPageCard";
 import { StatCardSkeleton } from "@/components/shared/Skeletons";
@@ -22,12 +24,29 @@ import { hasPermission } from "@/utils/permissions";
 import { PERMISSIONS } from "@/config/permissions";
 
 export default function BusinessPage() {
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (!hasPermission(PERMISSIONS.BUSINESSES.READ)) {
+      if (hasPermission(PERMISSIONS.STORE.ANALYTICS.READ)) {
+        router.replace("/admin/business/store-dashboard");
+      } else if (hasPermission(PERMISSIONS.STORE.CATEGORIES.READ)) {
+        router.replace("/admin/business/store-categories");
+      } else if (hasPermission(PERMISSIONS.STORE.PRODUCTS.READ)) {
+        router.replace("/admin/business/store-products");
+      } else if (hasPermission(PERMISSIONS.STORE.ORDERS.READ)) {
+        router.replace("/admin/business/store-orders");
+      }
+    }
+  }, [router]);
+
   const [modal, setModal] = useState({ name: null, data: null, state: false });
   const [filters, setFilters] = useState({
     itemsPerPage: 20,
     currentPage: 1,
     search: null,
     status: null,
+    hasStore: null,
     onChangeSearch: false,
   });
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
@@ -74,8 +93,8 @@ export default function BusinessPage() {
   ];
 
   return (
-    <InnerPageCard title="Businesses">
-
+    <InnerPageCard>
+      <BusinessTabs />
       <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-start md:items-center">
         {/* Status Count Cards (Left) */}
         <div className="flex gap-2 items-center flex-wrap">
@@ -106,11 +125,31 @@ export default function BusinessPage() {
 
         {/* Action Bar (Right) */}
         <div className="flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:w-auto justify-end">
-          {/* Desktop Search (Visible on Tablet/Desktop) */}
-          <div className="hidden md:block">
+          {/* Desktop Search & Store Filter (Visible on Tablet/Desktop) */}
+          <div className="hidden md:flex items-center gap-2">
             <SearchInput setFilters={setFilters} className="!max-w-[180px]" />
+            <label className={`flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] cursor-pointer select-none transition-all ${filters.hasStore === true ? '!bg-[#006666] dark:!bg-teal-600 !border-[#006666] dark:!border-teal-600 text-white' : '!border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 text-slate-300 dark:text-slate-600'}`} title="Only Show Stores">
+              <input
+                type="checkbox"
+                checked={filters.hasStore === true}
+                onChange={(e) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    hasStore: e.target.checked ? true : null,
+                    currentPage: 1,
+                  }))
+                }
+                className="sr-only"
+              />
+              {filters.hasStore === true ? (
+                <span className="text-xs font-black">✓</span>
+              ) : (
+                <span className="text-[10px] opacity-20">✓</span>
+              )}
+            </label>
           </div>
 
+          {/* Right Action Group */}
           <div className="flex items-center gap-2">
             <ColumnVisibilityDropdown
               options={columnOptions}
@@ -123,22 +162,11 @@ export default function BusinessPage() {
               onClick={handleRefresh}
               disabled={isRefreshing}
               title="Refresh Data"
-              className="flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
             </button>
 
-            {/* Mobile Filter Toggle */}
-            <button
-              onClick={() => setIsFilterModalOpen(true)}
-              className="mobile-filter-btn md:hidden"
-              title="Filters"
-            >
-              <FiFilter size={18} />
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2">
             {hasPermission(PERMISSIONS.BUSINESSES.CREATE) && (
               <AddButton
                 title="Add Business"
@@ -148,6 +176,15 @@ export default function BusinessPage() {
               />
             )}
           </div>
+
+          {/* Mobile Filter Toggle */}
+          <button
+            onClick={() => setIsFilterModalOpen(true)}
+            className="mobile-filter-btn md:hidden flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666]"
+            title="Filters"
+          >
+            <FiFilter size={18} />
+          </button>
         </div>
       </div>
 

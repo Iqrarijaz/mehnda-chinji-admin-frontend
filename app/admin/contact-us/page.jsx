@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import AddButton from "@/components/InnerPage/AddButton";
@@ -16,7 +16,7 @@ import { HiRefresh } from "react-icons/hi";
 import FilterModal from "./components/FilterModal";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
-import { useAdminData } from "@/hooks/useAdminData";
+import { useContactUs } from "./hooks/useContactUs";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
 
 export default function ContactUsPage() {
@@ -62,13 +62,7 @@ export default function ContactUsPage() {
         countsQuery,
         isRefreshing,
         handleRefresh
-    } = useAdminData({
-        listQueryKey: [ADMIN_KEYS.CONTACT.LIST, JSON.stringify(debFilter)],
-        listQueryFn: () => GET_CONTACT_REQUESTS(debFilter),
-        countsQueryKey: [ADMIN_KEYS.CONTACT.COUNTS],
-        countsQueryFn: GET_CONTACT_STATUS_COUNTS,
-        onListError: "Failed to fetch contact requests.",
-    });
+    } = useContactUs(debFilter);
 
     const { data: countsData, isLoading: countsLoading } = countsQuery;
 
@@ -135,7 +129,7 @@ export default function ContactUsPage() {
     }, [statusMutation]);
 
     return (
-        <InnerPageCard title="Contact Us Requests">
+        <InnerPageCard>
             <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-start md:items-center">
                 {/* Status Count Cards (Left) */}
                 <div className="flex gap-2 items-center flex-wrap">
@@ -165,10 +159,12 @@ export default function ContactUsPage() {
                 </div>
 
                 {/* Action Bar (Right) */}
-                <div className="flex gap-2 items-center w-full md:w-auto justify-end">
-                    {/* Desktop Search (Hidden on Mobile) */}
-                    <div className="hidden md:flex items-center gap-3 mr-1">
-                        <SearchInput setFilters={setFilters} />
+                <div className="flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:w-auto justify-end">
+                    <div className="hidden md:flex items-center gap-2">
+                        <SearchInput
+                            setFilters={setFilters}
+                            className="!max-w-[180px] !h-[32px] !border-2 !rounded-[2px]"
+                        />
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -194,16 +190,16 @@ export default function ContactUsPage() {
                             onClick={() => setModal({ name: "Add", data: null, state: true })}
                             className="!h-[32px] !rounded !px-4 !text-[10px] font-medium shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
                         />
-
-                        {/* Mobile Filter Toggle */}
-                        <button
-                            onClick={() => setIsFilterModalOpen(true)}
-                            className="mobile-filter-btn md:hidden dark:text-slate-400 dark:hover:text-teal-400 transition-colors"
-                            title="Filters"
-                        >
-                            <FiFilter size={18} />
-                        </button>
                     </div>
+
+                    {/* Mobile Filter Toggle */}
+                    <button
+                        onClick={() => setIsFilterModalOpen(true)}
+                        className="mobile-filter-btn md:!hidden flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white shadow-sm transition-all"
+                        title="Filters"
+                    >
+                        <FiFilter size={16} />
+                    </button>
                 </div>
             </div>
 
@@ -237,7 +233,7 @@ export default function ContactUsPage() {
                 confirmText={confirmModal.confirmText}
                 cancelText={confirmModal.cancelText}
                 variant={confirmModal.variant}
-                loading={statusMutation.isLoading || deleteMutation.isLoading}
+                loading={statusMutation.isPending || deleteMutation.isPending}
             />
         </InnerPageCard>
     );

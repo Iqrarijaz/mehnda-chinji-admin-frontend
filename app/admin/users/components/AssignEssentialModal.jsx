@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Modal, Input, List, Avatar, Button, Pagination } from "antd";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { SettingOutlined, SearchOutlined } from "@ant-design/icons";
 import { HiOutlineMapPin } from "react-icons/hi2";
@@ -24,14 +24,12 @@ const AssignEssentialModal = React.memo(({ modal, setModal }) => {
         return () => clearTimeout(timer);
     }, [search]);
 
-    const { data: essentialsResponse, isLoading: isListing } = useQuery(
-        ["admin_essentials_list", debouncedSearch, page],
-        () => GET_ESSENTIALS({ search: debouncedSearch, currentPage: page, itemsPerPage: 6 }),
-        {
-            enabled: modal.name === "AssignEssential" && modal.state,
-            keepPreviousData: true,
-        }
-    );
+    const { data: essentialsResponse, isLoading: isListing } = useQuery({
+        queryKey: ["admin_essentials_list", debouncedSearch, page],
+        queryFn: () => GET_ESSENTIALS({ search: debouncedSearch, currentPage: page, itemsPerPage: 6 }),
+        enabled: modal.name === "AssignEssential" && modal.state,
+        placeholderData: (prev) => prev,
+    });
 
     const assignMutation = useMutation({
         mutationKey: ["assignEssential"],
@@ -131,7 +129,7 @@ const AssignEssentialModal = React.memo(({ modal, setModal }) => {
                     rowKey="_id"
                     renderItem={(item) => {
                         const assigned = isAssigned(item._id);
-                        const isPending = assignMutation.isLoading && assignMutation.variables?.essentialId === item._id;
+                        const isPending = assignMutation.isPending && assignMutation.variables?.essentialId === item._id;
                         return (
                             <List.Item
                                 actions={[

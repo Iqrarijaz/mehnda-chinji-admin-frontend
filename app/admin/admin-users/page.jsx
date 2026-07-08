@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import AdminUsersTable from "./components/Table";
 import AddAdminUserModal from "./components/AddModal";
@@ -17,7 +17,7 @@ import { FiFilter } from "react-icons/fi";
 import { HiRefresh } from "react-icons/hi";
 import FilterModal from "./components/FilterModal";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
-import { useAdminData } from "@/hooks/useAdminData";
+import { useAdminUsers } from "./hooks/useAdminUsers";
 
 export default function AdminUsersPage() {
     const [modal, setModal] = useState({ name: null, data: null, state: false });
@@ -50,13 +50,7 @@ export default function AdminUsersPage() {
         countsQuery,
         isRefreshing,
         handleRefresh
-    } = useAdminData({
-        listQueryKey: [ADMIN_KEYS.ADMIN_USERS.LIST, JSON.stringify(debFilter)],
-        listQueryFn: () => GET_ADMIN_USERS(debFilter),
-        countsQueryKey: [ADMIN_KEYS.ADMIN_USERS.COUNTS],
-        countsQueryFn: GET_ADMIN_USER_STATUS_COUNTS,
-        onListError: "Failed to fetch admin users.",
-    });
+    } = useAdminUsers(debFilter);
 
     const { data: countsData, isLoading: countsLoading } = countsQuery;
 
@@ -70,7 +64,7 @@ export default function AdminUsersPage() {
     const onChange = React.useCallback((data) => setFilters((prev) => ({ ...prev, ...data })), []);
 
     return (
-        <InnerPageCard title="Admin Users">
+        <InnerPageCard>
 
             <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-start md:items-center">
                 {/* Status Count Cards (Left) */}
@@ -103,10 +97,14 @@ export default function AdminUsersPage() {
                 {/* Action Bar (Right) */}
                 <div className="flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:w-auto justify-end">
                     {/* Desktop Search (Visible on Tablet/Desktop) */}
-                    <div className="hidden md:block">
-                        <SearchInput setFilters={setFilters} className="!max-w-[180px]" />
+                    <div className="hidden md:flex items-center gap-2">
+                        <SearchInput
+                            setFilters={setFilters}
+                            className="!max-w-[180px] !h-[32px] !border-2 !rounded-[2px]"
+                        />
                     </div>
 
+                    {/* Right Action Group */}
                     <div className="flex items-center gap-2">
                         <ColumnVisibilityDropdown
                             options={columnOptions}
@@ -124,24 +122,22 @@ export default function AdminUsersPage() {
                             <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
                         </button>
 
-                        {/* Mobile Filter Toggle */}
-                        <button
-                            onClick={() => setIsFilterModalOpen(true)}
-                            className="mobile-filter-btn md:hidden"
-                            title="Filters"
-                        >
-                            <FiFilter size={18} />
-                        </button>
-                    </div>
-
-                    <div className="flex items-center gap-2">
                         <AddButton
-                            title="Add Admin User"
+                            title="Add User"
                             icon={false}
                             onClick={() => setModal({ name: "Add", data: null, state: true })}
-                            className="!h-[32px] !rounded !px-4 !text-[10px] font-medium shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                            className="!h-[32px] !border-2 !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded-[2px] !text-[10px] font-medium shadow-sm transition-all !px-3"
                         />
                     </div>
+
+                    {/* Mobile Filter Toggle */}
+                    <button
+                        onClick={() => setIsFilterModalOpen(true)}
+                        className="mobile-filter-btn md:!hidden flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white shadow-sm transition-all"
+                        title="Filters"
+                    >
+                        <FiFilter size={16} />
+                    </button>
                 </div>
             </div>
 

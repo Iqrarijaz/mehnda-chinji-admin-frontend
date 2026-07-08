@@ -1,7 +1,7 @@
 import { Modal, Tag, Input, Upload, Divider } from "antd";
 import { MessageOutlined } from "@ant-design/icons";
 import { FaReply, FaPaperPlane, FaPaperclip, FaClock, FaUser, FaUserTie } from "react-icons/fa";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Loading from "@/animations/homePageLoader";
 import SelectBox from "@/components/SelectBox";
@@ -265,7 +265,7 @@ const ManageTicketModal = React.memo(({ modal, setModal }) => {
                                 label="Send Response"
                                 icon={<FaPaperPlane size={10} />}
                                 onClick={handleSend}
-                                loading={replyMutation.isLoading}
+                                loading={replyMutation.isPending}
                                 className="!h-[32px] !px-5"
                                 disabled={!reply.trim() && fileList.length === 0}
                             />

@@ -34,7 +34,7 @@ const LogsTable = React.memo(({ logsList, onChange, visibleColumns = [] }) => {
             dataIndex: "createdAt",
             key: "createdAt",
             width: 170,
-            render: (text) => <div className="text-slate-500 dark:text-slate-500 text-xs font-medium whitespace-nowrap transition-colors duration-300">{timestampToDate(text)}</div>,
+            render: (text) => <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap transition-colors duration-300 group-hover:text-slate-300">{timestampToDate(text)}</div>,
         },
         {
             title: "Type",
@@ -43,7 +43,7 @@ const LogsTable = React.memo(({ logsList, onChange, visibleColumns = [] }) => {
             width: 120,
             align: "center",
             render: (type) => (
-                <Tag color={type === 'ERROR' ? 'red' : 'green'} className="!rounded-full !px-2 font-bold !border-0 uppercase text-[9px] dark:opacity-80">
+                <Tag color={type === 'ERROR' ? 'red' : 'green'} className="!rounded-full !px-2.5 font-bold !border-0 uppercase tracking-wider text-[9px] dark:opacity-80">
                     {type}
                 </Tag>
             ),
@@ -53,7 +53,7 @@ const LogsTable = React.memo(({ logsList, onChange, visibleColumns = [] }) => {
             dataIndex: "functionName",
             key: "functionName",
             width: 250,
-            render: (text) => <span className="font-semibold text-slate-700 dark:text-slate-200 text-xs truncate leading-tight block transition-colors duration-300">{text}</span>,
+            render: (text) => <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate leading-tight block transition-colors duration-300">{text}</span>,
         },
         {
             title: "User ID",
@@ -61,7 +61,7 @@ const LogsTable = React.memo(({ logsList, onChange, visibleColumns = [] }) => {
             key: "userId",
             width: 150,
             render: (userId) => (
-                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate block leading-tight transition-colors duration-300">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate block leading-tight transition-colors duration-300 group-hover:text-slate-300">
                     {userId || "System"}
                 </span>
             ),
@@ -71,6 +71,7 @@ const LogsTable = React.memo(({ logsList, onChange, visibleColumns = [] }) => {
             key: "actions",
             width: 70,
             align: "right",
+            fixed: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
@@ -83,7 +84,7 @@ const LogsTable = React.memo(({ logsList, onChange, visibleColumns = [] }) => {
         }
     ], [actionMenu]);
 
-    const activeColumns = React.useMemo(() => 
+    const activeColumns = React.useMemo(() =>
         allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
         [allColumns, visibleColumns]);
 
@@ -110,11 +111,11 @@ const LogsTable = React.memo(({ logsList, onChange, visibleColumns = [] }) => {
                         onChange: (page, pageSize) => onChange({ currentPage: page, itemsPerPage: pageSize }),
                     }}
                 />
-                
-                <ViewDetailsModal 
-                    open={viewModal.open} 
-                    onClose={handleCloseModal} 
-                    data={viewModal.data} 
+
+                <ViewDetailsModal
+                    open={viewModal.open}
+                    onClose={handleCloseModal}
+                    data={viewModal.data}
                 />
             </div>
         </div>

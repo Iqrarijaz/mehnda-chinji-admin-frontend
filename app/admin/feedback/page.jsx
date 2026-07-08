@@ -1,20 +1,16 @@
 "use client";
 import React, { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
-import { toast } from "react-toastify";
 import FeedbackList from "@/components/admin/feedback/FeedbackList";
-import { GET_FEEDBACK, UPDATE_FEEDBACK_STATUS, DELETE_FEEDBACK } from "@/app/api/admin/feedback";
 import InnerPageCard from "@/components/layout/InnerPageCard";
 import ConfirmModal from "@/components/shared/ConfirmModal";
-import { ADMIN_KEYS } from "@/constants/queryKeys";
+import { useFeedbackList, useUpdateFeedbackStatus, useDeleteFeedback } from "./hooks/useFeedback";
 
 export default function FeedbackPage() {
-    const queryClient = useQueryClient();
     const [filters, setFilters] = useState({
         limit: 20,
         page: 1,
     });
-    
+
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false,
         title: "",
@@ -29,37 +25,9 @@ export default function FeedbackPage() {
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
     }, []);
 
-    const { data, isLoading } = useQuery(
-        [ADMIN_KEYS.FEEDBACK.LIST, filters],
-        () => GET_FEEDBACK(filters),
-        { keepPreviousData: true }
-    );
-
-    const statusMutation = useMutation({
-        mutationFn: ({ id, status }) => UPDATE_FEEDBACK_STATUS(id, status),
-        onSuccess: () => {
-            toast.success("Status updated successfully");
-            queryClient.invalidateQueries([ADMIN_KEYS.FEEDBACK.LIST]);
-            closeConfirmModal();
-        },
-        onError: (error) => {
-            toast.error(error.errorMessage || error.message || "Failed to update status");
-            closeConfirmModal();
-        },
-    });
-
-    const deleteMutation = useMutation({
-        mutationFn: (id) => DELETE_FEEDBACK(id),
-        onSuccess: () => {
-            toast.success("Feedback deleted successfully");
-            queryClient.invalidateQueries([ADMIN_KEYS.FEEDBACK.LIST]);
-            closeConfirmModal();
-        },
-        onError: (error) => {
-            toast.error(error.errorMessage || error.message || "Failed to delete feedback");
-            closeConfirmModal();
-        },
-    });
+    const { data, isLoading } = useFeedbackList(filters);
+    const statusMutation = useUpdateFeedbackStatus(closeConfirmModal);
+    const deleteMutation = useDeleteFeedback(closeConfirmModal);
 
     const onDelete = React.useCallback((id) => {
         setConfirmModal({
@@ -86,22 +54,22 @@ export default function FeedbackPage() {
     }, [statusMutation]);
 
     return (
-        <InnerPageCard title="User Feedback">
-            <FeedbackList 
-                data={data?.data || []} 
-                isLoading={isLoading} 
-                filters={filters} 
-                setFilters={setFilters} 
+        <InnerPageCard>
+            <FeedbackList
+                data={data?.data || []}
+                isLoading={isLoading}
+                filters={filters}
+                setFilters={setFilters}
                 pagination={data?.pagination}
                 onUpdateStatus={onUpdateStatus}
                 onDelete={onDelete}
             />
-            
-            <ConfirmModal 
-                isOpen={confirmModal.isOpen} 
-                onClose={closeConfirmModal} 
-                title={confirmModal.title} 
-                description={confirmModal.description} 
+
+            <ConfirmModal
+                isOpen={confirmModal.isOpen}
+                onClose={closeConfirmModal}
+                title={confirmModal.title}
+                description={confirmModal.description}
                 onConfirm={confirmModal.onConfirm}
                 variant={confirmModal.variant}
                 confirmText={confirmModal.confirmText}

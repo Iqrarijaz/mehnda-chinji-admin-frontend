@@ -67,7 +67,7 @@ function SystemLogsTable({ systemLogsList, onChange }) {
       width: 170,
       sorter: true,
       render: (record) => (
-        <div className="capitalize font-bold text-slate-800 dark:text-slate-200 truncate transition-colors duration-300">{record}</div>
+        <div className="capitalize font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate transition-colors duration-300">{record}</div>
       ),
     },
     {
@@ -77,7 +77,7 @@ function SystemLogsTable({ systemLogsList, onChange }) {
       width: 200,
       sorter: true,
       render: (text) => (
-        <div className="font-mono text-xs text-slate-600 bg-slate-50 px-2 py-1 rounded border border-slate-100 truncate">{text}</div>
+        <div className="font-mono text-[10px] text-slate-600 bg-slate-50 px-2 py-0.5 rounded border border-slate-100 truncate">{text}</div>
       ),
     },
     {
@@ -87,7 +87,7 @@ function SystemLogsTable({ systemLogsList, onChange }) {
       width: 250,
       sorter: true,
       render: (record) => (
-        <div className="text-slate-600 font-medium truncate">{record?.email || "—"}</div>
+        <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate transition-colors duration-300 group-hover:text-slate-300">{record?.email || "—"}</div>
       ),
     },
     {
@@ -103,12 +103,12 @@ function SystemLogsTable({ systemLogsList, onChange }) {
               type="link"
               icon={<EyeOutlined />}
               onClick={() => setIsModalOpen({ name: "Request Body", state: true, record })}
-              className="!text-[#006666] !p-0 hover:!text-secondary flex items-center gap-1 mx-auto"
+              className="!text-[#006666] !p-0 hover:!text-secondary flex items-center gap-1 mx-auto text-[10px] font-medium"
             >
               View Data
             </Button>
           ) : (
-            <span className="text-slate-300">----</span>
+            <span className="text-slate-300 text-[10px]">----</span>
           )}
         </>
       ),
@@ -126,12 +126,12 @@ function SystemLogsTable({ systemLogsList, onChange }) {
               type="link"
               icon={<EyeOutlined />}
               onClick={() => setIsModalOpen({ name: "Response Data", state: true, record })}
-              className="!text-[#006666] !p-0 hover:!text-secondary flex items-center gap-1 mx-auto"
+              className="!text-[#006666] !p-0 hover:!text-secondary flex items-center gap-1 mx-auto text-[10px] font-medium"
             >
               View Data
             </Button>
           ) : (
-            <span className="text-slate-300">----</span>
+            <span className="text-slate-300 text-[10px]">----</span>
           )}
         </>
       ),
@@ -149,12 +149,12 @@ function SystemLogsTable({ systemLogsList, onChange }) {
               type="link"
               icon={<EyeOutlined />}
               onClick={() => setIsModalOpen({ name: "Error Details", state: true, record })}
-              className="!text-red-500 !p-0 hover:!text-red-600 flex items-center gap-1 mx-auto"
+              className="!text-red-500 !p-0 hover:!text-red-600 flex items-center gap-1 mx-auto text-[10px] font-medium"
             >
               View Error
             </Button>
           ) : (
-            <span className="text-slate-300">----</span>
+            <span className="text-slate-300 text-[10px]">----</span>
           )}
         </>
       ),
@@ -166,7 +166,7 @@ function SystemLogsTable({ systemLogsList, onChange }) {
       width: 200,
       sorter: true,
       render: (text) => (
-        <div className="text-slate-500 font-medium whitespace-nowrap">
+        <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap transition-colors duration-300 group-hover:text-slate-300">
           {timestampToDateWithTime(text)}
         </div>
       ),
@@ -176,6 +176,7 @@ function SystemLogsTable({ systemLogsList, onChange }) {
       key: "actions",
       width: 70,
       align: "right",
+      fixed: "right",
       render: (record) => (
         <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
           <Button

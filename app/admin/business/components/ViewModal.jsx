@@ -83,6 +83,13 @@ const ViewModal = React.memo(({ open, onCancel, data }) => {
                             <FaCalendarAlt size={10} className="text-orange-500" /> {timestampToDate(data.createdAt)}
                         </span>
                     </Descriptions.Item>
+                    <Descriptions.Item label="Store Module">
+                        <span className="flex items-center gap-2">
+                            <Tag color={data.hasStore ? "success" : "default"} className="m-0 font-bold px-1.5 py-0 rounded uppercase text-[9px] border-none">
+                                {data.hasStore ? "ENABLED" : "DISABLED"}
+                            </Tag>
+                        </span>
+                    </Descriptions.Item>
                     <Descriptions.Item label="Description">
                         <textarea
                             className="w-full bg-transparent border-none outline-none resize-none text-slate-700 text-xs cursor-not-allowed p-0 m-0"
@@ -92,6 +99,39 @@ const ViewModal = React.memo(({ open, onCancel, data }) => {
                         />
                     </Descriptions.Item>
                 </Descriptions>
+
+                {/* Store Settings Section */}
+                {data.hasStore && data.storeSettings && (
+                    <div className="p-2.5 bg-indigo-50/40 rounded border border-indigo-100/30">
+                        <h3 className="text-[9px] font-black text-indigo-700 uppercase tracking-widest mb-2">Store Settings</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[10px]">
+                            <div>
+                                <span className="text-slate-400 font-bold uppercase text-[8px] block mb-0.5">Min Order Amount</span>
+                                <span className="text-slate-700 font-bold">{data.storeSettings.minOrderAmount ? `Rs. ${data.storeSettings.minOrderAmount}` : "Rs. 0"}</span>
+                            </div>
+                            <div>
+                                <span className="text-slate-400 font-bold uppercase text-[8px] block mb-0.5">Operational Status</span>
+                                <Tag color={data.storeSettings.isStoreActive ? "success" : "error"} className="m-0 font-bold px-1.5 py-0 rounded uppercase text-[8px] border-none">
+                                    {data.storeSettings.isStoreActive ? "OPEN" : "CLOSED"}
+                                </Tag>
+                            </div>
+                            <div className="md:col-span-3">
+                                <span className="text-slate-400 font-bold uppercase text-[8px] block mb-0.5">Delivery Areas</span>
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                    {data.storeSettings.deliveryAreas && data.storeSettings.deliveryAreas.length > 0 ? (
+                                        data.storeSettings.deliveryAreas.map((area, i) => (
+                                            <Tag key={i} className="m-0 text-[9px] bg-slate-100 border-none font-medium px-1.5 py-0.5 text-slate-600 rounded">
+                                                {area}
+                                            </Tag>
+                                        ))
+                                    ) : (
+                                        <span className="text-slate-400 font-medium italic">No specific delivery areas configured. Open to all locations.</span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Additional Info */}
                 <div className="p-2.5 bg-teal-50/50 rounded border border-teal-100/30">

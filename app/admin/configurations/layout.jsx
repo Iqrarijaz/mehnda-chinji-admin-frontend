@@ -16,7 +16,7 @@ export default function ConfigurationsLayout({ children }) {
     };
 
     return (
-        <InnerPageCard title={getTitle()}>
+        <InnerPageCard>
             <ConfigTabs />
             {children}
         </InnerPageCard>

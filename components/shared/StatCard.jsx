@@ -30,7 +30,7 @@ const StatCard = ({
                 background: cardBg,
                 border: `2px solid ${cardBorder}`,
                 borderRadius: 2,
-                padding: "0 14px",
+                padding: "0 10px",
                 height: 32,
                 display: "flex",
                 alignItems: "center",
@@ -38,9 +38,7 @@ const StatCard = ({
                 textAlign: "left",
                 overflow: "hidden",
                 transition: "all 0.18s ease",
-                boxShadow: active
-                    ? `0 4px 18px ${color}44`
-                    : "0 1px 6px rgba(0,0,0,0.06)",
+                boxShadow: "none",
             }}
         >
             {/* Accent circle */}
@@ -63,7 +61,7 @@ const StatCard = ({
                 style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "8px",
+                    gap: "6px",
                 }}
             >
                 {/* Left: Icon */}
@@ -73,14 +71,14 @@ const StatCard = ({
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            width: 20,
-                            height: 20,
+                            width: 16,
+                            height: 16,
                             borderRadius: 4,
                             background: active
                                 ? "rgba(255,255,255,0.2)"
                                 : `${color}18`,
                             color: active ? "#fff" : color,
-                            fontSize: 14,
+                            fontSize: 12,
                             flexShrink: 0,
                         }}
                     >
@@ -89,11 +87,11 @@ const StatCard = ({
                 )}
 
                 {/* Right: Title + Count */}
-                <div style={{ display: "flex", alignItems: "baseline", gap: "6px" }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: "4px" }}>
                     <span
                         className="stat-title"
                         style={{
-                            fontSize: 10,
+                            fontSize: 9,
                             fontWeight: 700,
                             color: textColor,
                             textTransform: "uppercase",
@@ -108,7 +106,7 @@ const StatCard = ({
                     <span
                         className="stat-count"
                         style={{
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: 800,
                             color: active ? "#ffffff" : color,
                             lineHeight: 1,

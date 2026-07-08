@@ -8,7 +8,7 @@ import {
     SolutionOutlined
 } from "@ant-design/icons";
 import Loading from "@/animations/homePageLoader";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { timestampToDate } from "@/utils/date";
 import { UPDATE_REPORT_STATUS } from "@/app/api/admin/reports";
@@ -118,10 +118,10 @@ const ReportsTable = React.memo(({ reportsList, onChange, setFilters, visibleCol
             sorter: true,
             render: (reporter) => (
                 <div className="flex flex-col min-w-0 transition-colors duration-300">
-                    <span className="font-bold text-slate-700 dark:text-slate-200 text-[11px] truncate leading-tight block tracking-tight transition-colors duration-300">
+                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate leading-tight block tracking-tight transition-colors duration-300">
                         {reporter ? `${reporter.firstName} ${reporter.lastName}` : "Anonymous"}
                     </span>
-                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium tracking-wide truncate block mt-0.5 transition-colors duration-300">
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium tracking-wide truncate block mt-0.5 transition-colors duration-300 group-hover:text-slate-300">
                         {reporter?.phone || "No phone"}
                     </span>
                 </div>
@@ -137,7 +137,7 @@ const ReportsTable = React.memo(({ reportsList, onChange, setFilters, visibleCol
                     <Tag color={record.targetType === 'BUSINESS' ? 'blue' : record.targetType === 'PLACE' ? 'green' : 'orange'} className="!rounded-full !px-3 font-bold !border-0 uppercase text-[9px] shadow-sm">
                         {record.targetType}
                     </Tag>
-                    <span className="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate max-w-full leading-tight block tracking-tight mt-1 transition-colors duration-300">
+                    <span className="text-[10px] font-bold text-slate-800 dark:text-slate-100 truncate max-w-full leading-tight block tracking-tight mt-1 transition-colors duration-300">
                         {record.targetName || "No name"}
                     </span>
                 </div>
@@ -149,8 +149,8 @@ const ReportsTable = React.memo(({ reportsList, onChange, setFilters, visibleCol
             width: 250,
             render: (record) => (
                 <div className="flex flex-col min-w-0 transition-colors duration-300">
-                    <span className="font-bold text-slate-700 dark:text-slate-200 text-[11px] truncate leading-tight block tracking-tight transition-colors duration-300">{record.reason}</span>
-                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate block leading-tight mt-0.5 transition-colors duration-300">{record.description || "No further details"}</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate leading-tight block tracking-tight transition-colors duration-300">{record.reason}</span>
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate block leading-tight mt-0.5 transition-colors duration-300 group-hover:text-slate-300">{record.description || "No further details"}</span>
                 </div>
             ),
         },
@@ -180,13 +180,14 @@ const ReportsTable = React.memo(({ reportsList, onChange, setFilters, visibleCol
             key: "createdAt",
             width: 170,
             sorter: true,
-            render: (text) => <div className="text-slate-500 dark:text-slate-400 text-[10px] font-bold whitespace-nowrap transition-colors duration-300 uppercase tracking-tight">{timestampToDate(text)}</div>,
+            render: (text) => <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap transition-colors duration-300 group-hover:text-slate-300 uppercase tracking-tight">{timestampToDate(text)}</div>,
         },
         {
             title: "",
             key: "actions",
             width: 70,
             align: "right",
+            fixed: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
@@ -199,7 +200,7 @@ const ReportsTable = React.memo(({ reportsList, onChange, setFilters, visibleCol
         }
     ], [actionMenu]);
 
-    const activeColumns = React.useMemo(() => 
+    const activeColumns = React.useMemo(() =>
         allColumns.filter(col => col.key === "actions" || visibleColumns.includes(col.key)),
         [allColumns, visibleColumns]);
 
@@ -227,7 +228,7 @@ const ReportsTable = React.memo(({ reportsList, onChange, setFilters, visibleCol
                     }}
                     onChange={handleSorting}
                 />
-                {statusMutation.isLoading && <Loading />}
+                {statusMutation.isPending && <Loading />}
 
                 <ViewModal viewModal={viewModal} setViewModal={setViewModal} />
 
@@ -240,7 +241,7 @@ const ReportsTable = React.memo(({ reportsList, onChange, setFilters, visibleCol
                     confirmText={confirmModal.confirmText}
                     cancelText={confirmModal.cancelText}
                     variant={confirmModal.variant}
-                    loading={statusMutation.isLoading}
+                    loading={statusMutation.isPending}
                 />
             </div>
         </div>

@@ -3,7 +3,7 @@ import React from "react";
 import { Modal, Form, Input } from "antd";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { CREATE_ROLE, UPDATE_ROLE } from "@/app/api/admin/roles";
 import { FaEdit, FaShieldAlt } from "react-icons/fa";
@@ -126,7 +126,7 @@ const AddEditRoleModal = React.memo(({ modal, setModal }) => {
                             <CustomButton
                                 label={isEdit ? "Update Role" : "Create Role"}
                                 htmlType="submit"
-                                loading={isSubmitting || mutation.isLoading}
+                                loading={isSubmitting || mutation.isPending}
                             />
                         </div>
                     </Form>

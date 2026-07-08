@@ -8,7 +8,7 @@ import {
     EllipsisOutlined
 } from "@ant-design/icons";
 import Loading from "@/animations/homePageLoader";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { timestampToDate } from "@/utils/date";
 import { DELETE_ESSENTIAL, UPDATE_ESSENTIAL_STATUS, UPDATE_ESSENTIAL_REQUEST_STATUS } from "@/app/api/admin/essentials";
@@ -207,7 +207,7 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
             width: 200,
             render: (name) => (
                 <Tooltip title={name} placement="topLeft">
-                    <div className="capitalize font-bold text-slate-500 dark:text-slate-400 truncate cursor-help transition-colors">
+                    <div className="capitalize font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate cursor-help transition-colors duration-300">
                         {name}
                     </div>
                 </Tooltip>
@@ -237,10 +237,10 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
             title: "Type",
             dataIndex: "type",
             key: "type",
-            width: 150,
+            width: 60,
             align: "center",
             render: (type) => (
-                <span className="px-3 py-1 rounded-full capitalize font-bold text-orange-700 bg-orange-50 border border-orange-100 shadow-sm text-[10px]">
+                <span className="px-2.5 py-0.5 rounded-full uppercase font-bold text-orange-700 bg-orange-50 border border-orange-100 shadow-sm text-[9px] tracking-wider">
                     {type || "—"}
                 </span>
             ),
@@ -249,87 +249,42 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
             title: "Category",
             dataIndex: "category",
             key: "category",
-            width: 170,
+            width: 120,
             align: "center",
             sorter: true,
             render: (category) => (
                 <span
-                    className="px-3 py-1 rounded-full capitalize font-bold text-white shadow-sm text-[10px]"
+                    className="px-2.5 py-0.5 rounded-full uppercase font-bold text-white shadow-sm text-[9px] tracking-wider"
                     style={{ backgroundColor: getTagColor(category) }}
                 >
                     {category || "N/A"}
                 </span>
             ),
         },
-        {
-            title: "Address",
-            dataIndex: "address",
-            key: "address",
-            width: 250,
-            render: (address) => (
-                <Tooltip title={address} placement="topLeft">
-                    <div className="capitalize text-slate-500 dark:text-slate-400 font-medium truncate cursor-help transition-colors">
-                        {address || "—"}
-                    </div>
-                </Tooltip>
-            ),
-        },
+
         {
             title: "Timing",
             dataIndex: "timing",
             key: "timing",
-            width: 180,
+            width: 140,
             render: (timing) => (
                 <Tooltip title={timing || "No Timing Set"} placement="top">
-                    <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-medium truncate cursor-help transition-colors">
+                    <div className="flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate cursor-help transition-colors duration-300 group-hover:text-slate-300">
                         <span className="shrink-0 w-4 h-4 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-500 dark:text-blue-400">
                             <span className="text-[10px]">⏰</span>
                         </span>
-                        <span className="text-[11px]">{timing || "—"}</span>
+                        <span>{timing || "—"}</span>
                     </div>
                 </Tooltip>
             ),
         },
-        {
-            title: "Contact",
-            dataIndex: "contact",
-            key: "contact",
-            width: 100,
-            align: "center",
-            render: (contact) => {
-                if (!contact || contact.length === 0) return <span className="text-slate-400">—</span>;
 
-                return (
-                    <Popover
-                        content={
-                            <div className="space-y-2 p-1">
-                                {contact.map((c, i) => (
-                                    <div key={i} className="flex flex-col border-b border-slate-50 last:border-0 pb-1 last:pb-0">
-                                        <span className="text-[10px] font-bold text-slate-400 capitalize leading-none">{c.name}</span>
-                                        <span className="text-sm font-medium text-slate-700">{c.number}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        }
-                        title={<span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Contact Details</span>}
-                        trigger="click"
-                        placement="topRight"
-                    >
-                        <Button
-                            type="text"
-                            icon={<EyeOutlined className="text-teal-600" />}
-                            className="hover:!bg-teal-50 !rounded-full !flex items-center justify-center mx-auto"
-                        />
-                    </Popover>
-                );
-            }
-        },
         {
-            title: "Reg. Status",
+            title: "Status",
             dataIndex: "status",
             key: "status",
             align: "center",
-            width: 170,
+            width: 120,
             sorter: true,
             render: (status) => {
                 const colors = {
@@ -338,7 +293,7 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
                     PENDING: "bg-orange-500",
                 };
                 return (
-                    <span className={`${colors[status] || "bg-slate-400"} px-3 py-1 rounded-full capitalize font-bold text-white shadow-sm text-[10px]`}>
+                    <span className={`${colors[status] || "bg-slate-400"} px-2.5 py-0.5 rounded-full uppercase tracking-wider font-bold text-white shadow-sm text-[9px]`}>
                         {status || "PENDING"}
                     </span>
                 );
@@ -349,7 +304,7 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
             dataIndex: "isActive",
             key: "isActive",
             align: "center",
-            width: 170,
+            width: 70,
             render: (isActive, record) => (
                 <Switch
                     checked={isActive}
@@ -359,18 +314,11 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
                 />
             ),
         },
-        {
-            title: "Created At",
-            dataIndex: "createdAt",
-            key: "createdAt",
-            width: 170,
-            sorter: true,
-            render: (text) => <div className="text-slate-500 font-medium text-xs whitespace-nowrap">{timestampToDate(text)}</div>,
-        },
+
         {
             title: "",
             key: "actions",
-            width: 70,
+            width: 50,
             align: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
@@ -412,7 +360,7 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
                     }}
                     onChange={handleSorting}
                 />
-                {(manageStatusMutation.isLoading || deleteMutation.isLoading || requestStatusMutation.isLoading) && <Loading />}
+                {(manageStatusMutation.isPending || deleteMutation.isPending || requestStatusMutation.isPending) && <Loading />}
 
                 <ViewModal viewModal={viewModal} setViewModal={setViewModal} />
 
@@ -425,7 +373,7 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
                     confirmText={confirmModal.confirmText}
                     cancelText={confirmModal.cancelText}
                     variant={confirmModal.variant}
-                    loading={manageStatusMutation.isLoading || deleteMutation.isLoading || requestStatusMutation.isLoading}
+                    loading={manageStatusMutation.isPending || deleteMutation.isPending || requestStatusMutation.isPending}
                 />
             </div>
         </div>

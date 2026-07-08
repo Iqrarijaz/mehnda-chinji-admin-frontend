@@ -54,3 +54,13 @@ export async function DELETE_MARKETPLACE(data) {
         throw error;
     }
 }
+
+export async function GET_MARKETPLACE_STATUS_COUNTS() {
+    try {
+        const response = await Axios.get("/api/admin/marketplace/status-counts");
+        return response.data;
+
+    } catch (error) {
+        throw error;
+    }
+}

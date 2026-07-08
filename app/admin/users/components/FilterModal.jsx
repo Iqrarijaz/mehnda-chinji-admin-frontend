@@ -14,7 +14,7 @@ const FilterModal = React.memo(({ open, onCancel, filters, setFilters }) => {
             gender: undefined,
             search: "",
             page: 1,
-            pageSize: 10
+            pageSize: 20
         });
         if (onCancel) onCancel();
     };

@@ -4,7 +4,7 @@ import {
     DeleteOutlined,
     EllipsisOutlined,
 } from "@ant-design/icons";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { DELETE_ADMIN_USER, UPDATE_ADMIN_USER_STATUS } from "@/app/api/admin/admin-users";
 import { getTagColor } from "@/utils/tagColor";
@@ -129,7 +129,7 @@ const AdminUsersTable = React.memo(({ setModal, adminUsersList, filters, onChang
             width: 200,
             sorter: true,
             render: (name) => (
-                <span className="font-bold text-slate-800 dark:text-slate-200 text-xs truncate leading-tight block capitalize transition-colors duration-300">
+                <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate leading-tight block capitalize transition-colors duration-300">
                     {name}
                 </span>
             ),
@@ -141,7 +141,7 @@ const AdminUsersTable = React.memo(({ setModal, adminUsersList, filters, onChang
             width: 220,
             sorter: true,
             render: (email) => (
-                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate block leading-tight transition-colors duration-300">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate block leading-tight transition-colors duration-300 group-hover:text-slate-300">
                     {email || "—"}
                 </span>
             ),
@@ -152,7 +152,7 @@ const AdminUsersTable = React.memo(({ setModal, adminUsersList, filters, onChang
             key: "phone",
             width: 170,
             sorter: true,
-            render: (text) => <span className="text-slate-600 dark:text-slate-400 font-semibold text-xs whitespace-nowrap transition-colors duration-300">{text || "—"}</span>,
+            render: (text) => <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap transition-colors duration-300 group-hover:text-slate-300">{text || "—"}</span>,
         },
         {
             title: "Role Type",
@@ -190,6 +190,7 @@ const AdminUsersTable = React.memo(({ setModal, adminUsersList, filters, onChang
             key: "actions",
             width: 70,
             align: "right",
+            fixed: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button
@@ -222,7 +223,7 @@ const AdminUsersTable = React.memo(({ setModal, adminUsersList, filters, onChang
                     dataSource={data?.data?.docs || []}
                     pagination={{
                         current: data?.data?.page || 1,
-                        pageSize: data?.data?.limit || 10,
+                        pageSize: data?.data?.limit || 20,
                         total: data?.data?.totalDocs || 0,
                         showSizeChanger: true,
                         className: "px-4 pb-4",
@@ -240,7 +241,7 @@ const AdminUsersTable = React.memo(({ setModal, adminUsersList, filters, onChang
                     confirmText={confirmModal.confirmText}
                     cancelText={confirmModal.cancelText}
                     variant={confirmModal.variant}
-                    loading={manageStatusMutation.isLoading || deleteMutation.isLoading}
+                    loading={manageStatusMutation.isPending || deleteMutation.isPending}
                 />
             </div>
         </div>

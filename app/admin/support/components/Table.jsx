@@ -51,7 +51,7 @@ const SupportTable = React.memo(({ modal, setModal, ticketsList, onChange, filte
             width: 200,
             sorter: true,
             render: (text) => (
-                <span className="font-bold text-slate-800 dark:text-slate-100 text-xs truncate block max-w-[150px] transition-colors duration-300">{text}</span>
+                <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate block max-w-[150px] transition-colors duration-300">{text}</span>
             ),
         },
         {
@@ -60,8 +60,8 @@ const SupportTable = React.memo(({ modal, setModal, ticketsList, onChange, filte
             width: 180,
             render: (record) => (
                 <div className="flex flex-col min-w-0">
-                    <span className="text-[10px] text-slate-800 dark:text-slate-200 font-bold uppercase truncate transition-colors duration-300">{record.userId?.name || "Unknown User"}</span>
-                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium transition-colors duration-300">{record.userId?.phoneNumber || "No Phone"}</span>
+                    <span className="text-[11px] text-slate-800 dark:text-slate-100 font-bold uppercase truncate transition-colors duration-300">{record.userId?.name || "Unknown User"}</span>
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium transition-colors duration-300 group-hover:text-slate-300">{record.userId?.phoneNumber || "No Phone"}</span>
                 </div>
             ),
         },
@@ -72,7 +72,7 @@ const SupportTable = React.memo(({ modal, setModal, ticketsList, onChange, filte
             width: 250,
             render: (text) => (
                 <Tooltip title={text}>
-                    <div className="text-slate-500 dark:text-slate-400 text-[11px] leading-relaxed truncate max-w-[200px] transition-colors duration-300">
+                    <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium leading-relaxed truncate max-w-[200px] transition-colors duration-300 group-hover:text-slate-300">
                         {text || "No description provided"}
                     </div>
                 </Tooltip>
@@ -105,13 +105,14 @@ const SupportTable = React.memo(({ modal, setModal, ticketsList, onChange, filte
             key: "createdAt",
             width: 170,
             sorter: true,
-            render: (text) => <div className="text-slate-500 dark:text-slate-500 text-xs font-medium whitespace-nowrap transition-colors duration-300">{timestampToDate(text)}</div>,
+            render: (text) => <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap transition-colors duration-300 group-hover:text-slate-300">{timestampToDate(text)}</div>,
         },
         {
             title: "",
             key: "actions",
             width: 70,
             align: "right",
+            fixed: "right",
             render: (record) => (
                 <Dropdown menu={actionMenu(record)} trigger={["click"]} placement="bottomRight">
                     <Button

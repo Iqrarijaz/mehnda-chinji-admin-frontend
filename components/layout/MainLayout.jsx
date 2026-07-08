@@ -32,6 +32,21 @@ function MainLayout({ children }) {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Expand "Store Management" by default for STORE_ADMIN
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+        const user = userData?.adminData || userData;
+        if (user?.role === "STORE_ADMIN") {
+          setExpandedMenus(prev => ({ ...prev, "Stores": true }));
+        }
+      } catch (e) {
+        console.error("Failed to parse user data for sidebar expansion:", e);
+      }
+    }
+  }, []);
+
   // Auto-expand menu if current path matches a submenu item
   useEffect(() => {
     MenuList.forEach((item) => {
@@ -66,10 +81,10 @@ function MainLayout({ children }) {
           >
             <div className="flex items-center">
               <span className="text-lg flex-shrink-0">{item.icon}</span>
-              {(open || isMobileView) && <span className={`${isMobileView ? 'ml-4' : 'ml-3'} text-sm`}>{item.name}</span>}
+              {(open || isMobileView) && <span className={`${isMobileView ? 'ml-4' : 'ml-3'} text-[14px]`}>{item.name}</span>}
             </div>
             {(open || isMobileView) && (
-              <span className="text-sm">
+              <span className="text-[14px]">
                 {isExpanded ? <IoChevronUp size={16} /> : <IoChevronDown size={16} />}
               </span>
             )}
@@ -85,8 +100,8 @@ function MainLayout({ children }) {
                     className={`side_menu_item !py-2 ${isActive(subItem.link) ? "selected-menu-item" : ""}`}
                     onClick={isMobileView ? () => toggleMenu(false) : undefined}
                   >
-                    <span className="text-md flex-shrink-0">{subItem.icon}</span>
-                    <span className={`${isMobileView ? 'ml-4' : 'ml-3'} text-xs`}>{subItem.name}</span>
+                    <span className="text-base flex-shrink-0">{subItem.icon}</span>
+                    <span className={`${isMobileView ? 'ml-4' : 'ml-3'} text-[14px]`}>{subItem.name}</span>
                   </Link>
                 </li>
               ))}
@@ -105,7 +120,7 @@ function MainLayout({ children }) {
         >
           <span className={`${isMobileView ? 'text-xl' : 'text-lg'} flex-shrink-0`}>{item.icon}</span>
           {(open || isMobileView) && (
-            <span className={`${isMobileView ? 'ml-4 font-medium tracking-wide' : 'ml-3'} text-sm`}>{item.name}</span>
+            <span className={`${isMobileView ? 'ml-4 font-medium tracking-wide' : 'ml-3'} text-[14px]`}>{item.name}</span>
           )}
         </Link>
       </li>
@@ -131,33 +146,15 @@ function MainLayout({ children }) {
           transition-all duration-300 ease-in-out z-[70]
           ${isMobile
             ? `fixed top-0 left-0 h-screen w-[280px] shadow-2xl transform ${open ? "translate-x-0" : "-translate-x-full"}`
-            : `sticky top-0 h-screen flex flex-col ${open ? "w-64 border-r border-white/10 shadow-xl opacity-100" : "w-0 opacity-0 overflow-hidden border-none shadow-none pointer-events-none"}`
+            : `sticky top-0 h-screen flex flex-col ${open ? "w-[200px] border-r border-white/10 shadow-xl opacity-100" : "w-0 opacity-0 overflow-hidden border-none shadow-none pointer-events-none"}`
           }
         `}
       >
-        <div className="p-4 h-full flex flex-col">
-          {/* Logo */}
-          {/* <div className="flex items-center justify-between pt-2 pb-6 border-b border-white/5">
-            <div className="flex items-center justify-center flex-1">
-              <img
-                src="/rehbar_logo_white.png"
-                alt="Logo"
-                className={`object-contain rounded transition-all duration-300 ${open || isMobile ? "h-20 w-auto" : "h-0 w-0"}`}
-              />
-            </div>
-            {isMobile && (
-              <button
-                onClick={() => toggleMenu(false)}
-                className="text-white/70 hover:text-white p-2"
-              >
-                ✕
-              </button>
-            )}
-          </div> */}
+        <div className="p-2 h-full flex flex-col">
 
           {/* Menu */}
           <nav className="flex-1 mt-4">
-            <ul className="space-y-1 px-3">
+            <ul className="space-y-1 px-1">
               {MenuList.filter(hasPermission).map((item) => renderMenuItem(item, isMobile))}
             </ul>
           </nav>
@@ -174,7 +171,7 @@ function MainLayout({ children }) {
       {/* Main Content */}
       <main className="flex-1 bg-white dark:bg-[#0F172A] flex flex-col max-h-screen w-full overflow-hidden transition-colors duration-300">
         <MainHeader />
-        <div className="flex-1 overflow-y-auto overflow-x-auto p-4 md:p-6 bg-white dark:bg-slate-900/50 transition-colors duration-300">
+        <div className={`flex-1 p-2 md:p-4 bg-white dark:bg-slate-900/50 transition-colors duration-300 ${["/admin/users", "/admin/essentials"].includes(pathname) ? "overflow-hidden flex flex-col" : "overflow-y-auto overflow-x-auto"}`}>
           {children}
         </div>
       </main>

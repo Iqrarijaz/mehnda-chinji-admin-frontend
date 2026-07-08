@@ -12,10 +12,6 @@ export const ADMIN_KEYS = {
         LIST: "adminUsersList",
         COUNTS: "adminUsersStatusCounts",
     },
-    BLOOD_DONORS: {
-        LIST: "bloodDonorsList",
-        COUNTS: "bloodDonorStatusCounts",
-    },
     BUSINESS: {
         LIST: "businessList",
         COUNTS: "businessStatusCounts",
@@ -33,35 +29,34 @@ export const ADMIN_KEYS = {
         LIST: "ticketsList",
         COUNTS: "supportStatusCounts",
     },
-    LOCATIONS: {
-        LIST: "locationsList",
-    },
     ROLES: {
         LIST: "rolesList",
     },
     LOGS: {
         LIST: "systemLogs",
     },
-    POSTS: {
-        LIST: "postsList",
-        INFINITE: "infinitePostsQuery",
-    },
     CONFIGURATIONS: {
         LIST: "configurationsList",
-    },
-    WATER_SUPPLY: {
-        CONNECTIONS_LIST: "waterConnectionsList",
-        BILLS_LIST: "waterBillsList",
-        EXPENSES_LIST: "waterExpensesList",
-        REPORTS: "waterReports",
     },
     FEEDBACK: {
         LIST: "feedbackList",
     },
-    ANNOUNCEMENTS: {
-        LIST: "announcementsList",
-    },
     MARKETPLACE: {
         LIST: "marketplaceList",
+    },
+    STORE: {
+        CATEGORIES: {
+            LIST: "storeCategoriesList",
+        },
+        PRODUCTS: {
+            LIST: "storeProductsList",
+        },
+        ORDERS: {
+            LIST: "storeOrdersList",
+            DETAILS: "storeOrderDetails",
+        },
+        DASHBOARD: {
+            STATS: "storeDashboardStats",
+        }
     }
 };

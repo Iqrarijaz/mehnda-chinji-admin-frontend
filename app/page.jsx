@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import UseMount from "@/hooks/useMount";
 import Loading from "@/animations/homePageLoader";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { LOGIN } from "./api/login";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
@@ -112,7 +112,7 @@ function Page() {
                 handleSubmit,
                 isSubmitting,
               }) => {
-                const isLoading = isSubmitting || loginMutation.isLoading;
+                const isLoading = isSubmitting || loginMutation.isPending;
 
                 return (
                   <form onSubmit={handleSubmit} className="space-y-4">

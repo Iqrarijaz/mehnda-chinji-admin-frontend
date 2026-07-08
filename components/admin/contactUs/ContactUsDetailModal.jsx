@@ -1,7 +1,7 @@
 "use client";
 import { Modal, Tag, Divider } from "antd";
 import { UserOutlined, MailOutlined, GlobalOutlined, ClockCircleOutlined, InfoCircleOutlined } from "@ant-design/icons";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import SelectBox from "@/components/SelectBox";
 import CustomButton from "@/components/shared/CustomButton";
