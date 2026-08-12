@@ -6,7 +6,7 @@ function ColumnVisibilityDropdown({ options, columnOptions, visibleColumns, setV
     const displayOptions = options || columnOptions || [];
 
     const visibilityDropdown = (
-        <div className="bg-white dark:bg-slate-900 !rounded !p-2 shadow-xl border border-slate-100 dark:border-slate-800 min-w-[180px] transition-colors duration-300">
+        <div className="bg-white dark:bg-slate-900 !rounded !p-2  border border-slate-100 dark:border-slate-800 min-w-[180px] transition-colors duration-300">
             <div className="px-2 pb-2 mb-2 border-b border-slate-100 dark:border-slate-800 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors duration-300">
                 Toggle Columns
             </div>
@@ -30,7 +30,7 @@ function ColumnVisibilityDropdown({ options, columnOptions, visibleColumns, setV
         <Dropdown dropdownRender={() => visibilityDropdown} trigger={["click"]} placement="bottomRight">
             <Button
                 icon={<SettingOutlined className="!text-[10px]" />}
-                className={`!rounded-[2px] !border-2 !h-[32px] !px-3 !border-[#006666] dark:!border-teal-900/50 !text-[#006666] dark:!text-teal-400 !bg-white dark:!bg-slate-800 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white flex items-center gap-1.5 !text-[11px] font-medium transition-all duration-300 shadow-sm ${className}`}
+                className={`!rounded-[2px] !border-2 !h-[32px] !px-3 !border-[#006666] dark:!border-teal-900/50 !text-[#006666] dark:!text-teal-400 !bg-white dark:!bg-slate-800 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white flex items-center gap-1.5 !text-[11px] font-medium transition-all duration-300  ${className}`}
             >
                 Columns
             </Button>

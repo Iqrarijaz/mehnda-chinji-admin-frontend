@@ -66,7 +66,7 @@ const ProductTable = React.memo(({ modal, setModal, productsList, onChange, busi
 
         return {
             items,
-            className: "shadow-lg border border-slate-100 dark:border-slate-800 rounded p-1",
+            className: " border border-slate-100 dark:border-slate-800 rounded p-1",
         };
     };
 
@@ -182,7 +182,7 @@ const ProductTable = React.memo(({ modal, setModal, productsList, onChange, busi
     const pagination = productsList?.data?.pagination || {};
 
     return (
-        <div className="modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900">
+        <div className="modern-table  border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900">
             <Table
                 rowKey="_id"
                 className="custom-ant-table"

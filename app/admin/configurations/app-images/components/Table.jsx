@@ -92,7 +92,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
                 className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
+        className: "!rounded !p-2 !min-w-[160px]  border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     });
 
 
@@ -131,7 +131,7 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
             width: 170,
             align: "center",
             render: (images) => (
-                <span className="px-2.5 py-0.5 rounded-full font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 text-[9px] shadow-sm uppercase tracking-wider">
+                <span className="px-2.5 py-0.5 rounded-full font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 text-[9px]  uppercase tracking-wider">
                     {images?.length || 0} Assets
                 </span>
             ),
@@ -166,11 +166,11 @@ function AppImagesTable({ modal, setModal, appImagesList, filters, onChange, set
 
     return (
         <div className="space-y-3">
-            <div className="place-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
+            <div className="place-holder-table modern-table  border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 1100, y: 600 }}
+                    scroll={{ x: 1100 }}
                     sticky={true}
                     loading={{
                         spinning: appImagesList.isLoading,

@@ -102,7 +102,7 @@ const ViewProductModal = React.memo(({ open, onCancel, data }) => {
                     <div className="flex flex-wrap gap-2">
                         {data.images && data.images.length > 0 ? (
                             data.images.map((img, i) => (
-                                <div key={i} className="relative w-16 h-16 rounded border border-slate-200 overflow-hidden bg-white shadow-sm flex items-center justify-center">
+                                <div key={i} className="relative w-16 h-16 rounded border border-slate-200 overflow-hidden bg-white  flex items-center justify-center">
                                     <img src={img.url} alt="product" className="max-w-full max-h-full object-cover" />
                                     {img.isPrimary && (
                                         <span className="absolute bottom-0 left-0 right-0 text-center bg-teal-600 text-white font-bold text-[7px] py-0.5 uppercase tracking-wide">Primary</span>

@@ -93,7 +93,7 @@ const ViewConfigurationModal = React.memo(({ modal, setModal }) => {
                     {Array.isArray(data.data) && data.data[0]?.category && (
                         <div className="space-y-6">
                             {(filteredData || []).map((cat, idx) => (
-                                <div key={idx} className="bg-white dark:bg-slate-900/40 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm transition-all hover:shadow-md">
+                                <div key={idx} className="bg-white dark:bg-slate-900/40 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden  transition-all ">
                                     <div className="px-5 py-4 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                                         <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 rounded-lg bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center text-teal-600 dark:text-teal-400">
@@ -160,7 +160,7 @@ const ViewConfigurationModal = React.memo(({ modal, setModal }) => {
                     )}
 
                     {/* JSON Payload Display */}
-                    <div className="bg-slate-900 rounded-xl p-4 border border-slate-800 shadow-sm overflow-hidden">
+                    <div className="bg-slate-900 rounded-xl p-4 border border-slate-800  overflow-hidden">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3 pb-2 border-b border-slate-800/50">
                             <div className="flex items-center gap-2">
                                 <div className="w-6 h-6 rounded bg-slate-800 flex items-center justify-center">

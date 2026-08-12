@@ -106,7 +106,7 @@ const ReportsTable = React.memo(({ reportsList, onChange, setFilters, visibleCol
                 className: "!rounded hover:!bg-orange-50 dark:hover:!bg-orange-900/20 transition-colors duration-200",
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
+        className: "!rounded !p-2 !min-w-[160px]  border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     }), [handleUpdateStatus]);
 
     const allColumns = React.useMemo(() => [
@@ -134,7 +134,7 @@ const ReportsTable = React.memo(({ reportsList, onChange, setFilters, visibleCol
             align: "center",
             render: (record) => (
                 <div className="flex flex-col items-center min-w-0 transition-colors duration-300">
-                    <Tag color={record.targetType === 'BUSINESS' ? 'blue' : record.targetType === 'PLACE' ? 'green' : 'orange'} className="!rounded-full !px-3 font-bold !border-0 uppercase text-[9px] shadow-sm">
+                    <Tag color={record.targetType === 'BUSINESS' ? 'blue' : record.targetType === 'PLACE' ? 'green' : 'orange'} className="!rounded-full !px-3 font-bold !border-0 uppercase text-[9px] ">
                         {record.targetType}
                     </Tag>
                     <span className="text-[10px] font-bold text-slate-800 dark:text-slate-100 truncate max-w-full leading-tight block tracking-tight mt-1 transition-colors duration-300">
@@ -168,7 +168,7 @@ const ReportsTable = React.memo(({ reportsList, onChange, setFilters, visibleCol
                     PENDING: "warning",
                 };
                 return (
-                    <Tag color={colorMap[status] || "default"} className="!rounded-full !px-3 font-bold !border-0 uppercase text-[9px] shadow-sm">
+                    <Tag color={colorMap[status] || "default"} className="!rounded-full !px-3 font-bold !border-0 uppercase text-[9px] ">
                         {status || "PENDING"}
                     </Tag>
                 );
@@ -206,11 +206,11 @@ const ReportsTable = React.memo(({ reportsList, onChange, setFilters, visibleCol
 
     return (
         <div className="space-y-4">
-            <div className="place-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
+            <div className="place-holder-table modern-table  border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 1300, y: 600 }}
+                    scroll={{ x: 1300 }}
                     sticky={true}
                     loading={{
                         spinning: reportsList?.status === "loading",

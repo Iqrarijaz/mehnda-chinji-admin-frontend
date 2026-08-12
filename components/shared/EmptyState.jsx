@@ -28,7 +28,7 @@ const EmptyState = ({
                 <Button
                     type="primary"
                     onClick={onAction}
-                    className="!h-[42px] !px-6 !rounded !bg-[#006666] !border-none font-bold shadow-lg shadow-teal-900/10 hover:!bg-[#004d4d] transition-all"
+                    className="!h-[42px] !px-6 !rounded !bg-[#006666] !border-none font-bold   hover:!bg-[#004d4d] transition-all"
                 >
                     {actionTitle}
                 </Button>

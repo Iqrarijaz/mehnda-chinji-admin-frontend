@@ -48,7 +48,7 @@ const PermissionsSelector = React.memo(({ selectedPermissions = [], onChange }) 
                     <Card
                         key={moduleKey}
                         size="small"
-                        className="!rounded border-slate-100 dark:border-slate-800 dark:bg-slate-900/40 overflow-hidden shadow-sm transition-colors duration-300"
+                        className="!rounded border-slate-100 dark:border-slate-800 dark:bg-slate-900/40 overflow-hidden  transition-colors duration-300"
                         title={
                             <div className="flex items-center justify-between">
                                 <Checkbox

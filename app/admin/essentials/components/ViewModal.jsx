@@ -35,7 +35,7 @@ const ViewModal = React.memo(({ viewModal, setViewModal }) => {
                     <div className="space-y-4 p-1">
                         {/* Main Image Preview */}
                         {data.images && data.images.length > 0 && (
-                            <div className="relative h-44 w-full rounded-lg overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm transition-colors duration-300">
+                            <div className="relative h-44 w-full rounded-lg overflow-hidden border border-slate-100 dark:border-slate-800  transition-colors duration-300">
                                 <img
                                     src={data.images[0]}
                                     alt={data.name}
@@ -106,7 +106,7 @@ const ViewModal = React.memo(({ viewModal, setViewModal }) => {
                                                 href={data.googleAddress}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="absolute top-0 right-0 p-1.5 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-full text-teal-600 dark:text-teal-400 shadow-sm hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-all hover:scale-110"
+                                                className="absolute top-0 right-0 p-1.5 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-full text-teal-600 dark:text-teal-400  hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-all hover:scale-110"
                                                 title="View on Maps"
                                             >
                                                 <FaExternalLinkAlt size={8} />
@@ -122,6 +122,59 @@ const ViewModal = React.memo(({ viewModal, setViewModal }) => {
                                         {data.description || <span className="text-slate-300 dark:text-slate-600 italic">No description provided</span>}
                                     </div>
                                 </div>
+
+                                 {/* Tags Row */}
+                                {data.tags && data.tags.length > 0 && (
+                                    <div className="flex items-center p-2.5 px-4 bg-slate-50/50 dark:bg-slate-900/40 rounded-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                                        <div className="w-1/3 text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Tags / Features</div>
+                                        <div className="w-2/3 flex flex-wrap gap-1">
+                                            {data.tags.map((tag, idx) => (
+                                                <Tag key={idx} color="teal" className="m-0 text-[9px] font-medium px-2 py-0.5 rounded">
+                                                    {tag.eng || tag} {tag.ur && tag.ur !== tag.eng ? `(${tag.ur})` : ''}
+                                                </Tag>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* School Metadata Row */}
+                                {data.metadata && (data.metadata.principalName || data.metadata.totalStudents || data.metadata.totalTeachers) && (
+                                    <div className="flex flex-col p-2.5 px-4 bg-slate-50/50 dark:bg-slate-900/40 rounded-sm border border-slate-100 dark:border-slate-800 space-y-1">
+                                        <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">School Details</div>
+                                        <div className="grid grid-cols-3 gap-2 text-[11px] text-slate-700 dark:text-slate-300 font-medium">
+                                            {data.metadata.principalName && <div><span className="text-[9px] text-slate-400 block">Principal</span>{data.metadata.principalName}</div>}
+                                            {data.metadata.totalStudents && <div><span className="text-[9px] text-slate-400 block">Students</span>{data.metadata.totalStudents}</div>}
+                                            {data.metadata.totalTeachers && <div><span className="text-[9px] text-slate-400 block">Teachers</span>{data.metadata.totalTeachers}</div>}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Bus Routes Section */}
+                                {((data.route && data.route.length > 0) || (data.returnRoute && data.returnRoute.length > 0)) && (
+                                    <div className="flex flex-col p-2.5 px-4 bg-slate-50/50 dark:bg-slate-900/40 rounded-sm border border-slate-100 dark:border-slate-800 space-y-2">
+                                        <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Bus Route Schedule</div>
+                                        {data.route && data.route.length > 0 && (
+                                            <div>
+                                                <span className="text-[10px] font-bold text-teal-600 dark:text-teal-400 uppercase">Forward Route</span>
+                                                <div className="flex flex-wrap gap-1 mt-1">
+                                                    {data.route.map((r, i) => (
+                                                        <Tag key={i} color="blue" className="m-0 text-[9px]">{r.city} ({r.time})</Tag>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                        {data.returnRoute && data.returnRoute.length > 0 && (
+                                            <div>
+                                                <span className="text-[10px] font-bold text-orange-600 dark:text-orange-400 uppercase">Return Route</span>
+                                                <div className="flex flex-wrap gap-1 mt-1">
+                                                    {data.returnRoute.map((r, i) => (
+                                                        <Tag key={i} color="gold" className="m-0 text-[9px]">{r.city} ({r.time})</Tag>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
 
                                 {data.images && data.images[0] && (
                                     <div className="flex items-center p-2.5 px-4 bg-slate-50/50 dark:bg-slate-900/40 rounded-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">

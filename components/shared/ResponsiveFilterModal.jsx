@@ -40,7 +40,7 @@ const ResponsiveFilterModal = ({
       closeIcon={<CloseOutlined className="text-slate-400 hover:text-teal-600 transition-colors" />}
       title={
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center text-teal-600 dark:text-teal-400 shadow-sm transition-colors duration-300">
+          <div className="w-10 h-10 rounded bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center text-teal-600 dark:text-teal-400  transition-colors duration-300">
             {icon}
           </div>
           <div className="flex flex-col">

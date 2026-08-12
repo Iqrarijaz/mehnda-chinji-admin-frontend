@@ -64,10 +64,13 @@ function ContactUsDetailModal({ modal, setModal }) {
         >
             <div className="bg-slate-50/50 dark:bg-slate-900/40 p-4 rounded border border-slate-100/50 dark:border-slate-800/50 mt-4 max-h-[80vh] overflow-y-auto custom-scrollbar transition-colors duration-300">
                 {/* Status & Source Bar */}
-                <div className="bg-white dark:bg-[#1E293B] rounded p-4 mb-4 shadow-sm flex items-center justify-between border border-slate-100 dark:border-slate-800 transition-colors duration-300">
-                    <div className="flex items-center gap-3">
+                <div className="bg-white dark:bg-[#1E293B] rounded p-4 mb-4 flex items-center justify-between border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                    <div className="flex items-center gap-2 flex-wrap">
                         <Tag color={getStatusColor(contact?.status)} className="m-0 font-bold px-2 py-0.5 rounded-full uppercase text-[10px]">
                             {contact?.status}
+                        </Tag>
+                        <Tag color={contact?.type === "ACCOUNT_DELETION" ? "volcano" : "blue"} className="m-0 font-bold px-2 py-0.5 rounded-full uppercase text-[10px]">
+                            {contact?.type === "ACCOUNT_DELETION" ? "Account Deletion Request" : "General Contact"}
                         </Tag>
                         <Tag color={contact?.source === "app" ? "purple" : "cyan"} className="m-0 font-bold px-2 py-0.5 rounded-full uppercase text-[10px]">
                             {contact?.source} source
@@ -88,16 +91,40 @@ function ContactUsDetailModal({ modal, setModal }) {
                     </div>
                 </div>
 
+                {/* Account Deletion Specific Card */}
+                {contact?.type === "ACCOUNT_DELETION" && (
+                    <div className="bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 rounded-xl p-4 mb-4 space-y-3">
+                        <div className="flex items-center justify-between">
+                            <span className="text-xs font-black text-rose-800 dark:text-rose-300 uppercase tracking-wider flex items-center gap-1.5">
+                                🛡️ Deletion Details & Scope
+                            </span>
+                            <span className="text-xs font-bold px-3 py-1 bg-rose-600 text-white rounded-full uppercase">
+                                {contact?.deleteScope ? contact.deleteScope.replace("_", " ") : "Full Account"}
+                            </span>
+                        </div>
+                        {contact?.phone && (
+                            <div className="text-xs text-rose-900 dark:text-rose-200 font-medium">
+                                <strong>Contact Phone:</strong> {contact.phone}
+                            </div>
+                        )}
+                        {contact?.reason && (
+                            <div className="text-xs text-rose-900 dark:text-rose-200 font-medium leading-relaxed bg-white/60 dark:bg-rose-900/20 p-2.5 rounded border border-rose-100 dark:border-rose-900/40">
+                                <strong>Reason specified:</strong> "{contact.reason}"
+                            </div>
+                        )}
+                    </div>
+                )}
+
                 {/* Sender Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div className="bg-white dark:bg-[#1E293B] rounded p-4 shadow-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                    <div className="bg-white dark:bg-[#1E293B] rounded p-4 border border-slate-100 dark:border-slate-800 transition-colors duration-300">
                         <label className="text-slate-400 dark:text-slate-500 font-bold text-[9px] uppercase tracking-widest mb-1.5 block">Sender Name</label>
                         <div className="flex items-center gap-2">
                             <UserOutlined className="text-slate-400 dark:text-slate-500" />
                             <span className="text-slate-900 dark:text-slate-100 font-bold text-sm truncate">{contact?.name}</span>
                         </div>
                     </div>
-                    <div className="bg-white dark:bg-[#1E293B] rounded-xl p-4 shadow-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                    <div className="bg-white dark:bg-[#1E293B] rounded-xl p-4 border border-slate-100 dark:border-slate-800 transition-colors duration-300">
                         <label className="text-slate-400 dark:text-slate-500 font-bold text-[9px] uppercase tracking-widest mb-1.5 block">Email Address</label>
                         <div className="flex items-center gap-2">
                             <MailOutlined className="text-slate-400 dark:text-slate-500" />
@@ -107,7 +134,7 @@ function ContactUsDetailModal({ modal, setModal }) {
                 </div>
 
                 {/* Message Content */}
-                <div className="bg-white dark:bg-[#1E293B] rounded p-4 mb-4 shadow-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                <div className="bg-white dark:bg-[#1E293B] rounded p-4 mb-4 border border-slate-100 dark:border-slate-800 transition-colors duration-300">
                     <label className="text-slate-400 dark:text-slate-500 font-bold text-[9px] uppercase tracking-widest mb-2 block transition-colors duration-300">Message Description</label>
                     <div className="text-slate-600 dark:text-slate-400 text-[13px] leading-relaxed whitespace-pre-wrap bg-slate-50/50 dark:bg-slate-900/30 p-4 rounded border border-slate-100/50 dark:border-slate-800/50 italic font-medium min-h-[120px] transition-colors duration-300">
                         "{contact?.description}"

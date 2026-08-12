@@ -90,6 +90,19 @@ const ViewModal = React.memo(({ open, onCancel, data }) => {
                             </Tag>
                         </span>
                     </Descriptions.Item>
+                    <Descriptions.Item label="Business Tags">
+                        <div className="flex flex-wrap gap-1">
+                            {data.tags && data.tags.length > 0 ? (
+                                data.tags.map((tag, idx) => (
+                                    <Tag key={idx} color="teal" className="m-0 text-[10px] font-medium px-2 py-0.5 rounded">
+                                        {tag.eng || tag} {tag.ur && tag.ur !== tag.eng ? `(${tag.ur})` : ''}
+                                    </Tag>
+                                ))
+                            ) : (
+                                <span className="text-slate-400 italic">No tags specified</span>
+                            )}
+                        </div>
+                    </Descriptions.Item>
                     <Descriptions.Item label="Description">
                         <textarea
                             className="w-full bg-transparent border-none outline-none resize-none text-slate-700 text-xs cursor-not-allowed p-0 m-0"

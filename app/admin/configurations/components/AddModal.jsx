@@ -128,7 +128,7 @@ const AddConfigurationModal = React.memo(({ modal, setModal }) => {
                                             </div>
 
                                             <div className="modal-section !mb-0 space-y-2">
-                                                <div className="bg-slate-900 rounded-xl p-4 border border-slate-800 shadow-sm overflow-hidden h-full">
+                                                <div className="bg-slate-900 rounded-xl p-4 border border-slate-800  overflow-hidden h-full">
                                                     <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-800/50">
                                                         <div className="flex items-center gap-2">
                                                             <div className="w-6 h-6 rounded bg-slate-800 flex items-center justify-center">
@@ -172,7 +172,7 @@ const AddConfigurationModal = React.memo(({ modal, setModal }) => {
                                                             return (
                                                                 <div className="space-y-4">
                                                                     {previewData.map((cat, idx) => (
-                                                                        <div key={idx} className="bg-white dark:bg-slate-900/40 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm transition-all">
+                                                                        <div key={idx} className="bg-white dark:bg-slate-900/40 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden  transition-all">
                                                                             <div className="px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                                                                                 <div className="flex items-center gap-2">
                                                                                     <FaInfoCircle className="text-teal-500" size={14} />

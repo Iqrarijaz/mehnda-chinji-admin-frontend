@@ -39,7 +39,7 @@ function JsonViewerModal({ isModalOpen, setIsModalOpen }) {
       className="modern-modal"
     >
       <div className="p-2 pt-4">
-        <div className="bg-slate-900 rounded p-6 border border-slate-800 shadow-xl overflow-hidden">
+        <div className="bg-slate-900 rounded p-6 border border-slate-800  overflow-hidden">
           <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-800">
             <FaCode className="text-teal-400" size={14} />
             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Raw Payload Output</span>

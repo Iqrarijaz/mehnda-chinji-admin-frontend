@@ -141,7 +141,7 @@ const GlobalSearch = () => {
       </div>
 
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#1E293B] rounded-lg shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden z-[100] transform transition-all duration-200">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#1E293B] rounded-lg  border border-slate-100 dark:border-slate-800 overflow-hidden z-[100] transform transition-all duration-200">
           <div className="max-h-[360px] overflow-y-auto custom-scrollbar">
             {query.trim() === "" ? (
               hydratedRecent.length > 0 ? (
@@ -181,7 +181,7 @@ const GlobalSearch = () => {
                 </div>
               ) : (
                 <div className="p-10 text-center bg-slate-50/30 dark:bg-slate-900/10">
-                  <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-slate-100 dark:border-slate-700">
+                  <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4  border border-slate-100 dark:border-slate-700">
                     <FiSearch size={20} className="text-slate-200" />
                   </div>
                   <p className="text-xs font-black text-slate-400 uppercase tracking-widest leading-loose">Ready to Explore?</p>
@@ -215,14 +215,14 @@ const GlobalSearch = () => {
                       )}
                     </div>
                     {index === selectedIndex && (
-                      <span className="ml-auto text-[9px] bg-teal-600 text-white px-1.5 py-0.5 rounded-sm font-black uppercase tracking-tighter shadow-sm animate-in fade-in duration-300">Enter</span>
+                      <span className="ml-auto text-[9px] bg-teal-600 text-white px-1.5 py-0.5 rounded-sm font-black uppercase tracking-tighter  animate-in fade-in duration-300">Enter</span>
                     )}
                   </button>
                 ))}
               </div>
             ) : (
               <div className="p-8 text-center bg-slate-50/50 dark:bg-slate-900/10">
-                <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm border border-slate-100 dark:border-slate-700">
+                <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3  border border-slate-100 dark:border-slate-700">
                   <FiSearch size={20} className="text-slate-200" />
                 </div>
                 <p className="text-xs font-black text-slate-400 uppercase tracking-wider">No matches found</p>

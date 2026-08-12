@@ -117,7 +117,7 @@ const ConfigurationsTable = React.memo(({ modal, setModal, configurationsList, f
                 className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors duration-200",
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors duration-300",
+        className: "!rounded !p-2 !min-w-[160px]  border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors duration-300",
     }), [setModal, handleDelete]);
 
     const allColumns = React.useMemo(() => [
@@ -190,11 +190,11 @@ const ConfigurationsTable = React.memo(({ modal, setModal, configurationsList, f
 
     return (
         <div className="space-y-4">
-            <div className="place-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
+            <div className="place-holder-table modern-table  border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 1000, y: 600 }}
+                    scroll={{ x: 1000 }}
                     sticky={true}
                     loading={{
                         spinning: configurationsList.isLoading,

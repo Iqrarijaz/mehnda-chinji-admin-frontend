@@ -3,12 +3,14 @@ import React, { useState, useCallback } from "react";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import UsersTable from "./components/Table";
-import AddUserModal from "./components/AddModal";
-import UpdateUserModal from "./components/UpdateModal";
-import ResetPasswordModal from "./components/ResetPasswordModal";
 import { useDebounce } from "@/hooks/useDebounce";
 import StatCard from "@/components/shared/StatCard";
 import InnerPageCard from "@/components/layout/InnerPageCard";
+import dynamic from "next/dynamic";
+
+const AddUserModal = dynamic(() => import("./components/AddModal"), { ssr: false });
+const UpdateUserModal = dynamic(() => import("./components/UpdateModal"), { ssr: false });
+const ResetPasswordModal = dynamic(() => import("./components/ResetPasswordModal"), { ssr: false });
 
 import { StatCardSkeleton } from "@/components/shared/Skeletons";
 import ColumnVisibilityDropdown from "@/components/InnerPage/ColumnVisibilityDropdown";
@@ -81,7 +83,7 @@ export default function UsersPage() {
     }, []);
 
     return (
-        <InnerPageCard className="h-full min-h-0 flex flex-col overflow-hidden">
+        <InnerPageCard>
 
             <div className="flex flex-col md:flex-row justify-between mb-3 gap-3 items-start md:items-center">
                 {/* Status Count Cards (Left) */}
@@ -124,7 +126,7 @@ export default function UsersPage() {
                             onClick={handleRefresh}
                             disabled={isRefreshing}
                             title="Refresh Data"
-                            className="flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white  transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
                         </button>
@@ -133,7 +135,7 @@ export default function UsersPage() {
                             title="Add User"
                             icon={false}
                             onClick={() => setModal({ name: "Add", data: null, state: true })}
-                            className="!h-[32px] !rounded !px-4 !text-[10px] font-medium shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                            className="!h-[32px] !rounded !px-4 !text-[10px] font-medium  transform hover:scale-[1.02] active:scale-[0.98]"
                         />
                     </div>
 
@@ -149,7 +151,7 @@ export default function UsersPage() {
             </div>
 
 
-            <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
+            <div>
                 <UsersTable modal={modal} setModal={setModal} usersList={usersList} onChange={onChange} setFilters={setFilters} visibleColumns={visibleColumns} />
             </div>
 

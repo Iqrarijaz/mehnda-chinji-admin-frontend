@@ -45,7 +45,7 @@ const ViewDetailsModal = React.memo(({ open, onClose, data }) => {
                 
                 <div>
                     <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-3 transition-colors duration-300">Diagnostic Data (JSON)</p>
-                    <div className="bg-[#1e1e1e] p-4 rounded-lg overflow-x-auto shadow-inner max-h-[400px] border border-slate-800">
+                    <div className="bg-[#1e1e1e] p-4 rounded-lg overflow-x-auto  max-h-[400px] border border-slate-800">
                         <pre className="text-emerald-400 dark:text-emerald-500 text-xs font-mono leading-relaxed transition-colors duration-300">
                             {JSON.stringify(data.data, null, 2)}
                         </pre>

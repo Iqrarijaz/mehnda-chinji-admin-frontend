@@ -76,7 +76,7 @@ const MarketplaceTable = React.memo(({ marketplaceList, setModal, onChange, visi
                 className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
+        className: "!rounded !p-2 !min-w-[160px]  border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     }), [setModal, handleDelete]);
 
     const columns = React.useMemo(() => [
@@ -168,10 +168,27 @@ const MarketplaceTable = React.memo(({ marketplaceList, setModal, onChange, visi
             )
         },
         {
-            title: "Place",
-            dataIndex: "place",
-            key: "place",
-            render: (text) => <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate transition-colors duration-300 group-hover:text-slate-300">{text}</span>
+            title: "Location",
+            key: "location",
+            render: (_, record) => (
+                <div className="flex flex-col">
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate transition-colors duration-300 group-hover:text-slate-300">
+                        {record.city}{record.village ? `, ${record.village}` : ''}
+                    </span>
+                </div>
+            )
+        },
+        {
+            title: "Views",
+            key: "views",
+            align: "center",
+            render: (_, record) => (
+                <div className="flex justify-center items-center">
+                    <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2.5 py-0.5 rounded-full font-medium border border-slate-200 dark:border-slate-700 transition-colors duration-300">
+                        {record.viewsCount || 0}
+                    </span>
+                </div>
+            )
         },
         {
             title: "Status",
@@ -208,8 +225,8 @@ const MarketplaceTable = React.memo(({ marketplaceList, setModal, onChange, visi
 
                 return (
                     <div className="flex flex-col gap-1 items-start">
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border shadow-sm transition-colors ${getStatusStyles(status)}`}>
-                            <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${getDotStyles(status)}`} />
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border  transition-colors ${getStatusStyles(status)}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full  ${getDotStyles(status)}`} />
                             {status}
                         </span>
                         {status === "rejected" && record.rejectedReason && (

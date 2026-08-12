@@ -185,7 +185,7 @@ function AddAppImagesModal({ modal, setModal }) {
                                                     <button
                                                         type="button"
                                                         onClick={(e) => { e.stopPropagation(); removePreview(idx); }}
-                                                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-sm"
+                                                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all "
                                                     >
                                                         <FaTimes size={8} />
                                                     </button>

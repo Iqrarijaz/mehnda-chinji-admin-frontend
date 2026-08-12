@@ -129,7 +129,7 @@ function MainHeader() {
             size={40}
             src={user?.profileImage}
             icon={<FaUserCircle />}
-            className="border-2 border-white/20 shadow-md"
+            className="border-2 border-white/20 "
           />
           <div className="flex flex-col min-w-0">
             <span className="font-bold text-sm truncate leading-tight">{user?.name || "Administrator"}</span>
@@ -192,7 +192,7 @@ function MainHeader() {
   );
 
   return (
-    <div className="main-app-header flex items-center justify-between px-6 sticky top-0 z-40 shadow-sm border-b border-white/10">
+    <div className="main-app-header flex items-center justify-between px-4 sticky top-0 z-40  border-b border-white/10">
       <div className="flex items-center gap-4">
         <button
           onClick={handleToggle}
@@ -325,7 +325,7 @@ function MainHeader() {
 
           <button
             onClick={() => setIsProfileOpen(true)}
-            className="flex items-center gap-2 p-1 px-1 rounded-full transition-all border border-white/20 group shadow-sm active:scale-95"
+            className="flex items-center gap-2 p-1 px-1 rounded-full transition-all border border-white/20 group  active:scale-95"
           >
             <Avatar
               size={24}

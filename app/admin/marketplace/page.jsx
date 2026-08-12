@@ -94,39 +94,31 @@ export default function MarketplacePage() {
                 </div>
 
                 {/* Action Bar (Right) */}
-                <div className="flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:w-auto justify-end">
-                    <div className="hidden md:flex items-center gap-2">
-                        <SearchInput
-                            setFilters={setFilters}
-                            className="!max-w-[180px] !h-[32px] !border-2 !rounded-[2px]"
-                        />
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                        <ColumnVisibilityDropdown
-                            options={columnOptions}
-                            visibleColumns={visibleColumns}
-                            setVisibleColumns={setVisibleColumns}
-                        />
-                        <button
-                            onClick={handleRefresh}
-                            disabled={isRefreshing}
-                            title="Refresh Data"
-                            className="flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
-                        </button>
-                        <AddButton
-                            title="Add"
-                            icon={false}
-                            onClick={() => setModal({ name: "Add", data: null, state: true })}
-                            className="!h-[32px] !border-2 !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white !rounded-[2px] !text-[10px] font-medium shadow-sm transition-all !px-3"
-                        />
-                    </div>
+                <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+                    <SearchInput setFilters={setFilters} className="!max-w-[180px]" />
+                    <ColumnVisibilityDropdown
+                        options={columnOptions}
+                        visibleColumns={visibleColumns}
+                        setVisibleColumns={setVisibleColumns}
+                    />
+                    <button
+                        onClick={handleRefresh}
+                        disabled={isRefreshing}
+                        title="Refresh Data"
+                        className="flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white  transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
+                    </button>
+                    <AddButton
+                        title="Add"
+                        icon={false}
+                        onClick={() => setModal({ name: "Add", data: null, state: true })}
+                        className="!h-[32px] !rounded !px-4 !text-[10px] font-medium  transform hover:scale-[1.02] active:scale-[0.98]"
+                    />
                 </div>
             </div>
 
-            <div className="flex flex-col mb-4">
+            <div className="mb-0">
                 <MarketplaceTable
                     marketplaceList={marketplaceList}
                     setModal={setModal}

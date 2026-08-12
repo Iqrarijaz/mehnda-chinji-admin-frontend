@@ -41,7 +41,7 @@ const ViewModal = React.memo(({ viewModal, setViewModal }) => {
                             </div>
                             <Tag
                                 color={data.status === 'RESOLVED' ? 'green' : data.status === 'REVIEWED' ? 'blue' : 'orange'}
-                                className="rounded-full px-4 py-0 border-none font-bold text-[9px] uppercase tracking-widest m-0 shadow-sm"
+                                className="rounded-full px-4 py-0 border-none font-bold text-[9px] uppercase tracking-widest m-0 "
                             >
                                 {data.status || "PENDING"}
                             </Tag>
@@ -90,7 +90,7 @@ const ViewModal = React.memo(({ viewModal, setViewModal }) => {
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-between">
                                         <p className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase transition-colors duration-300">Type</p>
-                                        <Tag color={data.targetType === 'BUSINESS' ? 'blue' : 'green'} className="rounded font-bold border-none m-0 text-[9px] px-2 shadow-sm transition-colors duration-300">
+                                        <Tag color={data.targetType === 'BUSINESS' ? 'blue' : 'green'} className="rounded font-bold border-none m-0 text-[9px] px-2  transition-colors duration-300">
                                             {data.targetType}
                                         </Tag>
                                     </div>

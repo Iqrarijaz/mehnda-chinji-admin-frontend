@@ -22,8 +22,8 @@ const { Option } = Select;
 const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     address: Yup.string().required("Address is required"),
-    lat: Yup.number().nullable().typeError("Must be a number"),
-    lng: Yup.number().nullable().typeError("Must be a number"),
+    latitude: Yup.number().nullable().typeError("Must be a number"),
+    longitude: Yup.number().nullable().typeError("Must be a number"),
     type: Yup.string().required("Type is required"),
     category: Yup.string().required("Category is required"),
     contact: Yup.array().of(
@@ -85,9 +85,8 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
             _id: modal.data._id,
             ...values,
             contact: filteredContact,
-            // Convert numerical 0 to string to bypass weak backend falsy checks
-            lat: (values.lat === 0 || values.lat === "0") ? "0" : values.lat,
-            lng: (values.lng === 0 || values.lng === "0") ? "0" : values.lng,
+            latitude: (values.latitude === 0 || values.latitude === "0") ? "0" : values.latitude,
+            longitude: (values.longitude === 0 || values.longitude === "0") ? "0" : values.longitude,
         };
 
         updateEssential.mutate(payload);
@@ -199,6 +198,128 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
         }
     }, [modal?.state, modal?.data]);
 
+const TagInputSection = React.memo(({ tags = [], setFieldValue }) => {
+    const [engTag, setEngTag] = React.useState("");
+    const [urTag, setUrTag] = React.useState("");
+
+    const handleAddTag = () => {
+        if (!engTag.trim()) return;
+        const newTag = { eng: engTag.trim(), ur: urTag.trim() || engTag.trim() };
+        const exists = tags.some((t) => t.eng.toLowerCase() === newTag.eng.toLowerCase());
+        if (exists) return;
+        setFieldValue("tags", [...tags, newTag]);
+        setEngTag("");
+        setUrTag("");
+    };
+
+    const handleRemoveTag = (indexToRemove) => {
+        const updated = tags.filter((_, index) => index !== indexToRemove);
+        setFieldValue("tags", updated);
+    };
+
+    return (
+        <div className="space-y-2 mt-2">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1 block">
+                Tags / Features
+            </label>
+            <div className="flex flex-wrap gap-1.5 min-h-[32px] p-2 bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded">
+                {tags.length === 0 ? (
+                    <span className="text-slate-400 text-xs italic">No tags specified yet. Add tags below.</span>
+                ) : (
+                    tags.map((tag, index) => (
+                        <span key={index} className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-200 text-xs font-medium">
+                            <span>{tag.eng}</span>
+                            {tag.ur && tag.ur !== tag.eng && <span className="text-[10px] text-teal-600 dark:text-teal-400">({tag.ur})</span>}
+                            <button
+                                type="button"
+                                onClick={() => handleRemoveTag(index)}
+                                className="hover:text-red-600 transition-colors ml-0.5 font-bold"
+                            >
+                                &times;
+                            </button>
+                        </span>
+                    ))
+                )}
+            </div>
+            <div className="flex gap-2 items-center">
+                <input
+                    type="text"
+                    placeholder="Tag English (e.g. ICU)"
+                    value={engTag}
+                    onChange={(e) => setEngTag(e.target.value)}
+                    className="flex-1 px-2.5 py-1 text-xs border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded focus:outline-none focus:border-teal-500"
+                />
+                <input
+                    type="text"
+                    placeholder="Tag Urdu (e.g. آئی سی یو)"
+                    value={urTag}
+                    onChange={(e) => setUrTag(e.target.value)}
+                    className="flex-1 px-2.5 py-1 text-xs border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded focus:outline-none focus:border-teal-500 font-notoUrdu"
+                />
+                <button
+                    type="button"
+                    onClick={handleAddTag}
+                    className="px-3 py-1 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded transition-colors"
+                >
+                    + Add
+                </button>
+            </div>
+        </div>
+    );
+});
+
+const RouteStopsManager = React.memo(({ name, label, values = [], setFieldValue }) => {
+    const handleAddStop = () => {
+        setFieldValue(name, [...values, { city: "", time: "" }]);
+    };
+
+    const handleRemoveStop = (idx) => {
+        setFieldValue(name, values.filter((_, i) => i !== idx));
+    };
+
+    return (
+        <div className="bg-slate-50 dark:bg-slate-900/30 p-2.5 rounded border border-slate-200 dark:border-slate-800 space-y-2">
+            <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase">{label}</span>
+                <button
+                    type="button"
+                    onClick={handleAddStop}
+                    className="text-xs text-teal-600 dark:text-teal-400 font-bold hover:underline"
+                >
+                    + Add Stop
+                </button>
+            </div>
+            {values.map((stop, idx) => (
+                <div key={idx} className="flex gap-2 items-center">
+                    <input
+                        type="text"
+                        placeholder="Stop City/Location"
+                        value={stop.city}
+                        onChange={(e) => setFieldValue(`${name}.${idx}.city`, e.target.value)}
+                        className="flex-1 px-2 py-1 text-xs border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Time (e.g. 08:30 AM)"
+                        value={stop.time}
+                        onChange={(e) => setFieldValue(`${name}.${idx}.time`, e.target.value)}
+                        className="w-32 px-2 py-1 text-xs border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded"
+                    />
+                    {values.length > 1 && (
+                        <button
+                            type="button"
+                            onClick={() => handleRemoveStop(idx)}
+                            className="text-red-500 hover:text-red-700 text-xs font-bold px-1"
+                        >
+                            &times;
+                        </button>
+                    )}
+                </div>
+            ))}
+        </div>
+    );
+});
+
     const initialValues = {
         name: modal?.data?.name || "",
         description: modal?.data?.description || "",
@@ -206,15 +327,20 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
         timing: modal?.data?.timing || "",
         services: modal?.data?.services || "",
         googleAddress: modal?.data?.googleAddress || "",
-        lat: modal?.data?.lat ?? modal?.data?.location?.coordinates?.[1] ?? modal?.data?.latitude ?? null,
-        lng: modal?.data?.lng ?? modal?.data?.location?.coordinates?.[0] ?? modal?.data?.longitude ?? null,
+        latitude: modal?.data?.latitude ?? modal?.data?.location?.coordinates?.[1] ?? modal?.data?.lat ?? null,
+        longitude: modal?.data?.longitude ?? modal?.data?.location?.coordinates?.[0] ?? modal?.data?.lng ?? null,
         type: modal?.data?.type || "",
         category: modal?.data?.category || "",
+        tags: modal?.data?.tags || [],
+        route: modal?.data?.route?.length > 0 ? modal.data.route : [{ city: "", time: "" }],
+        returnRoute: modal?.data?.returnRoute?.length > 0 ? modal.data.returnRoute : [{ city: "", time: "" }],
         contact: modal?.data?.contact?.length > 0 ? modal.data.contact : [{ name: "", number: "" }],
         isDeleted: modal?.data?.isDeleted ?? false,
         images: modal?.data?.images || [],
         metadata: {
-            principalName: modal?.data?.metadata?.principalName || ""
+            principalName: modal?.data?.metadata?.principalName || "",
+            totalStudents: modal?.data?.metadata?.totalStudents || "",
+            totalTeachers: modal?.data?.metadata?.totalTeachers || ""
         },
         toppers: modal?.data?.toppers || [],
         events: modal?.data?.events || [],
@@ -258,14 +384,14 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
                                         <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3 transition-colors">Essential Presentation</p>
                                         <div className="relative group">
                                             {selectedImage ? (
-                                                <div className="relative h-40 w-full rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 transition-colors shadow-sm">
+                                                <div className="relative h-40 w-full rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 transition-colors ">
                                                     <img
                                                         src={selectedImage}
                                                         alt="Essential"
                                                         className="w-full h-full object-cover"
                                                     />
                                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                        <label className="cursor-pointer bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 shadow-xl border border-white/30">
+                                                        <label className="cursor-pointer bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2  border border-white/30">
                                                             <FaCamera size={14} />
                                                             Change Photo
                                                             <input type="file" className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, setFieldValue)} disabled={isUploading} />
@@ -343,9 +469,11 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
                                                         label: t.charAt(0).toUpperCase() + t.slice(1)
                                                     }))}
                                                 />
+                                            <                                             <div className="md:col-span-2">
+                                                <FormField label="Description" name="description" placeholder="Brief description..." type="textarea" />
                                             </div>
                                             <div className="md:col-span-2">
-                                                <FormField label="Description" name="description" placeholder="Brief description..." type="textarea" />
+                                                <TagInputSection tags={values.tags} setFieldValue={setFieldValue} />
                                             </div>
                                         </div>
                                     </div>
@@ -359,8 +487,8 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
                                             <div className="md:col-span-2">
                                                 <FormField label="Google Maps Link" name="googleAddress" placeholder="Maps URL" />
                                             </div>
-                                            <FormField label="Latitude" name="lat" type="number" />
-                                            <FormField label="Longitude" name="lng" type="number" />
+                                            <FormField label="Latitude" name="latitude" type="number" />
+                                            <FormField label="Longitude" name="longitude" type="number" />
                                         </div>
                                     </div>
 
@@ -368,15 +496,34 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
                                     {values.type === 'school' && (
                                         <div className="modal-section">
                                             <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">School Information</p>
-                                            <div className="grid grid-cols-1 gap-3">
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                                 <FormField
                                                     label="Principal Name"
                                                     name="metadata.principalName"
                                                     placeholder="Enter principal name"
                                                 />
+                                                <FormField
+                                                    label="Total Students"
+                                                    name="metadata.totalStudents"
+                                                    placeholder="e.g. 500"
+                                                />
+                                                <FormField
+                                                    label="Total Teachers"
+                                                    name="metadata.totalTeachers"
+                                                    placeholder="e.g. 25"
+                                                />
                                             </div>
                                         </div>
                                     )}
+
+                                    {/* Bus Route Stops Section for Travel / Bus */}
+                                    {(values.type === 'bus' || values.category === 'TRAVEL') && (
+                                        <div className="modal-section space-y-3">
+                                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors">Bus Route Stops & Schedule</p>
+                                            <RouteStopsManager name="route" label="Forward Route Stops" values={values.route} setFieldValue={setFieldValue} />
+                                            <RouteStopsManager name="returnRoute" label="Return Route Stops" values={values.returnRoute} setFieldValue={setFieldValue} />
+                                        </div>
+                                    )}     )}
 
                                     <div className="modal-section">
                                         <div className="flex items-center justify-between mb-2">
@@ -394,7 +541,7 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
                                                                             value={values.contact[index].name}
                                                                             onChange={(e) => setFieldValue(`contact.${index}.name`, e.target.value)}
                                                                             placeholder="Name"
-                                                                            className="!border-none !bg-transparent !shadow-none !h-[28px] !text-xs font-bold text-slate-600 dark:text-slate-300 transition-colors"
+                                                                            className="!border-none !bg-transparent ! !h-[28px] !text-xs font-bold text-slate-600 dark:text-slate-300 transition-colors"
                                                                         />
                                                                     </div>
                                                                     <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 self-center" />
@@ -403,7 +550,7 @@ const UpdateEssentialModal = React.memo(({ modal, setModal }) => {
                                                                             value={values.contact[index].number}
                                                                             onChange={(e) => setFieldValue(`contact.${index}.number`, e.target.value)}
                                                                             placeholder="Number"
-                                                                            className="!border-none !bg-transparent !shadow-none !h-[28px] !text-xs dark:text-slate-200 transition-colors"
+                                                                            className="!border-none !bg-transparent ! !h-[28px] !text-xs dark:text-slate-200 transition-colors"
                                                                         />
                                                                     </div>
                                                                 </div>

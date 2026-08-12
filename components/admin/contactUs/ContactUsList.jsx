@@ -73,7 +73,7 @@ function ContactUsList({ modal, setModal, contactList, onChange, onDelete, onUpd
                 danger: true,
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
+        className: "!rounded !p-2 !min-w-[160px]  border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     });
 
 
@@ -94,6 +94,32 @@ function ContactUsList({ modal, setModal, contactList, onChange, onDelete, onUpd
                     <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate transition-colors duration-300">{record.email}</div>
                 </div>
             ),
+        },
+        {
+            title: "Type",
+            key: "type",
+            width: 150,
+            render: (record) => {
+                const isDeletion = record.type === "ACCOUNT_DELETION";
+                const scopeLabels = {
+                    full_account: "Full Account",
+                    business_only: "Business Only",
+                    marketplace_only: "Marketplace Only",
+                    places_only: "Places Only"
+                };
+                return (
+                    <div className="flex flex-col gap-0.5">
+                        <Tag color={isDeletion ? "volcano" : "blue"} className="text-[9px] font-bold uppercase rounded-full border-none w-fit">
+                            {isDeletion ? "Account Deletion" : "General Contact"}
+                        </Tag>
+                        {isDeletion && record.deleteScope && (
+                            <span className="text-[10px] text-rose-600 dark:text-rose-400 font-bold tracking-tight">
+                                {scopeLabels[record.deleteScope] || record.deleteScope}
+                            </span>
+                        )}
+                    </div>
+                );
+            },
         },
         {
             title: "Source",
@@ -150,7 +176,7 @@ function ContactUsList({ modal, setModal, contactList, onChange, onDelete, onUpd
 
     return (
         <div className="space-y-4">
-            <div className="modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
+            <div className="modern-table  border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"

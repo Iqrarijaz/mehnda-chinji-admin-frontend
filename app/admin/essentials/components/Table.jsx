@@ -195,7 +195,7 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
                 className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
+        className: "!rounded !p-2 !min-w-[160px]  border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     }), [setModal, handleApprove, handleReject, handleDelete]);
 
     const allColumns = React.useMemo(() => [
@@ -222,7 +222,7 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
             render: (images) => (
                 <div className="flex items-center justify-center">
                     {images && images.length > 0 ? (
-                        <div className="w-10 h-10 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm transition-transform duration-300 hover:scale-110">
+                        <div className="w-10 h-10 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800  transition-transform duration-300 hover:scale-110">
                             <img src={images[0]} alt="Essential" className="w-full h-full object-cover" />
                         </div>
                     ) : (
@@ -237,10 +237,10 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
             title: "Type",
             dataIndex: "type",
             key: "type",
-            width: 60,
+            width: 100,
             align: "center",
             render: (type) => (
-                <span className="px-2.5 py-0.5 rounded-full uppercase font-bold text-orange-700 bg-orange-50 border border-orange-100 shadow-sm text-[9px] tracking-wider">
+                <span className="px-2.5 py-0.5 rounded-full uppercase font-bold text-orange-700 bg-orange-50 border border-orange-100  text-[9px] tracking-wider">
                     {type || "—"}
                 </span>
             ),
@@ -249,12 +249,12 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
             title: "Category",
             dataIndex: "category",
             key: "category",
-            width: 120,
+            width: 140,
             align: "center",
             sorter: true,
             render: (category) => (
                 <span
-                    className="px-2.5 py-0.5 rounded-full uppercase font-bold text-white shadow-sm text-[9px] tracking-wider"
+                    className="px-2.5 py-0.5 rounded-full uppercase font-bold text-white  text-[9px] tracking-wider"
                     style={{ backgroundColor: getTagColor(category) }}
                 >
                     {category || "N/A"}
@@ -293,7 +293,7 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
                     PENDING: "bg-orange-500",
                 };
                 return (
-                    <span className={`${colors[status] || "bg-slate-400"} px-2.5 py-0.5 rounded-full uppercase tracking-wider font-bold text-white shadow-sm text-[9px]`}>
+                    <span className={`${colors[status] || "bg-slate-400"} px-2.5 py-0.5 rounded-full uppercase tracking-wider font-bold text-white  text-[9px]`}>
                         {status || "PENDING"}
                     </span>
                 );
@@ -338,11 +338,11 @@ const EssentialsTable = React.memo(({ modal, setModal, essentialsList, onChange,
 
     return (
         <div className="space-y-3">
-            <div className="essential-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
+            <div className="essential-holder-table modern-table  border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 1500, y: 600 }}
+                    scroll={{ x: 1500 }}
                     sticky={true}
                     loading={{
                         spinning: essentialsList?.status === "loading",

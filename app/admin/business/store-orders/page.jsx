@@ -74,14 +74,14 @@ const StoreOrdersPage = React.memo(() => {
     const { data: dashboardData, isLoading: countsLoading } = dashboardQuery;
     const orderStats = dashboardData?.data?.orders || {};
 
-    const statCards = [
+    const statCards = React.useMemo(() => [
         { label: "Pending", short: "Pen", key: "PENDING", count: orderStats.PENDING || 0, color: "#ea580c", bg: "#fff7ed", border: "#fed7aa" },
         { label: "Confirmed", short: "Conf", key: "CONFIRMED", count: orderStats.CONFIRMED || 0, color: "#2563eb", bg: "#eff6ff", border: "#bfdbfe" },
         { label: "Preparing", short: "Prep", key: "PREPARING", count: orderStats.PREPARING || 0, color: "#0d9488", bg: "#f0fdfa", border: "#ccfbf1" },
         { label: "Out for Delivery", short: "Deliv", key: "OUT_FOR_DELIVERY", count: orderStats.OUT_FOR_DELIVERY || 0, color: "#8b5cf6", bg: "#f5f3ff", border: "#ddd6fe" },
         { label: "Delivered", short: "Done", key: "DELIVERED", count: orderStats.DELIVERED || 0, color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
         { label: "Cancelled", short: "Canc", key: "CANCELLED", count: orderStats.CANCELLED || 0, color: "#dc2626", bg: "#fef2f2", border: "#fecaca" },
-    ];
+    ], [orderStats]);
 
     const onChange = (data) => setFilters((prev) => ({ ...prev, ...data }));
 

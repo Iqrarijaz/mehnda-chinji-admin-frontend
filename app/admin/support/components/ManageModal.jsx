@@ -157,7 +157,7 @@ const ManageTicketModal = React.memo(({ modal, setModal }) => {
         >
             <div className="bg-slate-50/50 dark:bg-slate-900/40 p-3 rounded border border-slate-100/50 dark:border-slate-800/50 mt-4 max-h-[85vh] overflow-y-auto custom-scrollbar transition-colors duration-300">
                 {/* Info & Status Bar */}
-                <div className="bg-white dark:bg-slate-900 rounded p-3 mb-3 shadow-sm flex items-center justify-between border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                <div className="bg-white dark:bg-slate-900 rounded p-3 mb-3  flex items-center justify-between border border-slate-100 dark:border-slate-800 transition-colors duration-300">
                     <div className="flex flex-col">
                         <div className="flex items-center gap-2">
                             <span className="font-bold text-slate-800 dark:text-slate-200 text-sm capitalize leading-tight transition-colors duration-300">{ticket?.userId?.name}</span>
@@ -181,7 +181,7 @@ const ManageTicketModal = React.memo(({ modal, setModal }) => {
                 </div>
 
                 {/* Subject & Description */}
-                <div className="bg-white dark:bg-slate-900 rounded p-4 mb-3 shadow-sm border border-slate-100 dark:border-slate-800 space-y-2.5 transition-colors duration-300">
+                <div className="bg-white dark:bg-slate-900 rounded p-4 mb-3  border border-slate-100 dark:border-slate-800 space-y-2.5 transition-colors duration-300">
                     <div>
                         <label className="text-slate-400 dark:text-slate-500 font-bold text-[9px] uppercase tracking-widest mb-1 block">Subject Line</label>
                         <div className="text-slate-900 dark:text-slate-100 font-bold text-sm leading-tight transition-colors duration-300">{ticket?.subject}</div>
@@ -208,7 +208,7 @@ const ManageTicketModal = React.memo(({ modal, setModal }) => {
                         ) : (
                             ticket.messages?.map((msg, i) => (
                                 <div key={i} className={`flex ${msg.sender === 'admin' ? 'justify-end' : 'justify-start'}`}>
-                                    <div className={`max-w-[85%] rounded p-3 shadow-sm transition-colors duration-300 ${msg.sender === 'admin' ? 'bg-[#006666] text-white shadow-emerald-500/10' : 'bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}>
+                                    <div className={`max-w-[85%] rounded p-3  transition-colors duration-300 ${msg.sender === 'admin' ? 'bg-[#006666] text-white ' : 'bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}>
                                         <div className={`flex items-center gap-2 mb-1.5 border-b pb-1 ${msg.sender === 'admin' ? 'border-white/10' : 'border-slate-50 dark:border-slate-800/50'}`}>
                                             {msg.sender === 'admin' ? <FaUserTie size={10} className="text-teal-200" /> : <FaUser size={10} className="text-emerald-500 dark:text-emerald-400" />}
                                             <span className={`text-[9px] uppercase font-black tracking-tight ${msg.sender === 'admin' ? 'text-teal-50' : 'text-slate-400'}`}>
@@ -238,7 +238,7 @@ const ManageTicketModal = React.memo(({ modal, setModal }) => {
 
                 {/* Input Area */}
                 {ticket?.status !== "CLOSED" && (
-                    <div className="bg-white dark:bg-slate-900 rounded p-3 shadow-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+                    <div className="bg-white dark:bg-slate-900 rounded p-3  border border-slate-100 dark:border-slate-800 transition-colors duration-300">
                         <label className="text-slate-400 dark:text-slate-500 font-bold text-[9px] uppercase tracking-widest mb-1.5 block">Compose Response</label>
                         <TextArea
                             value={reply}

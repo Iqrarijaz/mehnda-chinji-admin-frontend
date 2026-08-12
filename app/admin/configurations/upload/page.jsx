@@ -46,7 +46,7 @@ export default function ImageUploadPage() {
 
     return (
         <div className="max-w-3xl mx-auto py-8">
-            <Card className="shadow-sm border-gray-100 dark:border-slate-800 dark:bg-slate-900">
+            <Card className=" border-gray-100 dark:border-slate-800 dark:bg-slate-900">
                 <div className="mb-8 text-center">
                     <h2 className="text-xl font-semibold mb-2 text-slate-800 dark:text-slate-100">
                         Quick Image Upload

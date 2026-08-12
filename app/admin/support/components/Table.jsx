@@ -30,7 +30,7 @@ const SupportTable = React.memo(({ modal, setModal, ticketsList, onChange, filte
                 className: "!rounded hover:!bg-emerald-50 dark:hover:!bg-emerald-900/20 transition-colors",
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
+        className: "!rounded !p-2 !min-w-[160px]  border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     }), [setModal]);
 
     const allColumns = React.useMemo(() => [
@@ -131,11 +131,11 @@ const SupportTable = React.memo(({ modal, setModal, ticketsList, onChange, filte
 
     return (
         <div className="space-y-4">
-            <div className="modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
+            <div className="modern-table  border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 1100, y: 600 }}
+                    scroll={{ x: 1100 }}
                     sticky={true}
                     loading={{
                         spinning: ticketsList?.isLoading,

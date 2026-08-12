@@ -9,17 +9,28 @@ import { toast } from "react-toastify";
 
 import { UPDATE_MARKETPLACE } from "@/app/api/admin/marketplace";
 import FormField from "@/components/InnerPage/FormField";
+import SelectField from "@/components/InnerPage/SelectField";
 import CustomButton from "@/components/shared/CustomButton";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 
 const { Dragger } = Upload;
 
+const MARKETPLACE_CATEGORIES = [
+    { en: "Animals", ur: "جانور", types: [{ en: "Cow", ur: "گائے" }, { en: "Goat", ur: "بکرا" }, { en: "Sheep", ur: "بھیڑ" }, { en: "Buffalo", ur: "بھینس" }, { en: "Horse", ur: "گھوڑا" }, { en: "Poultry", ur: "مرغیاں" }, { en: "Other Animal", ur: "دیگر جانور" }] },
+    { en: "Vehicles", ur: "گاڑیاں", types: [{ en: "Car", ur: "گاڑی" }, { en: "Bike", ur: "موٹر سائیکل" }, { en: "Tractor", ur: "ٹریکٹر" }, { en: "Rickshaw", ur: "رکشہ" }, { en: "Truck", ur: "ٹرک" }, { en: "Van", ur: "وین" }] },
+    { en: "Electronics", ur: "الیکٹرانکس", types: [{ en: "Mobile Phone", ur: "موبائل فون" }, { en: "Computer / Laptop", ur: "کمپیوٹر / لیپ ٹاپ" }, { en: "TV / Audio", ur: "ٹی وی / آڈیو" }, { en: "Generator / Solar", ur: "جنریٹر / سولر" }, { en: "Home Appliance", ur: "گھریلو سامان" }] },
+    { en: "Property", ur: "پراپرٹی", types: [{ en: "House", ur: "گھر" }, { en: "Plot / Land", ur: "پلاٹ / زمین" }, { en: "Commercial Shop", ur: "تجارتی دکان" }, { en: "Agricultural Land", ur: "زرعی زمین" }] },
+    { en: "Crops & Produce", ur: "فصلیں اور اناج", types: [{ en: "Wheat / Grain", ur: "گندم / اناج" }, { en: "Cotton", ur: "کپاس" }, { en: "Rice", ur: "چاول" }, { en: "Vegetables / Fruits", ur: "سبزیاں / پھل" }, { en: "Fodder", ur: "چارہ" }] },
+    { en: "Services", ur: "خدمات", types: [{ en: "Labor / Task", ur: "مزدوری / کام" }, { en: "Transport", ur: "ٹرانسپورٹ" }, { en: "Rental Equipment", ur: "کرائے کا سامان" }, { en: "Construction", ur: "تعمیرات" }] }
+];
+
 const validationSchema = Yup.object().shape({
     title: Yup.string().min(3, "Title must be at least 3 characters").max(100).required("Title is required"),
     description: Yup.string().min(10, "Description must be at least 10 characters").max(1000).required("Description is required"),
     price: Yup.number().min(1, "Price must be greater than 0").required("Price is required"),
-    place: Yup.string().min(2, "Place must be at least 2 characters").required("Place is required"),
+    city: Yup.string().min(2, "City must be at least 2 characters").required("City is required"),
+    village: Yup.string().min(2, "Village must be at least 2 characters").required("Village is required"),
     sellerPhone: Yup.string().matches(/^03\d{9}$/, "Please enter a valid Pakistani phone number (e.g., 03001234567)").required("Seller phone is required"),
     categoryEn: Yup.string().min(2, "Category (English) must be at least 2 characters").required("Required"),
     categoryUr: Yup.string().min(2, "Category (Urdu) must be at least 2 characters").required("Required"),
@@ -49,7 +60,8 @@ const UpdateListingModal = React.memo(({ modal, setModal }) => {
         title: modal.data?.title || "", 
         description: modal.data?.description || "", 
         price: modal.data?.price || "", 
-        place: modal.data?.place || "", 
+        city: modal.data?.city || "", 
+        village: modal.data?.village || "", 
         sellerPhone: modal.data?.sellerPhone || "",
         categoryEn: modal.data?.category?.en || "", 
         categoryUr: modal.data?.category?.ur || "", 
@@ -105,7 +117,8 @@ const UpdateListingModal = React.memo(({ modal, setModal }) => {
             formData.append("title", values.title.trim());
             formData.append("description", values.description.trim());
             formData.append("price", values.price);
-            formData.append("place", values.place.trim());
+            formData.append("city", values.city.trim());
+            formData.append("village", values.village.trim());
             formData.append("sellerPhone", values.sellerPhone.trim());
             formData.append("negotiable", values.negotiable ? "true" : "false");
             formData.append("showPhoneNumber", values.showPhoneNumber ? "true" : "false");
@@ -191,8 +204,9 @@ const UpdateListingModal = React.memo(({ modal, setModal }) => {
                                     <FormField label="Item Title" name="title" placeholder="e.g. Honda Civic 2021" required />
                                     <FormField label="Price (PKR)" name="price" type="number" placeholder="e.g. 150000" required />
                                 </div>
-                                <div className="grid grid-cols-2 gap-4 mt-2">
-                                    <FormField label="Place / Town" name="place" placeholder="e.g. Karachi" required />
+                                <div className="grid grid-cols-3 gap-4 mt-2">
+                                    <FormField label="City" name="city" placeholder="e.g. Karachi" required />
+                                    <FormField label="Village / Area" name="village" placeholder="e.g. Clifton" required />
                                     <FormField label="Seller Phone" name="sellerPhone" placeholder="e.g. 03001234567" required />
                                 </div>
                                 <div className="mt-2 mb-1.5">
@@ -209,12 +223,52 @@ const UpdateListingModal = React.memo(({ modal, setModal }) => {
                             <div className="modal-section">
                                 <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors duration-300">Categorization</p>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <FormField label="Category (English)" name="categoryEn" placeholder="e.g. Animals" required />
-                                    <FormField label="Category (Urdu)" name="categoryUr" placeholder="e.g. جانور" required />
+                                    <SelectField
+                                        label="Category"
+                                        name="categoryEn"
+                                        required
+                                        options={MARKETPLACE_CATEGORIES.map((cat) => ({
+                                            value: cat.en,
+                                            label: `${cat.en} - ${cat.ur}`
+                                        }))}
+                                        onChange={(e) => {
+                                            const selectedCatEn = e.target.value;
+                                            const catObj = MARKETPLACE_CATEGORIES.find((c) => c.en === selectedCatEn);
+                                            setFieldValue("categoryEn", selectedCatEn);
+                                            setFieldValue("categoryUr", catObj ? catObj.ur : selectedCatEn);
+                                            if (catObj && catObj.types.length > 0) {
+                                                setFieldValue("typeEn", catObj.types[0].en);
+                                                setFieldValue("typeUr", catObj.types[0].ur);
+                                            }
+                                        }}
+                                    />
+                                    <FormField label="Category (Urdu)" name="categoryUr" required readOnly />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4 mt-2">
-                                    <FormField label="Type (English)" name="typeEn" placeholder="e.g. Cow" required />
-                                    <FormField label="Type (Urdu)" name="typeUr" placeholder="e.g. گائے" required />
+                                    {(() => {
+                                        const activeCat = MARKETPLACE_CATEGORIES.find((c) => c.en === values.categoryEn);
+                                        const typeOptions = activeCat ? activeCat.types : [];
+                                        return (
+                                            <>
+                                                <SelectField
+                                                    label="Type"
+                                                    name="typeEn"
+                                                    required
+                                                    options={typeOptions.map((t) => ({
+                                                        value: t.en,
+                                                        label: `${t.en} - ${t.ur}`
+                                                    }))}
+                                                    onChange={(e) => {
+                                                        const selectedTypeEn = e.target.value;
+                                                        const typeObj = typeOptions.find((t) => t.en === selectedTypeEn);
+                                                        setFieldValue("typeEn", selectedTypeEn);
+                                                        setFieldValue("typeUr", typeObj ? typeObj.ur : selectedTypeEn);
+                                                    }}
+                                                />
+                                                <FormField label="Type (Urdu)" name="typeUr" required readOnly />
+                                            </>
+                                        );
+                                    })()}
                                 </div>
                             </div>
 

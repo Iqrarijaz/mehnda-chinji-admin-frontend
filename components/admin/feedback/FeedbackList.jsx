@@ -13,7 +13,7 @@ const FeedbackList = React.memo(({ data, isLoading, filters, setFilters, paginat
                 <div className="flex items-center gap-3">
                     <img 
                         src={record.userId?.image?.url || "/assets/avatar.png"} 
-                        className="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm"
+                        className="w-10 h-10 rounded-full object-cover border border-slate-200 "
                         alt={record.userId?.name || "User"}
                     />
                     <div>
@@ -111,7 +111,7 @@ const FeedbackList = React.memo(({ data, isLoading, filters, setFilters, paginat
     }, [setFilters]);
 
     return (
-        <div className="place-holder-table modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
+        <div className="place-holder-table modern-table  border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
             <Table
                 rowKey="_id"
                 className="custom-ant-table"

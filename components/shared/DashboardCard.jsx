@@ -39,7 +39,7 @@ const DashboardCard = React.memo(({ title, value, icon, color = "teal", trendCha
 
     return (
         <div
-            className={`p-2.5 rounded-lg border border-slate-100 dark:border-slate-800/80 bg-white dark:bg-slate-900 transition-all duration-300 relative overflow-hidden group backdrop-blur-sm flex items-center justify-between gap-2.5 hover:shadow-sm hover:border-slate-200 dark:hover:border-slate-700/50`}
+            className={`p-2.5 rounded-lg border border-slate-100 dark:border-slate-800/80 bg-white dark:bg-slate-900 transition-all duration-300 relative overflow-hidden group backdrop-blur-sm flex items-center justify-between gap-2.5  hover:border-slate-200 dark:hover:border-slate-700/50`}
             style={{ borderLeft: `3px solid ${styles.accentColor}` }}
         >
             <div className="flex items-center gap-2 min-w-0">

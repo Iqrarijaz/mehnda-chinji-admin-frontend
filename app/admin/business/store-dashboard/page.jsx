@@ -213,7 +213,7 @@ const StoreDashboardPage = React.memo(() => {
                     </div>
 
                     {/* Recent Orders Section */}
-                    <div className="bg-white dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+                    <div className="bg-white dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden ">
                         <Table
                             rowKey="_id"
                             columns={columns}

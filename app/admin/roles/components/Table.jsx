@@ -91,7 +91,7 @@ const RolesTable = React.memo(({ setModal, rolesList, filters, onChange, visible
                 className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
+        className: "!rounded !p-2 !min-w-[160px]  border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     }), [setModal, handleDelete]);
 
     const allColumns = React.useMemo(() => [
@@ -125,7 +125,7 @@ const RolesTable = React.memo(({ setModal, rolesList, filters, onChange, visible
             width: 170,
             align: "center",
             render: (permissions) => (
-                <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-teal-50 dark:bg-teal-900/30 text-[#006666] dark:text-teal-400 border border-teal-100/50 dark:border-teal-800/50 transition-colors duration-300 shadow-sm">
+                <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-teal-50 dark:bg-teal-900/30 text-[#006666] dark:text-teal-400 border border-teal-100/50 dark:border-teal-800/50 transition-colors duration-300 ">
                     <SecurityScanOutlined className="text-[10px]" />
                     <span className="text-[9px] font-bold uppercase tracking-wider">
                         {permissions?.length || 0} PERMS
@@ -157,11 +157,11 @@ const RolesTable = React.memo(({ setModal, rolesList, filters, onChange, visible
 
     return (
         <div className="space-y-4">
-            <div className="modern-table shadow-sm border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
+            <div className="modern-table  border border-slate-100 dark:border-slate-800 rounded overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
                 <Table
                     rowKey="_id"
                     className="custom-ant-table"
-                    scroll={{ x: 1100, y: 600 }}
+                    scroll={{ x: 1100 }}
                     sticky={true}
                     loading={{
                         spinning: rolesList.isLoading,

@@ -9,7 +9,7 @@ export const SkeletonPulse = ({ className }) => (
 
 export const TableSkeleton = ({ rows = 5, columns = 5 }) => {
     return (
-        <div className="w-full border border-slate-100 rounded overflow-hidden bg-white shadow-sm">
+        <div className="w-full border border-slate-100 rounded overflow-hidden bg-white ">
             <div className="bg-slate-50/50 h-12 border-b border-slate-100 flex items-center px-4 gap-4">
                 {Array.from({ length: columns }).map((_, i) => (
                     <Skeleton.Input key={i} active size="small" className="!w-full !min-w-0" />
@@ -28,7 +28,7 @@ export const TableSkeleton = ({ rows = 5, columns = 5 }) => {
 
 export const StatCardSkeleton = () => {
     return (
-        <div className="w-full md:w-auto md:min-w-[100px] md:max-w-[150px] flex-1 h-[32px] rounded-[2px] border-2 border-slate-100 bg-white shadow-sm flex items-center justify-center px-3 gap-2 overflow-hidden">
+        <div className="w-full md:w-auto md:min-w-[100px] md:max-w-[150px] flex-1 h-[32px] rounded-[2px] border-2 border-slate-100 bg-white  flex items-center justify-center px-3 gap-2 overflow-hidden">
             <SkeletonPulse className="w-6 h-4" />
             <SkeletonPulse className="w-12 h-2" />
         </div>
@@ -37,7 +37,7 @@ export const StatCardSkeleton = () => {
 
 export const DashboardCardSkeleton = () => {
     return (
-        <div className="w-full h-[76px] rounded-xl border border-slate-100/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 p-4 shadow-sm flex items-center justify-between overflow-hidden">
+        <div className="w-full h-[76px] rounded-xl border border-slate-100/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 p-4  flex items-center justify-between overflow-hidden">
             <div className="space-y-2 flex-1">
                 <SkeletonPulse className="w-20 h-3" />
                 <SkeletonPulse className="w-16 h-6" />

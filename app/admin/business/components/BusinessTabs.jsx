@@ -23,7 +23,9 @@ const BusinessTabs = React.memo(({ handleRefresh, isRefreshing }) => {
     const pathname = usePathname();
     const storeContext = useStoreContext();
 
-    const authorizedTabs = tabs.filter(tab => hasPermission(tab.permission));
+    const authorizedTabs = React.useMemo(() => {
+        return tabs.filter(tab => hasPermission(tab.permission));
+    }, []);
 
     if (authorizedTabs.length <= 1) return null; // No need to show tabs if only one is accessible
 

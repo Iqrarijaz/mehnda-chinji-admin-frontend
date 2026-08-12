@@ -137,7 +137,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                 className: "!rounded hover:!bg-red-50 dark:hover:!bg-red-900/20 transition-colors",
             },
         ],
-        className: "!rounded !p-2 !min-w-[160px] shadow-xl border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
+        className: "!rounded !p-2 !min-w-[160px]  border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
     }), [setModal, handleDelete, handleTogglePublicAnnouncer]);
 
 
@@ -155,7 +155,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                     <Avatar
                         size={32}
                         src={record.profileImage || record.image}
-                        className="bg-slate-100 dark:bg-slate-800 text-[#006666] dark:text-teal-400 font-bold border-2 border-white dark:border-slate-700 shadow-sm !text-xs transition-colors duration-300"
+                        className="bg-slate-100 dark:bg-slate-800 text-[#006666] dark:text-teal-400 font-bold border-2 border-white dark:border-slate-700  !text-xs transition-colors duration-300"
                     >
                         {name?.charAt(0)}
                     </Avatar>
@@ -316,9 +316,8 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
     }
 
     return (
-        <div className="flex-1 min-h-0 flex flex-col">
-            <div className="place-holder-table modern-table overflow-hidden flex-1 min-h-0 flex flex-col">
-                <Table
+        <div className="place-holder-table modern-table overflow-hidden">
+            <Table
                     columns={activeColumns}
                     dataSource={usersList.data?.data?.docs}
                     loading={{
@@ -334,9 +333,9 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                     }}
                     onChange={handleSorting}
                     rowKey="_id"
-                    scroll={{ x: 1300, y: "calc(100vh - 230px)" }}
+                    scroll={{ x: 1300 }}
                     sticky={true}
-                    className="custom-ant-table flex-1"
+                    className="custom-ant-table"
                 />
                 {(handleStatus.isPending || handleDelete.isPending) && <Loading />}
 
@@ -355,7 +354,6 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                     setModal={setModal}
                 />
             </div>
-        </div>
     );
 });
 

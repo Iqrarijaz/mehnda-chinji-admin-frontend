@@ -53,7 +53,7 @@ const MarketplaceTabs = React.memo(() => {
                             className={`
                                 flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-md transition-all duration-200
                                 ${isActive
-                                    ? 'bg-[#006666] text-white shadow-md hover:bg-[#005555]'
+                                    ? 'bg-[#006666] text-white  hover:bg-[#005555]'
                                     : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[#006666] dark:hover:text-teal-400'
                                 }
                                 ${isSingleTab ? 'w-full justify-center' : ''}

@@ -122,7 +122,7 @@ const ProfileModal = ({ open, onCancel }) => {
             <div className="flex flex-col items-center py-2.5 px-2">
                 {/* Profile Header Section */}
                 <div className="relative mb-10 mt-2">
-                    <div className="relative p-1 bg-gradient-to-tr from-teal-600 to-teal-400 rounded-full shadow-lg">
+                    <div className="relative p-1 bg-gradient-to-tr from-teal-600 to-teal-400 rounded-full ">
                         <Avatar
                             size={80}
                             icon={<UserOutlined />}
@@ -133,7 +133,7 @@ const ProfileModal = ({ open, onCancel }) => {
                             <Tooltip title="Update Photo">
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    className="absolute bottom-0 right-0 bg-teal-600 text-white p-2 rounded-full shadow-md hover:bg-teal-700 transition-all border-2 border-white flex items-center justify-center transform hover:scale-110"
+                                    className="absolute bottom-0 right-0 bg-teal-600 text-white p-2 rounded-full  hover:bg-teal-700 transition-all border-2 border-white flex items-center justify-center transform hover:scale-110"
                                 >
                                     <CameraOutlined style={{ fontSize: '12px' }} />
                                 </button>
@@ -166,7 +166,7 @@ const ProfileModal = ({ open, onCancel }) => {
 
                 {/* Verification Badge - Redesigned */}
                 <div className="w-full px-6 mb-4">
-                    <div className="flex items-center justify-center gap-2.5 bg-teal-50/50 dark:bg-teal-900/10 py-3 px-4 rounded border border-teal-100/50 dark:border-teal-900/20 shadow-sm">
+                    <div className="flex items-center justify-center gap-2.5 bg-teal-50/50 dark:bg-teal-900/10 py-3 px-4 rounded border border-teal-100/50 dark:border-teal-900/20 ">
                         <FaCheckCircle className="text-teal-500" size={16} />
                         <span className="text-[11px] font-black text-teal-700 dark:text-teal-300 uppercase tracking-widest">Account Active & Verified</span>
                     </div>
@@ -193,7 +193,7 @@ const ProfileModal = ({ open, onCancel }) => {
                                 className="!h-[32px] !rounded !border-2 !border-slate-100 dark:!border-slate-800 focus:!border-teal-500 !text-[12px]"
                             />
                         ) : (
-                            <div className="flex items-center gap-3 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 p-3.5 rounded border border-slate-100 dark:border-slate-800 shadow-sm transition-all hover:border-teal-100 dark:hover:border-teal-900/30">
+                            <div className="flex items-center gap-3 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 p-3.5 rounded border border-slate-100 dark:border-slate-800  transition-all hover:border-teal-100 dark:hover:border-teal-900/30">
                                 <PhoneOutlined className="text-teal-600 dark:text-teal-400" />
                                 <span className="text-sm font-bold">{user?.adminData?.phone || "N/A"}</span>
                             </div>
@@ -216,7 +216,7 @@ const ProfileModal = ({ open, onCancel }) => {
                                 type="primary"
                                 onClick={handleSave}
                                 loading={loading}
-                                className="modal-footer-btn-primary flex-1 !shadow-teal-900/10"
+                                className="modal-footer-btn-primary flex-1 !"
                                 icon={<CheckOutlined />}
                             >
                                 Save
@@ -229,7 +229,7 @@ const ProfileModal = ({ open, onCancel }) => {
                             icon={<FaSignOutAlt className="text-xs" />}
                             onClick={handleLogout}
                             loading={isLoggingOut}
-                            className="modal-footer-btn-danger w-full !h-[32px] !text-[10px] !bg-gradient-to-r !from-red-600 !to-red-500 !border-none !shadow-lg !shadow-red-500/10"
+                            className="modal-footer-btn-danger w-full !h-[32px] !text-[10px] !bg-gradient-to-r !from-red-600 !to-red-500 !border-none ! !"
                         >
                             Sign Out Account
                         </Button>

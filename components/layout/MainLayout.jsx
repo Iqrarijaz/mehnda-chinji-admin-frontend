@@ -145,8 +145,8 @@ function MainLayout({ children }) {
           sidebar overflow-y-auto custom-scrollbar
           transition-all duration-300 ease-in-out z-[70]
           ${isMobile
-            ? `fixed top-0 left-0 h-screen w-[280px] shadow-2xl transform ${open ? "translate-x-0" : "-translate-x-full"}`
-            : `sticky top-0 h-screen flex flex-col ${open ? "w-[200px] border-r border-white/10 shadow-xl opacity-100" : "w-0 opacity-0 overflow-hidden border-none shadow-none pointer-events-none"}`
+            ? `fixed top-0 left-0 h-screen w-[280px]  transform ${open ? "translate-x-0" : "-translate-x-full"}`
+            : `sticky top-0 h-screen flex flex-col ${open ? "w-[200px] border-r border-white/10  opacity-100" : "w-0 opacity-0 overflow-hidden border-none  pointer-events-none"}`
           }
         `}
       >
@@ -171,7 +171,7 @@ function MainLayout({ children }) {
       {/* Main Content */}
       <main className="flex-1 bg-white dark:bg-[#0F172A] flex flex-col max-h-screen w-full overflow-hidden transition-colors duration-300">
         <MainHeader />
-        <div className={`flex-1 p-2 md:p-4 bg-white dark:bg-slate-900/50 transition-colors duration-300 ${["/admin/users", "/admin/essentials"].includes(pathname) ? "overflow-hidden flex flex-col" : "overflow-y-auto overflow-x-auto"}`}>
+        <div className="flex-1 p-2 md:p-4 bg-white dark:bg-slate-900/50 transition-colors duration-300 overflow-y-auto overflow-x-auto">
           {children}
         </div>
       </main>

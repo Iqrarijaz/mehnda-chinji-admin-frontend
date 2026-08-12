@@ -129,7 +129,7 @@ function DashBoard() {
             {/* Premium Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded bg-[#006666] flex items-center justify-center text-white shadow-lg shadow-teal-900/20">
+                    <div className="w-12 h-12 rounded bg-[#006666] flex items-center justify-center text-white  ">
                         <RocketOutlined className="text-xl" />
                     </div>
                     <div>
@@ -149,13 +149,13 @@ function DashBoard() {
 
                 <div className="flex items-center gap-3">
 
-                    <div className="flex items-center gap-2 text-[10px] font-black text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/10 px-3 py-2 rounded-full border border-teal-100 dark:border-teal-900/20 uppercase tracking-widest shadow-sm">
+                    <div className="flex items-center gap-2 text-[10px] font-black text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/10 px-3 py-2 rounded-full border border-teal-100 dark:border-teal-900/20 uppercase tracking-widest ">
                         <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
                         Live Monitor Active
                     </div>
                     <button
                         onClick={fetchData}
-                        className="p-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-teal-600 dark:hover:text-teal-400 hover:border-teal-200 dark:hover:border-teal-900/30 transition-all shadow-sm active:scale-95"
+                        className="p-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-teal-600 dark:hover:text-teal-400 hover:border-teal-200 dark:hover:border-teal-900/30 transition-all  active:scale-95"
                     >
                         <HistoryOutlined />
                     </button>
@@ -186,7 +186,7 @@ function DashBoard() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Quick Shortcuts */}
-                        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+                        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800  overflow-hidden">
                             <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between">
                                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Tactical Shortcuts</span>
                                 <PlusOutlined className="text-slate-300 dark:text-slate-600 text-xs" />
@@ -207,7 +207,7 @@ function DashBoard() {
                         </div>
 
                         {/* Attention Required */}
-                        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+                        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800  overflow-hidden">
                             <div className="px-5 py-3 border-b border-slate-50 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between">
                                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500">Critical Attention</span>
                                 <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />

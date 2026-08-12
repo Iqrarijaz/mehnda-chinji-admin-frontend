@@ -91,6 +91,76 @@ const UpdateBusinessModal = React.memo(({ modal, setModal }) => {
         }
     };
 
+const TagInputSection = React.memo(({ tags = [], setFieldValue }) => {
+    const [engTag, setEngTag] = React.useState("");
+    const [urTag, setUrTag] = React.useState("");
+
+    const handleAddTag = () => {
+        if (!engTag.trim()) return;
+        const newTag = { eng: engTag.trim(), ur: urTag.trim() || engTag.trim() };
+        const exists = tags.some((t) => t.eng.toLowerCase() === newTag.eng.toLowerCase());
+        if (exists) return;
+        setFieldValue("tags", [...tags, newTag]);
+        setEngTag("");
+        setUrTag("");
+    };
+
+    const handleRemoveTag = (indexToRemove) => {
+        const updated = tags.filter((_, index) => index !== indexToRemove);
+        setFieldValue("tags", updated);
+    };
+
+    return (
+        <div className="space-y-2 mt-2">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-tight ml-1 block">
+                Business Tags / Services
+            </label>
+            <div className="flex flex-wrap gap-1.5 min-h-[32px] p-2 bg-slate-50 border border-slate-200 rounded">
+                {tags.length === 0 ? (
+                    <span className="text-slate-400 text-xs italic">No tags added yet. Add tags below.</span>
+                ) : (
+                    tags.map((tag, index) => (
+                        <span key={index} className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-200 text-xs font-medium">
+                            <span>{tag.eng}</span>
+                            {tag.ur && tag.ur !== tag.eng && <span className="text-[10px] text-teal-600 dark:text-teal-400">({tag.ur})</span>}
+                            <button
+                                type="button"
+                                onClick={() => handleRemoveTag(index)}
+                                className="hover:text-red-600 transition-colors ml-0.5 font-bold"
+                            >
+                                &times;
+                            </button>
+                        </span>
+                    ))
+                )}
+            </div>
+            <div className="flex gap-2 items-center">
+                <input
+                    type="text"
+                    placeholder="Tag in English (e.g. Stitching)"
+                    value={engTag}
+                    onChange={(e) => setEngTag(e.target.value)}
+                    className="flex-1 px-2.5 py-1 text-xs border border-slate-200 rounded focus:outline-none focus:border-teal-500"
+                />
+                <input
+                    type="text"
+                    placeholder="Tag in Urdu (e.g. سلائی)"
+                    value={urTag}
+                    onChange={(e) => setUrTag(e.target.value)}
+                    className="flex-1 px-2.5 py-1 text-xs border border-slate-200 rounded focus:outline-none focus:border-teal-500 font-notoUrdu"
+                />
+                <button
+                    type="button"
+                    onClick={handleAddTag}
+                    className="px-3 py-1 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded transition-colors"
+                >
+                    + Add
+                </button>
+            </div>
+        </div>
+    );
+});
+
     const initialValues = {
         _id: modal?.data?._id || "",
         name: modal?.data?.name || "",
@@ -101,6 +171,7 @@ const UpdateBusinessModal = React.memo(({ modal, setModal }) => {
         phone: modal?.data?.phone || "",
         address: modal?.data?.address || "",
         timing: modal?.data?.timing || "",
+        tags: modal?.data?.tags || [],
         hasStore: modal?.data?.hasStore ?? false,
         storeSettings: {
             deliveryAreas: modal?.data?.storeSettings?.deliveryAreas || [],
@@ -253,6 +324,9 @@ const UpdateBusinessModal = React.memo(({ modal, setModal }) => {
                                                 placeholder="Address"
                                                 required
                                             />
+                                            <div className="md:col-span-2">
+                                                <TagInputSection tags={values.tags} setFieldValue={setFieldValue} />
+                                            </div>
                                         </div>
                                     </div>
 

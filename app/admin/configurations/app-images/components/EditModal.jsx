@@ -176,7 +176,7 @@ function EditAppImagesModal({ modal, setModal }) {
                                                     <button
                                                         type="button"
                                                         onClick={() => removeExisting(idx)}
-                                                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-sm"
+                                                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all "
                                                     >
                                                         <FaTimes size={8} />
                                                     </button>
@@ -210,11 +210,11 @@ function EditAppImagesModal({ modal, setModal }) {
                                                     <button
                                                         type="button"
                                                         onClick={() => removeNew(idx)}
-                                                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-sm"
+                                                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all "
                                                     >
                                                         <FaTimes size={8} />
                                                     </button>
-                                                    <div className="absolute bottom-0 left-0 right-0 bg-emerald-600 text-[8px] text-white font-bold py-0.5 text-center uppercase tracking-tighter shadow-sm">New</div>
+                                                    <div className="absolute bottom-0 left-0 right-0 bg-emerald-600 text-[8px] text-white font-bold py-0.5 text-center uppercase tracking-tighter ">New</div>
                                                 </div>
                                             ))}
                                             <div

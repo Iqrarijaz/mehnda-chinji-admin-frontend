@@ -5,8 +5,9 @@ import { toast } from "react-toastify";
 import AddButton from "@/components/InnerPage/AddButton";
 import SearchInput from "@/components/InnerPage/SearchInput";
 import BusinessTable from "./components/Table";
-import AddBusinessModal from "./components/AddModal";
-import UpdateBusinessModal from "./components/UpdateModal";
+import dynamic from "next/dynamic";
+const AddBusinessModal = dynamic(() => import("./components/AddModal"), { ssr: false });
+const UpdateBusinessModal = dynamic(() => import("./components/UpdateModal"), { ssr: false });
 import BusinessTabs from "./components/BusinessTabs";
 import { GET_BUSINESSES, GET_BUSINESS_STATUS_COUNTS } from "@/app/api/admin/business";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -86,11 +87,11 @@ export default function BusinessPage() {
 
   const onChange = (data) => setFilters((prev) => ({ ...prev, ...data }));
 
-  const statCards = [
+  const statCards = React.useMemo(() => [
     { label: "Approved", short: "App", key: "APPROVED", count: counts.approved, color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
     { label: "Pending", short: "Pen", key: "PENDING", count: counts.pending, color: "#ea580c", bg: "#fff7ed", border: "#fed7aa" },
     { label: "Rejected", short: "Rej", key: "REJECTED", count: counts.rejected, color: "#dc2626", bg: "#fef2f2", border: "#fecaca" },
-  ];
+  ], [counts]);
 
   return (
     <InnerPageCard>
@@ -172,7 +173,7 @@ export default function BusinessPage() {
                 title="Add Business"
                 icon={false}
                 onClick={() => setModal({ name: "Add", data: null, state: true })}
-                className="!h-[32px] !rounded !px-4 !text-[10px] font-medium shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+                className="!h-[32px] !rounded !px-4 !text-[10px] font-medium  transform hover:scale-[1.02] active:scale-[0.98]"
               />
             )}
           </div>
