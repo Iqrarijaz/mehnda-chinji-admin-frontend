@@ -1714,7 +1714,7 @@ body::-webkit-scrollbar-thumb {
   font-size: 12px !important;
 }
 
-/* Sidebar Navigation Action Menu (Set to 15px with clean normal font-weight) */
+/* App-wide Navigation Action Menu */
 .side_menu_item,
 .side_menu_item span,
 .side_menu_item a,
@@ -1723,6 +1723,32 @@ body::-webkit-scrollbar-thumb {
 .selected-menu-item span {
   font-size: 15px !important;
   font-weight: 400 !important;
+}
+
+/* App-wide Zero Border Width & 6px Border Radius Overrides for Inputs, Select Dropdowns, Search Inputs, and Action Buttons */
+.custom-search-input,
+.ant-input,
+.ant-select-selector,
+.custom-selectbox,
+.select-field,
+.formit-input,
+.ant-picker,
+.ant-input-number,
+.mobile-filter-btn {
+  border: none !important;
+  border-width: 0 !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+}
+
+/* Ensure Ant Design Select Dropdown Menus and Popovers also have 0 border width and 6px border radius */
+.ant-select-dropdown,
+.ant-dropdown-menu,
+.ant-popover-inner {
+  border: none !important;
+  border-width: 0 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* App-wide maximum font-size constraint of 14px */
