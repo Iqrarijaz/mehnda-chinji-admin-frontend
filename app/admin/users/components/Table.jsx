@@ -18,7 +18,7 @@ import ConfirmModal from "@/components/shared/ConfirmModal";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import EmptyState from "@/components/shared/EmptyState";
 import { DELETE_USER, UPDATE_USER, TOGGLE_PUBLIC_ANNOUNCER } from "@/app/api/admin/users";
-import { timestampToDate } from "@/utils/date";
+import { timestampToDate, timestampToDateWithTime } from "@/utils/date";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 import AssignEssentialModal from "./AssignEssentialModal";
 
@@ -275,17 +275,17 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             title: "Created At",
             dataIndex: "createdAt",
             key: "createdAt",
-            width: 170,
+            width: 190,
             sorter: true,
-            render: (date) => <span className="text-slate-500 dark:text-slate-500 font-medium text-[11px] transition-colors duration-300">{timestampToDate(date)}</span>,
+            render: (date) => <span className="text-slate-500 dark:text-slate-500 font-medium text-[11px] transition-colors duration-300 whitespace-nowrap">{date ? timestampToDateWithTime(date) : "N/A"}</span>,
         },
         {
             title: "Last Activity",
             dataIndex: "lastActivityAt",
             key: "lastActivityAt",
-            width: 170,
+            width: 190,
             sorter: true,
-            render: (date) => <span className="text-slate-500 dark:text-slate-500 font-medium text-[11px] transition-colors duration-300">{date ? timestampToDate(date) : "N/A"}</span>,
+            render: (date) => <span className="text-slate-500 dark:text-slate-500 font-medium text-[11px] transition-colors duration-300 whitespace-nowrap">{date ? timestampToDateWithTime(date) : "N/A"}</span>,
         },
         {
             title: "App Version",
