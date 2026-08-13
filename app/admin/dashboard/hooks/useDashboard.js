@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import {
     GET_COMMUNITY_STATS,
     GET_MARKETPLACE_STATS,
-    GET_SUPPORT_STATS
+    GET_SUPPORT_STATS,
+    GET_USER_TRENDS
 } from "@/app/api/admin/dashboard";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 
@@ -43,6 +44,20 @@ export const useSupportStats = () => {
                 return res?.data || {};
             } catch (err) {
                 return {};
+            }
+        },
+    });
+};
+
+export const useUserTrends = (days = 7) => {
+    return useQuery({
+        queryKey: [ADMIN_KEYS.DASHBOARD?.USER_TRENDS || "dashboard_user_trends", days],
+        queryFn: async () => {
+            try {
+                const res = await GET_USER_TRENDS(days);
+                return res?.data || [];
+            } catch (err) {
+                return [];
             }
         },
     });

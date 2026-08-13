@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Table, Switch, Tag, Avatar, Menu, Dropdown, Button } from "antd";
+import { Table, Switch, Tag, Avatar, Menu, Dropdown, Button, Image } from "antd";
 import {
     EditOutlined,
     DeleteOutlined,
@@ -150,23 +150,39 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             dataIndex: "name",
             sorter: true,
             width: 170,
-            render: (name, record) => (
-                <div className="flex items-center gap-2.5">
-                    <Avatar
-                        size={32}
-                        src={record.profileImage || record.image}
-                        className="bg-slate-100 dark:bg-slate-800 text-[#006666] dark:text-teal-400 font-bold border-2 border-white dark:border-slate-700  !text-xs transition-colors duration-300"
-                    >
-                        {name?.charAt(0)}
-                    </Avatar>
-                    <div className="flex flex-col min-w-0">
-                        <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate leading-tight transition-colors duration-300 capitalize">{name}</span>
-                        {record.isPublicAnnouncer && (
-                            <span className="text-[9px] text-[#006666] dark:text-teal-400 font-bold mt-0.5 leading-none">Announcer</span>
+            render: (name, record) => {
+                const imageUrl = record.profileImage || record.image;
+                return (
+                    <div className="flex items-center gap-2.5">
+                        {imageUrl ? (
+                            <Image
+                                src={imageUrl}
+                                alt={name || "User Avatar"}
+                                width={32}
+                                height={32}
+                                className="rounded-full object-cover cursor-pointer hover:opacity-85 transition-opacity border-2 border-white dark:border-slate-700 shadow-sm"
+                                wrapperClassName="!w-8 !h-8 !rounded-full overflow-hidden flex-shrink-0"
+                                preview={{
+                                    mask: <div className="text-[8px] font-bold text-white bg-black/40 w-full h-full flex items-center justify-center">View</div>
+                                }}
+                            />
+                        ) : (
+                            <Avatar
+                                size={32}
+                                className="bg-slate-100 dark:bg-slate-800 text-[#006666] dark:text-teal-400 font-bold border-2 border-white dark:border-slate-700 !text-xs transition-colors duration-300 flex-shrink-0"
+                            >
+                                {name?.charAt(0)?.toUpperCase() || "U"}
+                            </Avatar>
                         )}
+                        <div className="flex flex-col min-w-0">
+                            <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate leading-tight transition-colors duration-300 capitalize">{name}</span>
+                            {record.isPublicAnnouncer && (
+                                <span className="text-[9px] text-[#006666] dark:text-teal-400 font-bold mt-0.5 leading-none">Announcer</span>
+                            )}
+                        </div>
                     </div>
-                </div>
-            ),
+                );
+            },
         },
         {
             title: "Email",

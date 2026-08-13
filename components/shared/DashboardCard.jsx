@@ -39,18 +39,18 @@ const DashboardCard = React.memo(({ title, value, icon, color = "teal", trendCha
 
     return (
         <div
-            className={`p-2.5 rounded-lg border border-slate-100 dark:border-slate-800/80 bg-white dark:bg-slate-900 transition-all duration-300 relative overflow-hidden group backdrop-blur-sm flex items-center justify-between gap-2.5  hover:border-slate-200 dark:hover:border-slate-700/50`}
+            className={`p-3.5 rounded-lg border border-slate-100 dark:border-slate-800/80 bg-white dark:bg-slate-900 transition-all duration-300 relative overflow-hidden group backdrop-blur-sm flex items-center justify-between gap-3 hover:border-slate-200 dark:hover:border-slate-700/50`}
             style={{ borderLeft: `3px solid ${styles.accentColor}` }}
         >
-            <div className="flex items-center gap-2 min-w-0">
+            <div className="flex items-center gap-3 min-w-0">
                 <div 
-                    className={`p-1.5 rounded ${styles.iconBg} ${styles.container} group-hover:scale-105 transition-transform text-sm flex items-center justify-center`}
+                    className={`bg-transparent ${styles.container} group-hover:scale-110 transition-transform text-2xl flex items-center justify-center`}
                 >
                     {icon}
                 </div>
                 <div className="min-w-0">
-                    <h4 className="text-[8px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest leading-none mb-0.5 truncate">{title}</h4>
-                    <span className="text-sm font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none">
+                    <h4 className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest leading-none mb-1 truncate">{title}</h4>
+                    <span className="text-base font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none">
                         {value}
                     </span>
                 </div>

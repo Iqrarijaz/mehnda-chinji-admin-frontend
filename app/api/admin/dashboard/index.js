@@ -39,3 +39,13 @@ export async function GET_SUPPORT_STATS() {
         throw error;
     }
 }
+
+export async function GET_USER_TRENDS(days = 7) {
+    try {
+        const response = await Axios.get(`/api/admin/dashboard/user-trends?days=${days}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching user trends:", error);
+        throw error;
+    }
+}
