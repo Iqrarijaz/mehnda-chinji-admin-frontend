@@ -469,7 +469,8 @@ const RouteStopsManager = React.memo(({ name, label, values = [], setFieldValue 
                                                         label: t.charAt(0).toUpperCase() + t.slice(1)
                                                     }))}
                                                 />
-                                            <                                             <div className="md:col-span-2">
+                                            </div>
+                                            <div className="md:col-span-2">
                                                 <FormField label="Description" name="description" placeholder="Brief description..." type="textarea" />
                                             </div>
                                             <div className="md:col-span-2">
@@ -523,7 +524,7 @@ const RouteStopsManager = React.memo(({ name, label, values = [], setFieldValue 
                                             <RouteStopsManager name="route" label="Forward Route Stops" values={values.route} setFieldValue={setFieldValue} />
                                             <RouteStopsManager name="returnRoute" label="Return Route Stops" values={values.returnRoute} setFieldValue={setFieldValue} />
                                         </div>
-                                    )}     )}
+                                    )}
 
                                     <div className="modal-section">
                                         <div className="flex items-center justify-between mb-2">

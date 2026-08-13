@@ -34,7 +34,7 @@ export default function UsersPage() {
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
     // Column Visibility State
-    const [visibleColumns, setVisibleColumns] = useState(["name", "email", "role", "gender", "status", "actions"]);
+    const [visibleColumns, setVisibleColumns] = useState(["name", "email", "role", "gender", "status", "lastActivityAt", "actions"]);
 
     const columnOptions = [
         { label: "Name", value: "name" },
@@ -126,7 +126,7 @@ export default function UsersPage() {
                             onClick={handleRefresh}
                             disabled={isRefreshing}
                             title="Refresh Data"
-                            className="flex items-center justify-center !h-[32px] !w-[32px] !border-2 !rounded-[2px] !border-[#006666] dark:!border-teal-900/50 !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white  transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex items-center justify-center !h-[32px] !w-[32px] !border-0 !border-none !rounded-[6px] !bg-white dark:!bg-slate-800 !text-[#006666] dark:!text-teal-400 hover:!bg-[#006666] dark:hover:!bg-teal-600 hover:!text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-none"
                         >
                             <HiRefresh size={16} className={isRefreshing ? "animate-spin" : ""} />
                         </button>

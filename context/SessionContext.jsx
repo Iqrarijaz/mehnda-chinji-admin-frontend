@@ -36,8 +36,8 @@ export function SessionProvider({ children }) {
         <SessionContext.Provider value={{ handleSessionExpired, isSessionExpired }}>
             {children}
             <SessionExpiredModal
-                isOpen={isSessionExpired}
-                onClose={closeSessionModal}
+                open={isSessionExpired}
+                handleClose={closeSessionModal}
             />
         </SessionContext.Provider>
     );

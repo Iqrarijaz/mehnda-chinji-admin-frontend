@@ -28,8 +28,8 @@ const StatCard = ({
             style={{
                 position: "relative",
                 background: cardBg,
-                border: `2px solid ${cardBorder}`,
-                borderRadius: 2,
+                border: "none",
+                borderRadius: 6,
                 padding: "0 10px",
                 height: 32,
                 display: "flex",

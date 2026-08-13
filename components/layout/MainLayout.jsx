@@ -80,11 +80,11 @@ function MainLayout({ children }) {
             className={`side_menu_item w-full justify-between ${isActiveParent ? "selected-menu-item" : ""}`}
           >
             <div className="flex items-center">
-              <span className="text-lg flex-shrink-0">{item.icon}</span>
-              {(open || isMobileView) && <span className={`${isMobileView ? 'ml-4' : 'ml-3'} text-[14px]`}>{item.name}</span>}
+              <span className="text-xl flex-shrink-0">{item.icon}</span>
+              {(open || isMobileView) && <span className={`${isMobileView ? 'ml-4' : 'ml-3'} text-[15px] font-medium`}>{item.name}</span>}
             </div>
             {(open || isMobileView) && (
-              <span className="text-[14px]">
+              <span className="text-[15px]">
                 {isExpanded ? <IoChevronUp size={16} /> : <IoChevronDown size={16} />}
               </span>
             )}
@@ -97,11 +97,11 @@ function MainLayout({ children }) {
                 <li key={subItem.name}>
                   <Link
                     href={subItem.link}
-                    className={`side_menu_item !py-2 ${isActive(subItem.link) ? "selected-menu-item" : ""}`}
+                    className={`side_menu_item !py-2.5 ${isActive(subItem.link) ? "selected-menu-item" : ""}`}
                     onClick={isMobileView ? () => toggleMenu(false) : undefined}
                   >
-                    <span className="text-base flex-shrink-0">{subItem.icon}</span>
-                    <span className={`${isMobileView ? 'ml-4' : 'ml-3'} text-[14px]`}>{subItem.name}</span>
+                    <span className="text-lg flex-shrink-0">{subItem.icon}</span>
+                    <span className={`${isMobileView ? 'ml-4' : 'ml-3'} text-[15px] font-normal`}>{subItem.name}</span>
                   </Link>
                 </li>
               ))}
@@ -118,9 +118,9 @@ function MainLayout({ children }) {
           className={`side_menu_item ${isMobileView ? '!m-0' : ''} ${isActive(item.link) ? "selected-menu-item" : ""}`}
           onClick={isMobileView ? () => toggleMenu(false) : undefined}
         >
-          <span className={`${isMobileView ? 'text-xl' : 'text-lg'} flex-shrink-0`}>{item.icon}</span>
+          <span className="text-xl flex-shrink-0">{item.icon}</span>
           {(open || isMobileView) && (
-            <span className={`${isMobileView ? 'ml-4 font-medium tracking-wide' : 'ml-3'} text-[14px]`}>{item.name}</span>
+            <span className={`${isMobileView ? 'ml-4 font-normal tracking-wide' : 'ml-3'} text-[15px] font-normal`}>{item.name}</span>
           )}
         </Link>
       </li>
@@ -146,7 +146,7 @@ function MainLayout({ children }) {
           transition-all duration-300 ease-in-out z-[70]
           ${isMobile
             ? `fixed top-0 left-0 h-screen w-[280px]  transform ${open ? "translate-x-0" : "-translate-x-full"}`
-            : `sticky top-0 h-screen flex flex-col ${open ? "w-[200px] border-r border-white/10  opacity-100" : "w-0 opacity-0 overflow-hidden border-none  pointer-events-none"}`
+            : `sticky top-0 h-screen flex flex-col ${open ? "w-[230px] border-r border-white/10  opacity-100" : "w-0 opacity-0 overflow-hidden border-none  pointer-events-none"}`
           }
         `}
       >
@@ -169,9 +169,9 @@ function MainLayout({ children }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 bg-white dark:bg-[#0F172A] flex flex-col max-h-screen w-full overflow-hidden transition-colors duration-300">
+      <main className="flex-1 bg-slate-100 dark:bg-[#0F172A] flex flex-col max-h-screen w-full overflow-hidden transition-colors duration-300">
         <MainHeader />
-        <div className="flex-1 p-2 md:p-4 bg-white dark:bg-slate-900/50 transition-colors duration-300 overflow-y-auto overflow-x-auto">
+        <div className="flex-1 p-2 md:p-4 bg-slate-100 dark:bg-slate-900/50 transition-colors duration-300 overflow-y-auto overflow-x-auto">
           {children}
         </div>
       </main>

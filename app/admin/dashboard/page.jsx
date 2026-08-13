@@ -36,7 +36,7 @@ import { timestampToDate } from "@/utils/date";
 const QuickActionButton = React.memo(({ icon, label, description, onClick, colorClass = "text-teal-600" }) => (
     <button
         onClick={onClick}
-        className="flex flex-col items-start p-3.5 rounded-lg border border-slate-100 dark:border-slate-800/50 hover:border-teal-200 dark:hover:border-teal-900/40 hover:bg-white dark:hover:bg-slate-800 transition-all duration-300 group bg-slate-50/30 dark:bg-slate-900/50 relative overflow-hidden active:scale-[0.97] w-full"
+        className="flex flex-col items-start p-3.5 rounded-[6px] border-0 border-none hover:bg-white dark:hover:bg-slate-800 transition-all duration-300 group bg-slate-50/30 dark:bg-slate-900/50 relative overflow-hidden active:scale-[0.97] w-full shadow-none"
     >
         <div className={`w-8 h-8 flex items-center justify-center bg-transparent ${colorClass} group-hover:scale-110 transition-transform duration-300 mb-2 text-2xl font-bold`}>
             {React.cloneElement(icon, { className: "text-2xl" })}
@@ -134,7 +134,7 @@ function DashBoard() {
             {/* Premium Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded bg-[#006666] flex items-center justify-center text-white">
+                    <div className="w-12 h-12 rounded-[6px] bg-[#006666] flex items-center justify-center text-white border-0">
                         <RocketOutlined className="text-2xl" />
                     </div>
                     <div>
@@ -142,7 +142,7 @@ function DashBoard() {
                             <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none uppercase">
                                 Dashboard
                             </h1>
-                            <div className="flex items-center gap-1 bg-teal-50 dark:bg-teal-900/10 px-1.5 py-0.5 rounded text-[8px] font-black text-teal-600 dark:text-teal-400 border border-teal-100 dark:border-teal-900/20 uppercase tracking-tighter">
+                            <div className="flex items-center gap-1 bg-teal-50 dark:bg-teal-900/10 px-1.5 py-0.5 rounded-[6px] text-[8px] font-black text-teal-600 dark:text-teal-400 border-0 uppercase tracking-tighter">
                                 <CheckCircleOutlined size={8} /> v2.4.0
                             </div>
                         </div>
@@ -153,13 +153,13 @@ function DashBoard() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 text-[10px] font-black text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/10 px-3 py-2 rounded-full border border-teal-100 dark:border-teal-900/20 uppercase tracking-widest ">
+                    <div className="flex items-center gap-2 text-[10px] font-black text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/10 px-3 py-2 rounded-full border-0 uppercase tracking-widest ">
                         <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
                         Live Monitor Active
                     </div>
                     <button
                         onClick={fetchData}
-                        className="p-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-teal-600 dark:hover:text-teal-400 hover:border-teal-200 dark:hover:border-teal-900/30 transition-all active:scale-95"
+                        className="p-2 rounded-full bg-white dark:bg-slate-800 border-0 text-slate-400 dark:text-slate-500 hover:text-teal-600 dark:hover:text-teal-400 transition-all active:scale-95 shadow-none"
                     >
                         <HistoryOutlined />
                     </button>
@@ -183,8 +183,8 @@ function DashBoard() {
             </div>
 
             {/* Daily User Trends & Analytics Chart Section */}
-            <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 p-5 shadow-sm">
-                <div className="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
+            <div className="bg-white dark:bg-slate-900 rounded-[6px] p-5 shadow-sm">
+                <div className="flex items-center justify-between mb-4 border-b border-slate-50 dark:border-slate-800 pb-3">
                     <div>
                         <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-wider">
                             Daily User Activity & Signup Trends
@@ -193,9 +193,9 @@ function DashBoard() {
                             Real-time tracking of active app users vs new user registrations over date & time
                         </p>
                     </div>
-                    <Tag color="cyan" className="font-bold text-[10px] uppercase px-2 py-0.5">
+                    <div className="font-bold text-[10px] uppercase px-2.5 py-1 rounded-[6px] border-0 border-none bg-slate-100 dark:bg-slate-800 text-teal-700 dark:text-teal-400 tracking-wider">
                         7-Day Analysis
-                    </Tag>
+                    </div>
                 </div>
                 <UserTrendsChart data={userTrends} />
             </div>
@@ -206,8 +206,8 @@ function DashBoard() {
                 <div className="lg:col-span-12 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Quick Shortcuts */}
-                        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 overflow-hidden">
-                            <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between">
+                        <div className="bg-white dark:bg-slate-900 rounded-[6px] border-0 border-none overflow-hidden shadow-none">
+                            <div className="px-5 py-3 border-0 border-none bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between">
                                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Tactical Shortcuts</span>
                                 <PlusOutlined className="text-slate-300 dark:text-slate-600 text-xs" />
                             </div>
@@ -227,7 +227,7 @@ function DashBoard() {
                         </div>
 
                         {/* Attention Required */}
-                        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 overflow-hidden">
+                        <div className="bg-white dark:bg-slate-900 rounded-[6px] border-0 border-none overflow-hidden shadow-none">
                             <div className="px-5 py-3 border-b border-slate-50 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between">
                                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500">Critical Attention</span>
                                 <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />

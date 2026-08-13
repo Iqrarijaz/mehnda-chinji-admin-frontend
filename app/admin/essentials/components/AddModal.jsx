@@ -482,7 +482,8 @@ const AddEssentialModal = React.memo(({ modal, setModal }) => {
                                                     }))}
                                                     onChange={(e) => setFieldValue("type", e.target.value)}
                                                 />
-                                            <                                             <div className="md:col-span-2">
+                                            </div>
+                                            <div className="md:col-span-2">
                                                 <FormField label="Description" name="description" placeholder="Brief description..." type="textarea" />
                                             </div>
                                             <div className="md:col-span-2">
@@ -537,7 +538,7 @@ const AddEssentialModal = React.memo(({ modal, setModal }) => {
                                             <RouteStopsManager name="route" label="Forward Route Stops" values={values.route} setFieldValue={setFieldValue} />
                                             <RouteStopsManager name="returnRoute" label="Return Route Stops" values={values.returnRoute} setFieldValue={setFieldValue} />
                                         </div>
-                                    )}     )}
+                                    )}
 
                                     {/* Section 3: Contacts */}
                                     <div className="modal-section">
