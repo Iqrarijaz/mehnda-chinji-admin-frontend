@@ -80,6 +80,15 @@ export async function TOGGLE_PUBLIC_ANNOUNCER(data) {
     }
 }
 
+export async function TOGGLE_CRICKET_ADMIN(data) {
+    try {
+        const response = await Axios.post("/api/admin/users/toggle-cricket-admin", data);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export async function ASSIGN_ESSENTIAL(data) {
     try {
         const response = await Axios.post("/api/admin/users/assign-essential", data);

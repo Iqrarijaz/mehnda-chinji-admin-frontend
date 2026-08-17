@@ -7,7 +7,8 @@ import {
     EllipsisOutlined,
     LockOutlined,
     SettingOutlined,
-    SoundOutlined
+    SoundOutlined,
+    TrophyOutlined
 } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -17,7 +18,7 @@ import Loading from "@/animations/homePageLoader";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { TableSkeleton } from "@/components/shared/Skeletons";
 import EmptyState from "@/components/shared/EmptyState";
-import { DELETE_USER, UPDATE_USER, TOGGLE_PUBLIC_ANNOUNCER } from "@/app/api/admin/users";
+import { DELETE_USER, UPDATE_USER, TOGGLE_PUBLIC_ANNOUNCER, TOGGLE_CRICKET_ADMIN } from "@/app/api/admin/users";
 import { timestampToDate, timestampToDateWithTime } from "@/utils/date";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 import AssignEssentialModal from "./AssignEssentialModal";
@@ -81,6 +82,18 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
         },
     });
 
+    const handleToggleCricketAdmin = useMutation({
+        mutationKey: ["toggleCricketAdmin"],
+        mutationFn: (payload) => TOGGLE_CRICKET_ADMIN(payload),
+        onSuccess: (data) => {
+            toast.success(data?.message || "Cricket admin status updated successfully");
+            queryClient.invalidateQueries([ADMIN_KEYS.USERS.LIST]);
+        },
+        onError: (error) => {
+            toast.error(error.errorMessage || "Something went wrong");
+        },
+    });
+
     const closeConfirmModal = React.useCallback(() => {
         setConfirmModal({ state: false, onConfirm: null, title: "", content: "" });
     }, []);
@@ -114,6 +127,18 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                 className: "!rounded hover:!bg-teal-50 dark:hover:!bg-teal-900/20 transition-colors",
             },
             {
+                key: "toggleCricketAdmin",
+                label: <span className="font-medium text-slate-700 dark:text-slate-300">
+                    {record.isCricketAdmin ? "Remove Cricket Admin" : "Make Cricket Admin"}
+                </span>,
+                icon: <TrophyOutlined className="text-amber-500 dark:text-amber-400" />,
+                onClick: () => handleToggleCricketAdmin.mutate({
+                    userId: record._id,
+                    isCricketAdmin: !record.isCricketAdmin
+                }),
+                className: "!rounded hover:!bg-amber-50 dark:hover:!bg-amber-900/20 transition-colors",
+            },
+            {
                 key: "assignEssential",
                 label: <span className="font-medium text-slate-700 dark:text-slate-300">Assign Place</span>,
                 icon: <SettingOutlined className="text-teal-600 dark:text-teal-400" />,
@@ -138,7 +163,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
             },
         ],
         className: "!rounded !p-2 !min-w-[160px]  border border-slate-100 dark:border-slate-800 dark:bg-slate-900 transition-colors",
-    }), [setModal, handleDelete, handleTogglePublicAnnouncer]);
+    }), [setModal, handleDelete, handleTogglePublicAnnouncer, handleToggleCricketAdmin]);
 
 
 
@@ -178,6 +203,9 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                             <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate leading-tight transition-colors duration-300 capitalize">{name}</span>
                             {record.isPublicAnnouncer && (
                                 <span className="text-[9px] text-[#006666] dark:text-teal-400 font-bold mt-0.5 leading-none">Announcer</span>
+                            )}
+                            {record.isCricketAdmin && (
+                                <span className="text-[9px] text-amber-600 dark:text-amber-400 font-bold mt-0.5 leading-none">Cricket Admin</span>
                             )}
                         </div>
                     </div>
@@ -353,7 +381,7 @@ const UsersTable = React.memo(({ modal, setModal, usersList, onChange, setFilter
                     sticky={true}
                     className="custom-ant-table"
                 />
-                {(handleStatus.isPending || handleDelete.isPending) && <Loading />}
+                {(handleStatus.isPending || handleDelete.isPending || handleTogglePublicAnnouncer.isPending || handleToggleCricketAdmin.isPending) && <Loading />}
 
                 <ConfirmModal
                     isOpen={confirmModal.state}
