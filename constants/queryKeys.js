@@ -44,6 +44,16 @@ export const ADMIN_KEYS = {
     MARKETPLACE: {
         LIST: "marketplaceList",
     },
+    CRICKET: {
+        TOURNAMENTS: "cricketTournamentsList",
+        TOURNAMENT_COUNTS: "cricketTournamentStatusCounts",
+        TOURNAMENT_DETAILS: "cricketTournamentDetails",
+        MATCHES: "cricketMatchesList",
+        MATCH_COUNTS: "cricketMatchStatusCounts",
+        MATCH_DETAILS: "cricketMatchDetails",
+        TEAMS: "cricketTeamsList",
+        ADMINS: "cricketAdminsList",
+    },
     STORE: {
         CATEGORIES: {
             LIST: "storeCategoriesList",
