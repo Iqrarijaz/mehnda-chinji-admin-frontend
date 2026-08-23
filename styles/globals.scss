@@ -15,8 +15,9 @@
   --header-bg: #006666;
   --sb-track-color: #F1F5F9;
   --sb-thumb-color: #006666;
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
 }
 
 .dark {
@@ -27,12 +28,72 @@
   --text-secondary: #CBD5E1;
   --text-muted: #64748B;
   --border-color: #334155;
-  --sidebar-bg: #111827; // Premium Slate Dark
+  --sidebar-bg: #111827;
   --header-bg: #111827;
   --sb-track-color: #0F172A;
   --sb-thumb-color: #334155;
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+}
+
+// ── Global Zero Border-Radius & No-Shadow System ─────────────
+*,
+*::before,
+*::after,
+.ant-btn,
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-select-selector,
+.ant-select-dropdown,
+.ant-picker,
+.ant-picker-dropdown,
+.ant-dropdown,
+.ant-dropdown-menu,
+.ant-card,
+.ant-modal,
+.ant-modal-content,
+.ant-modal-header,
+.ant-modal-footer,
+.ant-table,
+.ant-table-container,
+.ant-table-wrapper,
+.ant-tag,
+.ant-badge,
+.ant-popover,
+.ant-popover-inner,
+.ant-tooltip-inner,
+.ant-radio-button-wrapper,
+.ant-pagination-item,
+.ant-pagination-prev,
+.ant-pagination-next,
+.antd-table-custom,
+.sidebar,
+.main-app-header,
+[class*="rounded"],
+[class*="shadow"] {
+  border-radius: 0px !important;
+  box-shadow: none !important;
+}
+
+// ── Controls Height 40px Standardization (Input, Button, Dropdown, StatCard) ──
+.ant-btn:not(.ant-btn-sm):not(.ant-btn-icon-only),
+.ant-input:not(.ant-input-sm):not(textarea),
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-sm),
+.ant-select:not(.ant-select-sm) .ant-select-selector,
+.ant-picker:not(.ant-picker-small),
+.stat-card,
+input.custom-input,
+button.custom-btn {
+  min-height: 40px !important;
+  height: 40px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector .ant-select-selection-item,
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector .ant-select-selection-placeholder {
+  line-height: 38px !important;
 }
 
 body {
@@ -465,11 +526,12 @@ body {
   color: white !important;
   background-color: #006666 !important; // Teal
   border: none !important;
-  border-radius: 6px !important;
+  border-radius: 0px !important;
   padding: 4px 16px !important;
-  height: 32px !important;
-  font-size: 10px !important;
-  font-weight: 400 !important;
+  height: 40px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  box-shadow: none !important;
   transition: all 0.2s ease-in-out !important;
 }
 
@@ -482,35 +544,36 @@ body {
   color: white !important;
   background-color: #006666 !important; // Match sidebar
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 6px !important;
-  height: 38px !important;
+  border-radius: 0px !important;
+  height: 40px !important;
   font-size: 14px !important;
   font-weight: 400 !important;
   padding: 0px 18px !important;
+  box-shadow: none !important;
   transition: all 0.2s ease-in-out !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .filter-button:hover {
   background-color: #090e1a !important;
   border-color: #090e1a !important;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: none !important;
 }
 
 .search-input {
-  height: 36px !important;
-  border-radius: 6px !important;
+  height: 40px !important;
+  border-radius: 0px !important;
+  box-shadow: none !important;
 }
 
 .custom-search-input {
-  height: 32px !important;
+  height: 40px !important;
   padding: 4px 11px !important;
   border: 1px solid var(--border-color) !important;
-  border-radius: 6px !important;
+  border-radius: 0px !important;
   background-color: var(--bg-card) !important;
   display: flex !important;
   align-items: center !important;
+  box-shadow: none !important;
   transition: all 0.2s;
 
   .ant-input {
@@ -532,13 +595,13 @@ body {
 
 .custom-selectbox {
   &.ant-select {
-    height: 32px !important;
+    height: 40px !important;
   }
 
   .ant-select-selector {
     border: 1px solid var(--border-color) !important;
-    border-radius: 6px !important;
-    height: 32px !important;
+    border-radius: 0px !important;
+    height: 40px !important;
     padding: 0 11px !important;
     display: flex !important;
     align-items: center !important;
@@ -547,7 +610,7 @@ body {
 
     .ant-select-selection-item,
     .ant-select-selection-placeholder {
-      line-height: 30px !important;
+      line-height: 38px !important;
       display: flex !important;
       align-items: center !important;
       color: var(--text-primary) !important;
@@ -563,13 +626,13 @@ body {
 
 .selectbox-rounded-none {
   .ant-select-selector {
-    border-radius: 6px !important;
+    border-radius: 0px !important;
   }
 }
 
 .selectbox-rounded-2px {
   .ant-select-selector {
-    border-radius: 6px !important;
+    border-radius: 0px !important;
   }
 }
 
@@ -587,45 +650,39 @@ body {
   border: 1px solid #006666 !important;
 }
 
-.filter-button:hover {
-  color: black !important;
-  background-color: white !important;
-  border: 1px solid black !important;
-}
-
 .apply-button {
   color: white !important;
   background-color: #006666 !important;
   border: 1px solid #006666 !important;
-  border-radius: 6px !important;
+  border-radius: 0px !important;
   margin-left: 6px !important;
   padding: 2px 8px !important;
-  height: 32px !important;
+  height: 40px !important;
   width: 90px !important;
   font-size: 14px !important;
   font-weight: 500 !important;
+  box-shadow: none !important;
   transition: all 0.2s ease-in-out !important;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .apply-button:hover {
   background-color: #090e1a !important;
   border-color: #090e1a !important;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: none !important;
 }
 
 .cancel-button {
   color: var(--text-primary) !important;
   background-color: var(--bg-card) !important;
   border: 1px solid var(--border-color) !important;
-  border-radius: 6px !important;
+  border-radius: 0px !important;
   margin-left: 6px !important;
   padding: 2px 8px !important;
-  height: 32px !important;
+  height: 40px !important;
   width: 90px !important;
   font-size: 14px !important;
   font-weight: 500 !important;
+  box-shadow: none !important;
   transition: all 0.2s ease-in-out !important;
 }
 
@@ -633,17 +690,16 @@ body {
   background-color: #fee2e2 !important;
   border-color: #ef4444 !important;
   color: #dc2626 !important;
-  transform: translateY(-1px);
 }
 
 /* modalButtons.css */
 
 .modal-cancel-button {
-  @apply flex items-center border border-black text-black py-2 px-4 rounded-[6px] bg-white w-[80px];
+  @apply flex items-center border border-black text-black py-2 px-4 rounded-none bg-white w-[80px] h-[40px] shadow-none;
 }
 
 .modal-add-button {
-  @apply flex items-center border border-primary bg-primary text-white py-2 px-4 rounded-[6px] w-[80px];
+  @apply flex items-center border border-primary bg-primary text-white py-2 px-4 rounded-none w-[80px] h-[40px] shadow-none;
 }
 
 .modal-add-button:hover {
@@ -654,14 +710,14 @@ body {
 // ================antd css ==============//
 
 .ant-select {
-  height: 36px !important;
-  border-radius: 6px !important;
+  height: 40px !important;
+  border-radius: 0px !important;
 
   .ant-select-selector {
     border: 1px solid var(--border-color) !important;
-    border-radius: 6px !important;
+    border-radius: 0px !important;
     padding: 0 16px !important;
-    height: 32px !important;
+    height: 40px !important;
     display: flex;
     align-items: center;
     background-color: var(--bg-card) !important;
@@ -677,12 +733,13 @@ body {
 // Modern Select Box Standardization
 .modern-select-box {
   .ant-select-selector {
-    height: 32px !important;
+    height: 40px !important;
     padding: 0 12px !important;
-    border-radius: 6px !important;
+    border-radius: 0px !important;
     border: 1px solid var(--border-color) !important;
     font-size: 12px !important;
     font-family: inherit !important;
+    box-shadow: none !important;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover,

@@ -29,9 +29,9 @@ const StatCard = ({
                 position: "relative",
                 background: cardBg,
                 border: "none",
-                borderRadius: 6,
-                padding: "0 10px",
-                height: 32,
+                borderRadius: 0,
+                padding: "0 12px",
+                height: 40,
                 display: "flex",
                 alignItems: "center",
                 cursor: "pointer",
@@ -41,7 +41,7 @@ const StatCard = ({
                 boxShadow: "none",
             }}
         >
-            {/* Accent circle */}
+            {/* Accent square */}
             <span
                 style={{
                     position: "absolute",
@@ -49,7 +49,7 @@ const StatCard = ({
                     right: -20,
                     width: 10,
                     height: 10,
-                    borderRadius: "50%",
+                    borderRadius: 0,
                     background: accentBar,
                     opacity: 0.25,
                     pointerEvents: "none",
@@ -71,9 +71,9 @@ const StatCard = ({
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            width: 16,
-                            height: 16,
-                            borderRadius: 4,
+                            width: 18,
+                            height: 18,
+                            borderRadius: 0,
                             background: active
                                 ? "rgba(255,255,255,0.2)"
                                 : `${color}18`,

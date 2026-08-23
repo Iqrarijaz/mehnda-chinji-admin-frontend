@@ -23,11 +23,87 @@ function AntdConfigWrapper({ children }) {
         algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
         token: {
           colorPrimary: "#006666",
-          borderRadius: 4,
+          borderRadius: 0,
+          borderRadiusSM: 0,
+          borderRadiusLG: 0,
+          borderRadiusXS: 0,
+          controlHeight: 40,
+          controlHeightSM: 28,
+          controlHeightLG: 46,
+          boxShadow: "none",
+          boxShadowSecondary: "none",
+          boxShadowTertiary: "none",
           fontFamily: "Poppins, sans-serif",
           colorBgContainer: theme === 'dark' ? "#1E293B" : "#ffffff",
           colorText: theme === 'dark' ? "#F8FAFC" : "#404040",
         },
+        components: {
+          Button: {
+            borderRadius: 0,
+            borderRadiusSM: 0,
+            borderRadiusLG: 0,
+            controlHeight: 40,
+            controlHeightSM: 28,
+            controlHeightLG: 46,
+            boxShadow: "none",
+            primaryShadow: "none",
+          },
+          Input: {
+            borderRadius: 0,
+            borderRadiusSM: 0,
+            borderRadiusLG: 0,
+            controlHeight: 40,
+            controlHeightSM: 28,
+            controlHeightLG: 46,
+            boxShadow: "none",
+          },
+          Select: {
+            borderRadius: 0,
+            borderRadiusSM: 0,
+            borderRadiusLG: 0,
+            controlHeight: 40,
+            controlHeightSM: 28,
+            controlHeightLG: 46,
+            boxShadow: "none",
+          },
+          DatePicker: {
+            borderRadius: 0,
+            borderRadiusSM: 0,
+            borderRadiusLG: 0,
+            controlHeight: 40,
+            controlHeightSM: 28,
+            controlHeightLG: 46,
+            boxShadow: "none",
+          },
+          Card: {
+            borderRadius: 0,
+            borderRadiusLG: 0,
+            boxShadow: "none",
+            boxShadowTertiary: "none",
+          },
+          Table: {
+            borderRadius: 0,
+            borderRadiusLG: 0,
+            boxShadow: "none",
+          },
+          Modal: {
+            borderRadius: 0,
+            borderRadiusLG: 0,
+            boxShadow: "none",
+          },
+          Dropdown: {
+            borderRadius: 0,
+            boxShadow: "none",
+          },
+          Popover: {
+            borderRadius: 0,
+            boxShadow: "none",
+          },
+          Tooltip: {
+            borderRadius: 0,
+            boxShadow: "none",
+          },
+        }
       }}
     >
       <ToastContainer
