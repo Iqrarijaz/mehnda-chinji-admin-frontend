@@ -34,10 +34,10 @@ const MarketplaceCategoryChart = memo(function MarketplaceCategoryChart({ data =
     }, [data, totalCount]);
 
     return (
-        <div className="bg-white dark:bg-slate-900 rounded p-5 border border-slate-100 dark:border-slate-800 shadow-none flex flex-col h-full">
+        <div className="bg-white dark:bg-slate-900 rounded p-5 border-0 border-none shadow-none flex flex-col h-full">
             <div className="flex items-center justify-between mb-4 border-b border-slate-50 dark:border-slate-800 pb-3">
-                <div className="flex items-center gap-2">
-                    <span className="w-8 h-8 rounded bg-purple-100/60 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center text-sm font-bold">
+                <div className="flex items-center gap-2.5">
+                    <span className="bg-transparent text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl font-bold">
                         <PieChartOutlined />
                     </span>
                     <div>

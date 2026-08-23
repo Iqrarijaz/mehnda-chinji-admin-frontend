@@ -7,8 +7,8 @@ import {
 } from "@ant-design/icons";
 
 // Internal Memoized Stat Item
-const StatItem = memo(({ title, value, subtext, icon, colorClass, bgClass }) => (
-    <div className="bg-white dark:bg-slate-900 rounded p-4 border border-slate-100 dark:border-slate-800 shadow-none flex items-center justify-between transition-colors">
+const StatItem = memo(({ title, value, subtext, icon, colorClass }) => (
+    <div className="bg-white dark:bg-slate-900 rounded p-4 border-0 border-none shadow-none flex items-center justify-between transition-colors">
         <div>
             <p className="text-xs font-semibold text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-1">
                 {title}
@@ -22,7 +22,7 @@ const StatItem = memo(({ title, value, subtext, icon, colorClass, bgClass }) => 
                 </p>
             )}
         </div>
-        <div className={`w-12 h-12 rounded flex items-center justify-center ${bgClass} ${colorClass} text-xl font-bold`}>
+        <div className={`w-10 h-10 flex items-center justify-center bg-transparent ${colorClass} text-2xl font-bold`}>
             {icon}
         </div>
     </div>
@@ -38,8 +38,7 @@ const AnalyticsStatCards = memo(function AnalyticsStatCards({ overview = {}, pea
                 value: (overview.totalUsers ?? 0).toLocaleString(),
                 subtext: `+${(overview.newUsersInRange ?? 0).toLocaleString()} in selected range`,
                 icon: <UserOutlined />,
-                colorClass: "text-sky-600 dark:text-sky-400",
-                bgClass: "bg-sky-100/60 dark:bg-sky-950/30"
+                colorClass: "text-sky-600 dark:text-sky-400"
             },
             {
                 id: "marketplace_listings",
@@ -47,8 +46,7 @@ const AnalyticsStatCards = memo(function AnalyticsStatCards({ overview = {}, pea
                 value: (overview.totalListings ?? 0).toLocaleString(),
                 subtext: `${(overview.activeListings ?? 0).toLocaleString()} Active / Live`,
                 icon: <ShopOutlined />,
-                colorClass: "text-emerald-600 dark:text-emerald-400",
-                bgClass: "bg-emerald-100/60 dark:bg-emerald-950/30"
+                colorClass: "text-emerald-600 dark:text-emerald-400"
             },
             {
                 id: "peak_usage",
@@ -56,8 +54,7 @@ const AnalyticsStatCards = memo(function AnalyticsStatCards({ overview = {}, pea
                 value: peakHour,
                 subtext: "Highest hourly user traffic",
                 icon: <ClockCircleOutlined />,
-                colorClass: "text-amber-600 dark:text-amber-400",
-                bgClass: "bg-amber-100/60 dark:bg-amber-950/30"
+                colorClass: "text-amber-600 dark:text-amber-400"
             },
             {
                 id: "cricket_tournaments",
@@ -65,8 +62,7 @@ const AnalyticsStatCards = memo(function AnalyticsStatCards({ overview = {}, pea
                 value: (overview.totalTournaments ?? 0).toLocaleString(),
                 subtext: `${(overview.totalMatches ?? 0).toLocaleString()} Total Match Fixtures`,
                 icon: <TrophyOutlined />,
-                colorClass: "text-purple-600 dark:text-purple-400",
-                bgClass: "bg-purple-100/60 dark:bg-purple-950/30"
+                colorClass: "text-purple-600 dark:text-purple-400"
             }
         ];
     }, [overview, peakHour]);
@@ -81,7 +77,6 @@ const AnalyticsStatCards = memo(function AnalyticsStatCards({ overview = {}, pea
                     subtext={item.subtext}
                     icon={item.icon}
                     colorClass={item.colorClass}
-                    bgClass={item.bgClass}
                 />
             ))}
         </div>

@@ -1,8 +1,15 @@
-import React, { memo, useCallback } from "react";
-import { Radio, DatePicker, Button, Tooltip } from "antd";
+import React, { memo } from "react";
+import { DatePicker, Button, Tooltip } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 
 const { RangePicker } = DatePicker;
+
+const RANGE_OPTIONS = [
+    { value: "7d", label: "7 Days" },
+    { value: "30d", label: "30 Days" },
+    { value: "90d", label: "90 Days" },
+    { value: "1y", label: "1 Year" }
+];
 
 const AnalyticsHeader = memo(function AnalyticsHeader({
     range,
@@ -12,12 +19,8 @@ const AnalyticsHeader = memo(function AnalyticsHeader({
     onRefresh,
     isLoading
 }) {
-    const handleRangeRadioChange = useCallback((e) => {
-        onRangeChange(e.target.value);
-    }, [onRangeChange]);
-
     return (
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-white dark:bg-slate-900 px-5 py-4 rounded border border-slate-100 dark:border-slate-800 shadow-none">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-white dark:bg-slate-900 px-5 py-4 rounded border-0 border-none shadow-none">
             {/* Title */}
             <div>
                 <h1 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tight m-0 uppercase">
@@ -25,22 +28,28 @@ const AnalyticsHeader = memo(function AnalyticsHeader({
                 </h1>
             </div>
 
-            {/* Single Line Controls: Range Tabs + Custom Date Picker + Refresh Button */}
-            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full lg:w-auto justify-start lg:justify-end">
-                {/* Preset Range Selector */}
-                <Radio.Group
-                    value={range}
-                    onChange={handleRangeRadioChange}
-                    optionType="button"
-                    buttonStyle="solid"
-                    size="middle"
-                    className="flex-shrink-0"
-                >
-                    <Radio.Button value="7d">7 Days</Radio.Button>
-                    <Radio.Button value="30d">30 Days</Radio.Button>
-                    <Radio.Button value="90d">90 Days</Radio.Button>
-                    <Radio.Button value="1y">1 Year</Radio.Button>
-                </Radio.Group>
+            {/* Single Line Controls: Spaced Range Tabs + Custom Date Picker + Refresh Button */}
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 w-full lg:w-auto justify-start lg:justify-end">
+                {/* Preset Range Selector with Gap and Padding */}
+                <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded flex-shrink-0">
+                    {RANGE_OPTIONS.map((item) => {
+                        const isSelected = range === item.value;
+                        return (
+                            <button
+                                key={item.value}
+                                type="button"
+                                onClick={() => onRangeChange(item.value)}
+                                className={`px-3.5 py-1.5 text-xs font-semibold rounded transition-all duration-200 cursor-pointer ${
+                                    isSelected
+                                        ? "bg-[#006666] text-white shadow-none"
+                                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-700/60 bg-transparent"
+                                }`}
+                            >
+                                {item.label}
+                            </button>
+                        );
+                    })}
+                </div>
 
                 {/* Custom Date Range Picker */}
                 <RangePicker
