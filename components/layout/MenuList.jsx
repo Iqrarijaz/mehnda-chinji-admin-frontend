@@ -6,7 +6,7 @@ import { FaBloggerB } from "react-icons/fa6";
 import { MdDashboardCustomize } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
 import { MdReport } from "react-icons/md";
-import { FaDroplet, FaTerminal, FaBaseballBatBall } from "react-icons/fa6";
+import { FaDroplet, FaTerminal, FaBaseballBatBall, FaChartLine } from "react-icons/fa6";
 
 import { PERMISSIONS } from "@/config/permissions";
 
@@ -15,6 +15,12 @@ const MenuList = [
     name: "Dashboard",
     icon: <MdDashboardCustomize size={20} />,
     link: "/admin/dashboard",
+    permission: PERMISSIONS.DASHBOARD.READ
+  },
+  {
+    name: "Analytics & Graphs",
+    icon: <FaChartLine size={20} />,
+    link: "/admin/analytics",
     permission: PERMISSIONS.DASHBOARD.READ
   },
 
