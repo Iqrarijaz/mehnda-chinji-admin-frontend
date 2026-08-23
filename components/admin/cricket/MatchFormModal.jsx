@@ -16,7 +16,7 @@ import FormField from "@/components/InnerPage/FormField";
 import SelectField from "@/components/InnerPage/SelectField";
 import CustomButton from "@/components/shared/CustomButton";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
-import { MATCH_STAGES, STAGE_LABELS, asOptions } from "@/constants/cricket";
+import { MATCH_STAGES, STAGE_LABELS, STATUS_LABELS, asOptions } from "@/constants/cricket";
 
 /**
  * Schedule a fixture, or edit one that already exists.
@@ -28,7 +28,16 @@ import { MATCH_STAGES, STAGE_LABELS, asOptions } from "@/constants/cricket";
  * Callers that already hold the tournament (the detail dashboard) pass it in.
  * The matches list only knows a fixture's tournament id, so the squad list is
  * fetched on demand when the modal opens.
+ *
+ * Status is editable on an existing fixture so a match can be abandoned (rained
+ * off, called short). COMPLETED is deliberately absent: a match reaches it by
+ * being scored, and a completed one has already been folded into the standings,
+ * so unwinding it goes through deleting the fixture instead.
  */
+
+// UPDATE_MATCH_SCHEMA accepts exactly these three; COMPLETED is reached by
+// scoring, never by setting it directly.
+const EDITABLE_MATCH_STATUS = ["UPCOMING", "LIVE", "ABANDONED"];
 
 const toDateTimeLocal = (value) => {
     if (!value) return "";
@@ -53,7 +62,8 @@ const validationSchema = Yup.object().shape({
         .typeError("Overs must be a number")
         .integer("Overs must be a whole number")
         .min(1, "At least 1 over")
-        .max(50, "At most 50 overs")
+        .max(50, "At most 50 overs"),
+    status: Yup.string().oneOf(EDITABLE_MATCH_STATUS, "Invalid match status")
 });
 
 const MatchFormModal = React.memo(({ modal, setModal, tournament: providedTournament, tournamentId: providedTournamentId }) => {
@@ -65,6 +75,10 @@ const MatchFormModal = React.memo(({ modal, setModal, tournament: providedTourna
     const match = modal.data;
 
     const hasStarted = isEdit && match?.status && match.status !== "UPCOMING";
+    // The backend refuses any status change on a completed match — deleting the
+    // fixture is what reverses its standings contribution.
+    const isCompleted = isEdit && match?.status === "COMPLETED";
+    const canEditStatus = isEdit && !isCompleted;
 
     // Resolve which tournament this fixture belongs to, whichever way the
     // caller identified it.
@@ -113,7 +127,8 @@ const MatchFormModal = React.memo(({ modal, setModal, tournament: providedTourna
                 teamBId: match.teamB?.id || "",
                 venue: match.venue || "",
                 scheduledAt: toDateTimeLocal(match.scheduledAt),
-                maxOvers: match.maxOvers ?? ""
+                maxOvers: match.maxOvers ?? "",
+                status: EDITABLE_MATCH_STATUS.includes(match.status) ? match.status : "UPCOMING"
             };
         }
         return {
@@ -123,7 +138,8 @@ const MatchFormModal = React.memo(({ modal, setModal, tournament: providedTourna
             teamBId: "",
             venue: tournament?.venue || "",
             scheduledAt: "",
-            maxOvers: tournament?.defaultMaxOvers ?? ""
+            maxOvers: tournament?.defaultMaxOvers ?? "",
+            status: "UPCOMING"
         };
     }, [isEdit, match, tournament]);
 
@@ -170,6 +186,11 @@ const MatchFormModal = React.memo(({ modal, setModal, tournament: providedTourna
 
         if (isEdit) {
             payload.id = match._id;
+            // Only travels when it actually changed; the backend ignores a
+            // status equal to the current one anyway.
+            if (canEditStatus && values.status !== match.status) {
+                payload.status = values.status;
+            }
         } else {
             payload.tournamentId = tournamentId;
         }
@@ -214,7 +235,15 @@ const MatchFormModal = React.memo(({ modal, setModal, tournament: providedTourna
                         message="Register at least two teams in this tournament before scheduling a fixture."
                     />
                 )}
-                {hasStarted && (
+                {isCompleted && (
+                    <Alert
+                        type="info"
+                        showIcon
+                        className="mb-3 !text-[11px]"
+                        message="This match is complete. Its status is fixed — delete the fixture instead to also reverse its standings."
+                    />
+                )}
+                {hasStarted && !isCompleted && (
                     <Alert
                         type="info"
                         showIcon
@@ -247,7 +276,21 @@ const MatchFormModal = React.memo(({ modal, setModal, tournament: providedTourna
                                     </div>
                                     <FormField label="Max Overs" name="maxOvers" type="number" min={1} max={50} disabled={hasStarted} />
                                 </div>
-                                <FormField label="Date & Time" name="scheduledAt" type="datetime-local" required />
+                                <div className={`grid ${canEditStatus ? "grid-cols-2" : "grid-cols-1"} gap-4 mt-2`}>
+                                    <FormField label="Date & Time" name="scheduledAt" type="datetime-local" required />
+                                    {canEditStatus && (
+                                        <SelectField
+                                            label="Status"
+                                            name="status"
+                                            options={asOptions(EDITABLE_MATCH_STATUS, STATUS_LABELS)}
+                                        />
+                                    )}
+                                </div>
+                                {canEditStatus && (
+                                    <p className="text-[10px] text-slate-400 font-medium -mt-1">
+                                        Mark a fixture <span className="font-bold">Abandoned</span> when it is called off. A match becomes Completed by being scored, not from here.
+                                    </p>
+                                )}
                             </div>
 
                             <div className="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">

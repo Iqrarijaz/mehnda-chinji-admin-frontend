@@ -1,8 +1,9 @@
 "use client";
 import React, { useMemo, useRef } from "react";
 import { Modal } from "antd";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { FaTrophy } from "react-icons/fa6";
-import { Formik, Form } from "formik";
+import { Formik, Form, FieldArray } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -29,9 +30,20 @@ import {
  * field; only the endpoint and which fields are mandatory differ. Coordinates
  * are required on create (the backend rejects a tournament without a location)
  * and left alone on edit unless the admin types new ones.
+ *
+ * Organizers and guests are optional repeatable rows. Both are all-or-nothing
+ * per row on the backend — an organizer needs a name and a role, a guest a name
+ * and a title — so blank trailing rows are dropped on submit rather than sent
+ * as half-filled objects the Joi schema would reject.
  */
 
 const toDateInput = (value) => (value ? new Date(value).toISOString().slice(0, 10) : "");
+
+const EMPTY_ORGANIZER = { name: "", role: "", phone: "", image: "" };
+const EMPTY_GUEST = { name: "", title: "", image: "" };
+
+/** A row the admin started but left blank is dropped, not submitted. */
+const isBlankRow = (row) => Object.values(row).every((value) => !String(value || "").trim());
 
 const buildSchema = (isEdit) =>
     Yup.object().shape({
@@ -67,8 +79,107 @@ const buildSchema = (isEdit) =>
         runnerUpPrize: Yup.string().trim().required("Runner-up prize is required"),
         manOfTheSeriesPrize: Yup.string().trim(),
         bestBowlerPrize: Yup.string().trim(),
-        bannerImage: Yup.string().trim()
+        bannerImage: Yup.string().trim(),
+        // A row is either untouched or complete — the backend requires both
+        // key fields once an entry exists.
+        organizers: Yup.array().of(
+            Yup.object().shape({
+                name: Yup.string().trim().test(
+                    "organizer-name",
+                    "Name is required for this organizer",
+                    function (value) {
+                        return isBlankRow(this.parent) || Boolean(value && value.trim());
+                    }
+                ),
+                role: Yup.string().trim().test(
+                    "organizer-role",
+                    "Role is required for this organizer",
+                    function (value) {
+                        return isBlankRow(this.parent) || Boolean(value && value.trim());
+                    }
+                ),
+                phone: Yup.string().trim(),
+                image: Yup.string().trim()
+            })
+        ),
+        guests: Yup.array().of(
+            Yup.object().shape({
+                name: Yup.string().trim().test(
+                    "guest-name",
+                    "Name is required for this guest",
+                    function (value) {
+                        return isBlankRow(this.parent) || Boolean(value && value.trim());
+                    }
+                ),
+                title: Yup.string().trim().test(
+                    "guest-title",
+                    "Title is required for this guest",
+                    function (value) {
+                        return isBlankRow(this.parent) || Boolean(value && value.trim());
+                    }
+                ),
+                image: Yup.string().trim()
+            })
+        )
     });
+
+/**
+ * A list of optional, repeatable people rows (organizers, guests).
+ *
+ * Rendered inside the tournament Formik context, so it drives its own
+ * FieldArray and needs nothing but the field name and its column layout.
+ */
+const RepeatableSection = ({ name, title, rows = [], emptyRow, addLabel, columns }) => (
+    <FieldArray name={name}>
+        {({ push, remove }) => (
+            <>
+                <div className="flex items-center justify-between mb-2">
+                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors duration-300">
+                        {title} {rows.length > 0 ? `(${rows.length})` : ""}
+                        <span className="normal-case tracking-normal font-medium text-slate-400 ml-1">— optional</span>
+                    </p>
+                </div>
+
+                <div className="space-y-2">
+                    {rows.map((_, index) => (
+                        <div
+                            key={index}
+                            className="grid grid-cols-1 md:grid-cols-12 gap-2 items-start border border-slate-100 dark:border-slate-800 rounded p-2"
+                        >
+                            {columns.map((column) => (
+                                <div key={column.key} className={column.span}>
+                                    <FormField
+                                        noLabel
+                                        name={`${name}.${index}.${column.key}`}
+                                        placeholder={column.placeholder}
+                                    />
+                                </div>
+                            ))}
+                            <div className="md:col-span-1 flex justify-end pt-0.5">
+                                <button
+                                    type="button"
+                                    title={`Remove ${title.toLowerCase().replace(/s$/, "")}`}
+                                    onClick={() => remove(index)}
+                                    className="h-[28px] w-[28px] flex items-center justify-center rounded text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                >
+                                    <DeleteOutlined />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+
+                    <button
+                        type="button"
+                        onClick={() => push({ ...emptyRow })}
+                        className="flex items-center gap-2 h-[32px] px-4 rounded border-2 border-dashed border-slate-200 dark:border-slate-700 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:border-[#006666] hover:text-[#006666] transition-colors"
+                    >
+                        <PlusOutlined /> {addLabel}
+                    </button>
+                </div>
+            </>
+        )}
+    </FieldArray>
+);
 
 const TournamentFormModal = React.memo(({ modal, setModal, onSaved }) => {
     const formikRef = useRef(null);
@@ -96,7 +207,18 @@ const TournamentFormModal = React.memo(({ modal, setModal, onSaved }) => {
                 runnerUpPrize: record.prizes?.runnerUpPrize || "",
                 manOfTheSeriesPrize: record.prizes?.manOfTheSeriesPrize || "",
                 bestBowlerPrize: record.prizes?.bestBowlerPrize || "",
-                bannerImage: record.bannerImage || ""
+                bannerImage: record.bannerImage || "",
+                organizers: (record.organizers || []).map((person) => ({
+                    name: person.name || "",
+                    role: person.role || "",
+                    phone: person.phone || "",
+                    image: person.image || ""
+                })),
+                guests: (record.guests || []).map((person) => ({
+                    name: person.name || "",
+                    title: person.title || "",
+                    image: person.image || ""
+                }))
             };
         }
         return {
@@ -104,7 +226,8 @@ const TournamentFormModal = React.memo(({ modal, setModal, onSaved }) => {
             startDate: "", endDate: "", status: "UPCOMING",
             latitude: "", longitude: "",
             winnerPrize: "", runnerUpPrize: "", manOfTheSeriesPrize: "",
-            bestBowlerPrize: "", bannerImage: ""
+            bestBowlerPrize: "", bannerImage: "",
+            organizers: [], guests: []
         };
     }, [isEdit, record]);
 
@@ -164,6 +287,24 @@ const TournamentFormModal = React.memo(({ modal, setModal, onSaved }) => {
             payload.longitude = Number(values.longitude);
         }
 
+        // Drop rows the admin opened but never filled in.
+        payload.organizers = (values.organizers || [])
+            .filter((person) => !isBlankRow(person))
+            .map((person) => ({
+                name: person.name.trim(),
+                role: person.role.trim(),
+                phone: person.phone?.trim() || null,
+                image: person.image?.trim() || null
+            }));
+
+        payload.guests = (values.guests || [])
+            .filter((person) => !isBlankRow(person))
+            .map((person) => ({
+                name: person.name.trim(),
+                title: person.title.trim(),
+                image: person.image?.trim() || null
+            }));
+
         if (isEdit) payload.id = record._id;
 
         save.mutate(payload, { onSettled: () => setSubmitting(false) });
@@ -197,7 +338,7 @@ const TournamentFormModal = React.memo(({ modal, setModal, onSaved }) => {
                     validationSchema={buildSchema(isEdit)}
                     onSubmit={onSubmit}
                 >
-                    {({ isSubmitting }) => (
+                    {({ isSubmitting, values }) => (
                         <Form className="space-y-2">
                             <div className="modal-section">
                                 <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors duration-300">
@@ -230,6 +371,37 @@ const TournamentFormModal = React.memo(({ modal, setModal, onSaved }) => {
                                     <FormField label="Latitude" name="latitude" type="number" step="any" placeholder="e.g. 32.9328" required={!isEdit} />
                                     <FormField label="Longitude" name="longitude" type="number" step="any" placeholder="e.g. 72.8630" required={!isEdit} />
                                 </div>
+                            </div>
+
+                            <div className="modal-section">
+                                <RepeatableSection
+                                    name="organizers"
+                                    title="Organizers"
+                                    rows={values.organizers}
+                                    emptyRow={EMPTY_ORGANIZER}
+                                    addLabel="Add Organizer"
+                                    columns={[
+                                        { key: "name", placeholder: "Name", span: "md:col-span-4" },
+                                        { key: "role", placeholder: "Role (e.g. Head Organizer)", span: "md:col-span-3" },
+                                        { key: "phone", placeholder: "Phone", span: "md:col-span-2" },
+                                        { key: "image", placeholder: "Photo URL", span: "md:col-span-2" }
+                                    ]}
+                                />
+                            </div>
+
+                            <div className="modal-section">
+                                <RepeatableSection
+                                    name="guests"
+                                    title="Guests"
+                                    rows={values.guests}
+                                    emptyRow={EMPTY_GUEST}
+                                    addLabel="Add Guest"
+                                    columns={[
+                                        { key: "name", placeholder: "Name", span: "md:col-span-4" },
+                                        { key: "title", placeholder: "Title (e.g. Chief Guest - MPA)", span: "md:col-span-4" },
+                                        { key: "image", placeholder: "Photo URL", span: "md:col-span-3" }
+                                    ]}
+                                />
                             </div>
 
                             <div className="modal-section">
