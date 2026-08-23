@@ -5,7 +5,6 @@ import UseMount from "@/hooks/useMount";
 
 import {
     AnalyticsHeader,
-    AnalyticsStatCards,
     UserGrowthChart,
     PeakUsageChart,
     MarketplaceListingsChart,
@@ -13,7 +12,6 @@ import {
 } from "@/components/admin/analytics";
 
 import {
-    useAnalyticsOverview,
     useUserAnalytics,
     useMarketplaceAnalytics,
     usePeakUsageAnalytics
@@ -35,13 +33,6 @@ const AnalyticsPage = memo(function AnalyticsPage() {
 
     // React Query Hooks
     const {
-        data: overview = {},
-        isLoading: ovLoading,
-        refetch: refetchOverview,
-        isRefetching: ovRefetching
-    } = useAnalyticsOverview(range, formattedStartDate, formattedEndDate);
-
-    const {
         data: userGrowth = [],
         isLoading: ugLoading,
         refetch: refetchUserGrowth,
@@ -62,15 +53,8 @@ const AnalyticsPage = memo(function AnalyticsPage() {
         isRefetching: pkRefetching
     } = usePeakUsageAnalytics();
 
-    const isGlobalLoading = ovLoading || ugLoading || mpLoading || pkLoading ||
-        ovRefetching || ugRefetching || mpRefetching || pkRefetching;
-
-    // Highest Peak Hour Calculation (memoized)
-    const highestPeakHour = useMemo(() => {
-        if (!peakUsage.length) return "N/A";
-        const max = [...peakUsage].sort((a, b) => b.activeCount - a.activeCount)[0];
-        return max ? `${max.hour} (${max.activeCount} active)` : "N/A";
-    }, [peakUsage]);
+    const isGlobalLoading = ugLoading || mpLoading || pkLoading ||
+        ugRefetching || mpRefetching || pkRefetching;
 
     // Range Change Handler
     const handleRangeChange = useCallback((newRange) => {
@@ -85,11 +69,10 @@ const AnalyticsPage = memo(function AnalyticsPage() {
 
     // Global Refresh Handler
     const handleRefreshAll = useCallback(() => {
-        refetchOverview();
         refetchUserGrowth();
         refetchMarketplace();
         refetchPeakUsage();
-    }, [refetchOverview, refetchUserGrowth, refetchMarketplace, refetchPeakUsage]);
+    }, [refetchUserGrowth, refetchMarketplace, refetchPeakUsage]);
 
     if (!isMounted) return null;
 
@@ -105,13 +88,7 @@ const AnalyticsPage = memo(function AnalyticsPage() {
                 isLoading={isGlobalLoading}
             />
 
-            {/* 2. Overview Metric KPI Summary Cards */}
-            <AnalyticsStatCards
-                overview={overview}
-                peakHour={highestPeakHour}
-            />
-
-            {/* 3. Visual Charts Grid (2x2 Grid) */}
+            {/* 2. Visual Charts Grid (2x2 Grid) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* User Registrations Trend */}
                 <UserGrowthChart
