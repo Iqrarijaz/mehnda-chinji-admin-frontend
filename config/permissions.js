@@ -86,6 +86,13 @@ export const PERMISSIONS = {
         UPDATE: "marketplace.update",
         DELETE: "marketplace.delete",
     },
+    CRICKET: {
+        CREATE: "cricket.create",
+        READ: "cricket.read",
+        UPDATE: "cricket.update",
+        DELETE: "cricket.delete",
+        SCORE: "cricket.score",
+    },
     STORE: {
         CATEGORIES: {
             CREATE: "store.categories.create",

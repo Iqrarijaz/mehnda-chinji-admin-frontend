@@ -6,7 +6,7 @@ import { FaBloggerB } from "react-icons/fa6";
 import { MdDashboardCustomize } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
 import { MdReport } from "react-icons/md";
-import { FaDroplet, FaTerminal } from "react-icons/fa6";
+import { FaDroplet, FaTerminal, FaBaseballBatBall } from "react-icons/fa6";
 
 import { PERMISSIONS } from "@/config/permissions";
 
@@ -48,6 +48,34 @@ const MenuList = [
     icon: <FaProductHunt size={20} />,
     link: "/admin/marketplace",
     permission: PERMISSIONS.MARKETPLACE.READ
+  },
+
+  {
+    name: "Cricket",
+    icon: <FaBaseballBatBall size={20} />,
+    permission: PERMISSIONS.CRICKET.READ,
+    subItems: [
+      {
+        name: "Tournaments",
+        link: "/admin/cricket/tournaments",
+        permission: PERMISSIONS.CRICKET.READ,
+      },
+      {
+        name: "Matches & Fixtures",
+        link: "/admin/cricket/matches",
+        permission: PERMISSIONS.CRICKET.READ,
+      },
+      {
+        name: "Teams & Squads",
+        link: "/admin/cricket/teams",
+        permission: PERMISSIONS.CRICKET.READ,
+      },
+      {
+        name: "Admins & Scorers",
+        link: "/admin/cricket/admins",
+        permission: PERMISSIONS.CRICKET.READ,
+      },
+    ],
   },
 
   {
