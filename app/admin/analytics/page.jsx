@@ -94,7 +94,7 @@ const AnalyticsPage = memo(function AnalyticsPage() {
     if (!isMounted) return null;
 
     return (
-        <div className="space-y-6 p-4 md:p-6 bg-slate-50/50 dark:bg-slate-900/50 min-h-screen">
+        <div className="space-y-6 min-h-screen">
             {/* 1. Header Toolbar with Preset Pills & Date Picker */}
             <AnalyticsHeader
                 range={range}

@@ -1,8 +1,14 @@
 import { Input } from "antd";
-import React from "react";
+import React, { memo } from "react";
 import { FiSearch } from "react-icons/fi";
 
-function SearchInput({ setFilters, className = "", pageKey = "page", searchKey = "search" }) {
+const SearchInput = memo(function SearchInput({
+  setFilters,
+  className = "",
+  pageKey = "page",
+  searchKey = "search",
+  placeholder = "Search..."
+}) {
   return (
     <div className={`relative flex items-center ${className}`}>
       <Input
@@ -12,9 +18,9 @@ function SearchInput({ setFilters, className = "", pageKey = "page", searchKey =
             onChangeSearch: false,
           }));
         }}
-        placeholder="Search..."
-        className="custom-search-input !font-sans !text-[12px] !text-slate-600 dark:!text-slate-300 dark:!bg-slate-900 !border-0 !border-none !rounded-[6px] shadow-none"
-        prefix={<FiSearch size={16} className="text-[#006666] dark:text-teal-400 mr-2" />}
+        placeholder={placeholder}
+        className="custom-search-input !h-[40px] !font-sans !text-xs !text-slate-800 dark:!text-slate-100 !bg-white dark:!bg-slate-900 !border !border-slate-200 dark:!border-slate-700/80 !rounded-none shadow-none focus:!border-teal-600 dark:focus:!border-teal-500"
+        prefix={<FiSearch size={16} className="text-teal-600 dark:text-teal-400 mr-2 shrink-0" />}
         onChange={(event) => {
           const value = event?.target?.value;
           setFilters((oldValues) => ({
@@ -27,6 +33,8 @@ function SearchInput({ setFilters, className = "", pageKey = "page", searchKey =
       />
     </div>
   );
-}
+});
+
+SearchInput.displayName = "SearchInput";
 
 export default SearchInput;

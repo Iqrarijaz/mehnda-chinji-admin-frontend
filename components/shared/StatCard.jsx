@@ -16,10 +16,10 @@ const StatCard = ({
     const { theme } = useTheme();
     const isDark = theme === 'dark';
 
-    const cardBg = active ? "#006666" : (isDark ? "#0f172a" : bg);
-    const cardBorder = active ? "#006666" : (isDark ? "#1e293b" : border);
-    const textColor = active ? "#ffffff" : (isDark ? "#f1f5f9" : "#1e293b");
-    const accentBar = active ? "rgba(255,255,255,0.25)" : "#006666";
+    const cardBg = active ? "#006666" : (isDark ? "#1e293b" : bg);
+    const cardBorder = active ? "#006666" : (isDark ? "#334155" : border);
+    const textColor = active ? "#ffffff" : (isDark ? "#f8fafc" : "#1e293b");
+    const accentBar = active ? "rgba(255,255,255,0.25)" : (isDark ? "#2dd4bf" : "#006666");
 
     return (
         <button

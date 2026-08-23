@@ -96,6 +96,84 @@ button.custom-btn {
   line-height: 38px !important;
 }
 
+// ── Dark Mode Control Colors & Elements ──────────────────────
+.dark {
+  // Loader & Spinner
+  .ant-spin {
+    color: #2dd4bf !important;
+    .ant-spin-dot-item {
+      background-color: #2dd4bf !important;
+    }
+  }
+
+  // Skeleton Loaders
+  .ant-skeleton {
+    .ant-skeleton-input,
+    .ant-skeleton-button,
+    .ant-skeleton-avatar,
+    .ant-skeleton-image {
+      background: rgba(255, 255, 255, 0.08) !important;
+    }
+  }
+
+  // Custom Search Input in Dark Mode
+  .custom-search-input {
+    background-color: #0f172a !important;
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+
+    .ant-input {
+      color: #f8fafc !important;
+      background: transparent !important;
+      &::placeholder {
+        color: #94a3b8 !important;
+      }
+    }
+
+    &:hover,
+    &.ant-input-affix-wrapper-focused,
+    &:focus-within {
+      border-color: #2dd4bf !important;
+    }
+  }
+
+  // Stat Card in Dark Mode
+  .stat-card {
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+
+    .stat-title {
+      color: #94a3b8 !important;
+    }
+
+    &:hover {
+      border-color: #2dd4bf !important;
+      background: #334155 !important;
+    }
+  }
+
+  // Add Button in Dark Mode
+  .add-button {
+    background-color: #006666 !important;
+    color: #ffffff !important;
+    &:hover {
+      background-color: #007a7a !important;
+    }
+  }
+
+  // Filter Button in Dark Mode
+  .filter-button {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #2dd4bf !important;
+    &:hover {
+      background-color: #334155 !important;
+      color: #ffffff !important;
+    }
+  }
+}
+
 body {
   font-family: "Poppins", sans-serif !important;
   font-weight: 400;
