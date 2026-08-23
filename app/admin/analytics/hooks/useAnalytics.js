@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Axios } from "@/interceptors";
 
-export function useAnalyticsOverview(range = "30d", startDate, endDate) {
+export function useAnalyticsOverview(range = "7d", startDate, endDate) {
     return useQuery({
         queryKey: ["analytics", "overview", range, startDate, endDate],
         queryFn: async () => {
@@ -14,7 +14,7 @@ export function useAnalyticsOverview(range = "30d", startDate, endDate) {
     });
 }
 
-export function useUserAnalytics(range = "30d", startDate, endDate) {
+export function useUserAnalytics(range = "7d", startDate, endDate) {
     return useQuery({
         queryKey: ["analytics", "users", range, startDate, endDate],
         queryFn: async () => {
@@ -27,7 +27,7 @@ export function useUserAnalytics(range = "30d", startDate, endDate) {
     });
 }
 
-export function useMarketplaceAnalytics(range = "30d", startDate, endDate) {
+export function useMarketplaceAnalytics(range = "7d", startDate, endDate) {
     return useQuery({
         queryKey: ["analytics", "marketplace", range, startDate, endDate],
         queryFn: async () => {

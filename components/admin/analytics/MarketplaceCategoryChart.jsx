@@ -34,10 +34,10 @@ const MarketplaceCategoryChart = memo(function MarketplaceCategoryChart({ data =
     }, [data, totalCount]);
 
     return (
-        <div className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-100 dark:border-slate-700/60 shadow-sm flex flex-col h-full">
-            <div className="flex items-center justify-between mb-4">
+        <div className="bg-white dark:bg-slate-900 rounded p-5 border border-slate-100 dark:border-slate-800 shadow-none flex flex-col h-full">
+            <div className="flex items-center justify-between mb-4 border-b border-slate-50 dark:border-slate-800 pb-3">
                 <div className="flex items-center gap-2">
-                    <span className="w-8 h-8 rounded-lg bg-purple-100/60 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center text-sm font-bold">
+                    <span className="w-8 h-8 rounded bg-purple-100/60 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center text-sm font-bold">
                         <PieChartOutlined />
                     </span>
                     <div>
@@ -49,7 +49,7 @@ const MarketplaceCategoryChart = memo(function MarketplaceCategoryChart({ data =
                         </p>
                     </div>
                 </div>
-                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
                     Breakdown
                 </span>
             </div>
@@ -79,9 +79,9 @@ const MarketplaceCategoryChart = memo(function MarketplaceCategoryChart({ data =
                                 </Pie>
                                 <Tooltip
                                     contentStyle={{
-                                        backgroundColor: "#1e293b",
-                                        borderRadius: "8px",
-                                        border: "none",
+                                        backgroundColor: "#0f172a",
+                                        borderRadius: "4px",
+                                        border: "1px solid #334155",
                                         color: "#fff",
                                         fontSize: "12px"
                                     }}
@@ -94,11 +94,11 @@ const MarketplaceCategoryChart = memo(function MarketplaceCategoryChart({ data =
                         </ResponsiveContainer>
 
                         {/* Category Chips Legend */}
-                        <div className="flex flex-wrap items-center justify-center gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-700/60 w-full">
+                        <div className="flex flex-wrap items-center justify-center gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 w-full">
                             {formattedData.slice(0, 6).map((item) => (
                                 <div
                                     key={item.category}
-                                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700/40 text-[11px]"
+                                    className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-50 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/50 text-[11px]"
                                 >
                                     <span
                                         className="w-2 h-2 rounded-full"

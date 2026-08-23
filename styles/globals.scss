@@ -37,10 +37,7 @@
   --shadow-lg: none;
 }
 
-// ── Global Zero Border-Radius & No-Shadow System ─────────────
-*,
-*::before,
-*::after,
+// ── Global 4px Border-Radius & No-Shadow System ─────────────
 .ant-btn,
 .ant-input,
 .ant-input-affix-wrapper,
@@ -68,11 +65,36 @@
 .ant-pagination-prev,
 .ant-pagination-next,
 .antd-table-custom,
+.stat-card,
+.custom-search-input,
+.custom-selectbox {
+  border-radius: 4px !important;
+}
+
+// Ensure Status Toggle Switch remains perfectly rounded (pill-shaped)
+.ant-switch,
+.ant-switch-handle,
+.ant-switch-handle::before,
+.status-toggle,
+.status-pill,
+[class*="rounded-full"] {
+  border-radius: 9999px !important;
+}
+
+// Global No-Shadow System
+*,
+*::before,
+*::after,
+.ant-card,
+.ant-modal-content,
+.ant-dropdown,
+.ant-dropdown-menu,
+.ant-popover-inner,
+.ant-select-dropdown,
+.ant-picker-dropdown,
 .sidebar,
 .main-app-header,
-[class*="rounded"],
 [class*="shadow"] {
-  border-radius: 0px !important;
   box-shadow: none !important;
 }
 

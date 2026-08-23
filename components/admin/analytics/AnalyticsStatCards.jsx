@@ -8,7 +8,7 @@ import {
 
 // Internal Memoized Stat Item
 const StatItem = memo(({ title, value, subtext, icon, colorClass, bgClass }) => (
-    <div className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-100 dark:border-slate-700/60 shadow-sm flex items-center justify-between transition-all hover:shadow-md">
+    <div className="bg-white dark:bg-slate-900 rounded p-4 border border-slate-100 dark:border-slate-800 shadow-none flex items-center justify-between transition-colors">
         <div>
             <p className="text-xs font-semibold text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-1">
                 {title}
@@ -22,7 +22,7 @@ const StatItem = memo(({ title, value, subtext, icon, colorClass, bgClass }) => 
                 </p>
             )}
         </div>
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${bgClass} ${colorClass} text-xl font-bold`}>
+        <div className={`w-12 h-12 rounded flex items-center justify-center ${bgClass} ${colorClass} text-xl font-bold`}>
             {icon}
         </div>
     </div>
@@ -39,7 +39,7 @@ const AnalyticsStatCards = memo(function AnalyticsStatCards({ overview = {}, pea
                 subtext: `+${(overview.newUsersInRange ?? 0).toLocaleString()} in selected range`,
                 icon: <UserOutlined />,
                 colorClass: "text-sky-600 dark:text-sky-400",
-                bgClass: "bg-sky-100/60 dark:bg-sky-950/40"
+                bgClass: "bg-sky-100/60 dark:bg-sky-950/30"
             },
             {
                 id: "marketplace_listings",
@@ -48,7 +48,7 @@ const AnalyticsStatCards = memo(function AnalyticsStatCards({ overview = {}, pea
                 subtext: `${(overview.activeListings ?? 0).toLocaleString()} Active / Live`,
                 icon: <ShopOutlined />,
                 colorClass: "text-emerald-600 dark:text-emerald-400",
-                bgClass: "bg-emerald-100/60 dark:bg-emerald-950/40"
+                bgClass: "bg-emerald-100/60 dark:bg-emerald-950/30"
             },
             {
                 id: "peak_usage",
@@ -57,7 +57,7 @@ const AnalyticsStatCards = memo(function AnalyticsStatCards({ overview = {}, pea
                 subtext: "Highest hourly user traffic",
                 icon: <ClockCircleOutlined />,
                 colorClass: "text-amber-600 dark:text-amber-400",
-                bgClass: "bg-amber-100/60 dark:bg-amber-950/40"
+                bgClass: "bg-amber-100/60 dark:bg-amber-950/30"
             },
             {
                 id: "cricket_tournaments",
@@ -66,7 +66,7 @@ const AnalyticsStatCards = memo(function AnalyticsStatCards({ overview = {}, pea
                 subtext: `${(overview.totalMatches ?? 0).toLocaleString()} Total Match Fixtures`,
                 icon: <TrophyOutlined />,
                 colorClass: "text-purple-600 dark:text-purple-400",
-                bgClass: "bg-purple-100/60 dark:bg-purple-950/40"
+                bgClass: "bg-purple-100/60 dark:bg-purple-950/30"
             }
         ];
     }, [overview, peakHour]);

@@ -21,7 +21,7 @@ import {
 
 const AnalyticsPage = memo(function AnalyticsPage() {
     const isMounted = UseMount();
-    const [range, setRange] = useState("30d");
+    const [range, setRange] = useState("7d");
     const [customDates, setCustomDates] = useState(null);
 
     // Format start and end dates for custom date range picker

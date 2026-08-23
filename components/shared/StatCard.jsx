@@ -29,7 +29,7 @@ const StatCard = ({
                 position: "relative",
                 background: cardBg,
                 border: "none",
-                borderRadius: 0,
+                borderRadius: 4,
                 padding: "0 12px",
                 height: 40,
                 display: "flex",
@@ -41,7 +41,7 @@ const StatCard = ({
                 boxShadow: "none",
             }}
         >
-            {/* Accent square */}
+            {/* Accent */}
             <span
                 style={{
                     position: "absolute",
@@ -49,7 +49,7 @@ const StatCard = ({
                     right: -20,
                     width: 10,
                     height: 10,
-                    borderRadius: 0,
+                    borderRadius: 4,
                     background: accentBar,
                     opacity: 0.25,
                     pointerEvents: "none",
@@ -73,7 +73,7 @@ const StatCard = ({
                             justifyContent: "center",
                             width: 18,
                             height: 18,
-                            borderRadius: 0,
+                            borderRadius: 4,
                             background: active
                                 ? "rgba(255,255,255,0.2)"
                                 : `${color}18`,
