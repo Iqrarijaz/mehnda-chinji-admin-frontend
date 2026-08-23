@@ -22,7 +22,7 @@ import { PLAYER_ROLES, PLAYER_ROLE_LABELS } from "@/constants/cricket";
  * previous one rather than letting two coexist.
  */
 
-const EMPTY_PLAYER = { name: "", role: "ALL_ROUNDER", jerseyNumber: "", phone: "", isCaptain: false };
+const EMPTY_PLAYER = { name: "", role: "ALL_ROUNDER", jerseyNumber: "", phone: "", image: "", isCaptain: false };
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().trim().min(2, "Team name must be at least 2 characters").required("Team name is required"),
@@ -40,7 +40,8 @@ const validationSchema = Yup.object().shape({
                     .integer("Jersey must be a whole number")
                     .min(0, "Jersey cannot be negative")
                     .max(999, "Jersey must be 999 or below"),
-                phone: Yup.string().trim()
+                phone: Yup.string().trim(),
+                image: Yup.string().trim()
             })
         )
         .min(1, "Add at least one player")
@@ -68,6 +69,7 @@ const TeamFormModal = React.memo(({ modal, setModal, tournamentId }) => {
                     role: player.role || "ALL_ROUNDER",
                     jerseyNumber: player.jerseyNumber ?? "",
                     phone: player.phone || "",
+                    image: player.image || "",
                     isCaptain: Boolean(player.isCaptain)
                 }))
             };
@@ -101,6 +103,7 @@ const TeamFormModal = React.memo(({ modal, setModal, tournamentId }) => {
             role: player.role,
             jerseyNumber: player.jerseyNumber === "" || player.jerseyNumber === null ? null : Number(player.jerseyNumber),
             phone: player.phone?.trim() || null,
+            image: player.image?.trim() || null,
             isCaptain: Boolean(player.isCaptain)
         }));
 
@@ -181,10 +184,11 @@ const TeamFormModal = React.memo(({ modal, setModal, tournamentId }) => {
                                     {({ push, remove }) => (
                                         <div className="space-y-2">
                                             <div className="hidden md:grid grid-cols-12 gap-2 px-1">
-                                                <span className="col-span-4 text-[9px] font-bold text-slate-400 uppercase tracking-wider">Player</span>
-                                                <span className="col-span-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider">Role</span>
+                                                <span className="col-span-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider">Player</span>
+                                                <span className="col-span-2 text-[9px] font-bold text-slate-400 uppercase tracking-wider">Role</span>
                                                 <span className="col-span-1 text-[9px] font-bold text-slate-400 uppercase tracking-wider">#</span>
                                                 <span className="col-span-2 text-[9px] font-bold text-slate-400 uppercase tracking-wider">Phone</span>
+                                                <span className="col-span-2 text-[9px] font-bold text-slate-400 uppercase tracking-wider">Photo URL</span>
                                                 <span className="col-span-1 text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center">C</span>
                                                 <span className="col-span-1" />
                                             </div>
@@ -194,10 +198,10 @@ const TeamFormModal = React.memo(({ modal, setModal, tournamentId }) => {
                                                     key={index}
                                                     className="grid grid-cols-1 md:grid-cols-12 gap-2 items-start border border-slate-100 dark:border-slate-800 rounded p-2"
                                                 >
-                                                    <div className="md:col-span-4">
+                                                    <div className="md:col-span-3">
                                                         <FormField noLabel name={`players.${index}.name`} placeholder="Player name" />
                                                     </div>
-                                                    <div className="md:col-span-3">
+                                                    <div className="md:col-span-2">
                                                         <Select
                                                             value={player.role}
                                                             onChange={(value) => setFieldValue(`players.${index}.role`, value)}
@@ -211,6 +215,9 @@ const TeamFormModal = React.memo(({ modal, setModal, tournamentId }) => {
                                                     </div>
                                                     <div className="md:col-span-2">
                                                         <FormField noLabel name={`players.${index}.phone`} placeholder="Phone" />
+                                                    </div>
+                                                    <div className="md:col-span-2">
+                                                        <FormField noLabel name={`players.${index}.image`} placeholder="Photo URL" />
                                                     </div>
                                                     <div className="md:col-span-1 flex justify-center pt-1">
                                                         <Tooltip title="Mark as captain">
