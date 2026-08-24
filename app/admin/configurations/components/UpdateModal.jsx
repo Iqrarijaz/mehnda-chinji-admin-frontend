@@ -3,13 +3,15 @@ import { Modal, Input, Select } from "antd";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { FaCode, FaEdit, FaChevronRight, FaInfoCircle } from "react-icons/fa";
+import { FaCode, FaEdit, FaChevronRight, FaMagic } from "react-icons/fa";
 import CustomButton from "@/components/shared/CustomButton";
 import { FormSkeleton } from "@/components/shared/Skeletons";
 import { UPDATE_CONFIGURATION } from "@/app/api/admin/configurations";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 import { Formik, Form } from "formik";
 import FormField from "@/components/InnerPage/FormField";
+import ConfigPreview from "@/components/admin/configurations/ConfigPreview";
+import { CONFIG_TEMPLATES, stringifyTemplate } from "@/constants/configTemplates";
 
 const { TextArea } = Input;
 
@@ -139,6 +141,23 @@ const UpdateConfigurationModal = React.memo(({ modal, setModal }) => {
                                                             </div>
                                                             <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">JSON Schema Editor</span>
                                                         </div>
+                                                        <div className="flex items-center gap-2">
+                                                            {CONFIG_TEMPLATES.map((template) => (
+                                                                <button
+                                                                    key={template.type}
+                                                                    type="button"
+                                                                    title={template.description}
+                                                                    onClick={() => {
+                                                                        setFieldValue("type", template.type);
+                                                                        setFieldValue("dataString", stringifyTemplate(template.data));
+                                                                        toast.info(`${template.label} template loaded`);
+                                                                    }}
+                                                                    className="flex items-center gap-1.5 px-2.5 h-[24px] rounded bg-slate-800 hover:bg-teal-600 text-[9px] font-bold text-slate-300 hover:text-white uppercase tracking-widest transition-colors"
+                                                                >
+                                                                    <FaMagic size={9} /> {template.label}
+                                                                </button>
+                                                            ))}
+                                                        </div>
                                                     </div>
                                                     <TextArea
                                                         rows={20}
@@ -168,86 +187,7 @@ const UpdateConfigurationModal = React.memo(({ modal, setModal }) => {
                                             </div>
 
                                             <div className="max-h-[600px] overflow-y-auto custom-scrollbar pr-2">
-                                                {(() => {
-                                                    try {
-                                                        const previewData = JSON.parse(values.dataString);
-                                                        if (Array.isArray(previewData) && previewData[0]?.category) {
-                                                            return (
-                                                                <div className="space-y-4">
-                                                                    {previewData.map((cat, idx) => (
-                                                                        <div key={idx} className="bg-white dark:bg-slate-900/40 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden  transition-all">
-                                                                            <div className="px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                                                                                <div className="flex items-center gap-2">
-                                                                                    <FaInfoCircle className="text-teal-500" size={14} />
-                                                                                    <h3 className="text-[11px] font-black text-slate-800 dark:text-slate-100 uppercase tracking-wider m-0">
-                                                                                        {cat.category}
-                                                                                    </h3>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="p-4">
-                                                                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                                                                    {cat.types?.map((type, tIdx) => (
-                                                                                        <div
-                                                                                            key={tIdx}
-                                                                                            className="group flex flex-col items-center p-3 rounded-xl transition-all hover:bg-teal-50/30 dark:hover:bg-teal-900/10 cursor-pointer"
-                                                                                            onClick={() => {
-                                                                                                if (type.icon) {
-                                                                                                    navigator.clipboard.writeText(type.icon);
-                                                                                                    toast.success("Link copied to clipboard");
-                                                                                                }
-                                                                                            }}
-                                                                                        >
-                                                                                            <div className="w-[68px] h-[68px] flex items-center justify-center mb-2 transition-transform group-hover:scale-110 duration-300">
-                                                                                                {type.icon ? (
-                                                                                                    <img
-                                                                                                        src={type.icon}
-                                                                                                        alt={type.label}
-                                                                                                        className="w-full h-full object-contain"
-                                                                                                        onError={(e) => {
-                                                                                                            e.target.src = "https://via.placeholder.com/68?text=NA";
-                                                                                                        }}
-                                                                                                    />
-                                                                                                ) : (
-                                                                                                    <div className="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600">
-                                                                                                        <FaCode size={20} />
-                                                                                                    </div>
-                                                                                                )}
-                                                                                            </div>
-                                                                                            <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 text-center line-clamp-1 group-hover:text-teal-600 dark:group-hover:text-teal-400">
-                                                                                                {type.label}
-                                                                                            </span>
-                                                                                        </div>
-                                                                                    ))}
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    ))}
-                                                                </div>
-                                                            );
-                                                        }
-                                                        return (
-                                                            <div className="flex flex-col items-center justify-center h-[300px] border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-900/20">
-                                                                <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
-                                                                    <FaCode className="text-slate-300 dark:text-slate-600" size={24} />
-                                                                </div>
-                                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center px-6">
-                                                                    No category data pattern detected to visualize
-                                                                </p>
-                                                            </div>
-                                                        );
-                                                    } catch (e) {
-                                                        return (
-                                                            <div className="flex flex-col items-center justify-center h-[300px] border-2 border-dashed border-red-500/20 rounded-xl bg-red-50/50 dark:bg-red-900/10">
-                                                                <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center mb-4">
-                                                                    <FaCode className="text-red-400" size={24} />
-                                                                </div>
-                                                                <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest text-center px-6">
-                                                                    Invalid JSON payload structure
-                                                                </p>
-                                                            </div>
-                                                        );
-                                                    }
-                                                })()}
+                                                <ConfigPreview dataString={values.dataString} />
                                             </div>
                                         </div>
                                     </div>
