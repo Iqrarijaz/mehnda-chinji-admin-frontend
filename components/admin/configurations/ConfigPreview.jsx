@@ -15,7 +15,7 @@ import { FaCode, FaInfoCircle, FaLayerGroup, FaThLarge } from "react-icons/fa";
  */
 
 /** Empty or missing appVersions means the entry ships to every build. */
-const VersionBadge = ({ appVersions }) => {
+const VersionBadge = React.memo(({ appVersions }) => {
     const targeted = Array.isArray(appVersions) && appVersions.length > 0;
 
     if (!targeted) {
@@ -38,10 +38,11 @@ const VersionBadge = ({ appVersions }) => {
             ))}
         </span>
     );
-};
+});
+VersionBadge.displayName = "VersionBadge";
 
 /** An entry is live unless it is explicitly switched off. */
-const StatusBadge = ({ isActive }) => {
+const StatusBadge = React.memo(({ isActive }) => {
     const off = isActive === false;
     return (
         <span
@@ -53,7 +54,8 @@ const StatusBadge = ({ isActive }) => {
             {off ? "Hidden" : "Active"}
         </span>
     );
-};
+});
+StatusBadge.displayName = "StatusBadge";
 
 /**
  * One entry as the app will draw it.
@@ -63,7 +65,7 @@ const StatusBadge = ({ isActive }) => {
  * falls back to its bundled asset — said in words, because the portal has no
  * copy of the app's bundled artwork to show.
  */
-const EntryCard = ({ entry }) => {
+const EntryCard = React.memo(({ entry }) => {
     const icon = typeof entry.icon === "string" ? entry.icon.trim() : "";
     const isRemote = icon.startsWith("http://") || icon.startsWith("https://");
     const dimmed = entry.isActive === false;
@@ -114,9 +116,10 @@ const EntryCard = ({ entry }) => {
             </div>
         </div>
     );
-};
+});
+EntryCard.displayName = "EntryCard";
 
-const Section = ({ icon, title, count, badge, children }) => (
+const Section = React.memo(({ icon, title, count, badge, children }) => (
     <div className="bg-white dark:bg-slate-900/40 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
         <div className="px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
@@ -130,9 +133,10 @@ const Section = ({ icon, title, count, badge, children }) => (
         </div>
         <div className="p-4">{children}</div>
     </div>
-);
+));
+Section.displayName = "Section";
 
-const EntryGrid = ({ entries, emptyLabel }) => {
+const EntryGrid = React.memo(({ entries, emptyLabel }) => {
     if (!Array.isArray(entries) || entries.length === 0) {
         return (
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center py-4 m-0">
@@ -153,9 +157,10 @@ const EntryGrid = ({ entries, emptyLabel }) => {
             ))}
         </div>
     );
-};
+});
+EntryGrid.displayName = "EntryGrid";
 
-const HomePageConfigPreview = ({ data }) => (
+const HomePageConfigPreview = React.memo(({ data }) => (
     <div className="space-y-4">
         <Section
             icon={<FaThLarge className="text-teal-500" size={12} />}
@@ -194,10 +199,11 @@ const HomePageConfigPreview = ({ data }) => (
                 </Section>
             ))}
     </div>
-);
+));
+HomePageConfigPreview.displayName = "HomePageConfigPreview";
 
 /** The pre-existing ESSENTIALS-style payload: [{ category, types: [...] }]. */
-const LegacyCategoryPreview = ({ data }) => (
+const LegacyCategoryPreview = React.memo(({ data }) => (
     <div className="space-y-4">
         {data.map((cat, idx) => (
             <Section
@@ -243,9 +249,10 @@ const LegacyCategoryPreview = ({ data }) => (
             </Section>
         ))}
     </div>
-);
+));
+LegacyCategoryPreview.displayName = "LegacyCategoryPreview";
 
-const PlaceholderPanel = ({ tone = "slate", children }) => {
+const PlaceholderPanel = React.memo(({ tone = "slate", children }) => {
     const danger = tone === "danger";
     return (
         <div
@@ -268,7 +275,8 @@ const PlaceholderPanel = ({ tone = "slate", children }) => {
             </p>
         </div>
     );
-};
+});
+PlaceholderPanel.displayName = "PlaceholderPanel";
 
 const ConfigPreview = React.memo(({ dataString }) => {
     let parsed;

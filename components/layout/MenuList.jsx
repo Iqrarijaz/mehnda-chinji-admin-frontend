@@ -114,6 +114,11 @@ const MenuList = [
         permission: PERMISSIONS.CONFIGURATIONS.READ,
       },
       {
+        name: "Home Config",
+        link: "/admin/configurations/home-config",
+        permission: PERMISSIONS.CONFIGURATIONS.READ,
+      },
+      {
         name: "App Images",
         link: "/admin/configurations/app-images",
         permission: PERMISSIONS.CONFIGURATIONS.READ,

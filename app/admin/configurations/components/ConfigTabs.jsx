@@ -2,10 +2,11 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FaCog, FaImage, FaUpload } from "react-icons/fa";
+import { FaCog, FaImage, FaUpload, FaThLarge } from "react-icons/fa";
 
 const tabs = [
     { name: "System Config", link: "/admin/configurations", icon: <FaCog size={14} /> },
+    { name: "Home Config", link: "/admin/configurations/home-config", icon: <FaThLarge size={14} /> },
     { name: "App Images", link: "/admin/configurations/app-images", icon: <FaImage size={14} /> },
     { name: "Upload", link: "/admin/configurations/upload", icon: <FaUpload size={14} /> },
 ];
