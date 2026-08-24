@@ -6,7 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaThLarge } from "react-icons/fa";
 
-import { GET_CONFIGURATIONS, UPDATE_CONFIGURATION, CREATE_CONFIGURATION } from "@/app/api/admin/configurations";
+import { GET_CONFIGURATIONS, UPDATE_CONFIGURATION, UPDATE_CONFIGURATION_ITEM, CREATE_CONFIGURATION } from "@/app/api/admin/configurations";
 import { ADMIN_KEYS } from "@/constants/queryKeys";
 import ConfigPreview from "@/components/admin/configurations/ConfigPreview";
 
@@ -76,14 +76,59 @@ function HomePageConfigManager() {
         },
     });
 
+    /**
+     * Persist one entry immediately, addressed by id.
+     *
+     * A visibility toggle is a single-field edit, so it goes through the
+     * targeted endpoint rather than re-saving the whole layout — that way one
+     * admin flipping a switch cannot overwrite another's in-flight edits
+     * elsewhere in the document. Local state updates first so the switch feels
+     * instant, and reverts if the request fails.
+     *
+     * Before the document exists there is nothing to patch, so the change stays
+     * local until the first Save creates it.
+     */
+    const persistItem = useCallback(async ({ section, itemId, groupId, patch, revert }) => {
+        if (!configDoc?._id) return;
+
+        try {
+            await UPDATE_CONFIGURATION_ITEM({
+                _id: configDoc._id,
+                type: "HOME_PAGE_CONFIG",
+                section,
+                itemId,
+                ...(groupId ? { groupId } : {}),
+                patch,
+            });
+            queryClient.invalidateQueries({ queryKey: [ADMIN_KEYS.CONFIGURATIONS.LIST] });
+        } catch (err) {
+            revert?.();
+            toast.error(err?.errorMessage || err?.message || "Failed to update item");
+        }
+    }, [configDoc, queryClient]);
+
     // Handlers for Categories
     const handleToggleCategory = useCallback((index, isActive) => {
+        let target = null;
         setConfigData((prev) => {
             const next = [...prev.categories];
+            target = next[index];
             next[index] = { ...next[index], isActive };
             return { ...prev, categories: next };
         });
-    }, []);
+        if (target?.id) {
+            persistItem({
+                section: "categories",
+                itemId: target.id,
+                patch: { isActive },
+                revert: () => setConfigData((prev) => {
+                    const next = [...prev.categories];
+                    next[index] = { ...next[index], isActive: !isActive };
+                    return { ...prev, categories: next };
+                }),
+            });
+        }
+    }, [persistItem]);
 
     const handleDeleteCategory = useCallback((index) => {
         setConfigData((prev) => ({
@@ -94,12 +139,26 @@ function HomePageConfigManager() {
 
     // Handlers for More Categories
     const handleToggleMoreCategory = useCallback((index, isActive) => {
+        let target = null;
         setConfigData((prev) => {
             const next = [...prev.moreCategories];
+            target = next[index];
             next[index] = { ...next[index], isActive };
             return { ...prev, moreCategories: next };
         });
-    }, []);
+        if (target?.id) {
+            persistItem({
+                section: "moreCategories",
+                itemId: target.id,
+                patch: { isActive },
+                revert: () => setConfigData((prev) => {
+                    const next = [...prev.moreCategories];
+                    next[index] = { ...next[index], isActive: !isActive };
+                    return { ...prev, moreCategories: next };
+                }),
+            });
+        }
+    }, [persistItem]);
 
     const handleDeleteMoreCategory = useCallback((index) => {
         setConfigData((prev) => ({
@@ -110,12 +169,27 @@ function HomePageConfigManager() {
 
     // Handlers for Utility Groups & Items
     const handleToggleGroup = useCallback((groupIndex, isActive) => {
+        let target = null;
         setConfigData((prev) => {
             const next = [...prev.utilities];
+            target = next[groupIndex];
             next[groupIndex] = { ...next[groupIndex], isActive };
             return { ...prev, utilities: next };
         });
-    }, []);
+        if (target?.id) {
+            // No groupId: for utilities that addresses the group itself.
+            persistItem({
+                section: "utilities",
+                itemId: target.id,
+                patch: { isActive },
+                revert: () => setConfigData((prev) => {
+                    const next = [...prev.utilities];
+                    next[groupIndex] = { ...next[groupIndex], isActive: !isActive };
+                    return { ...prev, utilities: next };
+                }),
+            });
+        }
+    }, [persistItem]);
 
     const handleDeleteGroup = useCallback((groupIndex) => {
         setConfigData((prev) => ({
@@ -125,16 +199,37 @@ function HomePageConfigManager() {
     }, []);
 
     const handleToggleUtilityItem = useCallback((groupIndex, itemIndex, isActive) => {
+        let groupId = null;
+        let itemId = null;
         setConfigData((prev) => {
             const nextUtilities = [...prev.utilities];
             const group = { ...nextUtilities[groupIndex] };
             const nextItems = [...group.items];
+            groupId = group.id;
+            itemId = nextItems[itemIndex]?.id;
             nextItems[itemIndex] = { ...nextItems[itemIndex], isActive };
             group.items = nextItems;
             nextUtilities[groupIndex] = group;
             return { ...prev, utilities: nextUtilities };
         });
-    }, []);
+        if (groupId && itemId) {
+            persistItem({
+                section: "utilities",
+                groupId,
+                itemId,
+                patch: { isActive },
+                revert: () => setConfigData((prev) => {
+                    const nextUtilities = [...prev.utilities];
+                    const group = { ...nextUtilities[groupIndex] };
+                    const nextItems = [...group.items];
+                    nextItems[itemIndex] = { ...nextItems[itemIndex], isActive: !isActive };
+                    group.items = nextItems;
+                    nextUtilities[groupIndex] = group;
+                    return { ...prev, utilities: nextUtilities };
+                }),
+            });
+        }
+    }, [persistItem]);
 
     const handleDeleteUtilityItem = useCallback((groupIndex, itemIndex) => {
         setConfigData((prev) => {
