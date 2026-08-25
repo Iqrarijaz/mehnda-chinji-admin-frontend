@@ -8,7 +8,7 @@ import { totalExtras } from "@/constants/cricket";
  * Over-by-over commentary for one innings, newest first — the running record
  * a scorer checks against before correcting an over.
  */
-const OverHistory = ({ innings, title }) => {
+const OverHistory = React.memo(function OverHistory({ innings, title }) {
     const overs = [...(innings?.overs || [])].sort((a, b) => b.overNumber - a.overNumber);
 
     return (
@@ -51,10 +51,37 @@ const OverHistory = ({ innings, title }) => {
                                             </Tag>
                                         )}
                                     </div>
-                                    <span className="text-[9px] text-slate-400 font-medium truncate">
-                                        {over.bowlerName}
-                                        {over.commentary ? ` · ${over.commentary}` : ""}
+                                    <span className="text-[9.5px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                                        {over.bowlerName}{over.strikerName ? ` · Bat: ${over.strikerName}` : ""}
                                     </span>
+                                    {over.balls && over.balls.length > 0 ? (
+                                        <div className="flex items-center gap-1 flex-wrap mt-1">
+                                            {over.balls.map((b, bIdx) => (
+                                                <span
+                                                    key={b._id || bIdx}
+                                                    className={`px-1.5 py-0.5 rounded text-[8.5px] font-bold ${
+                                                        b.isWicket
+                                                            ? "bg-red-500 text-white"
+                                                            : b.isWide
+                                                            ? "bg-yellow-400 text-slate-900"
+                                                            : b.isNoBall
+                                                            ? "bg-orange-500 text-white"
+                                                            : b.runs === 4
+                                                            ? "bg-blue-500 text-white"
+                                                            : b.runs === 6
+                                                            ? "bg-purple-500 text-white"
+                                                            : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                                                    }`}
+                                                >
+                                                    {b.isWicket ? "W" : (b.isWide ? (b.runs > 0 ? `Wd+${b.runs}` : "Wd") : (b.isNoBall ? (b.runs > 0 ? `Nb+${b.runs}` : "Nb") : b.runs))}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        over.commentary ? (
+                                            <span className="text-[9px] text-slate-400 font-mono mt-0.5">{over.commentary}</span>
+                                        ) : null
+                                    )}
                                 </div>
                             </div>
                         );
@@ -63,6 +90,6 @@ const OverHistory = ({ innings, title }) => {
             )}
         </div>
     );
-};
+});
 
 export default OverHistory;

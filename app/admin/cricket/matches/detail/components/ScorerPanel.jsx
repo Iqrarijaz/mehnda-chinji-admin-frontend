@@ -29,6 +29,8 @@ const validationSchema = Yup.object().shape({
         .max(50, "At most 50 overs")
         .required("Over number is required"),
     bowlerName: Yup.string().trim().min(2, "Bowler name is too short").required("Bowler is required"),
+    strikerName: Yup.string().trim().optional().nullable(),
+    nonStrikerName: Yup.string().trim().optional().nullable(),
     runsScored: Yup.number()
         .typeError("Runs must be a number")
         .integer("Runs must be a whole number")
@@ -47,7 +49,7 @@ const validationSchema = Yup.object().shape({
     commentary: Yup.string().trim().max(200, "Commentary is too long")
 });
 
-const ScorerPanel = ({ match, teams }) => {
+const ScorerPanel = React.memo(function ScorerPanel({ match, teams }) {
     const formikRef = useRef(null);
     const queryClient = useQueryClient();
 
@@ -64,6 +66,13 @@ const ScorerPanel = ({ match, teams }) => {
         return "—";
     }, [activeInnings, match.teamA, match.teamB]);
 
+    const battingSquad = useMemo(() => {
+        const battingId = String(activeInnings?.battingTeamId || "");
+        if (battingId === String(teams?.teamA?._id)) return teams?.teamA;
+        if (battingId === String(teams?.teamB?._id)) return teams?.teamB;
+        return null;
+    }, [activeInnings, teams]);
+
     const bowlingSquad = useMemo(() => {
         const bowlingId = String(activeInnings?.bowlingTeamId || "");
         if (bowlingId === String(teams?.teamA?._id)) return teams?.teamA;
@@ -74,6 +83,8 @@ const ScorerPanel = ({ match, teams }) => {
     const initialValues = {
         overNumber: nextOverNumber,
         bowlerName: "",
+        strikerName: "",
+        nonStrikerName: "",
         runsScored: 0,
         wickets: 0,
         wides: 0,
@@ -105,6 +116,9 @@ const ScorerPanel = ({ match, teams }) => {
                 id: match._id,
                 overNumber: Number(values.overNumber),
                 bowlerName: values.bowlerName.trim(),
+                strikerName: values.strikerName?.trim() || null,
+                nonStrikerName: values.nonStrikerName?.trim() || null,
+                batsmanName: values.strikerName?.trim() || null,
                 runsScored: Number(values.runsScored),
                 wickets: Number(values.wickets),
                 extras: {
@@ -169,6 +183,31 @@ const ScorerPanel = ({ match, teams }) => {
             >
                 {({ isSubmitting, values }) => (
                     <Form className="space-y-2">
+                        {/* Batsmen on Crease */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <FormField
+                                    label={`Striker (${battingTeamName})`}
+                                    name="strikerName"
+                                    placeholder={battingSquad?.players?.[0]?.name || "Striker name"}
+                                    list="scorer-batsman-options"
+                                />
+                            </div>
+                            <div>
+                                <FormField
+                                    label={`Non-Striker (${battingTeamName})`}
+                                    name="nonStrikerName"
+                                    placeholder={battingSquad?.players?.[1]?.name || "Non-striker name"}
+                                    list="scorer-batsman-options"
+                                />
+                            </div>
+                            <datalist id="scorer-batsman-options">
+                                {(battingSquad?.players || []).map((player) => (
+                                    <option key={player._id || player.name} value={player.name} />
+                                ))}
+                            </datalist>
+                        </div>
+
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                             <FormField label="Over #" name="overNumber" type="number" min={1} max={50} required />
                             <div className="col-span-2">
@@ -185,7 +224,7 @@ const ScorerPanel = ({ match, teams }) => {
                                     ))}
                                 </datalist>
                             </div>
-                            <FormField label="Runs" name="runsScored" type="number" min={0} max={60} required />
+                            <FormField label="Runs (0 - 60)" name="runsScored" type="number" min={0} max={60} required />
                         </div>
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -219,6 +258,6 @@ const ScorerPanel = ({ match, teams }) => {
             </Formik>
         </div>
     );
-};
+});
 
 export default ScorerPanel;
