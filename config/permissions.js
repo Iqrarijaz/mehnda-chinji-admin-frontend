@@ -45,8 +45,10 @@ export const PERMISSIONS = {
         DELETE: "admin_users.delete",
     },
     CONFIGURATIONS: {
+        CREATE: "configurations.create",
         READ: "configurations.read",
         UPDATE: "configurations.update",
+        DELETE: "configurations.delete",
     },
     NOTIFICATION_TEMPLATES: {
         CREATE: "notification_templates.create",
